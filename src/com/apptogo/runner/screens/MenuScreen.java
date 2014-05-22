@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -16,7 +17,7 @@ public class MenuScreen extends BaseScreen{
     
 	public MenuScreen(Runner runner){
 		super(runner);	
-		playButton = ResourcesManager.getInstance().getMenuTexture("playButton");
+		playButton = ResourcesManager.getInstance().getMenuResource("gfx/menu/playButton.png");
 	}
 	
 	@Override
@@ -29,13 +30,12 @@ public class MenuScreen extends BaseScreen{
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		//tu bylem 
 	    spriteBatch.begin();
 	    	spriteBatch.draw(playButton, 0, 0);
 	    spriteBatch.end();
 	    
 	    if(Gdx.input.justTouched())
-	    	ScreensManager.getInstance().createGameScreen();
+	    	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
 		
 	}
 	

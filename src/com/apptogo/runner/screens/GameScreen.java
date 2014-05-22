@@ -17,17 +17,17 @@ public class GameScreen extends BaseScreen{
     
 	public GameScreen(Runner runner){
 		super(runner);	
-		Logger.log(this, "tworze gameScreen");
-		gameImage = ResourcesManager.getInstance().getGameTexture("gameImage");
+		gameImage = ResourcesManager.getInstance().getGameResource("gfx/game/gameImage.png");
 	}
 	
 	@Override
 	public void show() {
-		Logger.log(this, "wlaczam gameScreen");
+
 	}
 	
 	@Override
 	public void render(float delta) {
+
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

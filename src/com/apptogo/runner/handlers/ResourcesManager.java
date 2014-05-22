@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,15 +13,10 @@ public class ResourcesManager {
 
 	//do zaimplementowania bedzie ladowanie tekstur do atlasów
 	
-	private HashMap<String, Texture> menuTextures;
-	private HashMap<String, Music> menuMusic;
-	private HashMap<String, Sound> menuSounds;
-	
-	private HashMap<String, Texture> gameTextures;
-	private HashMap<String, Music> gameMusic;
-	private HashMap<String, Sound> gameSounds;
-	
 	Runner runner;
+	AssetManager menuManager;
+	AssetManager gameManager;
+	AssetManager splashManager;
 	
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
 	
@@ -28,159 +24,109 @@ public class ResourcesManager {
 
 	}
 	
+	/*---SPLASH---*/
 	
-	/*---- MENU TEXTURES ----*/
+	public void loadSplashTextures(){
+		splashManager.load("gfx/splash/splash.png", Texture.class);
+		splashManager.load("gfx/splash/background.png", Texture.class);
+		splashManager.load("gfx/splash/frame-background.png", Texture.class);
+		splashManager.load("gfx/splash/frame.png", Texture.class);
+		splashManager.load("gfx/splash/bar.png", Texture.class);
+		splashManager.load("gfx/splash/hidden.png", Texture.class);
+	}
+	
+	public <T> T getSplashResource(String key) {
+		return splashManager.get(key);
+	}
+	
+	public void unloadSplashResource(String key) {
+		if(splashManager.get(key) != null)
+			splashManager.unload(key);
+	}
+	
+	public void unloadAllSplashResources() {
+		splashManager.clear();
+		 //splashManager.dispose();
+	}
+	
+	
+	/*---- MENU----*/
 	
 	public void loadMenuTextures(){
-		menuTextures.put("playButton", new Texture(Gdx.files.internal("gfx/menu/playButton.png")));
+		menuManager.load("gfx/menu/playButton.png", Texture.class);
+		menuManager.load("gfx/menu/big1.png", Texture.class);
+		menuManager.load("gfx/menu/big2.png", Texture.class);
+		menuManager.load("gfx/menu/big3.png", Texture.class);
+		menuManager.load("gfx/menu/big4.png", Texture.class);
+		menuManager.load("gfx/menu/big5.png", Texture.class);
+		menuManager.load("gfx/menu/big6.png", Texture.class);
+		menuManager.load("gfx/menu/big7.png", Texture.class);
 	}
-	public Texture getMenuTexture(String key) {
-		return menuTextures.get(key);
-	}
-	public void removeMenuTexture(String key) {
-		Texture tex = menuTextures.get(key);
-		if(tex != null) {
-			menuTextures.remove(key);
-			tex.dispose();
-		}
-	}
-	public void removeAllMenuTextures() {
-		 for(Texture tex : menuTextures.values()){
-			 tex.dispose();
-		 }
-		 menuTextures.clear();
-	}
-	
-	
-	/*---- MENU MUSIC ----*/
 	
 	public void loadMenuMusic(){
-		menuMusic.put("menuMusic", Gdx.audio.newMusic(Gdx.files.internal("mfx/menu/menuMusic.ogg")));
+		menuManager.load("mfx/menu/menuMusic.ogg", Music.class);
 	}
 	
-	public Music getMenuMusic(String key) {
-		return menuMusic.get(key);
-	}
-	public void removeMenuMusic(String key) {
-		Music m = menuMusic.get(key);
-		if(m != null) {
-			menuMusic.remove(key);
-			m.dispose();
-		}
-	}
-	public void removeAllMenuMusic() {
-		 for(Music m : menuMusic.values()){
-			 m.dispose();
-		 }
-		 menuMusic.clear();
-	}
-	
-	
-	/*---- MENU SOUNDS ----*/
-
 	public void loadMenuSounds() {
-		menuSounds.put("menuClick", Gdx.audio.newSound(Gdx.files.internal("mfx/menu/menuClick.ogg")));
+		menuManager.load("mfx/menu/menuClick.ogg", Sound.class);
 	}
-	public Sound getMenuSound(String key) {
-		return menuSounds.get(key);
+	
+	public <T> T getMenuResource(String key) {
+		return menuManager.get(key);
 	}
-	public void removeMenuSound(String key) {
-		Sound sound = menuSounds.get(key);
-		if(sound != null) {
-			menuSounds.remove(key);
-			sound.dispose();
-		}
+	
+	public void unloadMenuResource(String key) {
+		if(menuManager.get(key) != null)
+			menuManager.unload(key);
 	}
-	public void removeAllMenuSounds() {
-		 for(Sound s : menuSounds.values()){
-			 s.dispose();
-		 }
-		 menuSounds.clear();
+	
+	public void unloadAllMenuResources() {
+		 menuManager.clear();
+		 //menuManager.dispose();
 	}
 	
 	
 	
-	/*---- GAME TEXTURES ----*/
+	/*---GAME---*/
 	
 	public void loadGameTextures(){
-		gameTextures.put("gameImage", new Texture(Gdx.files.internal("gfx/game/gameImage.png")));
+		gameManager.load("gfx/game/gameImage.png", Texture.class);
 	}
-	public Texture getGameTexture(String key) {
-		return gameTextures.get(key);
-	}
-	public void removeGameTexture(String key) {
-		Texture tex = gameTextures.get(key);
-		if(tex != null) {
-			gameTextures.remove(key);
-			tex.dispose();
-		}
-	}
-	public void removeAllGameTextures() {
-		 for(Texture tex : gameTextures.values()){
-			 tex.dispose();
-		 }
-		 gameTextures.clear();
-	}
-	
-	
-	/*---- MENU MUSIC ----*/
 	
 	public void loadGameMusic(){
-		gameMusic.put("gameMusic", Gdx.audio.newMusic(Gdx.files.internal("mfx/game/gameMusic.ogg")));
+		gameManager.load("mfx/game/gameMusic.ogg", Music.class);
 	}
 	
-	public Music getGameMusic(String key) {
-		return menuMusic.get(key);
-	}
-	public void removeGameMusic(String key) {
-		Music m = gameMusic.get(key);
-		if(m != null) {
-			gameMusic.remove(key);
-			m.dispose();
-		}
-	}
-	public void removeAllGameMusic() {
-		 for(Music m : gameMusic.values()){
-			 m.dispose();
-		 }
-		 gameMusic.clear();
-	}
-	
-	
-	/*---- MENU SOUNDS ----*/
-
 	public void loadGameSounds() {
-		gameSounds.put("gameClick", Gdx.audio.newSound(Gdx.files.internal("mfx/game/gameClick.ogg")));
+		gameManager.load("mfx/game/gameClick.ogg", Sound.class);
 	}
-	public Sound getGameSound(String key) {
-		return gameSounds.get(key);
+	
+	public <T> T getGameResource(String key) {
+		return gameManager.get(key);
 	}
-	public void removeGameSound(String key) {
-		Sound sound = gameSounds.get(key);
-		if(sound != null) {
-			gameSounds.remove(key);
-			sound.dispose();
-		}
+	
+	public void unloadGameResource(String key) {
+		if(gameManager.get(key) != null)
+			gameManager.unload(key);
 	}
-	public void removeAllGameSounds() {
-		 for(Sound s : gameSounds.values()){
-			 s.dispose();
-		 }
-		 gameSounds.clear();
+	
+	public void unloadAllGameResources() {
+		gameManager.clear();
+		 //gameManager.dispose();
 	}
+	
 	
 	/*---OTHER---*/
 	public static ResourcesManager getInstance(){ return INSTANCE; }
 	
     public static void prepareManager(Runner runner){
     	getInstance().runner = runner;
-    	
-    	getInstance().menuTextures = new HashMap<String, Texture>();
-    	getInstance().menuMusic = new HashMap<String, Music>();
-    	getInstance().menuSounds = new HashMap<String, Sound>();
-    	
-    	getInstance().gameTextures = new HashMap<String, Texture>();
-    	getInstance().gameMusic = new HashMap<String, Music>();
-    	getInstance().gameSounds = new HashMap<String, Sound>();
+    	getInstance().menuManager = new AssetManager();
+    	getInstance().gameManager = new AssetManager();
+    	getInstance().splashManager = new AssetManager();
     }
+    
+    public AssetManager getMenuManager(){ return this.menuManager; }
+    public AssetManager getGameManager(){ return this.gameManager; }
+    public AssetManager getSplashManager(){ return this.splashManager; }
 }

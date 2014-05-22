@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Runner extends Game{
 
-	public static final int V_WIDTH = 640;
+	public static final int V_WIDTH = 800;
 	public static final int V_HEIGHT = 480;
 	
 	private SpriteBatch sb;
@@ -24,7 +24,7 @@ public class Runner extends Game{
 		ScreensManager.prepareManager(this);
 		ResourcesManager.prepareManager(this);
 		
-		ScreensManager.getInstance().createMenuScreen();
+		ScreensManager.getInstance().createSplashScreen();
 	}
 
 	@Override

@@ -1,49 +1,52 @@
 package com.apptogo.runner.handlers;
 
-import java.util.Stack;
-
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.GameScreen;
+import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MenuScreen;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.apptogo.runner.screens.SplashScreen;
 
-//wydaje mi sie ze fajnie byloby to przerobic ostatecznie na singletona tak jak bylo w runalien
 public class ScreensManager {
 	
 	private static final ScreensManager INSTANCE = new ScreensManager();
 	
 	private Runner runner;
+	
+	private BaseScreen splashScreen;
 	private BaseScreen menuScreen;
 	private BaseScreen gameScreen;
+	private BaseScreen loadingScreen;
 	
-	private ScreenType currentScreenType = ScreenType.SCREEN_MENU;
+	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
 	
 	private ResourcesManager resourcesManager = ResourcesManager.getInstance();
 
 	public enum ScreenType{
-		SCREEN_MENU, SCREEN_GAME
+		SCREEN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING
+	}
+	
+	/*---SPLASH SCREEN---*/
+	public void createSplashScreen(){
+		splashScreen = new SplashScreen(runner);
+		setScreen(splashScreen);
+	}
+	
+	/*---SPLASH SCREEN---*/
+	public void createLoadingScreen(ScreenType screenToLoad){
+		loadingScreen = new LoadingScreen(runner, screenToLoad);
+		setScreen(loadingScreen);
 	}
 	
 	/*---MENU SCREEN---*/
 	public void createMenuScreen(){
-		resourcesManager.loadMenuTextures();
-		resourcesManager.loadMenuMusic();
-		resourcesManager.loadMenuSounds();
-		
 		menuScreen = new MenuScreen(runner);
 		setScreen(menuScreen);
 	}
 	
 	/*---GAME SCREEN---*/
 	public void createGameScreen(){
-		resourcesManager.loadGameTextures();
-		resourcesManager.loadGameMusic();
-		resourcesManager.loadGameSounds();
-		
 		gameScreen = new GameScreen(runner);
 		setScreen(gameScreen);
 	}
