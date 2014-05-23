@@ -9,21 +9,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SplashScreen extends BaseScreen{	
-    
-	private Image splashTexture;
-	private Image background;
-	private Image frameBackground;
-	private Image frame;
-	private Image bar;
-	private Image hidden;
 	
 	private Stage stage;
 	private Viewport viewport;
@@ -31,38 +22,25 @@ public class SplashScreen extends BaseScreen{
 	
 	private ProgressBar progressBar;
 	
-	float startX, endX, percent;
+	float percent;
 	
 	public SplashScreen(Runner runner){
 		super(runner);	
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        progressBar = new ProgressBar(0f, 1f, 0.001f, false, skin);
-
 	}
 	
 	@Override
 	public void show() {
+	
 		ResourcesManager.getInstance().loadSplashTextures();
 		ResourcesManager.getInstance().getSplashManager().finishLoading();
 		
-		
+		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        progressBar = new ProgressBar(0f, 1f, 0.001f, false, skin);
+        
 		stage = new Stage();
-		viewport = new FitViewport(runner.V_WIDTH, runner.V_HEIGHT, camera);
+		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, camera);
+		stage.setViewport(viewport);
 		
-		/*
-		splashTexture = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/splash.png"));
-		background = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/background.png"));
-		frameBackground = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/frame-background.png"));
-		frame = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/frame.png"));
-		bar = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/bar.png"));
-		hidden = new Image((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/hidden.png"));
-		
-		stage.addActor(splashTexture);
-		stage.addActor(background);
-		stage.addActor(frameBackground);
-		stage.addActor(frame);
-		stage.addActor(bar);
-		*/
 		stage.addActor(progressBar);
         ResourcesManager.getInstance().loadMenuMusic();
         ResourcesManager.getInstance().loadMenuSounds();
@@ -77,18 +55,11 @@ public class SplashScreen extends BaseScreen{
 		if(ResourcesManager.getInstance().getMenuManager().update()) {
 			ScreensManager.getInstance().createMenuScreen();
 		}
-		
-		float progress = ResourcesManager.getInstance().getMenuManager().getProgress();
-		Logger.log(this, "progress: " + progress);
-		
+
 		percent = Interpolation.linear.apply(percent, ResourcesManager.getInstance().getMenuManager().getProgress(), 0.1f);
 		progressBar.setValue(percent);
-		/*
-		hidden.setX(startX + endX * percent);
-		frameBackground.setX(hidden.getX());
-		frameBackground.setWidth(450 - 450 * percent);
-		frameBackground.invalidate();
-		*/
+		Logger.log(this, "progress: " + percent);
+		
 		stage.act();
 		stage.draw();
 	}
@@ -102,19 +73,6 @@ public class SplashScreen extends BaseScreen{
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-		/*
-		background.setSize(width, height);
-		splashTexture.setPosition(runner.V_WIDTH/2 - splashTexture.getWidth()/2, runner.V_HEIGHT/2 - splashTexture.getHeight()/2 + 100);
-		frame.setPosition(stage.getWidth() - frame.getWidth()/2, stage.getHeight() - frame.getHeight()/2 -100);
-		bar.setPosition(frame.getX(), frame.getY());
-		hidden.setPosition(bar.getX(), bar.getY());
-		
-		startX = hidden.getX();
-		endX = 440;
-		
-		frameBackground.setSize(450, 50);
-		frameBackground.setPosition(hidden.getX(), hidden.getY());
-		*/
 	}
 
 	@Override

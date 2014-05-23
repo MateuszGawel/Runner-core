@@ -1,6 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Screen;

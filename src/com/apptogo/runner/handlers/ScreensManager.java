@@ -20,8 +20,6 @@ public class ScreensManager {
 	
 	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
-	
-	private ResourcesManager resourcesManager = ResourcesManager.getInstance();
 
 	public enum ScreenType{
 		SCREEN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING
