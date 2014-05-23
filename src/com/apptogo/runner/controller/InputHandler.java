@@ -1,4 +1,4 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.controller;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;

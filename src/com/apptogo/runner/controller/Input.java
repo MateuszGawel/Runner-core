@@ -1,4 +1,4 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.controller;
 
 public class Input {
 

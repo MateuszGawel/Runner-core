@@ -1,7 +1,7 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.Input;
-import com.apptogo.runner.handlers.InputHandler;
+import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;

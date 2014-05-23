@@ -3,7 +3,7 @@ package com.apptogo.runner.world;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Player;
-import com.apptogo.runner.handlers.Input;
+import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
