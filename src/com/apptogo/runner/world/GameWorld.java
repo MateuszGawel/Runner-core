@@ -1,6 +1,8 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.controller.Input;
@@ -8,6 +10,7 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -27,6 +30,8 @@ public class GameWorld {
 	public Player player;
 	public OrthographicCamera camera;
 	
+	public RayHandler rayHandler;
+	
 	public GameWorld(){
 		world = new World(GRAVITY, true);
 		stage = new Stage();
@@ -45,6 +50,11 @@ public class GameWorld {
 		
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
+		
+		rayHandler = new RayHandler(world);
+		//rayHandler.setCombinedMatrix(camera.combined);
+		
+		new PointLight(rayHandler, 5000, Color.CYAN, 20, 400 / PPM, 240 / PPM);
 	}
 	
 	public void handleInput(){

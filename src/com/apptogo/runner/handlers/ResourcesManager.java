@@ -51,7 +51,7 @@ public class ResourcesManager {
 	
 	public void loadMenuTextures(){
 		menuManager.load("gfx/menu/playButton.png", Texture.class);
-		menuManager.load("gfx/menu/big1.png", Texture.class);
+		//menuManager.load("gfx/menu/big1.png", Texture.class);
 		//menuManager.load("gfx/menu/big2.png", Texture.class);
 	/*	menuManager.load("gfx/menu/big3.png", Texture.class);
 		menuManager.load("gfx/menu/big4.png", Texture.class);

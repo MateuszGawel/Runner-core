@@ -4,6 +4,10 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import java.util.Iterator;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -98,6 +102,8 @@ public class TiledMapLoader {
 				}
 			}
 		}
+		
+		
 	}
 	
 	
@@ -113,7 +119,6 @@ public class TiledMapLoader {
 		                 0.0f);
 		return polygon;
 	}
-	
 	private Shape getShape(PolygonMapObject obj){
 		PolygonShape polygon = new PolygonShape();
 		float[] vertices = obj.getPolygon().getTransformedVertices();
@@ -127,7 +132,6 @@ public class TiledMapLoader {
 		polygon.set(worldVertices);
 		return polygon;
 	}
-	
 	private Shape getShape(PolylineMapObject obj){
 		float[] vertices = obj.getPolyline().getTransformedVertices();
 		Vector2[] worldVertices = new Vector2[vertices.length / 2];
@@ -142,7 +146,6 @@ public class TiledMapLoader {
 		chain.createChain(worldVertices);
 		return chain;
 	}
-	
 	private Shape getShape(EllipseMapObject obj){
 		Ellipse ellipse = obj.getEllipse();
 		CircleShape ellipseShape = new CircleShape();

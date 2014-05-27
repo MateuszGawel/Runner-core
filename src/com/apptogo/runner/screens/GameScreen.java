@@ -1,5 +1,9 @@
 package com.apptogo.runner.screens;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -7,6 +11,7 @@ import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -34,6 +39,7 @@ public class GameScreen extends BaseScreen{
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
 		Gdx.input.setInputProcessor(new InputHandler());
+				
 	}
 	
 	@Override
