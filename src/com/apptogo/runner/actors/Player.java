@@ -132,7 +132,7 @@ public class Player extends Actor{
 		
 		//wyliczam predkosc poczatkowa z rzutu pionowego
 		float v0 = (float) sqrt( 20 * (double)meters ); //to rzutowanie to paranoja ale tak jest jak uzywamy floata ;P	
-		
+		System.out.println("MASA: "+playerBody.getMass() );
 		playerBody.setLinearVelocity(0, v0); //applyLinearImpulse(new Vector2(0, v0), playerBody.getWorldCenter(), true);
 	}
 	

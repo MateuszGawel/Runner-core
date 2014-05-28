@@ -11,7 +11,7 @@ public class Materials {
 	
 	static
 	{
-		HumanBody = createFixtureDef(1000f, 0f, 0f);
+		HumanBody = createFixtureDef(30f, 0f, 0f);
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution)

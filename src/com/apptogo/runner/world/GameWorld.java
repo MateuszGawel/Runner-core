@@ -22,7 +22,7 @@ public class GameWorld {
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
-	public static final Vector2 GRAVITY = new Vector2(0f, -9.2f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -9.81f);
 	
 	public World world;
 	public Stage stage;
