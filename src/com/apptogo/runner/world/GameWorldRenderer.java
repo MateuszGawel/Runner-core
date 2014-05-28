@@ -1,11 +1,11 @@
 package com.apptogo.runner.world;
 
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
-
 import com.apptogo.runner.handlers.TiledMapLoader;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
@@ -16,6 +16,7 @@ public class GameWorldRenderer {
     OrthographicCamera camera;  
     Box2DDebugRenderer debugRenderer;
     TiledMapRenderer tiledMapRenderer;
+    private SpriteBatch sb;
   
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
@@ -30,6 +31,8 @@ public class GameWorldRenderer {
         camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;  
         
         tiledMapRenderer = TiledMapLoader.getInstance().getMapRenderer();
+        
+        sb = new SpriteBatch();
     }  
     
     public void render(){
@@ -51,5 +54,11 @@ public class GameWorldRenderer {
     	}
     	
     	gameWorld.stage.draw();
+    	
+    	//FPS render
+    	sb.begin();
+    	BitmapFont font = new BitmapFont();
+    	font.draw(sb, "FPS: "+String.valueOf( Gdx.graphics.getFramesPerSecond() ), 10f, 460f);
+    	sb.end();
     }
 }

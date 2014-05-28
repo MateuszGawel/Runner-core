@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import static java.lang.Math.*;
 
 public class Player extends Actor{
 
@@ -73,10 +75,7 @@ public class Player extends Actor{
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(16 / PPM, 40 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
 		
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0f;
-		fixtureDef.restitution = 0.0f;
+		FixtureDef fixtureDef = Materials.HumanBody;
 		fixtureDef.shape = shape;
 		
 		playerBody = world.createBody(bodyDef);
@@ -129,8 +128,12 @@ public class Player extends Actor{
 		return temp;
 	}
 	
-	public void jump(){
-		playerBody.applyForceToCenter(0, 1000, true);
+	public void jump(float meters){
+		
+		//wyliczam predkosc poczatkowa z rzutu pionowego
+		float v0 = (float) sqrt( 20 * (double)meters ); //to rzutowanie to paranoja ale tak jest jak uzywamy floata ;P	
+		
+		playerBody.setLinearVelocity(0, v0); //applyLinearImpulse(new Vector2(0, v0), playerBody.getWorldCenter(), true);
 	}
 	
 	public void startRunning(){

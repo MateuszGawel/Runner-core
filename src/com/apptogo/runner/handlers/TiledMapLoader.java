@@ -32,7 +32,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 
 public class TiledMapLoader {	
@@ -57,6 +56,11 @@ public class TiledMapLoader {
 		//enabling lights if enableLight parameter is set
 		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
 		{
+			if( "true".equals( (String)tiledMap.getProperties().get("enableGammaCorrection") ) )
+			{
+				//RayHandler.setGammaCorrection(true);
+			}
+			
 			rayHandler = new RayHandler(world);		
 			
 			if( "true".equals( (String)tiledMap.getProperties().get("enableAmbientLight") ) )
@@ -92,22 +96,21 @@ public class TiledMapLoader {
 				while(objectIt.hasNext()) 
 				{
 					MapObject object = objectIt.next();
-					
-					if( "light".equals( object.getName() ) )
+						
+					if( object.getName() != null && object.getName().toString().equals("light") )
 					{
-						float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
-						float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
-						int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
-						float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
-						
-						String[] colors = ( (String)object.getProperties().get("lightColor") ).split(",");
-						
-						float r =  Float.parseFloat(colors[0]);
-						float g = Float.parseFloat(colors[1]);
-						float b = Float.parseFloat(colors[2]);
-						float a = Float.parseFloat(colors[3]);
-						
-						new PointLight(rayHandler, rays, new Color(r,g,b,a), distance, x, y);
+						if( rayHandler != null )
+						{
+							float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
+							float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
+							int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
+							float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
+							
+							Color lightColor = object.getColor();
+							lightColor.a = Float.parseFloat( (String)object.getProperties().get("opacity") );
+							
+							new PointLight(rayHandler, rays, lightColor, distance, x, y);
+						}
 					}
 					else
 					{
