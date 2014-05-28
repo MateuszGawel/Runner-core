@@ -33,6 +33,7 @@ public class GameWorldRenderer {
     }  
     
     public void render(){
+    	
 		tiledMapRenderer.setView(camera);
 	    tiledMapRenderer.render();
 	    
@@ -42,7 +43,12 @@ public class GameWorldRenderer {
     	
     	debugRenderer.render(gameWorld.world, camera.combined);
     	
-    	gameWorld.rayHandler.updateAndRender();
+    	//rendering lights
+    	if(gameWorld.rayHandler != null)
+    	{
+    		gameWorld.rayHandler.setCombinedMatrix(camera.combined);
+    		gameWorld.rayHandler.updateAndRender();
+    	}
     	
     	gameWorld.stage.draw();
     }

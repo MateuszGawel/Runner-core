@@ -51,10 +51,7 @@ public class GameWorld {
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
 		
-		rayHandler = new RayHandler(world);
-		//rayHandler.setCombinedMatrix(camera.combined);
-		
-		new PointLight(rayHandler, 5000, Color.CYAN, 20, 400 / PPM, 240 / PPM);
+		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 	}
 	
 	public void handleInput(){

@@ -32,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 
 public class TiledMapLoader {	
@@ -42,6 +43,8 @@ public class TiledMapLoader {
 	private Array<Body> bodies = new Array<Body>();
 	private FixtureDef defaultFixture;
 	
+	private RayHandler rayHandler;
+	
 	public void loadMap(String mapPath){
 		TiledMap tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
@@ -50,6 +53,24 @@ public class TiledMapLoader {
 		defaultFixture.density = 1.0f;
 		defaultFixture.friction = 0.8f;
 		defaultFixture.restitution = 0.0f;
+		
+		//enabling lights if enableLight parameter is set
+		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
+		{
+			rayHandler = new RayHandler(world);		
+			
+			if( "true".equals( (String)tiledMap.getProperties().get("enableAmbientLight") ) )
+			{
+				String[] colors = ( (String)tiledMap.getProperties().get("ambientLightColor") ).split(",");
+				
+				rayHandler.setAmbientLight(new Color( Float.parseFloat(colors[0]), 
+													  Float.parseFloat(colors[1]),
+													  Float.parseFloat(colors[2]),
+													  Float.parseFloat(colors[3]) ));
+			}
+			
+		}
+		else rayHandler = null;
 		
 		createPhysics(tiledMap);
 	}
@@ -71,33 +92,53 @@ public class TiledMapLoader {
 				while(objectIt.hasNext()) 
 				{
 					MapObject object = objectIt.next();
-		
-					if (object instanceof TextureMapObject){
-						continue;
-					}
 					
-					//body definition
-					BodyDef bodyDef = new BodyDef();
-					bodyDef.type = BodyDef.BodyType.StaticBody;
-					
-					//shape definition
-					Shape shape;
-					     if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
-					else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
-					else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
-					else{                                           
-							try
-					     	{
-								shape = getShape( (RectangleMapObject)object );
-					     	}
-					     	catch(Exception e) { continue; } //rozpaczliwa proba przerzutowania byle czego na kwadraciaki :) niestety nie wszystko sie da [np Ellipse... sie nie da] wiec zrobilem tak
+					if( "light".equals( object.getName() ) )
+					{
+						float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
+						float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
+						int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
+						float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
+						
+						String[] colors = ( (String)object.getProperties().get("lightColor") ).split(",");
+						
+						float r =  Float.parseFloat(colors[0]);
+						float g = Float.parseFloat(colors[1]);
+						float b = Float.parseFloat(colors[2]);
+						float a = Float.parseFloat(colors[3]);
+						
+						new PointLight(rayHandler, rays, new Color(r,g,b,a), distance, x, y);
 					}
-					//creating body
-					defaultFixture.shape = shape;
-					Body body = world.createBody(bodyDef);
-					body.createFixture(defaultFixture);
+					else
+					{
 		
-					bodies.add(body);
+						if (object instanceof TextureMapObject){
+							continue;
+						}
+						
+						//body definition
+						BodyDef bodyDef = new BodyDef();
+						bodyDef.type = BodyDef.BodyType.StaticBody;
+						
+						//shape definition
+						Shape shape;
+						     if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
+						else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
+						else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
+						else{                                           
+								try
+						     	{
+									shape = getShape( (RectangleMapObject)object );
+						     	}
+						     	catch(Exception e) { continue; } //rozpaczliwa proba przerzutowania byle czego na kwadraciaki :) niestety nie wszystko sie da [np Ellipse... sie nie da] wiec zrobilem tak
+						}
+						//creating body
+						defaultFixture.shape = shape;
+						Body body = world.createBody(bodyDef);
+						body.createFixture(defaultFixture);
+			
+						bodies.add(body);
+					}
 		
 				}
 			}
@@ -170,4 +211,5 @@ public class TiledMapLoader {
 	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	public void setWorld(World world){ this.world = world; }
 	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
+	public RayHandler getRayHandler(){ return rayHandler; }
 }
