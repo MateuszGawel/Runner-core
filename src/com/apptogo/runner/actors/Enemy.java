@@ -2,10 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.vars.Materials;
@@ -23,10 +19,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-
 import static java.lang.Math.*;
 
-public class Player extends Actor{
+public class Enemy extends Actor{
 
 	private World world;
 	private float stateTime;
@@ -61,7 +56,7 @@ public class Player extends Actor{
 	Animation standupAnimation;
 	
 	
-	public Player(World world){
+	public Enemy(World world){
 		this.world = world;
 		createPlayerBody();
 		createPlayerAnimation();
@@ -80,7 +75,7 @@ public class Player extends Actor{
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(16 / PPM, 40 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
 		
-		FixtureDef fixtureDef = Materials.playerBody;
+		FixtureDef fixtureDef = Materials.enemyBody;
 		fixtureDef.shape = shape;
 		
 		playerBody = world.createBody(bodyDef);
@@ -88,7 +83,7 @@ public class Player extends Actor{
 	}
 	
 	private void createPlayerAnimation(){
-		Texture playerSheet = (Texture)ResourcesManager.getInstance().getGameResource("gfx/game/playerSheet.png");
+		Texture playerSheet = (Texture)ResourcesManager.getInstance().getGameResource("gfx/game/enemySheet.png");
 		TextureRegion[][] playerRegionsTemp = TextureRegion.split(playerSheet, playerSheet.getWidth()/12, playerSheet.getHeight()/11);
 		
 		playerFrames = new TextureRegion[SHEET_ROWS * SHEET_COLUMNS];
@@ -137,36 +132,11 @@ public class Player extends Actor{
 		float v0 = (float) sqrt( 20 * meters );
 		System.out.println("MASA: "+playerBody.getMass());
 		playerBody.setLinearVelocity(0, v0); 
-		notifyJump();
-	}
-	
-	private void notifyJump(){
-		JSONObject data = new JSONObject();  
-	    try {
-			data.put("jump", true);
-			data.put("startRunning", false);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}    
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
-	}
-	
-	private void notifyStartRunning(){
-		JSONObject data = new JSONObject();  
-	    try {
-			data.put("startRunning", true);
-			data.put("jump", false);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}    
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
 	}
 	
 	public void startRunning(){
 		currentState = PlayerState.RUNNING;
-		notifyStartRunning();
+		
 	}
 	
 	@Override
@@ -189,7 +159,6 @@ public class Player extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-
 		super.draw(batch, parentAlpha);
 		batch.draw(currentFrame, getX() - (60 / PPM), getY() - (42 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}

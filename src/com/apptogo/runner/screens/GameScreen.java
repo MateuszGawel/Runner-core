@@ -1,11 +1,18 @@
 package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.apptogo.runner.appwarp.WarpController;
+import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.controller.InputHandler;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
@@ -17,7 +24,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public class GameScreen extends BaseScreen{
+public class GameScreen extends BaseScreen implements WarpListener{
 	
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
@@ -28,6 +35,7 @@ public class GameScreen extends BaseScreen{
     
 	public GameScreen(Runner runner){
 		super(runner);	
+		WarpController.getInstance().setListener(this);
 	}
 	
 	@Override
@@ -57,7 +65,6 @@ public class GameScreen extends BaseScreen{
 		
 		worldRenderer.render();
 		guiStage.draw();
-		
 		Input.update();
 	}
 	
@@ -99,6 +106,49 @@ public class GameScreen extends BaseScreen{
 	@Override
 	public ScreenType getSceneType() {
 		return ScreenType.SCREEN_GAME;
+	}
+
+	@Override
+	public void onWaitingStarted(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameStarted(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameFinished(int code, boolean isRemote) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameUpdateReceived(String message) {
+		try {
+			JSONObject data = new JSONObject(message);
+			boolean jump = (boolean)data.getBoolean("jump");
+			boolean startRunning = (boolean)data.getBoolean("startRunning");
+			if(jump){
+				world.enemy.jump(2);
+				Logger.log(this, "enemy skok");
+			}
+			if(startRunning)
+				world.enemy.startRunning();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 

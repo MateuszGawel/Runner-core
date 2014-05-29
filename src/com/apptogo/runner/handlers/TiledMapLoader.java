@@ -7,6 +7,7 @@ import java.util.Iterator;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -40,7 +41,7 @@ public class TiledMapLoader {
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
 	private Array<Body> bodies = new Array<Body>();
-	private FixtureDef defaultFixture;
+	private FixtureDef groundFixture;
 	
 	private RayHandler rayHandler;
 	
@@ -48,10 +49,7 @@ public class TiledMapLoader {
 		TiledMap tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
 		
-		defaultFixture = new FixtureDef();
-		defaultFixture.density = 1.0f;
-		defaultFixture.friction = 0.8f;
-		defaultFixture.restitution = 0.0f;
+		groundFixture = Materials.groundBody;
 		
 		//enabling lights if enableLight parameter is set
 		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
@@ -136,9 +134,9 @@ public class TiledMapLoader {
 						     	catch(Exception e) { continue; } //rozpaczliwa proba przerzutowania byle czego na kwadraciaki :) niestety nie wszystko sie da [np Ellipse... sie nie da] wiec zrobilem tak
 						}
 						//creating body
-						defaultFixture.shape = shape;
+						groundFixture.shape = shape;
 						Body body = world.createBody(bodyDef);
-						body.createFixture(defaultFixture);
+						body.createFixture(groundFixture);
 			
 						bodies.add(body);
 					}

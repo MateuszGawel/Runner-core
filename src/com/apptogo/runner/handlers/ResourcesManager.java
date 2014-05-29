@@ -89,6 +89,7 @@ public class ResourcesManager {
 	public void loadGameTextures(){
 		gameManager.load("gfx/game/gameImage.png", Texture.class);
 		gameManager.load("gfx/game/playerSheet.png", Texture.class);
+		gameManager.load("gfx/game/enemySheet.png", Texture.class);
 	}
 	
 	public void loadGameMusic(){

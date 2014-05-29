@@ -5,6 +5,7 @@ import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MenuScreen;
+import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 
 public class ScreensManager {
@@ -15,6 +16,7 @@ public class ScreensManager {
 	
 	private BaseScreen splashScreen;
 	private BaseScreen menuScreen;
+	private BaseScreen multiplayerScreen;
 	private BaseScreen gameScreen;
 	private BaseScreen loadingScreen;
 	
@@ -22,7 +24,7 @@ public class ScreensManager {
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
-		SCREEN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING
+		SCREEN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER
 	}
 	
 	/*---SPLASH SCREEN---*/
@@ -41,6 +43,12 @@ public class ScreensManager {
 	public void createMenuScreen(){
 		menuScreen = new MenuScreen(runner);
 		setScreen(menuScreen);
+	}
+	
+	/*---MULTIPLAYER SCREEN---*/
+	public void createMultiplayerScreen(){
+		multiplayerScreen = new MultiplayerScreen(runner);
+		setScreen(multiplayerScreen);
 	}
 	
 	/*---GAME SCREEN---*/

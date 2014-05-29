@@ -1,5 +1,9 @@
 package com.apptogo.runner.screens;
 
+
+
+import com.apptogo.runner.appwarp.WarpController;
+import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -32,7 +36,7 @@ public class MenuScreen extends BaseScreen{
 	    spriteBatch.end();
 	    
 	    if(Gdx.input.justTouched())
-	    	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+	    	ScreensManager.getInstance().createMultiplayerScreen();
 		
 	}
 	
@@ -76,6 +80,5 @@ public class MenuScreen extends BaseScreen{
 	public ScreenType getSceneType() {
 		return ScreenType.SCREEN_MENU;
 	}
-
 
 }

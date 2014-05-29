@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
@@ -28,6 +29,7 @@ public class GameWorld {
 	public Stage stage;
 	public StretchViewport stretchViewport;
 	public Player player;
+	public Enemy enemy;
 	public OrthographicCamera camera;
 	
 	public RayHandler rayHandler;
@@ -44,8 +46,10 @@ public class GameWorld {
 	}
 	
 	private void createWorld(){
+		enemy = new Enemy(world);
 		player = new Player(world);
 		
+		stage.addActor(enemy);
 		stage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
