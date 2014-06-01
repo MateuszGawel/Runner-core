@@ -13,6 +13,8 @@ import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
@@ -21,7 +23,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class GameScreen extends BaseScreen implements WarpListener{
@@ -32,6 +38,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private Stage guiStage;
 	private OrthographicCamera guiCamera;
 	public StretchViewport guiStretchViewport;
+	private Image back;
     
 	public GameScreen(Runner runner){
 		super(runner);	
@@ -47,7 +54,19 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
 		Gdx.input.setInputProcessor(new InputHandler());
-				
+		
+		back = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/back.png")));
+		back.setPosition(0, 0);
+		back.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                 Logger.log(this, "BACK CLICKED");
+                 ScreensManager.getInstance().createMainMenuScreen();
+             }
+         });
+		
+		//zeby to zadzialalo to trzeba zrobic input multiplexer
+		//guiStage.addActor(back);
+		//Gdx.input.setInputProcessor(guiStage);
 	}
 	
 	@Override
@@ -66,6 +85,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		worldRenderer.render();
 		guiStage.draw();
 		Input.update();
+		Logger.log(this, Gdx.graphics.getFramesPerSecond());
 	}
 	
 	@Override

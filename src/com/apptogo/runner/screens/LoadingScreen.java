@@ -24,7 +24,7 @@ public class LoadingScreen extends BaseScreen{
 	        ResourcesManager.getInstance().loadGameSounds();
 	        ResourcesManager.getInstance().loadGameTextures();
 		}
-		else if(screenToLoad == ScreenType.SCREEN_MENU){
+		else if(screenToLoad == ScreenType.SCREEN_MAIN_MENU){
 	        ResourcesManager.getInstance().loadMenuMusic();
 	        ResourcesManager.getInstance().loadMenuSounds();
 	        ResourcesManager.getInstance().loadMenuTextures();
@@ -41,14 +41,14 @@ public class LoadingScreen extends BaseScreen{
 		Gdx.gl.glClearColor(0, 0.5f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if(screenToLoad == ScreenType.SCREEN_MENU && ResourcesManager.getInstance().getMenuManager().update()) {
-			ScreensManager.getInstance().createMenuScreen();
+		if(screenToLoad == ScreenType.SCREEN_MAIN_MENU && ResourcesManager.getInstance().getMenuManager().update()) {
+			ScreensManager.getInstance().createMainMenuScreen();
 		}
 		else if(screenToLoad == ScreenType.SCREEN_GAME && ResourcesManager.getInstance().getGameManager().update()) {
 			ScreensManager.getInstance().createGameScreen();
 		}
 		float progress = 0;
-		if(screenToLoad == ScreenType.SCREEN_MENU)
+		if(screenToLoad == ScreenType.SCREEN_MAIN_MENU)
 			progress = ResourcesManager.getInstance().getMenuManager().getProgress();
 		else if(screenToLoad == ScreenType.SCREEN_GAME)
 			progress = ResourcesManager.getInstance().getGameManager().getProgress();

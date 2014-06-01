@@ -51,9 +51,9 @@ public class SplashScreen extends BaseScreen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		if(ResourcesManager.getInstance().getMenuManager().update()) {
-			ScreensManager.getInstance().createMenuScreen();
+			ScreensManager.getInstance().createMainMenuScreen();
 		}
 
 		percent = Interpolation.linear.apply(percent, ResourcesManager.getInstance().getMenuManager().getProgress(), 0.1f);

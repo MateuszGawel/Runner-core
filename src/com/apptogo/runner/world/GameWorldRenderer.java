@@ -47,18 +47,14 @@ public class GameWorldRenderer {
     	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//rendering lights
+    	/*
     	if(gameWorld.rayHandler != null)
     	{
     		gameWorld.rayHandler.setCombinedMatrix(camera.combined);
     		gameWorld.rayHandler.updateAndRender();
     	}
-    	
+    	*/
     	gameWorld.stage.draw();
-    	
-    	//FPS render
-    	sb.begin();
-    	BitmapFont font = new BitmapFont();
-    	font.draw(sb, "FPS: "+String.valueOf( Gdx.graphics.getFramesPerSecond() ), 10f, 460f);
-    	sb.end();
+    
     }
 }

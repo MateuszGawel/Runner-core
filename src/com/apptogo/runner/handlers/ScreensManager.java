@@ -2,9 +2,11 @@ package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
+import com.apptogo.runner.screens.CharacterChooseScreen;
 import com.apptogo.runner.screens.GameScreen;
+import com.apptogo.runner.screens.LevelChooseScreen;
 import com.apptogo.runner.screens.LoadingScreen;
-import com.apptogo.runner.screens.MenuScreen;
+import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 
@@ -15,16 +17,18 @@ public class ScreensManager {
 	private Runner runner;
 	
 	private BaseScreen splashScreen;
-	private BaseScreen menuScreen;
+	private BaseScreen mainMenuScreen;
 	private BaseScreen multiplayerScreen;
 	private BaseScreen gameScreen;
 	private BaseScreen loadingScreen;
+	private BaseScreen characterChooseScreen;
+	private BaseScreen levelChooseScreen;
 	
 	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
-		SCREEN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER
+		SCREEN_MAIN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER, SCREEN_CHARACTER_CHOOSE, SCREEN_LEVEL_CHOOSE
 	}
 	
 	/*---SPLASH SCREEN---*/
@@ -39,10 +43,22 @@ public class ScreensManager {
 		setScreen(loadingScreen);
 	}
 	
-	/*---MENU SCREEN---*/
-	public void createMenuScreen(){
-		menuScreen = new MenuScreen(runner);
-		setScreen(menuScreen);
+	/*---MAIN MENU SCREEN---*/
+	public void createMainMenuScreen(){
+		mainMenuScreen = new MainMenuScreen(runner);
+		setScreen(mainMenuScreen);
+	}
+	
+	/*---CHARACTER CHOOSE SCREEN---*/
+	public void createCharacterChooseScreen(boolean multiplayer){
+		characterChooseScreen = new CharacterChooseScreen(runner, multiplayer);
+		setScreen(characterChooseScreen);
+	}
+	
+	/*---LEVEL CHOOSE SCREEN---*/
+	public void createLevelChooseScreen(){
+		levelChooseScreen = new LevelChooseScreen(runner);
+		setScreen(levelChooseScreen);
 	}
 	
 	/*---MULTIPLAYER SCREEN---*/

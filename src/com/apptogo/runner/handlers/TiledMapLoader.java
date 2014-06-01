@@ -70,7 +70,6 @@ public class TiledMapLoader {
 													  Float.parseFloat(colors[2]),
 													  Float.parseFloat(colors[3]) ));
 			}
-			
 		}
 		else rayHandler = null;
 		
