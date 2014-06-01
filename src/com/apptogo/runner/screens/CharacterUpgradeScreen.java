@@ -1,13 +1,12 @@
 package com.apptogo.runner.screens;
 
 
-
+import static com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,22 +20,22 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 
 //ten screen bedzie do przepisania na scene2d ui
-public class CharacterChooseScreen extends BaseScreen{
+public class CharacterUpgradeScreen extends BaseScreen{
 	boolean multiplayer;
 	
-	private Image playerOne;
-	private Image playerTwo;
+	private Image choosenCharacterImage;
+	private GameCharacter choosenCharacter;
 	private Image back;
+	private Image start;
 	private Stage stage;
 	private StretchViewport viewport;
 	private Skin skin;
 	private Label screenName;
-	private Label playerOneName;
-	private Label playerTwoName;
 	private Label multiplayerLabel;
 	
-	public CharacterChooseScreen(Runner runner, boolean multiplayer){
+	public CharacterUpgradeScreen(Runner runner, boolean multiplayer, GameCharacter choosenCharacter){
 		super(runner);	
+		this.choosenCharacter = choosenCharacter;
 		this.multiplayer = multiplayer;
 		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage = new Stage(viewport);
@@ -46,40 +45,32 @@ public class CharacterChooseScreen extends BaseScreen{
 	public void show() {
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		
-		playerOne = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player1.png")));
-		playerOne.setPosition(Runner.SCREEN_WIDTH/2 - playerOne.getWidth() - 50, Runner.SCREEN_HEIGHT/2 - 100);
-		playerOne.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                 Logger.log(this, "PLAYER ONE CLICKED");
-                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.MASTER_OF_DISASTER);
-            }
-         });
-
-		playerTwo = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player2.png")));
-		playerTwo.setPosition(Runner.SCREEN_WIDTH/2 + 50, Runner.SCREEN_HEIGHT/2 - 100);
-		playerTwo.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                 Logger.log(this, "PLAYER TWO CLICKED");
-                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.NAKED_MAN);
-                 /*
-                 if(!multiplayer)
-                	 ScreensManager.getInstance().createLevelChooseScreen();
-                 else
-                	 ScreensManager.getInstance().createMultiplayerScreen();
-                	 */
-             }
-         });
+		choosenCharacterImage = new Image(((Texture)ResourcesManager.getInstance().getMenuResource(choosenCharacter)));
+		choosenCharacterImage.setPosition(Runner.SCREEN_WIDTH/2 - choosenCharacterImage.getWidth()/2, Runner.SCREEN_HEIGHT/2 - 100);
+		
 		
 		back = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/back.png")));
 		back.setPosition(0, 0);
 		back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                  Logger.log(this, "BACK CLICKED");
-                 ScreensManager.getInstance().createMainMenuScreen();
+                 ScreensManager.getInstance().createCharacterChooseScreen(multiplayer);
              }
          });
 		
-		screenName = new Label("CHOOSE YOUR CHARACTER", skin);
+		start = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/start.png")));
+		start.setPosition(Runner.SCREEN_WIDTH/2 - start.getWidth()/2, Runner.SCREEN_HEIGHT/2 - 200);
+		start.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                 Logger.log(this, "START CLICKED");
+                 if(!multiplayer)
+                	 ScreensManager.getInstance().createLevelChooseScreen();
+                 else
+                	 ScreensManager.getInstance().createMultiplayerScreen();
+             }
+         });
+		
+		screenName = new Label("UPGRADE YOUR CHARACTER", skin);
 		screenName.setPosition(Runner.SCREEN_WIDTH/2 - screenName.getWidth()/2, Runner.SCREEN_HEIGHT/2 + 200);
 		
 		if(multiplayer)
@@ -88,19 +79,11 @@ public class CharacterChooseScreen extends BaseScreen{
 			multiplayerLabel = new Label("SINGLEPLAYER", skin);
 		multiplayerLabel.setPosition(Runner.SCREEN_WIDTH/2 - multiplayerLabel.getWidth()/2, Runner.SCREEN_HEIGHT/2 + 180);
 		
-		playerOneName = new Label("MASTER OF DISASTER", skin);
-		playerOneName.setPosition(playerOne.getX() + playerOne.getWidth()/2 - playerOneName.getWidth()/2, Runner.SCREEN_HEIGHT/2 - 150);
-		
-		playerTwoName = new Label("NAKED MAN", skin);
-		playerTwoName.setPosition(playerTwo.getX() + playerTwo.getWidth()/2 - playerTwoName.getWidth()/2 , Runner.SCREEN_HEIGHT/2 - 150);
-		
-		stage.addActor(playerOne);
-		stage.addActor(playerTwo);
 		stage.addActor(back);
+		stage.addActor(choosenCharacterImage);
 		stage.addActor(screenName);
 		stage.addActor(multiplayerLabel);
-		stage.addActor(playerOneName);
-		stage.addActor(playerTwoName);
+		stage.addActor(start);
 		
 		Gdx.input.setInputProcessor(stage);
 	}

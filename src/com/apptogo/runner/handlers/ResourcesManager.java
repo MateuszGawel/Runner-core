@@ -1,5 +1,6 @@
 package com.apptogo.runner.handlers;
 
+import static com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -57,6 +58,7 @@ public class ResourcesManager {
 		menuManager.load("gfx/menu/level1.png", Texture.class);
 		menuManager.load("gfx/menu/level2.png", Texture.class);
 		menuManager.load("gfx/menu/back.png", Texture.class);
+		menuManager.load("gfx/menu/start.png", Texture.class);
 		//menuManager.load("gfx/menu/big1.png", Texture.class);
 		//menuManager.load("gfx/menu/big2.png", Texture.class);
 	/*	menuManager.load("gfx/menu/big3.png", Texture.class);
@@ -76,6 +78,15 @@ public class ResourcesManager {
 	
 	public <T> T getMenuResource(String key) {
 		return menuManager.get(key);
+	}
+	
+	public <T> T getMenuResource(GameCharacter character) {
+		if(character == GameCharacter.MASTER_OF_DISASTER)
+			return menuManager.get("gfx/menu/player1.png");
+		else if(character == GameCharacter.NAKED_MAN)
+			return menuManager.get("gfx/menu/player2.png");
+		else
+			return null;
 	}
 	
 	public void unloadMenuResource(String key) {

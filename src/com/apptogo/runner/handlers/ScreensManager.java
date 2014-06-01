@@ -3,12 +3,14 @@ package com.apptogo.runner.handlers;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CharacterChooseScreen;
+import com.apptogo.runner.screens.CharacterUpgradeScreen;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.screens.LevelChooseScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
+import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 
 public class ScreensManager {
 	
@@ -23,12 +25,13 @@ public class ScreensManager {
 	private BaseScreen loadingScreen;
 	private BaseScreen characterChooseScreen;
 	private BaseScreen levelChooseScreen;
+	private BaseScreen characterUpgradeScreen;
 	
 	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
-		SCREEN_MAIN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER, SCREEN_CHARACTER_CHOOSE, SCREEN_LEVEL_CHOOSE
+		SCREEN_MAIN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER, SCREEN_CHARACTER_CHOOSE, SCREEN_LEVEL_CHOOSE, SCREEN_CHARACTER_UPGRADE
 	}
 	
 	/*---SPLASH SCREEN---*/
@@ -59,6 +62,12 @@ public class ScreensManager {
 	public void createLevelChooseScreen(){
 		levelChooseScreen = new LevelChooseScreen(runner);
 		setScreen(levelChooseScreen);
+	}
+	
+	/*---CHARACTER UPGRADE SCREEN---*/
+	public void createCharacterUpgradeScreen(boolean multiplayer, GameCharacter choosenCharacter){
+		characterUpgradeScreen = new CharacterUpgradeScreen(runner, multiplayer, choosenCharacter);
+		setScreen(characterUpgradeScreen);
 	}
 	
 	/*---MULTIPLAYER SCREEN---*/
