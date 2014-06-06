@@ -1,17 +1,16 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,7 +22,7 @@ public class GameWorld {
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
-	public static final Vector2 GRAVITY = new Vector2(0f, -9.81f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -30f);
 	
 	public World world;
 	public Stage stage;
@@ -36,6 +35,7 @@ public class GameWorld {
 	
 	public GameWorld(){
 		world = new World(GRAVITY, true);
+		world.setContactListener(new MyContactListener(this));
 		stage = new Stage();
 		stretchViewport = new StretchViewport(WIDTH, HEIGHT, stage.getCamera());
 		stage.setViewport(stretchViewport);
@@ -53,7 +53,7 @@ public class GameWorld {
 		stage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
-		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
+		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map1.tmx");
 		
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 	}

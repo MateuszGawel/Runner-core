@@ -11,17 +11,9 @@ public class Runner extends Game{
 
 	public static final int SCREEN_WIDTH = 800;
 	public static final int SCREEN_HEIGHT = 480;
-	
-	private SpriteBatch sb;
-	private OrthographicCamera cam;	
-	
+
 	@Override
 	public void create() {	
-		
-		cam = new OrthographicCamera();
-		cam.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-		sb = new SpriteBatch();
-		
 		ScreensManager.prepareManager(this);
 		ResourcesManager.prepareManager(this);
 		ScreensManager.getInstance().createSplashScreen();
@@ -34,10 +26,8 @@ public class Runner extends Game{
 	
 	@Override
 	public void dispose() {
-		sb.dispose();
+
 	}
 	
-	public SpriteBatch getSpriteBatch() { return sb; }
-	public OrthographicCamera getCamera() { return cam; }
 
 }

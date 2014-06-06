@@ -40,17 +40,25 @@ public class TiledMapLoader {
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
-	private Array<Body> bodies = new Array<Body>();
+	private Array<Body> terrainBodies = new Array<Body>();
+	private Array<Body> killingBodies = new Array<Body>();
 	private FixtureDef groundFixture;
+	private FixtureDef killingFixture;
+	private TiledMap tiledMap;
 	
 	private RayHandler rayHandler;
 	
 	public void loadMap(String mapPath){
-		TiledMap tiledMap = new TmxMapLoader().load( mapPath );
+		tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
 		
 		groundFixture = Materials.groundBody;
-		
+		killingFixture = Materials.killingBody;
+		//initLights();
+		createPhysics(tiledMap);
+	}
+	
+	private void initLights(){
 		//enabling lights if enableLight parameter is set
 		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
 		{
@@ -72,8 +80,6 @@ public class TiledMapLoader {
 			}
 		}
 		else rayHandler = null;
-		
-		createPhysics(tiledMap);
 	}
 	
 	private void createPhysics(TiledMap map) {
@@ -81,73 +87,97 @@ public class TiledMapLoader {
 		MapLayers layers = map.getLayers();
 		Iterator<MapLayer> layersIt = layers.iterator();
 		
-		while(layersIt.hasNext()) //lece po wszystkich warstwach
+		while(layersIt.hasNext())
 		{
 			MapLayer layer = layersIt.next();
 			
-			if( "true".equals( (String)layer.getProperties().get("physicsEnabled") ) ) //ale biore tylko te ktore maja parametr physicsEnabled ustawione na "true"
+			if("true".equals((String)layer.getProperties().get("physicsEnabled")))
 			{
 				MapObjects objects = layer.getObjects();
 				Iterator<MapObject> objectIt = objects.iterator();
-		
-				while(objectIt.hasNext()) 
-				{
-					MapObject object = objectIt.next();
-						
-					if( object.getName() != null && object.getName().toString().equals("light") )
-					{
-						if( rayHandler != null )
-						{
-							float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
-							float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
-							int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
-							float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
-							
-							Color lightColor = object.getColor();
-							lightColor.a = Float.parseFloat( (String)object.getProperties().get("opacity") );
-							
-							new PointLight(rayHandler, rays, lightColor, distance, x, y);
-						}
-					}
-					else
-					{
-		
-						if (object instanceof TextureMapObject){
-							continue;
-						}
-						
-						//body definition
-						BodyDef bodyDef = new BodyDef();
-						bodyDef.type = BodyDef.BodyType.StaticBody;
-						
-						//shape definition
-						Shape shape;
-						     if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
-						else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
-						else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
-						else{                                           
-								try
-						     	{
-									shape = getShape( (RectangleMapObject)object );
-						     	}
-						     	catch(Exception e) { continue; } //rozpaczliwa proba przerzutowania byle czego na kwadraciaki :) niestety nie wszystko sie da [np Ellipse... sie nie da] wiec zrobilem tak
-						}
-						//creating body
-						groundFixture.shape = shape;
-						Body body = world.createBody(bodyDef);
-						body.createFixture(groundFixture);
-			
-						bodies.add(body);
-					}
-		
-				}
+				
+				createTerrainLayer(layer, objectIt);
+				createKillingLayer(layer, objectIt);
 			}
-		}
-		
-		
+		}	
 	}
 	
+	private void createTerrainLayer(MapLayer layer, Iterator<MapObject> objectIt){
+		if("true".equals( (String)layer.getProperties().get("terrain"))){
+			while(objectIt.hasNext()) 
+			{
+				MapObject object = objectIt.next();
+				if (object instanceof TextureMapObject){
+					continue;
+				}
+
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.type = BodyDef.BodyType.StaticBody;
+				
+				groundFixture.shape = createShape(object);
+				Body body = world.createBody(bodyDef);
+				body.createFixture(groundFixture).setUserData("terrain");
+				body.setUserData("terrain");
+				
+				terrainBodies.add(body);
+			}
+		}
+	}
 	
+	private void createKillingLayer(MapLayer layer, Iterator<MapObject> objectIt){
+		if("true".equals( (String)layer.getProperties().get("killing"))){
+			while(objectIt.hasNext()) 
+			{
+				MapObject object = objectIt.next();
+				if (object instanceof TextureMapObject){
+					continue;
+				}
+
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.type = BodyDef.BodyType.StaticBody;
+				
+				killingFixture.shape = createShape(object);
+				Body body = world.createBody(bodyDef);
+				body.createFixture(killingFixture).setUserData("killing");
+				body.setUserData("killing");
+				
+				killingBodies.add(body);
+			}
+		}
+	}
+	
+	private void createLights(MapObject object){
+		if( object.getProperties().get("light") != null && object.getName().toString().equals("light") )
+		{
+			if( rayHandler != null )
+			{
+				float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
+				float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
+				int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
+				float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
+				
+				Color lightColor = object.getColor();
+				lightColor.a = Float.parseFloat( (String)object.getProperties().get("opacity") );
+				
+				new PointLight(rayHandler, rays, lightColor, distance, x, y);
+			}
+		}
+	}
+	
+	private Shape createShape(MapObject object){
+		Shape shape = null;
+		if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
+		else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
+		else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
+		else{                                           
+				try
+		     	{
+					shape = getShape( (RectangleMapObject)object );
+		     	}
+		     	catch(Exception e) { }
+		}
+		return shape;
+	}
 	
 	private Shape getShape(RectangleMapObject obj){
 		Rectangle rectangle = obj.getRectangle();
@@ -202,10 +232,10 @@ public class TiledMapLoader {
 	
 	
 	public void destroyPhysics() {
-		for (Body body : bodies) {
+		for (Body body : terrainBodies) {
 			world.destroyBody(body);
 		}
-		bodies.clear();
+		terrainBodies.clear();
 	}
 	
 	public static TiledMapLoader getInstance(){ return INSTANCE; }

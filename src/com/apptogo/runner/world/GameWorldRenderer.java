@@ -16,23 +16,18 @@ public class GameWorldRenderer {
     OrthographicCamera camera;  
     Box2DDebugRenderer debugRenderer;
     TiledMapRenderer tiledMapRenderer;
-    private SpriteBatch sb;
-  
+
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
         this.gameWorld = gameWorld;  
         this.debugRenderer = new Box2DDebugRenderer();  
-      
-        // we obtain a reference to the game stage camera. The camera is scaled to box2d meter units  
         this.camera = (OrthographicCamera) gameWorld.stage.getCamera();  
-      
-        // center the camera on bob (optional)  
+       
         camera.position.x = gameWorld.player.getPlayerBody().getPosition().x;  
         camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;  
         
         tiledMapRenderer = TiledMapLoader.getInstance().getMapRenderer();
         
-        sb = new SpriteBatch();
     }  
     
     public void render(){
@@ -46,7 +41,7 @@ public class GameWorldRenderer {
     	
     	debugRenderer.render(gameWorld.world, camera.combined);
     	
-    	//rendering lights
+    	//œwiat³a powoduja spadek wydajnosci
     	/*
     	if(gameWorld.rayHandler != null)
     	{

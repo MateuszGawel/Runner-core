@@ -9,13 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public abstract class BaseScreen implements Screen{
 	
 	protected Runner runner;
-	protected SpriteBatch spriteBatch;
-	protected OrthographicCamera camera;
 	
 	protected BaseScreen(Runner runner) {
 		this.runner = runner;
-		spriteBatch = runner.getSpriteBatch();
-		camera = runner.getCamera();
 	}
 	
 	public abstract void handleInput();

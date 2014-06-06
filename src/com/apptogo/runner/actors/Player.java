@@ -68,23 +68,24 @@ public class Player extends Actor{
 	}
 	
 	public enum PlayerState{
-		IDLE, RUNNING, JUMPING
+		IDLE, RUNNING, JUMPING, DIE
 	}
 	
 	private void createPlayerBody(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(new Vector2(50 / PPM, 200 / PPM));
+		bodyDef.position.set(new Vector2(50 / PPM, 300 / PPM));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(16 / PPM, 40 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
+		shape.setAsBox(10 / PPM, 25 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
 		
 		FixtureDef fixtureDef = Materials.playerBody;
 		fixtureDef.shape = shape;
 		
 		playerBody = world.createBody(bodyDef);
-		playerBody.createFixture(fixtureDef);
+		playerBody.createFixture(fixtureDef).setUserData("player");
+		playerBody.setUserData("player");
 	}
 	
 	private void createPlayerAnimation(){
@@ -134,10 +135,14 @@ public class Player extends Actor{
 	}
 	
 	public void jump(double meters){
-		float v0 = (float) sqrt( 20 * meters );
+		float v0 = (float) sqrt( 60 * meters );
 		System.out.println("MASA: "+playerBody.getMass());
 		playerBody.setLinearVelocity(0, v0); 
 		notifyJump();
+	}
+	
+	public void die(){
+		currentState = PlayerState.DIE;
 	}
 	
 	private void notifyJump(){
@@ -177,10 +182,13 @@ public class Player extends Actor{
 			currentFrame = breatheAnimation.getKeyFrame(stateTime, true);
 		}
 		if(currentState == PlayerState.RUNNING){
-			playerBody.setLinearVelocity(5, playerBody.getLinearVelocity().y);
+			playerBody.setLinearVelocity(8, playerBody.getLinearVelocity().y);
 			currentFrame = runAnimation.getKeyFrame(stateTime, true);
 		}
-        setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+		if(currentState == PlayerState.DIE){
+			currentFrame = dieTopAnimation.getKeyFrame(stateTime, false);
+		}
+        setPosition(playerBody.getPosition().x + 20/PPM, playerBody.getPosition().y + 15/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(playerBody.getAngle() * MathUtils.radiansToDegrees);

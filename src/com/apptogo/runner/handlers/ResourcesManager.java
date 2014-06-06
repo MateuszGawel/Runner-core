@@ -59,14 +59,16 @@ public class ResourcesManager {
 		menuManager.load("gfx/menu/level2.png", Texture.class);
 		menuManager.load("gfx/menu/back.png", Texture.class);
 		menuManager.load("gfx/menu/start.png", Texture.class);
-		//menuManager.load("gfx/menu/big1.png", Texture.class);
-		//menuManager.load("gfx/menu/big2.png", Texture.class);
-	/*	menuManager.load("gfx/menu/big3.png", Texture.class);
+		/*
+		menuManager.load("gfx/menu/big1.png", Texture.class);
+		menuManager.load("gfx/menu/big2.png", Texture.class);
+		menuManager.load("gfx/menu/big3.png", Texture.class);
 		menuManager.load("gfx/menu/big4.png", Texture.class);
 		menuManager.load("gfx/menu/big5.png", Texture.class);
 		menuManager.load("gfx/menu/big6.png", Texture.class);
 		menuManager.load("gfx/menu/big7.png", Texture.class);
-*/	}
+		*/
+	}
 	
 	public void loadMenuMusic(){
 		menuManager.load("mfx/menu/menuMusic.ogg", Music.class);

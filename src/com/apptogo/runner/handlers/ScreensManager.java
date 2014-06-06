@@ -1,4 +1,4 @@
-package com.apptogo.runner.handlers;
+ package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
@@ -31,7 +31,14 @@ public class ScreensManager {
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
-		SCREEN_MAIN_MENU, SCREEN_GAME, SCREEN_SPLASH, SCREEN_LOADING, SCREEN_MULTIPLAYER, SCREEN_CHARACTER_CHOOSE, SCREEN_LEVEL_CHOOSE, SCREEN_CHARACTER_UPGRADE
+		SCREEN_MAIN_MENU, 
+		SCREEN_GAME, 
+		SCREEN_SPLASH, 
+		SCREEN_LOADING, 
+		SCREEN_MULTIPLAYER, 
+		SCREEN_CHARACTER_CHOOSE, 
+		SCREEN_LEVEL_CHOOSE, 
+		SCREEN_CHARACTER_UPGRADE
 	}
 	
 	/*---SPLASH SCREEN---*/

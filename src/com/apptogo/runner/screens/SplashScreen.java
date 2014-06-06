@@ -19,7 +19,6 @@ public class SplashScreen extends BaseScreen{
 	private Stage stage;
 	private Viewport viewport;
 	private Skin skin;
-	
 	private ProgressBar progressBar;
 	
 	float percent;
@@ -38,7 +37,7 @@ public class SplashScreen extends BaseScreen{
         progressBar = new ProgressBar(0f, 1f, 0.001f, false, skin);
         
 		stage = new Stage();
-		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, camera);
+		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage.setViewport(viewport);
 		
 		stage.addActor(progressBar);
@@ -58,7 +57,6 @@ public class SplashScreen extends BaseScreen{
 
 		percent = Interpolation.linear.apply(percent, ResourcesManager.getInstance().getMenuManager().getProgress(), 0.1f);
 		progressBar.setValue(percent);
-		Logger.log(this, "progress: " + percent);
 		
 		stage.act();
 		stage.draw();

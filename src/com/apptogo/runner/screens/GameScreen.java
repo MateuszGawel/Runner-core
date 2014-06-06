@@ -1,12 +1,7 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
 
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
@@ -20,7 +15,6 @@ import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -51,6 +45,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		guiCamera = (OrthographicCamera) guiStage.getCamera();  
 		guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
 		guiStage.setViewport(guiStretchViewport);
+		
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
 		Gdx.input.setInputProcessor(new InputHandler());
@@ -85,7 +80,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		worldRenderer.render();
 		guiStage.draw();
 		Input.update();
-		Logger.log(this, Gdx.graphics.getFramesPerSecond());
+
 	}
 	
 	@Override
