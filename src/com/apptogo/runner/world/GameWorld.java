@@ -61,7 +61,7 @@ public class GameWorld {
 	public void handleInput(){
 		if(Input.isPressed(Input.RIGHT)) {
 			Logger.log(this, "PRAWO");
-			player.jump( 2 );
+			player.jump();
 		}
 		if(Input.isPressed(Input.LEFT)) {
 			Logger.log(this, "LEWO");
@@ -76,7 +76,7 @@ public class GameWorld {
 			}
 			else {
 				Logger.log(this, "PRAWO");
-				player.jump( 2 );
+				player.jump();
 			}
 		}
 	}

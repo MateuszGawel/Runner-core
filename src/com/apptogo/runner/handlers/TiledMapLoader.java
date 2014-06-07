@@ -40,7 +40,7 @@ public class TiledMapLoader {
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
-	private Array<Body> terrainBodies = new Array<Body>();
+	private Array<Body> groundBodies = new Array<Body>();
 	private Array<Body> killingBodies = new Array<Body>();
 	private FixtureDef groundFixture;
 	private FixtureDef killingFixture;
@@ -96,13 +96,13 @@ public class TiledMapLoader {
 				MapObjects objects = layer.getObjects();
 				Iterator<MapObject> objectIt = objects.iterator();
 				
-				createTerrainLayer(layer, objectIt);
+				createGroundLayer(layer, objectIt);
 				createKillingLayer(layer, objectIt);
 			}
 		}	
 	}
 	
-	private void createTerrainLayer(MapLayer layer, Iterator<MapObject> objectIt){
+	private void createGroundLayer(MapLayer layer, Iterator<MapObject> objectIt){
 		if("true".equals( (String)layer.getProperties().get("terrain"))){
 			while(objectIt.hasNext()) 
 			{
@@ -116,10 +116,10 @@ public class TiledMapLoader {
 				
 				groundFixture.shape = createShape(object);
 				Body body = world.createBody(bodyDef);
-				body.createFixture(groundFixture).setUserData("terrain");
-				body.setUserData("terrain");
+				body.createFixture(groundFixture).setUserData("ground");
+				body.setUserData("ground");
 				
-				terrainBodies.add(body);
+				groundBodies.add(body);
 			}
 		}
 	}
@@ -232,10 +232,10 @@ public class TiledMapLoader {
 	
 	
 	public void destroyPhysics() {
-		for (Body body : terrainBodies) {
+		for (Body body : groundBodies) {
 			world.destroyBody(body);
 		}
-		terrainBodies.clear();
+		groundBodies.clear();
 	}
 	
 	public static TiledMapLoader getInstance(){ return INSTANCE; }

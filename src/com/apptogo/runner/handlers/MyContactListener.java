@@ -18,17 +18,30 @@ public class MyContactListener implements ContactListener{
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		Logger.log(this, "fixA: " + fa.getUserData() + " fixB: " + fb.getUserData());
+		
 		if(("killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())) 
 				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData()))){
 			Logger.log(this, "PLAYER DOTYKA GRZYBKA");
 			world.player.die();
 		}
+		Logger.log(this, "WYKRYTO: " + fa.getUserData() + ", " + fb.getUserData());
+		if(("player".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("player".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+			world.player.incrementJumpSensor();
+			Logger.log(this, "DOTYKA ZIEMI");
+		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+		
+		if(("player".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("player".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+			world.player.decrementJumpSensor();
+			Logger.log(this, "PUSZCZA ZIEMIE");
+		}
 		
 	}
 
