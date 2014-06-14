@@ -1,11 +1,12 @@
 package com.apptogo.runner.handlers;
 
-import static com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class ResourcesManager {
 
@@ -15,6 +16,8 @@ public class ResourcesManager {
 	AssetManager menuManager;
 	AssetManager gameManager;
 	AssetManager splashManager;
+	
+	TextureAtlas stickmanAtlas;
 	
 	private static final ResourcesManager INSTANCE = new ResourcesManager();
 	
@@ -109,6 +112,8 @@ public class ResourcesManager {
 		gameManager.load("gfx/game/gameImage.png", Texture.class);
 		gameManager.load("gfx/game/playerSheet.png", Texture.class);
 		gameManager.load("gfx/game/enemySheet.png", Texture.class);
+		gameManager.load("gfx/game/bandit.png", Texture.class);
+		gameManager.load("gfx/game/characters/stickman.pack", TextureAtlas.class);
 	}
 	
 	public void loadGameMusic(){

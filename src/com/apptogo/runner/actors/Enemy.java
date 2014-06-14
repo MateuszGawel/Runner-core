@@ -55,6 +55,7 @@ public class Enemy extends Actor{
 	Animation landAnimation;
 	Animation standupAnimation;
 	
+	Texture bandit;
 	
 	public Enemy(World world){
 		this.world = world;
@@ -83,8 +84,8 @@ public class Enemy extends Actor{
 	}
 	
 	private void createPlayerAnimation(){
-		Texture playerSheet = (Texture)ResourcesManager.getInstance().getGameResource("gfx/game/enemySheet.png");
-		TextureRegion[][] playerRegionsTemp = TextureRegion.split(playerSheet, playerSheet.getWidth()/12, playerSheet.getHeight()/11);
+		bandit = (Texture)ResourcesManager.getInstance().getGameResource("gfx/game/bandit.png");
+		/*TextureRegion[][] playerRegionsTemp = TextureRegion.split(playerSheet, playerSheet.getWidth()/12, playerSheet.getHeight()/11);
 		
 		playerFrames = new TextureRegion[SHEET_ROWS * SHEET_COLUMNS];
         int index = 0;
@@ -114,7 +115,7 @@ public class Enemy extends Actor{
     	jumpAnimation = new Animation(0.02f, jumpFrames);
     	landAnimation = new Animation(0.02f, landFrames);
     	standupAnimation = new Animation(0.02f, standupFrames);
-    	
+    	*/
     	stateTime = 0f;
 	}
 	
@@ -142,7 +143,7 @@ public class Enemy extends Actor{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		stateTime += delta;
+		/*stateTime += delta;
 		if(currentState == PlayerState.IDLE){
 			currentFrame = breatheAnimation.getKeyFrame(stateTime, true);
 		}
@@ -154,13 +155,13 @@ public class Enemy extends Actor{
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(playerBody.getAngle() * MathUtils.radiansToDegrees);
-        setOrigin(getWidth() / 2, getHeight() / 2);
+        setOrigin(getWidth() / 2, getHeight() / 2);*/
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (60 / PPM), getY() - (42 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(bandit, 2, 10, bandit.getWidth() / PPM, bandit.getHeight() / PPM);
 	}
 	
 	public PlayerState getCurrentState(){ return this.currentState; }

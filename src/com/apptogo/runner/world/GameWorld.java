@@ -26,7 +26,7 @@ public class GameWorld {
 	
 	public World world;
 	public Stage stage;
-	public StretchViewport stretchViewport;
+	public StretchViewport viewport;
 	public Player player;
 	public Enemy enemy;
 	public OrthographicCamera camera;
@@ -37,8 +37,8 @@ public class GameWorld {
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
 		stage = new Stage();
-		stretchViewport = new StretchViewport(WIDTH, HEIGHT, stage.getCamera());
-		stage.setViewport(stretchViewport);
+		viewport = new StretchViewport(WIDTH, HEIGHT, stage.getCamera());
+		stage.setViewport(viewport);
 		camera = (OrthographicCamera)stage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
 	
