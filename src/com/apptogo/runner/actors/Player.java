@@ -58,11 +58,11 @@ public class Player extends Actor{
 	private void createPlayerBody(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(new Vector2(50 / PPM, 300 / PPM));
+		bodyDef.position.set(new Vector2(50 / PPM, 800 / PPM));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(10 / PPM, 25 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
+		shape.setAsBox(10 / PPM, 27 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
 		
 		FixtureDef fixtureDef = Materials.playerBody;
 		fixtureDef.shape = shape;
@@ -74,6 +74,12 @@ public class Player extends Actor{
 		//wall sensor
 		shape.setAsBox(2 / PPM, 25 / PPM, new Vector2(10 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
+		fixtureDef.shape = shape;
+		playerBody.createFixture(fixtureDef).setUserData("player");
+		
+		//foot sensor
+		shape.setAsBox(30 / PPM, 30 / PPM, new Vector2(0 / PPM, -40 / PPM), 0);
+		fixtureDef = Materials.footSensorBody;
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
 	}
@@ -153,13 +159,14 @@ public class Player extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (60 / PPM), getY() - (42 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX() - (50 / PPM), getY() - (50 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 	
 	public void incrementJumpSensor(){
 		if(jumpSensor <= 0 && alive){
 			playerAnimator.resetTime();
-			currentAnimationState = PlayerAnimationState.LANDING;
+			if(currentAnimationState == PlayerAnimationState.JUMPING)
+				currentAnimationState = PlayerAnimationState.LANDING;
 		}
 		jumpSensor++;
 	}

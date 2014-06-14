@@ -56,8 +56,8 @@ public class ResourcesManager {
 	public void loadMenuTextures(){
 		menuManager.load("gfx/menu/singlePlayer.png", Texture.class);
 		menuManager.load("gfx/menu/multiPlayer.png", Texture.class);
-		menuManager.load("gfx/menu/player1.png", Texture.class);
-		menuManager.load("gfx/menu/player2.png", Texture.class);
+		menuManager.load("gfx/menu/player1.jpg", Texture.class);
+		menuManager.load("gfx/menu/player2.jpg", Texture.class);
 		menuManager.load("gfx/menu/level1.png", Texture.class);
 		menuManager.load("gfx/menu/level2.png", Texture.class);
 		menuManager.load("gfx/menu/back.png", Texture.class);
@@ -86,10 +86,10 @@ public class ResourcesManager {
 	}
 	
 	public <T> T getMenuResource(GameCharacter character) {
-		if(character == GameCharacter.MASTER_OF_DISASTER)
-			return menuManager.get("gfx/menu/player1.png");
-		else if(character == GameCharacter.NAKED_MAN)
-			return menuManager.get("gfx/menu/player2.png");
+		if(character == GameCharacter.BANDIT)
+			return menuManager.get("gfx/menu/player1.jpg");
+		else if(character == GameCharacter.ALIEN)
+			return menuManager.get("gfx/menu/player2.jpg");
 		else
 			return null;
 	}
@@ -114,6 +114,7 @@ public class ResourcesManager {
 		gameManager.load("gfx/game/enemySheet.png", Texture.class);
 		gameManager.load("gfx/game/bandit.png", Texture.class);
 		gameManager.load("gfx/game/characters/stickman.pack", TextureAtlas.class);
+		gameManager.load("gfx/game/characters/bandit.pack", TextureAtlas.class);
 	}
 	
 	public void loadGameMusic(){

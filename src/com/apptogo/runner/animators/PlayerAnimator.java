@@ -19,23 +19,32 @@ public class PlayerAnimator {
 	private TextureAtlas stickmanAtlas;
 	
 	/*--animations--*/
-	private final int IDLE_FRAMES_COUNT = 10;
-	private final int BORED_FRAMES_COUNT = 10;
+	//private final int IDLE_FRAMES_COUNT = 10;
+	//private final int BORED_FRAMES_COUNT = 10;
+	private final int RUNNING_FRAMES_COUNT = 20;
 	
-	private AtlasRegion[] idleFrames;
-	private AtlasRegion[] boredFrames;
-
-	private Animation idleAnimation;
-	private MyAnimation boredAnimation;
-
-	private float[] idleFrameTimes = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f};
-	private float[] boredFrameTimes = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f};
+	//private AtlasRegion[] idleFrames;
+	//private AtlasRegion[] boredFrames;
+	private AtlasRegion[] runningFrames;
+	
+	//private Animation idleAnimation;
+	//private MyAnimation boredAnimation;
+	private Animation runningAnimation;
+	
+	//private float[] idleFrameTimes = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f};
+	//private float[] boredFrameTimes = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f};
 
 	public PlayerAnimator(Player player){
 		this.player = player;
-		stickmanAtlas = ResourcesManager.getInstance().getGameResource("gfx/game/characters/stickman.pack");
+		stickmanAtlas = ResourcesManager.getInstance().getGameResource("gfx/game/characters/bandit.pack");
 		stateTime = 0f;
 		
+		runningFrames = new AtlasRegion[RUNNING_FRAMES_COUNT];
+		for(int i=0; i<RUNNING_FRAMES_COUNT; i++){
+			runningFrames[i] = stickmanAtlas.findRegion("run" + i);
+		}
+		runningAnimation = new Animation(0.03f, runningFrames);
+		/*
 		idleFrames = new AtlasRegion[IDLE_FRAMES_COUNT];
 		boredFrames = new AtlasRegion[BORED_FRAMES_COUNT];
 
@@ -49,6 +58,7 @@ public class PlayerAnimator {
 		
 		idleAnimation = new Animation(0.1f, idleFrames);
 		boredAnimation = new MyAnimation(boredFrameTimes, boredFrames);
+		*/
 	}
 
 	/*---ANIMATIONS---*/
@@ -61,7 +71,7 @@ public class PlayerAnimator {
 			//currentFrame = animateJump(delta);
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.RUNNING){
-			currentFrame = animateIdle(delta);
+			currentFrame = animateRunning(delta);
 			//currentFrame = animateRun(delta);
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.DIETOP){
@@ -69,7 +79,7 @@ public class PlayerAnimator {
 			//currentFrame = animateDieTop(delta);
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.LANDING){
-			currentFrame = animateIdle(delta);
+			currentFrame = animateRunning(delta);
 			/*currentFrame = animateLand(delta);
 			if(landAnimation.isAnimationFinished(stateTime)){
 				if(player.getPlayerSpeed() > 0)
@@ -83,9 +93,17 @@ public class PlayerAnimator {
 		return currentFrame;
 	}
 	
+	
 	private TextureRegion animateIdle(float delta){
 		stateTime += delta;
-		return idleAnimation.getKeyFrame(stateTime, true);
+		//return runningAnimation.getKeyFrame(stateTime, true);
+		return runningFrames[5];
+	}
+	
+	
+	private TextureRegion animateRunning(float delta){
+		stateTime += delta;
+		return runningAnimation.getKeyFrame(stateTime, true);
 	}
 	
 	public void resetTime(){

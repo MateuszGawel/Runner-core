@@ -46,21 +46,21 @@ public class CharacterChooseScreen extends BaseScreen{
 	public void show() {
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		
-		playerOne = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player1.png")));
+		playerOne = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player1.jpg")));
 		playerOne.setPosition(Runner.SCREEN_WIDTH/2 - playerOne.getWidth() - 50, Runner.SCREEN_HEIGHT/2 - 100);
 		playerOne.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                  Logger.log(this, "PLAYER ONE CLICKED");
-                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.MASTER_OF_DISASTER);
+                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.BANDIT);
             }
          });
 
-		playerTwo = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player2.png")));
+		playerTwo = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/player2.jpg")));
 		playerTwo.setPosition(Runner.SCREEN_WIDTH/2 + 50, Runner.SCREEN_HEIGHT/2 - 100);
 		playerTwo.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                  Logger.log(this, "PLAYER TWO CLICKED");
-                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.NAKED_MAN);
+                 ScreensManager.getInstance().createCharacterUpgradeScreen(multiplayer, GameCharacter.ALIEN);
                  /*
                  if(!multiplayer)
                 	 ScreensManager.getInstance().createLevelChooseScreen();
@@ -88,10 +88,10 @@ public class CharacterChooseScreen extends BaseScreen{
 			multiplayerLabel = new Label("SINGLEPLAYER", skin);
 		multiplayerLabel.setPosition(Runner.SCREEN_WIDTH/2 - multiplayerLabel.getWidth()/2, Runner.SCREEN_HEIGHT/2 + 180);
 		
-		playerOneName = new Label("MASTER OF DISASTER", skin);
+		playerOneName = new Label("BANDIT", skin);
 		playerOneName.setPosition(playerOne.getX() + playerOne.getWidth()/2 - playerOneName.getWidth()/2, Runner.SCREEN_HEIGHT/2 - 150);
 		
-		playerTwoName = new Label("NAKED MAN", skin);
+		playerTwoName = new Label("ALIEN", skin);
 		playerTwoName.setPosition(playerTwo.getX() + playerTwo.getWidth()/2 - playerTwoName.getWidth()/2 , Runner.SCREEN_HEIGHT/2 - 150);
 		
 		stage.addActor(playerOne);

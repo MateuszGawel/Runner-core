@@ -46,14 +46,14 @@ public class GameWorld {
 	}
 	
 	private void createWorld(){
-		enemy = new Enemy(world);
+		//enemy = new Enemy(world);
 		player = new Player(world);
 		
-		stage.addActor(enemy);
+		//stage.addActor(enemy);
 		stage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
-		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map1.tmx");
+		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map2.tmx");
 		
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 	}
