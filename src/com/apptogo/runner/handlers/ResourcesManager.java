@@ -109,11 +109,6 @@ public class ResourcesManager {
 	/*---GAME---*/
 	
 	public void loadGameTextures(){
-		gameManager.load("gfx/game/gameImage.png", Texture.class);
-		gameManager.load("gfx/game/playerSheet.png", Texture.class);
-		gameManager.load("gfx/game/enemySheet.png", Texture.class);
-		gameManager.load("gfx/game/bandit.png", Texture.class);
-		gameManager.load("gfx/game/characters/stickman.pack", TextureAtlas.class);
 		gameManager.load("gfx/game/characters/bandit.pack", TextureAtlas.class);
 	}
 	

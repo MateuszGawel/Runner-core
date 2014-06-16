@@ -25,6 +25,7 @@ public class InputHandler extends InputAdapter {
 	public boolean keyDown(int k) {
 		if(k == Keys.LEFT) Input.setKey(Input.LEFT, true);
 		if(k == Keys.RIGHT) Input.setKey(Input.RIGHT, true); 
+		if(k == Keys.SPACE) Input.setKey(Input.START, true); 
 		return true;
 	}
 	
@@ -32,6 +33,7 @@ public class InputHandler extends InputAdapter {
 	public boolean keyUp(int k) {
 		if(k == Keys.LEFT) Input.setKey(Input.LEFT, false);
 		if(k == Keys.RIGHT) Input.setKey(Input.RIGHT, false); 
+		if(k == Keys.SPACE) Input.setKey(Input.START, true); 
 		return true;
 	}
 

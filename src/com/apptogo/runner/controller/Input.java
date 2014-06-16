@@ -9,9 +9,10 @@ public class Input {
 	
 	public static boolean[] keys;
 	public static boolean[] pkeys;
-	private static final int NUM_KEYS = 2;
+	private static final int NUM_KEYS = 3;
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
+	public static final int START = 2;
 	
 	static {
 		keys = new boolean[NUM_KEYS];
@@ -32,5 +33,6 @@ public class Input {
 	public static void setKey(int i, boolean b) { keys[i] = b; }
 	public static boolean isDown(int i) { return keys[i]; }
 	public static boolean isPressed(int i) { return keys[i] && !pkeys[i]; }
+	public static boolean isReleased(int i) { return !keys[i] && pkeys[i]; }
 	
 }

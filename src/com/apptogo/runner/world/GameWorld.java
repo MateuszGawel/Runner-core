@@ -53,7 +53,7 @@ public class GameWorld {
 		stage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
-		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map2.tmx");
+		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
 		
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 	}
@@ -64,6 +64,14 @@ public class GameWorld {
 			player.jump();
 		}
 		if(Input.isPressed(Input.LEFT)) {
+			Logger.log(this, "LEWO");
+			player.slide();
+		}
+		if(Input.isReleased(Input.LEFT)) {
+			Logger.log(this, "LEWO up");
+			player.standUp();
+		}
+		if(Input.isPressed(Input.START)) {
 			Logger.log(this, "LEWO");
 			player.startRunning();
 		}

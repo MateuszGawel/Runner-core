@@ -52,7 +52,7 @@ public class Player extends Actor{
 	}
 	
 	public enum PlayerAnimationState{
-		IDLE, RUNNING, JUMPING, DIETOP, LANDING
+		IDLE, RUNNING, JUMPING, DIETOP, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP
 	}
 	
 	private void createPlayerBody(){
@@ -62,7 +62,7 @@ public class Player extends Actor{
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(10 / PPM, 27 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
+		shape.setAsBox(25 / PPM, 65 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
 		
 		FixtureDef fixtureDef = Materials.playerBody;
 		fixtureDef.shape = shape;
@@ -92,6 +92,20 @@ public class Player extends Actor{
 			float v0 = (float) sqrt( 60 * playerJumpHeight );
 			playerBody.setLinearVelocity(0, v0); 
 			notifyJump();
+		}
+	}
+	
+	public void slide(){
+		if(alive){
+			currentAnimationState = PlayerAnimationState.BEGINSLIDING;
+			playerAnimator.resetTime();
+		}
+	}
+	
+	public void standUp(){
+		if(alive){
+			currentAnimationState = PlayerAnimationState.STANDINGUP;
+			playerAnimator.resetTime();
 		}
 	}
 	
@@ -159,13 +173,13 @@ public class Player extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (50 / PPM), getY() - (50 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (105 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 	
 	public void incrementJumpSensor(){
 		if(jumpSensor <= 0 && alive){
 			playerAnimator.resetTime();
-			if(currentAnimationState == PlayerAnimationState.JUMPING)
+			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING)
 				currentAnimationState = PlayerAnimationState.LANDING;
 		}
 		jumpSensor++;
