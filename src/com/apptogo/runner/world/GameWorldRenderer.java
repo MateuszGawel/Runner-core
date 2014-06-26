@@ -39,7 +39,7 @@ public class GameWorldRenderer {
     	camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;
     	camera.update();
     	
-    	debugRenderer.render(gameWorld.world, camera.combined);
+    	//debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

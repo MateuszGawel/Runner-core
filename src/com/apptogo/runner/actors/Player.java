@@ -9,6 +9,8 @@ import com.apptogo.runner.animators.PlayerAnimator;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -116,6 +118,7 @@ public class Player extends Actor{
 			playerAnimator.resetTime();
 			playerSpeed = 0;
 			notifyDie();
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
 		}
 	}
 	
