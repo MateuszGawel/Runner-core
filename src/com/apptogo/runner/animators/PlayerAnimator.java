@@ -33,14 +33,14 @@ public class PlayerAnimator {
 	private final int MOONWALK_FRAMES_COUNT = 33;
 	*/
 	
-	private final int RUN_FRAMES_COUNT = 19;
-	private final int IDLE_FRAMES_COUNT = 20;
-	private final int JUMP_FRAMES_COUNT = 20;
-	private final int LAND_FRAMES_COUNT = 20;
-	private final int FLY_FRAMES_COUNT = 20;
-	private final int SLIDE_FRAMES_COUNT = 20;
-	private final int BEGINSLIDE_FRAMES_COUNT = 20;
-	private final int STANDUP_FRAMES_COUNT = 20;
+	private final int RUN_FRAMES_COUNT = 21;
+	private final int IDLE_FRAMES_COUNT = 60;
+	private final int JUMP_FRAMES_COUNT = 6;
+	private final int LAND_FRAMES_COUNT = 9;
+	private final int FLY_FRAMES_COUNT = 30;
+	private final int SLIDE_FRAMES_COUNT = 30;
+	private final int BEGINSLIDE_FRAMES_COUNT = 6;
+	private final int STANDUP_FRAMES_COUNT = 6;
 	
 	private AtlasRegion[] runFrames;
 	private AtlasRegion[] idleFrames;
@@ -69,7 +69,7 @@ public class PlayerAnimator {
 		for(int i=0; i<IDLE_FRAMES_COUNT; i++){
 			idleFrames[i] = banditAtlas.findRegion("idle" + i);
 		}
-		idleAnimation = new Animation(0.08f, idleFrames);
+		idleAnimation = new Animation(0.03f, idleFrames);
 		
 		runFrames = new AtlasRegion[RUN_FRAMES_COUNT];
 		for(int i=0; i<RUN_FRAMES_COUNT; i++){
@@ -79,37 +79,37 @@ public class PlayerAnimator {
 		
 		jumpFrames = new AtlasRegion[JUMP_FRAMES_COUNT];
 		for(int i=0; i<JUMP_FRAMES_COUNT; i++){
-			jumpFrames[i] = banditAtlas.findRegion("idle" + i);
+			jumpFrames[i] = banditAtlas.findRegion("jump" + i);
 		}
 		jumpAnimation = new Animation(0.03f, jumpFrames);
 		
 		landFrames = new AtlasRegion[LAND_FRAMES_COUNT];
 		for(int i=0; i<LAND_FRAMES_COUNT; i++){
-			landFrames[i] = banditAtlas.findRegion("idle" + i);
+			landFrames[i] = banditAtlas.findRegion("land" + i);
 		}
 		landAnimation = new Animation(0.03f, landFrames);
 		
 		flyFrames = new AtlasRegion[FLY_FRAMES_COUNT];
 		for(int i=0; i<FLY_FRAMES_COUNT; i++){
-			flyFrames[i] = banditAtlas.findRegion("idle" + i);
+			flyFrames[i] = banditAtlas.findRegion("fly" + i);
 		}
 		flyAnimation = new Animation(0.03f, flyFrames);
 		
 		slideFrames = new AtlasRegion[SLIDE_FRAMES_COUNT];
 		for(int i=0; i<SLIDE_FRAMES_COUNT; i++){
-			slideFrames[i] = banditAtlas.findRegion("idle" + i);
+			slideFrames[i] = banditAtlas.findRegion("slide" + i);
 		}
 		slideAnimation = new Animation(0.03f, slideFrames);
 		
 		beginSlideFrames = new AtlasRegion[BEGINSLIDE_FRAMES_COUNT];
 		for(int i=0; i<BEGINSLIDE_FRAMES_COUNT; i++){
-			beginSlideFrames[i] = banditAtlas.findRegion("idle" + i);
+			beginSlideFrames[i] = banditAtlas.findRegion("beginSlide" + i);
 		}
 		beginSlideAnimation = new Animation(0.03f, beginSlideFrames);
 		
 		standUpFrames = new AtlasRegion[STANDUP_FRAMES_COUNT];
 		for(int i=0; i<STANDUP_FRAMES_COUNT; i++){
-			standUpFrames[i] = banditAtlas.findRegion("idle" + i);
+			standUpFrames[i] = banditAtlas.findRegion("standup" + i);
 		}
 		standUpAnimation = new Animation(0.03f, standUpFrames);
 

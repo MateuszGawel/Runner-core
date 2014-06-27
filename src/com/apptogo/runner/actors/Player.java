@@ -176,7 +176,7 @@ public class Player extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (105 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 	
 	public void incrementJumpSensor(){
