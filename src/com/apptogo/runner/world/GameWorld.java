@@ -8,13 +8,17 @@ import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class GameWorld {
@@ -25,37 +29,85 @@ public class GameWorld {
 	public static final Vector2 GRAVITY = new Vector2(0f, -30f);
 	
 	public World world;
-	public Stage stage;
+	
+	public Stage worldStage;
 	public StretchViewport viewport;
+	public OrthographicCamera camera;
+	public float minCameraX;
+	public float maxCameraX;
+	public float minCameraY;
+	public float maxCameraY;
+    
+	private Stage backgroundStage;
+	public StretchViewport backgroundStretchViewport;
+	private OrthographicCamera backgroundCamera;
+
 	public Player player;
 	public Enemy enemy;
-	public OrthographicCamera camera;
+	
+	public Group background;
+	public Image mountains;
+	public ParallaxBackground rocks;
+	public Image skyBlue;
+	public Image sand;
+	
+	private Vector2 mapSize;
 	
 	public RayHandler rayHandler;
 	
 	public GameWorld(){
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
-		stage = new Stage();
-		viewport = new StretchViewport(WIDTH, HEIGHT, stage.getCamera());
-		stage.setViewport(viewport);
-		camera = (OrthographicCamera)stage.getCamera();
+		
+		worldStage = new Stage();
+		viewport = new StretchViewport(WIDTH, HEIGHT, worldStage.getCamera());
+		worldStage.setViewport(viewport);
+		camera = (OrthographicCamera)worldStage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-	
+		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
+	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
+	    
+
+		background = new Group();
+		backgroundStage = new Stage();
+		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
+		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
+		backgroundStage.setViewport(backgroundStretchViewport);
+		
 		createWorld();
 	}
 	
 	private void createWorld(){
-		//enemy = new Enemy(world);
+		backgroundStage.addActor(background);
+
 		player = new Player(world);
-		
-		//stage.addActor(enemy);
-		stage.addActor(player);
+		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
-		TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
-		
+		mapSize = TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
+		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
+		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
+		createBackground();
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
+	}
+	
+	private void createBackground(){
+
+		skyBlue = new Image((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/skyBlue.png"));
+		skyBlue.setPosition(0, 500);
+		background.addActor(skyBlue);
+		
+		mountains = new Image((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/mountains.png"));
+		mountains.setPosition(0, 450);
+		background.addActor(mountains);
+		
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/rocks.png"), mapSize, player);
+		rocks.setPosition(0, 450);
+		background.addActor(rocks);
+		
+		sand = new Image((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/sand.png"));
+		sand.setPosition(0, 100);
+		background.addActor(sand);
 	}
 	
 	public void handleInput(){
@@ -91,6 +143,11 @@ public class GameWorld {
 	
     public void update(float delta) {  
         world.step(delta, 3, 3);
-        stage.act(delta);
+        worldStage.act(delta);
+        
+		backgroundCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
+		backgroundCamera.update();
+		backgroundStage.act(delta);
+		backgroundStage.draw();
     }  
 }

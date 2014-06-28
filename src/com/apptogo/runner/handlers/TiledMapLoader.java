@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
@@ -45,17 +46,32 @@ public class TiledMapLoader {
 	private FixtureDef groundFixture;
 	private FixtureDef killingFixture;
 	private TiledMap tiledMap;
-	
+	MapProperties mapProperties;
 	private RayHandler rayHandler;
 	
-	public void loadMap(String mapPath){
+	public Vector2 loadMap(String mapPath){
 		tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
-		
 		groundFixture = Materials.groundBody;
 		killingFixture = Materials.killingBody;
 		//initLights();
 		createPhysics(tiledMap);
+		
+		return calculateMapSize();
+	}
+	
+	private Vector2 calculateMapSize(){
+		mapProperties = tiledMap.getProperties();
+		
+		int mapWidth = mapProperties.get("width", Integer.class);
+		int mapHeight = mapProperties.get("height", Integer.class);
+		int tilePixelWidth = mapProperties.get("tilewidth", Integer.class);
+		int tilePixelHeight = mapProperties.get("tileheight", Integer.class);
+
+		int mapPixelWidth = mapWidth * tilePixelWidth;
+		int mapPixelHeight = mapHeight * tilePixelHeight;
+		Logger.log(this,  mapPixelWidth);
+		return new Vector2(mapPixelWidth, mapPixelHeight);
 	}
 	
 	private void initLights(){

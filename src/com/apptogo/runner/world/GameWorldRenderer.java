@@ -21,7 +21,7 @@ public class GameWorldRenderer {
     {  
         this.gameWorld = gameWorld;  
         this.debugRenderer = new Box2DDebugRenderer();  
-        this.camera = (OrthographicCamera) gameWorld.stage.getCamera();  
+        this.camera = (OrthographicCamera) gameWorld.worldStage.getCamera();  
        
         camera.position.x = gameWorld.player.getPlayerBody().getPosition().x;  
         camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;  
@@ -35,8 +35,10 @@ public class GameWorldRenderer {
 		tiledMapRenderer.setView(camera);
 	    tiledMapRenderer.render();
 	    
-    	camera.position.x = gameWorld.player.getPlayerBody().getPosition().x;
-    	camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;
+	    camera.position.set(
+	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.getPlayerBody().getPosition().x, gameWorld.minCameraX)),
+	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.getPlayerBody().getPosition().y, gameWorld.minCameraY)),
+	            0);
     	camera.update();
     	
     	debugRenderer.render(gameWorld.world, camera.combined);
@@ -49,7 +51,7 @@ public class GameWorldRenderer {
     		gameWorld.rayHandler.updateAndRender();
     	}
     	*/
-    	gameWorld.stage.draw();
+    	gameWorld.worldStage.draw();
     
     }
 }

@@ -29,9 +29,6 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
 	
-	private Stage guiStage;
-	private OrthographicCamera guiCamera;
-	public StretchViewport guiStretchViewport;
 	private Image back;
     
 	public GameScreen(Runner runner){
@@ -41,10 +38,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	
 	@Override
 	public void show() {
-		guiStage = new Stage();
-		guiCamera = (OrthographicCamera) guiStage.getCamera();  
-		guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
-		guiStage.setViewport(guiStretchViewport);
+
 		
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
@@ -70,15 +64,8 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		handleInput();
-		
-		guiCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
-		guiCamera.update();
-		
 		world.update(delta);
-		guiStage.act(delta);
-		
 		worldRenderer.render();
-		guiStage.draw();
 		Input.update();
 
 	}

@@ -11,6 +11,7 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -60,7 +61,7 @@ public class Player extends Actor{
 	private void createPlayerBody(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(new Vector2(50 / PPM, 800 / PPM));
+		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();

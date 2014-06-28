@@ -110,6 +110,10 @@ public class ResourcesManager {
 	
 	public void loadGameTextures(){
 		gameManager.load("gfx/game/characters/bandit.pack", TextureAtlas.class);
+		gameManager.load("gfx/game/levels/mountains.png", Texture.class);
+		gameManager.load("gfx/game/levels/rocks.png", Texture.class);
+		gameManager.load("gfx/game/levels/skyBlue.png", Texture.class);
+		gameManager.load("gfx/game/levels/sand.png", Texture.class);
 	}
 	
 	public void loadGameMusic(){
