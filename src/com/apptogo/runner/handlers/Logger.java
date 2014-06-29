@@ -13,4 +13,9 @@ public class Logger {
 		if(debug)
 			System.out.println(object.getClass() + " MESSAGE: " + message);
 	}
+	
+	public static void log( Object object, float message){
+		if(debug)
+			System.out.println(object.getClass() + " MESSAGE: " + message);
+	}
 }

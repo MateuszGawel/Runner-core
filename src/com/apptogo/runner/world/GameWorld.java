@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -49,7 +50,7 @@ public class GameWorld {
 	public Image mountains;
 	public ParallaxBackground rocks;
 	public Image skyBlue;
-	public Image sand;
+	public Actor sand;
 	
 	private Vector2 mapSize;
 	
@@ -97,16 +98,13 @@ public class GameWorld {
 		skyBlue.setPosition(0, 500);
 		background.addActor(skyBlue);
 		
-		mountains = new Image((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/mountains.png"));
-		mountains.setPosition(0, 450);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/rocks.png"), mapSize, player);
-		rocks.setPosition(0, 450);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400);
 		background.addActor(rocks);
 		
-		sand = new Image((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/sand.png"));
-		sand.setPosition(0, 100);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getGameResource("gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80);
 		background.addActor(sand);
 	}
 	
