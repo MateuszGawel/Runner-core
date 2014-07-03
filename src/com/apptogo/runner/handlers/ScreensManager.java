@@ -2,13 +2,10 @@
 
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
-import com.apptogo.runner.screens.CharacterChooseScreen;
-import com.apptogo.runner.screens.CharacterUpgradeScreen;
 import com.apptogo.runner.screens.GameScreen;
-import com.apptogo.runner.screens.LevelChooseScreen;
+import com.apptogo.runner.screens.LoadingMenuScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
-import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 
@@ -19,32 +16,32 @@ public class ScreensManager {
 	private Runner runner;
 	
 	private BaseScreen splashScreen;
+	private BaseScreen loadingMenuScreen;
 	private BaseScreen mainMenuScreen;
-	private BaseScreen multiplayerScreen;
 	private BaseScreen gameScreen;
 	private BaseScreen loadingScreen;
-	private BaseScreen characterChooseScreen;
-	private BaseScreen levelChooseScreen;
-	private BaseScreen characterUpgradeScreen;
 	
 	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
+		SCREEN_SPLASH,
+		SCREEN_LOADING_MENU,
 		SCREEN_MAIN_MENU, 
-		SCREEN_GAME, 
-		SCREEN_SPLASH, 
 		SCREEN_LOADING, 
-		SCREEN_MULTIPLAYER, 
-		SCREEN_CHARACTER_CHOOSE, 
-		SCREEN_LEVEL_CHOOSE, 
-		SCREEN_CHARACTER_UPGRADE
+		SCREEN_GAME
 	}
 	
 	/*---SPLASH SCREEN---*/
 	public void createSplashScreen(){
 		splashScreen = new SplashScreen(runner);
 		setScreen(splashScreen);
+	}
+	
+	/*---LOADING MENU SCREEN---*/
+	public void createLoadingMenuScreen(){
+		loadingMenuScreen = new LoadingMenuScreen(runner);
+		setScreen(loadingMenuScreen);
 	}
 	
 	/*---SPLASH SCREEN---*/
@@ -57,30 +54,6 @@ public class ScreensManager {
 	public void createMainMenuScreen(){
 		mainMenuScreen = new MainMenuScreen(runner);
 		setScreen(mainMenuScreen);
-	}
-	
-	/*---CHARACTER CHOOSE SCREEN---*/
-	public void createCharacterChooseScreen(boolean multiplayer){
-		characterChooseScreen = new CharacterChooseScreen(runner, multiplayer);
-		setScreen(characterChooseScreen);
-	}
-	
-	/*---LEVEL CHOOSE SCREEN---*/
-	public void createLevelChooseScreen(){
-		levelChooseScreen = new LevelChooseScreen(runner);
-		setScreen(levelChooseScreen);
-	}
-	
-	/*---CHARACTER UPGRADE SCREEN---*/
-	public void createCharacterUpgradeScreen(boolean multiplayer, GameCharacter choosenCharacter){
-		characterUpgradeScreen = new CharacterUpgradeScreen(runner, multiplayer, choosenCharacter);
-		setScreen(characterUpgradeScreen);
-	}
-	
-	/*---MULTIPLAYER SCREEN---*/
-	public void createMultiplayerScreen(){
-		multiplayerScreen = new MultiplayerScreen(runner);
-		setScreen(multiplayerScreen);
 	}
 	
 	/*---GAME SCREEN---*/

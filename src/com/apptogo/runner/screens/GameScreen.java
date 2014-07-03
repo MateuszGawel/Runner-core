@@ -44,7 +44,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		worldRenderer = new GameWorldRenderer(world);
 		Gdx.input.setInputProcessor(new InputHandler());
 		
-		back = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/back.png")));
+		/*back = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/back.png")));
 		back.setPosition(0, 0);
 		back.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -53,9 +53,9 @@ public class GameScreen extends BaseScreen implements WarpListener{
              }
          });
 		
-		//zeby to zadzialalo to trzeba zrobic input multiplexer
-		//guiStage.addActor(back);
-		//Gdx.input.setInputProcessor(guiStage);
+		zeby to zadzialalo to trzeba zrobic input multiplexer
+		guiStage.addActor(back);
+		Gdx.input.setInputProcessor(guiStage);*/
 	}
 	
 	@Override

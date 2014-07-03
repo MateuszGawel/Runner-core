@@ -1,16 +1,16 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,8 +18,9 @@ public class SplashScreen extends BaseScreen{
 	
 	private Stage stage;
 	private Viewport viewport;
-	private Skin skin;
-	private ProgressBar progressBar;
+	private Image splashImage;
+	private float splashImageOpacity;
+	private AlphaAction action;
 	
 	float percent;
 	
@@ -33,17 +34,17 @@ public class SplashScreen extends BaseScreen{
 		ResourcesManager.getInstance().loadSplashTextures();
 		ResourcesManager.getInstance().getSplashManager().finishLoading();
 		
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        progressBar = new ProgressBar(0f, 1f, 0.001f, false, skin);
+		splashImage = new Image(((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/splash.png")));
+		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
+		splashImageOpacity = 0.0f;
+		action = new AlphaAction();
         
 		stage = new Stage();
 		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage.setViewport(viewport);
 		
-		stage.addActor(progressBar);
-        ResourcesManager.getInstance().loadMenuMusic();
-        ResourcesManager.getInstance().loadMenuSounds();
-        ResourcesManager.getInstance().loadMenuTextures();
+		stage.addActor(splashImage);
+
 	}
 	
 	@Override
@@ -51,12 +52,13 @@ public class SplashScreen extends BaseScreen{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if(ResourcesManager.getInstance().getMenuManager().update()) {
-			ScreensManager.getInstance().createMainMenuScreen();
-		}
-
-		percent = Interpolation.linear.apply(percent, ResourcesManager.getInstance().getMenuManager().getProgress(), 0.1f);
-		progressBar.setValue(percent);
+		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingMenuScreen();
+		
+		splashImageOpacity += 0.025f;
+		
+		action.reset();
+		action.setAlpha( ((splashImageOpacity>1.0f)?1.0f:splashImageOpacity) * (float)Math.sin(((splashImageOpacity>1.0f)?1.0f:splashImageOpacity)) );
+		splashImage.addAction( action );
 		
 		stage.act();
 		stage.draw();

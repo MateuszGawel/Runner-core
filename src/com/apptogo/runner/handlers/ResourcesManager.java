@@ -29,11 +29,6 @@ public class ResourcesManager {
 	
 	public void loadSplashTextures(){
 		splashManager.load("gfx/splash/splash.png", Texture.class);
-		splashManager.load("gfx/splash/background.png", Texture.class);
-		splashManager.load("gfx/splash/frame-background.png", Texture.class);
-		splashManager.load("gfx/splash/frame.png", Texture.class);
-		splashManager.load("gfx/splash/bar.png", Texture.class);
-		splashManager.load("gfx/splash/hidden.png", Texture.class);
 	}
 	
 	public <T> T getSplashResource(String key) {
@@ -54,23 +49,14 @@ public class ResourcesManager {
 	/*---- MENU----*/
 	
 	public void loadMenuTextures(){
-		menuManager.load("gfx/menu/singlePlayer.png", Texture.class);
+		/*menuManager.load("gfx/menu/singlePlayer.png", Texture.class);
 		menuManager.load("gfx/menu/multiPlayer.png", Texture.class);
 		menuManager.load("gfx/menu/player1.jpg", Texture.class);
 		menuManager.load("gfx/menu/player2.jpg", Texture.class);
 		menuManager.load("gfx/menu/level1.png", Texture.class);
 		menuManager.load("gfx/menu/level2.png", Texture.class);
 		menuManager.load("gfx/menu/back.png", Texture.class);
-		menuManager.load("gfx/menu/start.png", Texture.class);
-		/*
-		menuManager.load("gfx/menu/big1.png", Texture.class);
-		menuManager.load("gfx/menu/big2.png", Texture.class);
-		menuManager.load("gfx/menu/big3.png", Texture.class);
-		menuManager.load("gfx/menu/big4.png", Texture.class);
-		menuManager.load("gfx/menu/big5.png", Texture.class);
-		menuManager.load("gfx/menu/big6.png", Texture.class);
-		menuManager.load("gfx/menu/big7.png", Texture.class);
-		*/
+		menuManager.load("gfx/menu/start.png", Texture.class);*/
 	}
 	
 	public void loadMenuMusic(){
@@ -86,12 +72,13 @@ public class ResourcesManager {
 	}
 	
 	public <T> T getMenuResource(GameCharacter character) {
-		if(character == GameCharacter.BANDIT)
+		/*if(character == GameCharacter.BANDIT)
 			return menuManager.get("gfx/menu/player1.jpg");
 		else if(character == GameCharacter.ALIEN)
 			return menuManager.get("gfx/menu/player2.jpg");
 		else
-			return null;
+			return null;*/
+		return null;
 	}
 	
 	public void unloadMenuResource(String key) {
