@@ -52,7 +52,7 @@ public class SplashScreen extends BaseScreen{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingMenuScreen();
+		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		
 		splashImageOpacity += 0.025f;
 		

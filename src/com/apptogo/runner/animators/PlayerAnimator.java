@@ -15,11 +15,10 @@ public class PlayerAnimator {
 	private float stateTime;
 
 	private TextureRegion currentFrame;
-	private TextureRegion[] playerFrames;
 	private TextureAtlas banditAtlas;
 	
 	/*--animations--*/	
-	private final int RUN_FRAMES_COUNT = 19;
+	private final int RUN_FRAMES_COUNT = 18;
 	private final int IDLE_FRAMES_COUNT = 22;
 	private final int JUMP_FRAMES_COUNT = 6;
 	private final int LAND_FRAMES_COUNT = 6;
@@ -27,6 +26,10 @@ public class PlayerAnimator {
 	private final int SLIDE_FRAMES_COUNT = 8;
 	private final int BEGINSLIDE_FRAMES_COUNT = 6;
 	private final int STANDUP_FRAMES_COUNT = 6;
+	private final int DIEBOTTOM_FRAMES_COUNT = 9;
+	private final int DIETOP_FRAMES_COUNT = 9;
+	private final int CROUCH_FRAMES_COUNT = 10;
+	private final int MOONWALK_FRAMES_COUNT = 30;
 	
 	private AtlasRegion[] runFrames;
 	private AtlasRegion[] idleFrames;
@@ -36,6 +39,10 @@ public class PlayerAnimator {
 	private AtlasRegion[] slideFrames;
 	private AtlasRegion[] beginSlideFrames;
 	private AtlasRegion[] standUpFrames;
+	private AtlasRegion[] dieBottomFrames;
+	private AtlasRegion[] dieTopFrames;
+	private AtlasRegion[] crouchFrames;
+	private AtlasRegion[] moonwalkFrames;
 
 	private Animation runAnimation;
 	private Animation idleAnimation;
@@ -45,6 +52,10 @@ public class PlayerAnimator {
 	private Animation slideAnimation;
 	private Animation beginSlideAnimation;
 	private Animation standUpAnimation;
+	private Animation dieBottomAnimation;
+	private Animation dieTopAnimation;
+	private Animation crouchAnimation;
+	private Animation moonwalkAnimation;
 
 	public PlayerAnimator(Player player){
 		this.player = player;
@@ -99,6 +110,29 @@ public class PlayerAnimator {
 		}
 		standUpAnimation = new Animation(0.03f, standUpFrames);
 
+		dieBottomFrames = new AtlasRegion[DIEBOTTOM_FRAMES_COUNT];
+		for(int i=0; i<DIEBOTTOM_FRAMES_COUNT; i++){
+			dieBottomFrames[i] = banditAtlas.findRegion("diebottom" + i);
+		}
+		dieBottomAnimation = new Animation(0.03f, dieBottomFrames);
+		
+		dieTopFrames = new AtlasRegion[DIETOP_FRAMES_COUNT];
+		for(int i=0; i<DIETOP_FRAMES_COUNT; i++){
+			dieTopFrames[i] = banditAtlas.findRegion("dietop" + i);
+		}
+		dieTopAnimation = new Animation(0.03f, dieTopFrames);
+		
+		crouchFrames = new AtlasRegion[CROUCH_FRAMES_COUNT];
+		for(int i=0; i<CROUCH_FRAMES_COUNT; i++){
+			crouchFrames[i] = banditAtlas.findRegion("crouch" + i);
+		}
+		crouchAnimation = new Animation(0.03f, crouchFrames);
+		
+		moonwalkFrames = new AtlasRegion[MOONWALK_FRAMES_COUNT];
+		for(int i=0; i<MOONWALK_FRAMES_COUNT; i++){
+			moonwalkFrames[i] = banditAtlas.findRegion("moonwalk" + i);
+		}
+		moonwalkAnimation = new Animation(0.03f, moonwalkFrames);
 	}
 
 	/*---ANIMATIONS---*/
@@ -141,6 +175,18 @@ public class PlayerAnimator {
 			if(standUpAnimation.isAnimationFinished(stateTime)){
 				player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
 			}
+		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.DIEINGTOP){
+			currentFrame = animateDieTop(delta);
+		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.DIEINGBOTTOM){
+			currentFrame = animateDieBottom(delta);
+		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.CROUCHING){
+			currentFrame = animateCrouch(delta);
+		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.MOONWALKING){
+			currentFrame = animateMoonwalk(delta);
 		}
 		
 		return currentFrame;
@@ -185,6 +231,26 @@ public class PlayerAnimator {
 	private TextureRegion animateStandUp(float delta){
 		stateTime += delta;
 		return standUpAnimation.getKeyFrame(stateTime, false);
+	}
+	
+	private TextureRegion animateDieTop(float delta){
+		stateTime += delta;
+		return dieTopAnimation.getKeyFrame(stateTime, false);
+	}
+	
+	private TextureRegion animateDieBottom(float delta){
+		stateTime += delta;
+		return dieBottomAnimation.getKeyFrame(stateTime, false);
+	}
+	
+	private TextureRegion animateCrouch(float delta){
+		stateTime += delta;
+		return crouchAnimation.getKeyFrame(stateTime, false);
+	}
+	
+	private TextureRegion animateMoonwalk(float delta){
+		stateTime += delta;
+		return moonwalkAnimation.getKeyFrame(stateTime, false);
 	}
 	
 	public void resetTime(){

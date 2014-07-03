@@ -3,7 +3,7 @@
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.GameScreen;
-import com.apptogo.runner.screens.LoadingMenuScreen;
+//import com.apptogo.runner.screens.LoadingMenuScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.SplashScreen;
@@ -39,8 +39,8 @@ public class ScreensManager {
 	}
 	
 	/*---LOADING MENU SCREEN---*/
-	public void createLoadingMenuScreen(){
-		loadingMenuScreen = new LoadingMenuScreen(runner);
+	public void createLoadinfgMenuScreen(){
+		//loadingMenuScreen = new LoadingMenuScreen(runner);
 		setScreen(loadingMenuScreen);
 	}
 	

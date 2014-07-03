@@ -1,6 +1,7 @@
 package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
+import static java.lang.Math.sqrt;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,14 +9,9 @@ import org.json.JSONObject;
 import com.apptogo.runner.animators.PlayerAnimator;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -26,10 +22,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-
-import static java.lang.Math.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 public class Player extends Actor{
 
@@ -41,7 +34,12 @@ public class Player extends Actor{
 	private float playerSpeed;
 	private float playerJumpHeight;
 	private int jumpSensor;
+	private Vector2 playerBodySize;
+	
+	//flags
 	private boolean alive;
+	private boolean inAir;
+	private boolean sliding;
 	
 	public Player(World world){
 		this.world = world;
@@ -50,32 +48,43 @@ public class Player extends Actor{
 		playerSpeed = 0;
 		jumpSensor = 0;
 		alive = true;
-		playerJumpHeight = 3;
+		playerJumpHeight = 4;
 		createPlayerBody();
+        setOrigin(0, 0);
 	}
 	
 	public enum PlayerAnimationState{
-		IDLE, RUNNING, JUMPING, DIETOP, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP
+		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP
 	}
 	
 	private void createPlayerBody(){
+		playerBodySize = new Vector2(25 / PPM, 65 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(25 / PPM, 65 / PPM); // ludzik ma 0.5m x 1m (troche wiecej niz 1m)
-		
-		FixtureDef fixtureDef = Materials.playerBody;
-		fixtureDef.shape = shape;
+		FixtureDef fixtureDef;
 		
 		playerBody = world.createBody(bodyDef);
-		playerBody.createFixture(fixtureDef).setUserData("player");
 		playerBody.setUserData("player");
 		
+		//main fixture
+		shape.setAsBox(playerBodySize.x, playerBodySize.y);
+		fixtureDef = Materials.playerBody;
+		fixtureDef.shape = shape;
+		playerBody.createFixture(fixtureDef).setUserData("player");
+		
+		//sliding fixture
+		shape.setAsBox(playerBodySize.y, playerBodySize.x, new Vector2(-playerBodySize.x, -40/PPM), 0);
+		fixtureDef = Materials.playerSlidingBody;
+		fixtureDef.shape = shape;
+		playerBody.createFixture(fixtureDef).setUserData("player");
+		playerBody.getFixtureList().get(1).setSensor(true);
+		/*
 		//wall sensor
-		shape.setAsBox(2 / PPM, 25 / PPM, new Vector2(10 / PPM, 0), 0);
+		shape.setAsBox(2 / PPM, 25 / PPM, new Vector2(50 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
@@ -85,41 +94,71 @@ public class Player extends Actor{
 		fixtureDef = Materials.footSensorBody;
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
+		*/
+		
 	}
 	
 	/*---ACTION METHODS---*/
 	public void jump(){
-		if(jumpSensor > 0 && alive){
+		if(!inAir && alive){
+			sliding = false;
 			currentAnimationState = PlayerAnimationState.JUMPING;
 			playerAnimator.resetTime();
-			float v0 = (float) sqrt( 60 * playerJumpHeight );
+			float v0 = (float) sqrt(-world.getGravity().y*2 * playerJumpHeight );
 			playerBody.setLinearVelocity(0, v0); 
 			notifyJump();
 		}
 	}
 	
+	public void land(){
+		if(alive && inAir){
+			currentAnimationState = PlayerAnimationState.LANDING;
+			playerAnimator.resetTime();
+			notifyJump();
+		}
+	}
+	
 	public void slide(){
-		if(alive){
+		if(alive && !inAir && !sliding){
+			sliding = true;
+			//this.addAction(Actions.rotateTo(90 * MathUtils.degreesToRadians, 0.2f));
+			playerBody.getFixtureList().get(0).setSensor(true);
+			playerBody.getFixtureList().get(1).setSensor(false);
 			currentAnimationState = PlayerAnimationState.BEGINSLIDING;
 			playerAnimator.resetTime();
 		}
 	}
 	
 	public void standUp(){
-		if(alive){
+		if(alive && sliding){
+			sliding = false;
+			//this.addAction(Actions.rotateTo(0, 0.2f));
+			playerBody.getFixtureList().get(0).setSensor(false);
+			playerBody.getFixtureList().get(1).setSensor(true);
 			currentAnimationState = PlayerAnimationState.STANDINGUP;
 			playerAnimator.resetTime();
 		}
 	}
 	
-	public void die(){
+	public void dieTop(){
 		if(alive){
 			alive = false;
-			currentAnimationState = PlayerAnimationState.DIETOP;
+			currentAnimationState = PlayerAnimationState.DIEINGTOP;
 			playerAnimator.resetTime();
 			playerSpeed = 0;
 			notifyDie();
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+		}
+	}
+	
+	public void dieBottom(){
+		if(alive){
+			//alive = false;
+			currentAnimationState = PlayerAnimationState.DIEINGBOTTOM;
+			playerAnimator.resetTime();
+			playerSpeed = 0;
+			notifyDie();
+			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
 		}
 	}
 	
@@ -161,16 +200,26 @@ public class Player extends Actor{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		if(playerSpeed > 0)
+		
+		if(jumpSensor > 0)
+			inAir = false;
+		else{
+			inAir = true;
+			//if(currentAnimationState != PlayerAnimationState.JUMPING)
+			//	currentAnimationState = PlayerAnimationState.FLYING;
+		}
+		
+		if(playerSpeed > 0 && !sliding)
 			playerBody.setLinearVelocity(playerSpeed, playerBody.getLinearVelocity().y);
 		
 		currentFrame = playerAnimator.animate(delta);
 		
-        setPosition(playerBody.getPosition().x + 20/PPM, playerBody.getPosition().y + 15/PPM);
+        setPosition(playerBody.getPosition().x + 10/PPM, playerBody.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(playerBody.getAngle() * MathUtils.radiansToDegrees);
-        setOrigin(getWidth() / 2, getHeight() / 2);
+             
+        //playerBody.setTransform(playerBody.getPosition().x, playerBody.getPosition().y, this.getRotation());
 	}
 	
 	
@@ -182,9 +231,8 @@ public class Player extends Actor{
 	
 	public void incrementJumpSensor(){
 		if(jumpSensor <= 0 && alive){
-			playerAnimator.resetTime();
 			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING)
-				currentAnimationState = PlayerAnimationState.LANDING;
+				land();
 		}
 		jumpSensor++;
 	}

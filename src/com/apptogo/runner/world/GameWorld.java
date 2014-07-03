@@ -27,7 +27,7 @@ public class GameWorld {
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
-	public static final Vector2 GRAVITY = new Vector2(0f, -30f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -60f);
 	
 	public World world;
 	
@@ -109,20 +109,16 @@ public class GameWorld {
 	}
 	
 	public void handleInput(){
-		if(Input.isPressed(Input.RIGHT)) {
-			Logger.log(this, "PRAWO");
+		if(Input.isDown(Input.RIGHT)) {
 			player.jump();
 		}
-		if(Input.isPressed(Input.LEFT)) {
-			Logger.log(this, "LEWO");
+		if(Input.isDown(Input.LEFT)) {
 			player.slide();
 		}
 		if(Input.isReleased(Input.LEFT)) {
-			Logger.log(this, "LEWO up");
 			player.standUp();
 		}
 		if(Input.isPressed(Input.START)) {
-			Logger.log(this, "LEWO");
 			player.startRunning();
 		}
 		

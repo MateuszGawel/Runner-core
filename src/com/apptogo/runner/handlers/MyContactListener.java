@@ -22,7 +22,7 @@ public class MyContactListener implements ContactListener{
 		if(("killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())) 
 				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData()))){
 			Logger.log(this, "PLAYER DOTYKA GRZYBKA");
-			world.player.die();
+			world.player.dieBottom();
 		}
 		Logger.log(this, "WYKRYTO: " + fa.getUserData() + ", " + fb.getUserData());
 		if(("player".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
