@@ -5,12 +5,22 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class LoadingScreen extends BaseScreen{	
     
 	private ScreenType screenToLoad;
+	private Stage stage;
+	private Viewport viewport;
+	private ProgressBar slider;
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad){
 		super(runner);	
@@ -33,12 +43,23 @@ public class LoadingScreen extends BaseScreen{
 	
 	@Override
 	public void show() {
-
+		
+		Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+		slider = new ProgressBar(0.0f, 1.0f, 0.05f, false, skin);
+		
+		slider.setSize(400, 25);
+		slider.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - slider.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - slider.getHeight()/2.0f );
+		
+		stage = new Stage();
+		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		stage.setViewport(viewport);
+		
+		stage.addActor(slider);
 	}
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0.5f, 0.2f, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		if(screenToLoad == ScreenType.SCREEN_MAIN_MENU && ResourcesManager.getInstance().getMenuManager().update()) {
@@ -53,6 +74,11 @@ public class LoadingScreen extends BaseScreen{
 		else if(screenToLoad == ScreenType.SCREEN_GAME)
 			progress = ResourcesManager.getInstance().getGameManager().getProgress();
 		Logger.log(this, "progress: " + progress);
+		
+		slider.setValue(progress);
+		
+		stage.act();
+		stage.draw();
 		
 	}
 	

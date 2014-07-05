@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -24,6 +25,7 @@ public class MainMenuScreen extends BaseScreen{
 	private Stage stage;
 	private Viewport viewport;
 	private TextButton button;
+	private Label label;
 	
 	private Skin skin;
 	
@@ -49,12 +51,16 @@ public class MainMenuScreen extends BaseScreen{
              }
          });
         
+        label = new Label("MENU GLOWNE", skin);
+        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
+        
         
 		stage = new Stage();
 		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage.setViewport(viewport);
 		
 		stage.addActor(button);
+		stage.addActor(label);
 		Gdx.input.setInputProcessor(stage);
 	}
 	
