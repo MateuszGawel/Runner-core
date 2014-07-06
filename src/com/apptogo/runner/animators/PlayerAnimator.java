@@ -2,8 +2,10 @@ package com.apptogo.runner.animators;
 
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.actors.Player.PlayerAnimationState;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -57,9 +59,9 @@ public class PlayerAnimator {
 	private Animation crouchAnimation;
 	private Animation moonwalkAnimation;
 
-	public PlayerAnimator(Player player){
+	public PlayerAnimator(Player player){Logger.log(this,  "ANIMATOR");
 		this.player = player;
-		banditAtlas = ResourcesManager.getInstance().getGameResource("gfx/game/characters/bandit.pack");
+		banditAtlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/bandit.pack");
 		stateTime = 0f;
 		
 		idleFrames = new AtlasRegion[IDLE_FRAMES_COUNT];

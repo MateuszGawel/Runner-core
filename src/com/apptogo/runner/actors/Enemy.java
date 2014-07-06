@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 import static java.lang.Math.*;
 
 public class Enemy extends Actor{
@@ -84,7 +86,7 @@ public class Enemy extends Actor{
 	}
 	
 	private void createPlayerAnimation(){
-		bandit = (Texture)ResourcesManager.getInstance().getGameResource("gfx/game/bandit.png");
+		bandit = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/bandit.png");
 		/*TextureRegion[][] playerRegionsTemp = TextureRegion.split(playerSheet, playerSheet.getWidth()/12, playerSheet.getHeight()/11);
 		
 		playerFrames = new TextureRegion[SHEET_ROWS * SHEET_COLUMNS];

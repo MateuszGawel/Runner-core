@@ -25,6 +25,7 @@ public class MainMenuScreen extends BaseScreen{
 	private Stage stage;
 	private Viewport viewport;
 	private TextButton button;
+	private TextButton goToUpgradeScreenButton;
 	private Label label;
 	
 	private Skin skin;
@@ -41,13 +42,24 @@ public class MainMenuScreen extends BaseScreen{
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		button = new TextButton("Click me", skin, "default");
         
-        button.setWidth(200f);
+		button.setWidth(200f);
         button.setHeight(20f);
         button.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - button.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - button.getHeight()/2.0f );
         button.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                  Logger.log(this, "LEVEL ONE CLICKED");
                  ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+             }
+         });
+        
+        goToUpgradeScreenButton = new TextButton("UPGRADE SCREEN", skin, "default");
+        goToUpgradeScreenButton.setWidth(200f);
+        goToUpgradeScreenButton.setHeight(20f);
+        goToUpgradeScreenButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - goToUpgradeScreenButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - goToUpgradeScreenButton.getHeight()/2.0f - 30f );
+        goToUpgradeScreenButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                 Logger.log(this, "GO TO UPGRADE SCREEN CLICKED");
+                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_UPGRADE);
              }
          });
         
@@ -60,6 +72,7 @@ public class MainMenuScreen extends BaseScreen{
 		stage.setViewport(viewport);
 		
 		stage.addActor(button);
+		stage.addActor(goToUpgradeScreenButton);
 		stage.addActor(label);
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -110,7 +123,7 @@ public class MainMenuScreen extends BaseScreen{
 
 	@Override
 	public ScreenType getSceneType() {
-		return ScreenType.SCREEN_SPLASH;
+		return ScreenType.SCREEN_MAIN_MENU;
 	}
 
 

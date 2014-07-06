@@ -7,6 +7,7 @@ import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.SplashScreen;
+import com.apptogo.runner.screens.UpgradeScreen;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 
 public class ScreensManager {
@@ -20,16 +21,27 @@ public class ScreensManager {
 	private BaseScreen mainMenuScreen;
 	private BaseScreen gameScreen;
 	private BaseScreen loadingScreen;
-	
+	private BaseScreen upgradeScreen;
 	private ScreenType currentScreenType;
 	private BaseScreen currentScreen;
 
 	public enum ScreenType{
 		SCREEN_SPLASH,
 		SCREEN_LOADING_MENU,
-		SCREEN_MAIN_MENU, 
+		SCREEN_MAIN_MENU,
+		SCREEN_UPGRADE,
 		SCREEN_LOADING, 
 		SCREEN_GAME
+	}
+	
+	/*---TO JEST NA PALE I POWINNO BYC POLEPSZONE W PRZYSZLOSCI---*/
+	public void createProperScreen(ScreenType screenType)
+	{
+		if(screenType == ScreenType.SCREEN_GAME) createGameScreen();
+		else if(screenType == ScreenType.SCREEN_MAIN_MENU) createMainMenuScreen();
+		else if(screenType == ScreenType.SCREEN_SPLASH) createSplashScreen();
+		else if(screenType == ScreenType.SCREEN_UPGRADE) createUpgradeScreen();
+		else {/*--do nothing--*/}
 	}
 	
 	/*---SPLASH SCREEN---*/
@@ -37,14 +49,8 @@ public class ScreensManager {
 		splashScreen = new SplashScreen(runner);
 		setScreen(splashScreen);
 	}
-	
-	/*---LOADING MENU SCREEN---*/
-	public void createLoadinfgMenuScreen(){
-		//loadingMenuScreen = new LoadingMenuScreen(runner);
-		setScreen(loadingMenuScreen);
-	}
-	
-	/*---SPLASH SCREEN---*/
+		
+	/*---LOADING SCREEN---*/
 	public void createLoadingScreen(ScreenType screenToLoad){
 		loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
@@ -60,6 +66,12 @@ public class ScreensManager {
 	public void createGameScreen(){
 		gameScreen = new GameScreen(runner);
 		setScreen(gameScreen);
+	}
+	
+	/*---UPGRADE SCREEN---*/
+	public void createUpgradeScreen(){
+		upgradeScreen = new UpgradeScreen(runner);
+		setScreen(upgradeScreen);
 	}
 	
 	/*---OTHER---*/

@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -24,6 +26,9 @@ public class SplashScreen extends BaseScreen{
 	
 	float percent;
 	
+	private TextButton button;
+	private Skin skin;
+	
 	public SplashScreen(Runner runner){
 		super(runner);	
 	}
@@ -31,20 +36,19 @@ public class SplashScreen extends BaseScreen{
 	@Override
 	public void show() {
 	
-		ResourcesManager.getInstance().loadSplashTextures();
-		ResourcesManager.getInstance().getSplashManager().finishLoading();
-		
-		splashImage = new Image(((Texture)ResourcesManager.getInstance().getSplashResource("gfx/splash/splash.png")));
+		ResourcesManager.getInstance().loadResources(this);
+		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
+
+		splashImage = new Image(((Texture)ResourcesManager.getInstance().getResource(this, "gfx/splash/splash.png")));
 		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
 		splashImageOpacity = 0.0f;
 		action = new AlphaAction();
-        
+
 		stage = new Stage();
 		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage.setViewport(viewport);
 		
 		stage.addActor(splashImage);
-
 	}
 	
 	@Override

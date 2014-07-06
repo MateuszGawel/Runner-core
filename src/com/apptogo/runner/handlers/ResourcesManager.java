@@ -1,6 +1,10 @@
 package com.apptogo.runner.handlers;
 
+import java.util.ArrayList;
+
+import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -10,133 +14,283 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class ResourcesManager {
 
-	//do zaimplementowania bedzie ladowanie tekstur do atlasów
-	
+	private static final ResourcesManager INSTANCE = new ResourcesManager();
 	Runner runner;
-	AssetManager menuManager;
-	AssetManager gameManager;
-	AssetManager splashManager;
+	
+	public static ResourcesManager getInstance()
+	{
+		return INSTANCE;
+	}
+	public static void prepareManager(Runner runner){
+    	getInstance().runner = runner;
+    }
+	
+	//do zaimplementowania bedzie ladowanie tekstur do atlasów	
+	
+	//---
+	private class ScreenMeta
+	{
+		public ScreenType screenType;
+		public AssetManager manager;
+		public ArrayList<String> textures;
+		public ArrayList<String> textureAtlases;
+		public ArrayList<String> musics;
+		public ArrayList<String> sounds;
+		public String texturesDirectory;
+		public String texturesExtension;
+		public String textureAtlasesDirectory;
+		public String textureAtlasesExtension;
+		public String musicsDirectory;
+		public String musicsExtension;
+		public String soundsDirectory;
+		public String soundsExtension;
+		
+		public ScreenMeta(ScreenType screenType)
+		{
+			this.screenType = screenType;
+			manager = new AssetManager();
+			textures = new ArrayList<String>();
+			textureAtlases = new ArrayList<String>();
+			musics = new ArrayList<String>();
+			sounds = new ArrayList<String>();
+			
+			texturesDirectory = "";
+			texturesExtension = "";
+			textureAtlasesDirectory = "";
+			textureAtlasesExtension = "";
+			musicsDirectory = "";
+			musicsExtension = "";
+			soundsDirectory = "";
+			soundsExtension = "";
+		}
+		
+		public void addTextures(String[] textures) { for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
+		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
+		public void addTextureAtlases(String[] textureAtlases) { for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
+		public void addTextureAtlas(String textureAtlas) { Logger.log(this, textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
+		public void addMusics(String[] musics) { for(String m: musics) this.musics.add(musicsDirectory+m+musicsExtension); }
+		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
+		public void addSounds(String[] sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
+		public void addSound(String sound) { this.sounds.add(soundsDirectory+sound+soundsExtension); }
+
+		public void setTexturesDirectory(String texturesDirectory) {
+			this.texturesDirectory = texturesDirectory;
+		}
+		public void setTexturesExtension(String texturesExtension) {
+			this.texturesExtension = texturesExtension;
+		}
+		public void setTextureAtlasesDirectory(String textureAtlasesDirectory) {
+			this.textureAtlasesDirectory = textureAtlasesDirectory;
+		}
+		public void setTextureAtlasesExtension(String textureAtlasesExtension) {
+			this.textureAtlasesExtension = textureAtlasesExtension;
+		}
+		public void setMusicsDirectory(String musicsDirectory) {
+			this.musicsDirectory = musicsDirectory;
+		}
+		public void setMusicsExtension(String musicsExtension) {
+			this.musicsExtension = musicsExtension;
+		}
+		public void setSoundsDirectory(String soundsDirectory) {
+			this.soundsDirectory = soundsDirectory;
+		}
+		public void setSoundsExtension(String soundsExtension) {
+			this.soundsExtension = soundsExtension;
+		}	
+	}
+	//---
 	
 	TextureAtlas stickmanAtlas;
-	
-	private static final ResourcesManager INSTANCE = new ResourcesManager();
-	
-	public ResourcesManager() {
-
+	ArrayList<ScreenMeta> screenMetaArray;
+		
+	public ResourcesManager() 
+	{
+		screenMetaArray = new ArrayList<ScreenMeta>();
+		
+		//ADDING SCREENS:
+		//-----------------------------------------------------------------------------
+		//|1. SPLASH SCREEN
+		ScreenMeta splashMeta = new ScreenMeta(ScreenType.SCREEN_SPLASH);
+		
+		splashMeta.addTexture("gfx/splash/splash.png");
+		
+		screenMetaArray.add( splashMeta ); 
+		
+		//|2. MAIN MENU SCREEN
+		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
+		screenMetaArray.add( mainMenuMeta );
+		
+		//|3. GAME SCREEN
+		ScreenMeta gameMeta = new ScreenMeta(ScreenType.SCREEN_GAME);
+		
+		gameMeta.setTexturesDirectory("gfx/game/levels/");
+		gameMeta.setTexturesExtension(".png");
+		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand"} );
+		
+		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
+		
+		gameMeta.addMusic("mfx/game/gameMusic.ogg");
+		
+		gameMeta.addSound("mfx/game/gameClick.ogg");
+		
+		screenMetaArray.add( gameMeta );
+		
+		//|4. UPGRADE SCREEN
+		ScreenMeta upgradeMeta = new ScreenMeta(ScreenType.SCREEN_UPGRADE);
+		screenMetaArray.add( upgradeMeta );
+		
+		//|5. LOADING SCREEN
+		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
+		screenMetaArray.add( loadingMeta );
 	}
 	
-	/*---SPLASH---*/
-	
-	public void loadSplashTextures(){
-		splashManager.load("gfx/splash/splash.png", Texture.class);
+	//--------- LOADING RESOURCES
+	public void loadResources(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		loadResources(screenType);
+	}	
+	public void loadResources(ScreenType screenType)
+	{	
+		this.loadTextureAtlases(screenType);
+		this.loadTextures(screenType);
+		this.loadMusics(screenType);
+		this.loadSounds(screenType);
 	}
 	
-	public <T> T getSplashResource(String key) {
-		return splashManager.get(key);
+	public void loadTextures(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		loadTextures(screenType);
+	}
+	public void loadTextures(ScreenType screenType)
+	{
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		for(String texture: (ArrayList<String>)screenMetaArray.get(index).textures) 
+		{
+			manager.load(texture, Texture.class); 
+		}
 	}
 	
-	public void unloadSplashResource(String key) {
-		if(splashManager.get(key) != null)
-			splashManager.unload(key);
+	public void loadTextureAtlases(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		loadTextureAtlases(screenType);
+	}
+	public void loadTextureAtlases(ScreenType screenType)
+	{Logger.log(this,  "LOADED");
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		for(String textureAtlas: (ArrayList<String>)screenMetaArray.get(index).textureAtlases) 
+		{
+			manager.load(textureAtlas, TextureAtlas.class); 
+		}
 	}
 	
-	public void unloadAllSplashResources() {
-		splashManager.clear();
-		 //splashManager.dispose();
+	public void loadMusics(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		loadMusics(screenType);
+	}
+	public void loadMusics(ScreenType screenType)
+	{	
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		for(String music: (ArrayList<String>)screenMetaArray.get(index).musics) 
+		{
+			manager.load(music, Music.class); 
+		}
 	}
 	
+	public void loadSounds(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		loadSounds(screenType);
+	}
+	public void loadSounds(ScreenType screenType)
+	{
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		for(String sound: (ArrayList<String>)screenMetaArray.get(index).sounds) 
+		{
+			manager.load(sound, Sound.class); 
+		}
+	}
+	//---------
 	
-	/*---- MENU----*/
-	
-	public void loadMenuTextures(){
-		/*menuManager.load("gfx/menu/singlePlayer.png", Texture.class);
-		menuManager.load("gfx/menu/multiPlayer.png", Texture.class);
-		menuManager.load("gfx/menu/player1.jpg", Texture.class);
-		menuManager.load("gfx/menu/player2.jpg", Texture.class);
-		menuManager.load("gfx/menu/level1.png", Texture.class);
-		menuManager.load("gfx/menu/level2.png", Texture.class);
-		menuManager.load("gfx/menu/back.png", Texture.class);
-		menuManager.load("gfx/menu/start.png", Texture.class);*/
+	//--------- UNLOADING RESOURCES
+	public void unloadAllResources(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		unloadAllResources(screenType);
+	}
+	public void unloadAllResources(ScreenType screenType)
+	{
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		manager.clear();
+		//manager.dispose();
 	}
 	
-	public void loadMenuMusic(){
-		menuManager.load("mfx/menu/menuMusic.ogg", Music.class);
+	public void unloadResource(BaseScreen screen, String filename)
+	{
+		ScreenType screenType = screen.getSceneType();
+		unloadResource(screenType, filename);
+	}
+	public void unloadResource(ScreenType screenType, String filename)
+	{
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		manager.unload(filename);
+	}
+	//---------
+	
+	//--------- ACCESSING RESOURCES
+	public <T> T getResource(BaseScreen screen, String filename)
+	{
+		ScreenType screenType = screen.getSceneType();
+		return getResource(screenType, filename);
+	}
+	public <T> T getResource(ScreenType screenType, String filename)
+	{
+		int index = getScreenIndex(screenType);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		
+		return manager.get(filename);
 	}
 	
-	public void loadMenuSounds() {
-		menuManager.load("mfx/menu/menuClick.ogg", Sound.class);
+	public AssetManager getAssetManager(BaseScreen screen)
+	{
+		ScreenType screenType = screen.getSceneType();
+		return getAssetManager(screenType);
 	}
-	
-	public <T> T getMenuResource(String key) {
-		return menuManager.get(key);
+	public AssetManager getAssetManager(ScreenType screenType)
+	{
+		int index = getScreenIndex(screenType);
+		return (AssetManager)screenMetaArray.get(index).manager;
 	}
+	//---------
 	
-	public <T> T getMenuResource(GameCharacter character) {
-		/*if(character == GameCharacter.BANDIT)
-			return menuManager.get("gfx/menu/player1.jpg");
-		else if(character == GameCharacter.ALIEN)
-			return menuManager.get("gfx/menu/player2.jpg");
-		else
-			return null;*/
-		return null;
+	private int getScreenIndex(ScreenType screenType)
+	{
+		int index = -1;
+		
+		for(int i=0; i<screenMetaArray.size(); i++)
+		{
+			if( screenMetaArray.get(i).screenType == screenType )
+			{
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
 	}
-	
-	public void unloadMenuResource(String key) {
-		if(menuManager.get(key) != null)
-			menuManager.unload(key);
-	}
-	
-	public void unloadAllMenuResources() {
-		 menuManager.clear();
-		 //menuManager.dispose();
-	}
-	
-	
-	
-	/*---GAME---*/
-	
-	public void loadGameTextures(){
-		gameManager.load("gfx/game/characters/bandit.pack", TextureAtlas.class);
-		gameManager.load("gfx/game/levels/mountains.png", Texture.class);
-		gameManager.load("gfx/game/levels/rocks.png", Texture.class);
-		gameManager.load("gfx/game/levels/skyBlue.png", Texture.class);
-		gameManager.load("gfx/game/levels/sand.png", Texture.class);
-	}
-	
-	public void loadGameMusic(){
-		gameManager.load("mfx/game/gameMusic.ogg", Music.class);
-	}
-	
-	public void loadGameSounds() {
-		gameManager.load("mfx/game/gameClick.ogg", Sound.class);
-	}
-	
-	public <T> T getGameResource(String key) {
-		return gameManager.get(key);
-	}
-	
-	public void unloadGameResource(String key) {
-		if(gameManager.get(key) != null)
-			gameManager.unload(key);
-	}
-	
-	public void unloadAllGameResources() {
-		gameManager.clear();
-		 //gameManager.dispose();
-	}
-	
-	
-	/*---OTHER---*/
-	public static ResourcesManager getInstance(){ return INSTANCE; }
-	
-    public static void prepareManager(Runner runner){
-    	getInstance().runner = runner;
-    	getInstance().menuManager = new AssetManager();
-    	getInstance().gameManager = new AssetManager();
-    	getInstance().splashManager = new AssetManager();
-    }
-    
-    public AssetManager getMenuManager(){ return this.menuManager; }
-    public AssetManager getGameManager(){ return this.gameManager; }
-    public AssetManager getSplashManager(){ return this.splashManager; }
 }
