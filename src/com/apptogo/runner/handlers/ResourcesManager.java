@@ -142,6 +142,22 @@ public class ResourcesManager {
 		//|5. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
 		screenMetaArray.add( loadingMeta );
+		
+		//|6. CAMPAIGN SCREEN
+		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
+		screenMetaArray.add( campaignMeta );
+		
+		//|7. MULTIPLAYER SCREEN
+		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
+		screenMetaArray.add( multiplayerMeta );
+
+		//|8. CREATE ROOM SCREEN
+		ScreenMeta createRoomMeta = new ScreenMeta(ScreenType.SCREEN_CREATE_ROOM);
+		screenMetaArray.add( createRoomMeta );
+		
+		//|9. FIND ROOM SCREEN
+		ScreenMeta findRoomMeta = new ScreenMeta(ScreenType.SCREEN_FIND_ROOM);
+		screenMetaArray.add( findRoomMeta );
 	}
 	
 	//--------- LOADING RESOURCES

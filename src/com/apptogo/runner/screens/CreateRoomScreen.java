@@ -20,72 +20,57 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen extends BaseScreen{	
+public class CreateRoomScreen extends BaseScreen{	
 	
 	private Stage stage;
 	private Viewport viewport;
-	private TextButton upgradeButton;
-	private TextButton campaignButton;
-	private TextButton multiplayerButton;
-	private Label label;
 	
 	private Skin skin;
 	
-	public MainMenuScreen(Runner runner){
+	private Label label;
+	private TextButton button;
+	private TextButton backButton;
+	
+	public CreateRoomScreen(Runner runner){
 		super(runner);	
 	}
 	
 	@Override
 	public void show() {
 		
-		Logger.log(this, "MAIN MENU SCREEN SHOWED");
-		
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-		       
-        upgradeButton = new TextButton("UPGRADE SCREEN", skin, "default");
-        upgradeButton.setWidth(200f);
-        upgradeButton.setHeight(20f);
-        upgradeButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - upgradeButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - upgradeButton.getHeight()/2.0f );
-        upgradeButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_UPGRADE);
-            }
-         });
-        
-        campaignButton = new TextButton("CAMPAIGN", skin, "default");
-		campaignButton.setWidth(200f);
-		campaignButton.setHeight(20f);
-		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f - 30f );
-		campaignButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_CAMPAIGN);
-            }
-         });
 		
-		multiplayerButton = new TextButton("MULTIPLAYER", skin, "default");
-		multiplayerButton.setWidth(200f);
-		multiplayerButton.setHeight(20f);
-		multiplayerButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - multiplayerButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - multiplayerButton.getHeight()/2.0f - 60f );
-		multiplayerButton.addListener(new ClickListener() {
+		label = new Label("TWORZENIE POKOJU", skin);
+        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
+		
+		button = new TextButton("CREATE ROOM", skin, "default");
+        button.setWidth(200f);
+        button.setHeight(20f);
+        button.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - button.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - button.getHeight()/2.0f );
+        button.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
             }
          });
         
-        label = new Label("MENU GLOWNE", skin);
-        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
-        
+        backButton = new TextButton("BACK", skin, "default");
+        backButton.setWidth(200f);
+        backButton.setHeight(20f);
+        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 30f );
+        backButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+            }
+         });
         
 		stage = new Stage();
 		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		stage.setViewport(viewport);
 		
-		stage.addActor(upgradeButton);
-		stage.addActor(campaignButton);
-		stage.addActor(multiplayerButton);
+		stage.addActor(button);
+		stage.addActor(backButton);
 		stage.addActor(label);
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -136,7 +121,7 @@ public class MainMenuScreen extends BaseScreen{
 
 	@Override
 	public ScreenType getSceneType() {
-		return ScreenType.SCREEN_MAIN_MENU;
+		return ScreenType.SCREEN_UPGRADE;
 	}
 
 

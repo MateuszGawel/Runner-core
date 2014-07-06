@@ -35,9 +35,7 @@ public class UpgradeScreen extends BaseScreen{
 	
 	@Override
 	public void show() {
-		
-		Logger.log(this, "UPGRADE SCREEN SHOWED");
-		
+				
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		button = new TextButton("BACK", skin, "default");
         
@@ -47,7 +45,7 @@ public class UpgradeScreen extends BaseScreen{
         button.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                  Logger.log(this, "LEVEL ONE CLICKED");
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
              }
          });
         

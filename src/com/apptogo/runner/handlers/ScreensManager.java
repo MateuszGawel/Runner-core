@@ -4,10 +4,14 @@ import java.util.ArrayList;
 
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
+import com.apptogo.runner.screens.CampaignScreen;
+import com.apptogo.runner.screens.CreateRoomScreen;
+import com.apptogo.runner.screens.FindRoomScreen;
 import com.apptogo.runner.screens.GameScreen;
 //import com.apptogo.runner.screens.LoadingMenuScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
+import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.UpgradeScreen;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
@@ -31,6 +35,10 @@ public class ScreensManager {
 		SCREEN_LOADING, 
 		SCREEN_MAIN_MENU,
 		SCREEN_UPGRADE,
+		SCREEN_CAMPAIGN,
+		SCREEN_MULTIPLAYER,
+		SCREEN_CREATE_ROOM,
+		SCREEN_FIND_ROOM,
 		SCREEN_GAME
 	}
 		
@@ -60,6 +68,14 @@ public class ScreensManager {
 			screen = new MainMenuScreen(runner);
 		else if(screenType == ScreenType.SCREEN_UPGRADE)
 			screen = new UpgradeScreen(runner);
+		else if(screenType == ScreenType.SCREEN_CAMPAIGN)
+			screen = new CampaignScreen(runner);
+		else if(screenType == ScreenType.SCREEN_MULTIPLAYER)
+			screen = new MultiplayerScreen(runner);
+		else if(screenType == ScreenType.SCREEN_CREATE_ROOM)
+			screen = new CreateRoomScreen(runner);
+		else if(screenType == ScreenType.SCREEN_FIND_ROOM)
+			screen = new FindRoomScreen(runner);
 		else if(screenType == ScreenType.SCREEN_GAME)
 			screen = new GameScreen(runner);
 		else
