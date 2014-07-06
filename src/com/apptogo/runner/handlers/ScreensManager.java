@@ -1,5 +1,7 @@
  package com.apptogo.runner.handlers;
 
+import java.util.ArrayList;
+
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.GameScreen;
@@ -13,81 +15,89 @@ import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 public class ScreensManager {
 	
 	private static final ScreensManager INSTANCE = new ScreensManager();
-	
 	private Runner runner;
 	
-	private BaseScreen splashScreen;
-	private BaseScreen loadingMenuScreen;
-	private BaseScreen mainMenuScreen;
-	private BaseScreen gameScreen;
-	private BaseScreen loadingScreen;
-	private BaseScreen upgradeScreen;
-	private ScreenType currentScreenType;
-	private BaseScreen currentScreen;
+	public static ScreensManager getInstance(){ return INSTANCE; }
+	public static void prepareManager(Runner runner)
+	{ 
+		getInstance().runner = runner; 
+		getInstance().screens = new ArrayList<BaseScreen>();
+	}
 
-	public enum ScreenType{
+	
+	public enum ScreenType
+	{
 		SCREEN_SPLASH,
-		SCREEN_LOADING_MENU,
+		SCREEN_LOADING, 
 		SCREEN_MAIN_MENU,
 		SCREEN_UPGRADE,
-		SCREEN_LOADING, 
 		SCREEN_GAME
 	}
-	
-	/*---TO JEST NA PALE I POWINNO BYC POLEPSZONE W PRZYSZLOSCI---*/
-	public void createProperScreen(ScreenType screenType)
-	{
-		if(screenType == ScreenType.SCREEN_GAME) createGameScreen();
-		else if(screenType == ScreenType.SCREEN_MAIN_MENU) createMainMenuScreen();
-		else if(screenType == ScreenType.SCREEN_SPLASH) createSplashScreen();
-		else if(screenType == ScreenType.SCREEN_UPGRADE) createUpgradeScreen();
-		else {/*--do nothing--*/}
-	}
-	
-	/*---SPLASH SCREEN---*/
-	public void createSplashScreen(){
-		splashScreen = new SplashScreen(runner);
-		setScreen(splashScreen);
-	}
 		
-	/*---LOADING SCREEN---*/
-	public void createLoadingScreen(ScreenType screenToLoad){
+	private ArrayList<BaseScreen> screens;
+	private BaseScreen loadingScreen; //to niestety jest wyjatek i trzeba go obrobic osobno
+	private BaseScreen currentScreen;
+	private ScreenType currentScreenType;
+		
+	public void createScreen(ScreenType screenType)
+	{
+		int index = getScreenIndex(screenType);
+		setScreen( screens.get(index) );
+	}
+	public void createLoadingScreen(ScreenType screenToLoad)
+	{
 		loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
 	}
 	
-	/*---MAIN MENU SCREEN---*/
-	public void createMainMenuScreen(){
-		mainMenuScreen = new MainMenuScreen(runner);
-		setScreen(mainMenuScreen);
+	private void addNewScreen(ScreenType screenType)
+	{
+		BaseScreen screen;
+		
+		if(screenType == ScreenType.SCREEN_SPLASH)
+			screen = new SplashScreen(runner);
+		else if(screenType == ScreenType.SCREEN_MAIN_MENU)
+			screen = new MainMenuScreen(runner);
+		else if(screenType == ScreenType.SCREEN_UPGRADE)
+			screen = new UpgradeScreen(runner);
+		else if(screenType == ScreenType.SCREEN_GAME)
+			screen = new GameScreen(runner);
+		else
+			screen = null;
+		
+		if(screen != null)
+			screens.add(screen);
+	}
+	private int getScreenIndex(ScreenType screenType)
+	{
+		//ta funkcja jest zasadniczo nadmiarowa ale moze bedziemy chcieli miec dostep do scen w danym stanie
+		int index = -1;
+		
+		for(int i=0; i<screens.size(); i++)
+		{
+			if( screens.get(i).getSceneType() == screenType )
+			{
+				index = i;
+				break;
+			}
+		}
+		
+		if( index == -1 )
+		{
+			addNewScreen(screenType);
+			index = screens.size() - 1;
+		}
+		
+		return index;
 	}
 	
-	/*---GAME SCREEN---*/
-	public void createGameScreen(){
-		gameScreen = new GameScreen(runner);
-		setScreen(gameScreen);
-	}
-	
-	/*---UPGRADE SCREEN---*/
-	public void createUpgradeScreen(){
-		upgradeScreen = new UpgradeScreen(runner);
-		setScreen(upgradeScreen);
-	}
-	
-	/*---OTHER---*/
-	public void setScreen(BaseScreen screen){
+	public void setScreen(BaseScreen screen)
+	{
 		runner.setScreen(screen);
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	}
 	
-    public static ScreensManager getInstance(){ return INSTANCE; }
-    
-    public static void prepareManager(Runner runner){
-    	getInstance().runner = runner;
-    }
-    
     public ScreenType getCurrentScreenType(){ return currentScreenType; }
     public BaseScreen getCurrentScreen(){ return currentScreen; }
-    
 }

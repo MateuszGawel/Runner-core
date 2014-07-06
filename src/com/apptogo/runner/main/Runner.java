@@ -16,7 +16,7 @@ public class Runner extends Game{
 	public void create() {	
 		ScreensManager.prepareManager(this);
 		ResourcesManager.prepareManager(this);
-		ScreensManager.getInstance().createSplashScreen();
+		ScreensManager.getInstance().createScreen(ScreenType.SCREEN_SPLASH);
 	}
 
 	@Override

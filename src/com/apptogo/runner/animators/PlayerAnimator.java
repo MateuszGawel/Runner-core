@@ -2,7 +2,6 @@ package com.apptogo.runner.animators;
 
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.actors.Player.PlayerAnimationState;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -59,7 +58,7 @@ public class PlayerAnimator {
 	private Animation crouchAnimation;
 	private Animation moonwalkAnimation;
 
-	public PlayerAnimator(Player player){Logger.log(this,  "ANIMATOR");
+	public PlayerAnimator(Player player){
 		this.player = player;
 		banditAtlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/bandit.pack");
 		stateTime = 0f;
