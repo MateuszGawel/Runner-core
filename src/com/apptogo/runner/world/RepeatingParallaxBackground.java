@@ -29,7 +29,6 @@ public class RepeatingParallaxBackground extends Actor{
 		this.player = player;
 		this.x = x;
 		this.y = y;
-		
 		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		xWrapCount = (int) Math.ceil(mapSize.x / texture.getWidth());
 		Logger.log(this, mapSize.x + " / " + texture.getWidth() + " = " + xWrapCount);

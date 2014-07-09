@@ -2,6 +2,7 @@ package com.apptogo.runner.animators;
 
 import com.apptogo.runner.actors.Player;
 import com.apptogo.runner.actors.Player.PlayerAnimationState;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -46,7 +47,7 @@ public class PlayerAnimator {
 	private AtlasRegion[] moonwalkFrames;
 
 	private Animation runAnimation;
-	private Animation idleAnimation;
+	private MyAnimation idleAnimation;
 	private Animation jumpAnimation;
 	private Animation landAnimation;
 	private Animation flyAnimation;
@@ -55,8 +56,8 @@ public class PlayerAnimator {
 	private Animation standUpAnimation;
 	private Animation dieBottomAnimation;
 	private Animation dieTopAnimation;
-	private Animation crouchAnimation;
-	private Animation moonwalkAnimation;
+	private MyAnimation crouchAnimation;
+	private MyAnimation moonwalkAnimation;
 
 	public PlayerAnimator(Player player){
 		this.player = player;
@@ -67,7 +68,7 @@ public class PlayerAnimator {
 		for(int i=0; i<IDLE_FRAMES_COUNT; i++){
 			idleFrames[i] = banditAtlas.findRegion("idle" + i);
 		}
-		idleAnimation = new Animation(0.06f, idleFrames);
+		idleAnimation = new MyAnimation(0.06f, idleFrames);
 		
 		runFrames = new AtlasRegion[RUN_FRAMES_COUNT];
 		for(int i=0; i<RUN_FRAMES_COUNT; i++){
@@ -127,19 +128,24 @@ public class PlayerAnimator {
 		for(int i=0; i<CROUCH_FRAMES_COUNT; i++){
 			crouchFrames[i] = banditAtlas.findRegion("crouch" + i);
 		}
-		crouchAnimation = new Animation(0.03f, crouchFrames);
+		crouchAnimation = new MyAnimation(0.03f, crouchFrames);
 		
 		moonwalkFrames = new AtlasRegion[MOONWALK_FRAMES_COUNT];
 		for(int i=0; i<MOONWALK_FRAMES_COUNT; i++){
 			moonwalkFrames[i] = banditAtlas.findRegion("moonwalk" + i);
 		}
-		moonwalkAnimation = new Animation(0.03f, moonwalkFrames);
+		moonwalkAnimation = new MyAnimation(0.03f, moonwalkFrames);
 	}
 
 	/*---ANIMATIONS---*/
 	public TextureRegion animate(float delta){
 		if(player.getCurrentAnimationState() == PlayerAnimationState.IDLE){
 			currentFrame = animateIdle(delta);
+			if(idleAnimation.isAnimationFinished(delta)){
+				resetTime();
+				player.setCurrentAnimationState(PlayerAnimationState.MOONWALKING);
+				idleAnimation.resetLoops();
+			}
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.JUMPING){
 			currentFrame = animateJump(delta);
@@ -185,9 +191,18 @@ public class PlayerAnimator {
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.CROUCHING){
 			currentFrame = animateCrouch(delta);
+			if(crouchAnimation.isAnimationFinished(delta)){
+				resetTime();
+				player.setCurrentAnimationState(PlayerAnimationState.IDLE);
+			}
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.MOONWALKING){
 			currentFrame = animateMoonwalk(delta);
+			if(moonwalkAnimation.isAnimationFinished(delta)){
+				resetTime();
+				player.setCurrentAnimationState(PlayerAnimationState.IDLE);
+				moonwalkAnimation.resetLoops();
+			}
 		}
 		
 		return currentFrame;
@@ -196,7 +211,7 @@ public class PlayerAnimator {
 	
 	private TextureRegion animateIdle(float delta){
 		stateTime += delta;
-		return idleAnimation.getKeyFrame(stateTime, true);
+		return idleAnimation.getKeyFrame(stateTime, true, 10);
 	}
 	
 	private TextureRegion animateRun(float delta){
@@ -246,12 +261,12 @@ public class PlayerAnimator {
 	
 	private TextureRegion animateCrouch(float delta){
 		stateTime += delta;
-		return crouchAnimation.getKeyFrame(stateTime, false);
+		return crouchAnimation.getKeyFrame(stateTime, true, 2);
 	}
 	
 	private TextureRegion animateMoonwalk(float delta){
 		stateTime += delta;
-		return moonwalkAnimation.getKeyFrame(stateTime, false);
+		return moonwalkAnimation.getKeyFrame(stateTime, true, 5);
 	}
 	
 	public void resetTime(){

@@ -8,10 +8,10 @@ import org.json.JSONObject;
 
 import com.apptogo.runner.animators.PlayerAnimator;
 import com.apptogo.runner.appwarp.WarpController;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,7 +22,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Actor{
 
@@ -35,11 +36,14 @@ public class Player extends Actor{
 	private float playerJumpHeight;
 	private int jumpSensor;
 	private Vector2 playerBodySize;
-	
+	private Vector2 deathPosition;
 	//flags
 	private boolean alive;
 	private boolean inAir;
 	private boolean sliding;
+	private boolean immortal;
+	private boolean blinking;
+	private boolean visible;
 	
 	public Player(World world){
 		this.world = world;
@@ -48,6 +52,8 @@ public class Player extends Actor{
 		playerSpeed = 0;
 		jumpSensor = 0;
 		alive = true;
+		blinking = false;
+		visible = true;
 		playerJumpHeight = 4;
 		createPlayerBody();
         setOrigin(0, 0);
@@ -77,7 +83,7 @@ public class Player extends Actor{
 		playerBody.createFixture(fixtureDef).setUserData("player");
 		
 		//sliding fixture
-		shape.setAsBox(playerBodySize.y, playerBodySize.x, new Vector2(-playerBodySize.x, -40/PPM), 0);
+		shape.setAsBox(playerBodySize.y - 15/PPM, playerBodySize.x, new Vector2(-playerBodySize.x, -40/PPM), 0);
 		fixtureDef = Materials.playerSlidingBody;
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
@@ -95,6 +101,7 @@ public class Player extends Actor{
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
 		*/
+		
 		
 	}
 	
@@ -153,11 +160,13 @@ public class Player extends Actor{
 	
 	public void dieBottom(){
 		if(alive){
-			//alive = false;
+			alive = false;
+			deathPosition = new Vector2(playerBody.getPosition());
 			currentAnimationState = PlayerAnimationState.DIEINGBOTTOM;
 			playerAnimator.resetTime();
 			playerSpeed = 0;
 			notifyDie();
+			respawn();
 			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
 		}
 	}
@@ -200,7 +209,7 @@ public class Player extends Actor{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		
+		handleBlinking();
 		if(jumpSensor > 0)
 			inAir = false;
 		else{
@@ -222,11 +231,60 @@ public class Player extends Actor{
         //playerBody.setTransform(playerBody.getPosition().x, playerBody.getPosition().y, this.getRotation());
 	}
 	
+	public void respawn(){
+		Timer.schedule(new Task() {
+			@Override
+			public void run() {
+				handleImmortality(2);
+				alive = true;
+				playerBody.setTransform(deathPosition, 0);
+				playerAnimator.resetTime();
+				currentAnimationState = PlayerAnimationState.IDLE;
+				startRunning();
+			}
+		}, 1);
+	}
+	
+	public void handleImmortality(float immortalityLenght){
+		immortal = true;
+		blinking = true;
+		Timer.schedule(new Task() {
+			@Override
+			public void run() {
+				immortal = false;
+				blinking = false;
+			}
+		}, immortalityLenght);
+	}
+	
+	private void handleBlinking(){
+		setVisible(visible);
+		
+		if(blinking && visible){
+			Timer.schedule(new Task() {
+				@Override
+				public void run() {
+					visible = false;
+				}
+			}, 0.1f);
+		}
+		else if(blinking && !visible){
+			Timer.schedule(new Task() {
+				@Override
+				public void run() {
+					visible = true;
+				}
+			}, 0.08f);
+		}
+		else if(!blinking){
+			visible = true;
+		}
+	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 	}
 	
 	public void incrementJumpSensor(){
@@ -246,5 +304,6 @@ public class Player extends Actor{
 	public void setCurrentAnimationState(PlayerAnimationState state){ this.currentAnimationState = state; }
 	public float getPlayerSpeed(){ return this.playerSpeed; }
 	public boolean isAlive(){ return this.alive; }
+	public boolean isImmortal(){ return this.immortal; }
 	public void setAlive(boolean alive){ this.alive = alive; }
 }
