@@ -19,7 +19,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -40,10 +43,10 @@ public class GameWorld {
 	public float minCameraY;
 	public float maxCameraY;
     
-	private Stage backgroundStage;
+	public Stage backgroundStage;
 	public StretchViewport backgroundStretchViewport;
-	private OrthographicCamera backgroundCamera;
-
+	public OrthographicCamera backgroundCamera;
+	
 	public Player player;
 	public Enemy enemy;
 	
@@ -74,8 +77,7 @@ public class GameWorld {
 		backgroundStage = new Stage();
 		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
 		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
-		backgroundStage.setViewport(backgroundStretchViewport);
-		
+		backgroundStage.setViewport(backgroundStretchViewport);	
 		createWorld();
 	}
 	
@@ -109,7 +111,13 @@ public class GameWorld {
 		background.addActor(sand);
 	}
 	
+
+	
 	public void handleInput(){
+		if(Input.isPressed()) {
+			player.startRunning();
+		}
+		/*
 		if(Input.isDown(Input.RIGHT)) {
 			player.jump();
 		}
@@ -123,7 +131,6 @@ public class GameWorld {
 			player.startRunning();
 		}
 		
-
 		if(Input.isPressed()) {
 			if(Input.x < Gdx.graphics.getWidth() / 2) {
 				Logger.log(this, "LEWO");
@@ -134,15 +141,13 @@ public class GameWorld {
 				player.jump();
 			}
 		}
+		*/
 	}
 	
     public void update(float delta) {  
         world.step(delta, 3, 3);
-        worldStage.act(delta);
-        
-		backgroundCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
-		backgroundCamera.update();
+
 		backgroundStage.act(delta);
-		backgroundStage.draw();
+        worldStage.act(delta);
     }  
 }

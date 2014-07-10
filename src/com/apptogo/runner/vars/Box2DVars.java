@@ -12,6 +12,7 @@ public class Box2DVars {
 	public static final short BIT_KILLING = 16;
 	public static final short BIT_WALLSENSOR = 32;
 	public static final short BIT_FOOTSENSOR = 64;
+	public static final short BIT_BOMB = 128;
 	
 	public static enum GameCharacter{
 		ALIEN, BANDIT

@@ -31,7 +31,9 @@ public class PlayerAnimator {
 	private final int DIEBOTTOM_FRAMES_COUNT = 9;
 	private final int DIETOP_FRAMES_COUNT = 9;
 	private final int CROUCH_FRAMES_COUNT = 10;
-	private final int MOONWALK_FRAMES_COUNT = 30;
+	private final int MOONWALK_FRAMES_COUNT = 31;
+	private final int FLYBOMB_FRAMES_COUNT = 10;
+	private final int RUNBOMB_FRAMES_COUNT = 10;
 	
 	private AtlasRegion[] runFrames;
 	private AtlasRegion[] idleFrames;
@@ -45,7 +47,9 @@ public class PlayerAnimator {
 	private AtlasRegion[] dieTopFrames;
 	private AtlasRegion[] crouchFrames;
 	private AtlasRegion[] moonwalkFrames;
-
+	private AtlasRegion[] flyBombFrames;
+	private AtlasRegion[] runBombFrames;
+	
 	private Animation runAnimation;
 	private MyAnimation idleAnimation;
 	private Animation jumpAnimation;
@@ -58,7 +62,9 @@ public class PlayerAnimator {
 	private Animation dieTopAnimation;
 	private MyAnimation crouchAnimation;
 	private MyAnimation moonwalkAnimation;
-
+	private Animation flyBombAnimation;
+	private Animation runBombAnimation;
+	
 	public PlayerAnimator(Player player){
 		this.player = player;
 		banditAtlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/bandit.pack");
@@ -135,6 +141,19 @@ public class PlayerAnimator {
 			moonwalkFrames[i] = banditAtlas.findRegion("moonwalk" + i);
 		}
 		moonwalkAnimation = new MyAnimation(0.03f, moonwalkFrames);
+		
+		flyBombFrames = new AtlasRegion[FLYBOMB_FRAMES_COUNT];
+		for(int i=0; i<FLYBOMB_FRAMES_COUNT; i++){
+			flyBombFrames[i] = banditAtlas.findRegion("flybomb" + i);
+		}
+		flyBombAnimation = new Animation(0.03f, flyBombFrames);
+		
+		runBombFrames = new AtlasRegion[RUNBOMB_FRAMES_COUNT];
+		for(int i=0; i<RUNBOMB_FRAMES_COUNT; i++){
+			runBombFrames[i] = banditAtlas.findRegion("runbomb" + i);
+		}
+		runBombAnimation = new Animation(0.03f, runBombFrames);
+		
 	}
 
 	/*---ANIMATIONS---*/
@@ -204,6 +223,19 @@ public class PlayerAnimator {
 				moonwalkAnimation.resetLoops();
 			}
 		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.RUNBOMB){
+			currentFrame = animateRunBomb(delta);
+			if(runBombAnimation.isAnimationFinished(stateTime)){
+				player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
+			}
+		}
+		else if(player.getCurrentAnimationState() == PlayerAnimationState.FLYBOMB){
+			currentFrame = animateFlyBomb(delta);
+			if(flyBombAnimation.isAnimationFinished(stateTime)){
+				Logger.log(this,  "finished");
+				player.setCurrentAnimationState(PlayerAnimationState.FLYING);
+			}
+		}
 		
 		return currentFrame;
 	}
@@ -267,6 +299,16 @@ public class PlayerAnimator {
 	private TextureRegion animateMoonwalk(float delta){
 		stateTime += delta;
 		return moonwalkAnimation.getKeyFrame(stateTime, true, 5);
+	}
+	
+	private TextureRegion animateRunBomb(float delta){
+		stateTime += delta;
+		return runBombAnimation.getKeyFrame(stateTime, false);
+	}
+	
+	private TextureRegion animateFlyBomb(float delta){
+		stateTime += delta;
+		return flyBombAnimation.getKeyFrame(stateTime, false);
 	}
 	
 	public void resetTime(){

@@ -127,6 +127,9 @@ public class ResourcesManager {
 		gameMeta.setTexturesExtension(".png");
 		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand"} );
 		
+		gameMeta.setTexturesDirectory("gfx/game/characters/buttons/");
+		gameMeta.addTextures( new String[]{"slowButton","jumpButton","slideButton","bombButton"} );
+		
 		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
 		
 		gameMeta.addMusic("mfx/game/gameMusic.ogg");
