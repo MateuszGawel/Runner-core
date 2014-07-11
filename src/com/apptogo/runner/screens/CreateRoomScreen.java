@@ -40,10 +40,10 @@ public class CreateRoomScreen extends BaseScreen{
 		
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		
-		label = new Label("TWORZENIE POKOJU", skin);
+		label = new Label( getLangString("createRoomLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
-		button = new TextButton("CREATE ROOM", skin, "default");
+		button = new TextButton( getLangString("createRoomButton"), skin, "default");
         button.setWidth(200f);
         button.setHeight(20f);
         button.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - button.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - button.getHeight()/2.0f );
@@ -54,7 +54,7 @@ public class CreateRoomScreen extends BaseScreen{
             }
          });
         
-        backButton = new TextButton("BACK", skin, "default");
+        backButton = new TextButton( getLangString("backButton"), skin, "default");
         backButton.setWidth(200f);
         backButton.setHeight(20f);
         backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 30f );

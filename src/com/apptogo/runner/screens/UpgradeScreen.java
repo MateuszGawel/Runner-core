@@ -37,7 +37,7 @@ public class UpgradeScreen extends BaseScreen{
 	public void show() {
 				
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-		button = new TextButton("BACK", skin, "default");
+		button = new TextButton( getLangString("backButton"), skin, "default");
         
         button.setWidth(200f);
         button.setHeight(20f);
@@ -49,7 +49,7 @@ public class UpgradeScreen extends BaseScreen{
              }
          });
         
-        label = new Label("UPGRADE POSTACI", skin);
+        label = new Label( getLangString("upgradeLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
         
         

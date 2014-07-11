@@ -29,6 +29,7 @@ public class FindRoomScreen extends BaseScreen{
 	
 	private Label label;
 	private TextButton button;
+	private TextButton randomRoomButton;
 	private TextButton backButton;
 	
 	public FindRoomScreen(Runner runner){
@@ -40,10 +41,10 @@ public class FindRoomScreen extends BaseScreen{
 				
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		
-		label = new Label("WYSZUKIWANIE POKOJU", skin);
+		label = new Label( getLangString("joinRoomLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
-		button = new TextButton("JOIN THIS ROOM", skin, "default");
+		button = new TextButton( getLangString("joinRoomButton"), skin, "default");
         button.setWidth(200f);
         button.setHeight(20f);
         button.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - button.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - button.getHeight()/2.0f );
@@ -54,10 +55,21 @@ public class FindRoomScreen extends BaseScreen{
             }
          });
         
-        backButton = new TextButton("BACK", skin, "default");
+        randomRoomButton = new TextButton( getLangString("joinRandomRoomButton"), skin, "default");
+        randomRoomButton.setWidth(200f);
+        randomRoomButton.setHeight(20f);
+        randomRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - randomRoomButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - randomRoomButton.getHeight()/2.0f - 30f );
+        randomRoomButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+            }
+         });
+        
+        backButton = new TextButton( getLangString("backButton"), skin, "default");
         backButton.setWidth(200f);
         backButton.setHeight(20f);
-        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 30f );
+        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 60f );
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -70,6 +82,7 @@ public class FindRoomScreen extends BaseScreen{
 		stage.setViewport(viewport);
 		
 		stage.addActor(button);
+		stage.addActor(randomRoomButton);
 		stage.addActor(backButton);
 		stage.addActor(label);
 		Gdx.input.setInputProcessor(stage);

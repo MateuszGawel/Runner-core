@@ -6,6 +6,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
+import com.apptogo.runner.vars.LanguageManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,7 +43,7 @@ public class MainMenuScreen extends BaseScreen{
 		
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		       
-        upgradeButton = new TextButton("UPGRADE SCREEN", skin, "default");
+        upgradeButton = new TextButton( getLangString("upgradeButton"), skin, "default");
         upgradeButton.setWidth(200f);
         upgradeButton.setHeight(20f);
         upgradeButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - upgradeButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - upgradeButton.getHeight()/2.0f );
@@ -53,7 +54,7 @@ public class MainMenuScreen extends BaseScreen{
             }
          });
         
-        campaignButton = new TextButton("CAMPAIGN", skin, "default");
+        campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");  //campaignButton = new TextButton("CAMPAIGN", skin, "default");
 		campaignButton.setWidth(200f);
 		campaignButton.setHeight(20f);
 		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f - 30f );
@@ -64,7 +65,7 @@ public class MainMenuScreen extends BaseScreen{
             }
          });
 		
-		multiplayerButton = new TextButton("MULTIPLAYER", skin, "default");
+		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
 		multiplayerButton.setWidth(200f);
 		multiplayerButton.setHeight(20f);
 		multiplayerButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - multiplayerButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - multiplayerButton.getHeight()/2.0f - 60f );
@@ -75,7 +76,7 @@ public class MainMenuScreen extends BaseScreen{
             }
          });
         
-        label = new Label("MENU GLOWNE", skin);
+        label = new Label( getLangString("mainMenuLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
         
         

@@ -30,7 +30,6 @@ public class MultiplayerScreen extends BaseScreen{
 	private Label label;
 	private TextButton createRoomButton;
 	private TextButton findRoomButton;
-	private TextButton randomRoomButton;
 	private TextButton backButton;
 	
 	public MultiplayerScreen(Runner runner){
@@ -42,10 +41,10 @@ public class MultiplayerScreen extends BaseScreen{
 				
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		
-		label = new Label("MULTIPLAYER - DOLACZANIE DO GRY", skin);
+		label = new Label( getLangString("multiplayerLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
-        createRoomButton = new TextButton("CREATE ROOM", skin, "default");
+        createRoomButton = new TextButton( getLangString("createRoomMenuButton"), skin, "default");
         createRoomButton.setWidth(200f);
         createRoomButton.setHeight(20f);
         createRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - createRoomButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - createRoomButton.getHeight()/2.0f );
@@ -56,7 +55,7 @@ public class MultiplayerScreen extends BaseScreen{
             }
          });
         
-        findRoomButton = new TextButton("FIND ROOM", skin, "default");
+        findRoomButton = new TextButton( getLangString("joinRoomMenuButton"), skin, "default");
         findRoomButton.setWidth(200f);
         findRoomButton.setHeight(20f);
         findRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - findRoomButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - findRoomButton.getHeight()/2.0f - 30f );
@@ -66,22 +65,11 @@ public class MultiplayerScreen extends BaseScreen{
             	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_FIND_ROOM);
             }
          });
-        
-        randomRoomButton = new TextButton("JOIN RANDOM ROOM", skin, "default");
-        randomRoomButton.setWidth(200f);
-        randomRoomButton.setHeight(20f);
-        randomRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - randomRoomButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - randomRoomButton.getHeight()/2.0f - 60f );
-        randomRoomButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
-            }
-         });
-        
-        backButton = new TextButton("BACK", skin, "default");
+                
+        backButton = new TextButton( getLangString("backButton"), skin, "default");
         backButton.setWidth(200f);
         backButton.setHeight(20f);
-        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 90f );
+        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 60f );
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -95,7 +83,6 @@ public class MultiplayerScreen extends BaseScreen{
 		
 		stage.addActor(createRoomButton);
 		stage.addActor(findRoomButton);
-		stage.addActor(randomRoomButton);
 		stage.addActor(backButton);
 		stage.addActor(label);
 		Gdx.input.setInputProcessor(stage);
