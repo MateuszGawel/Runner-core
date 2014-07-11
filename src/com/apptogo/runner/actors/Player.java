@@ -46,7 +46,9 @@ public class Player extends Actor{
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	        return new Bomb(player, world);
+	    	Bomb bomb = new Bomb(player, world);
+	    	player.getStage().addActor(bomb);
+	    	return bomb;
 	    }
     };
     
