@@ -3,23 +3,24 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -29,33 +30,90 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
 	
+	
+	public Stage guiStage;
+	public StretchViewport guiStretchViewport;
+	public OrthographicCamera guiCamera;
 	private Image back;
-    
+	private Image jumpButton;
+	private Image slideButton;
+	private Image slowButton;
+	private Image bombButton;
+	private InputMultiplexer inputMultiplexer;
+	
 	public GameScreen(Runner runner){
 		super(runner);	
-		WarpController.getInstance().setListener(this);
+		//WarpController.getInstance().setListener(this);
 	}
 	
 	@Override
 	public void show() {
 
 		
+		
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
-		Gdx.input.setInputProcessor(new InputHandler());
 		
-		/*back = new Image(((Texture)ResourcesManager.getInstance().getMenuResource("gfx/menu/back.png")));
-		back.setPosition(0, 0);
-		back.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                 Logger.log(this, "BACK CLICKED");
-                 ScreensManager.getInstance().createMainMenuScreen();
-             }
-         });
+		guiStage = new Stage();
+		guiCamera = (OrthographicCamera) guiStage.getCamera();  
+		guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
 		
-		zeby to zadzialalo to trzeba zrobic input multiplexer
-		guiStage.addActor(back);
-		Gdx.input.setInputProcessor(guiStage);*/
+		createGui();
+		
+		inputMultiplexer = new InputMultiplexer(); 
+		inputMultiplexer.addProcessor(guiStage);
+		inputMultiplexer.addProcessor(new InputHandler());  
+		Gdx.input.setInputProcessor(inputMultiplexer);
+	}
+	
+	private void createGui(){
+		jumpButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/jumpButton.png"));
+		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, jumpButton.getHeight() + 20 + 40);
+		jumpButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				world.player.jump();
+		        return true;
+		    }
+		});
+		guiStage.addActor(jumpButton);
+		
+		slowButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/slowButton.png"));
+		slowButton.setPosition(20, 20);
+		slowButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				Logger.log(this, "slooow");
+		        return true;
+		    }
+		});
+		guiStage.addActor(slowButton);
+		
+		slideButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/slideButton.png"));
+		slideButton.setPosition(Runner.SCREEN_WIDTH - slideButton.getWidth() - 20, 20);
+		slideButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				world.player.slide();
+		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				world.player.standUp();
+		    }
+		});
+		guiStage.addActor(slideButton);
+		
+		bombButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/bombButton.png"));
+		bombButton.setPosition(20, bombButton.getHeight() + 20 + 40);
+		bombButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				world.player.throwBombs();
+		        return true;
+		    }
+		});
+		guiStage.addActor(bombButton);
 	}
 	
 	@Override
@@ -67,13 +125,15 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		world.update(delta);
 		worldRenderer.render();
 		Input.update();
+		guiStage.act(delta);
+		guiCamera.update();
+    	guiStage.draw();
 
 	}
 	
 	@Override
 	public void handleInput() {
 		world.handleInput();
-		
 	}
 	
 	@Override

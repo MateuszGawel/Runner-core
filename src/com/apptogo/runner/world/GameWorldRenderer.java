@@ -1,6 +1,7 @@
 package com.apptogo.runner.world;
 
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -30,18 +31,25 @@ public class GameWorldRenderer {
         
     }  
     
-    public void render(){
-    	
+    public void render(){  	
 		tiledMapRenderer.setView(camera);
-	    tiledMapRenderer.render();
-	    
+		
 	    camera.position.set(
 	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.getPlayerBody().getPosition().x, gameWorld.minCameraX)),
 	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.getPlayerBody().getPosition().y, gameWorld.minCameraY)),
 	            0);
+		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
+		
     	camera.update();
-    	
+		gameWorld.backgroundCamera.update();
+
+		
+    	gameWorld.backgroundStage.draw();
+    	tiledMapRenderer.render();
+    	gameWorld.worldStage.draw();
     	debugRenderer.render(gameWorld.world, camera.combined);
+    	
+    	
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*
@@ -51,7 +59,5 @@ public class GameWorldRenderer {
     		gameWorld.rayHandler.updateAndRender();
     	}
     	*/
-    	gameWorld.worldStage.draw();
-    
     }
 }

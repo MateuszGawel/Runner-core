@@ -10,8 +10,6 @@ import com.apptogo.runner.animators.PlayerAnimator;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,6 +20,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -37,6 +37,19 @@ public class Player extends Actor{
 	private int jumpSensor;
 	private Vector2 playerBodySize;
 	private Vector2 deathPosition;
+	private Player player = this;
+	
+    // array containing the active bullets.
+    private final Array<Bomb> activeBombs = new Array<Bomb>();
+
+    // bullet pool.
+    private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
+	    @Override
+	    protected Bomb newObject() {
+	        return new Bomb(player, world);
+	    }
+    };
+    
 	//flags
 	private boolean alive;
 	private boolean inAir;
@@ -60,7 +73,7 @@ public class Player extends Actor{
 	}
 	
 	public enum PlayerAnimationState{
-		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP
+		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB
 	}
 	
 	private void createPlayerBody(){
@@ -171,11 +184,30 @@ public class Player extends Actor{
 		}
 	}
 	
+	public void throwBombs(){
+		if(alive){
+			if(inAir){
+				currentAnimationState = PlayerAnimationState.FLYBOMB;
+				playerAnimator.resetTime();
+			}
+			else{
+				currentAnimationState = PlayerAnimationState.RUNBOMB;
+				playerAnimator.resetTime();
+			}
+			
+			Bomb bomb = bombsPool.obtain();
+			bomb.init();
+	        activeBombs.add(bomb);
+		}
+	}
+	
 	public void startRunning(){
-		currentAnimationState = PlayerAnimationState.RUNNING;
-		playerAnimator.resetTime();
-		playerSpeed = 8;
-		notifyStartRunning();
+		if(playerSpeed == 0 && alive){
+			currentAnimationState = PlayerAnimationState.RUNNING;
+			playerAnimator.resetTime();
+			playerSpeed = 8;
+			notifyStartRunning();
+		}
 	}
 	
 	/*---NOTIFIERS---*/
@@ -205,10 +237,21 @@ public class Player extends Actor{
 	    WarpController.getInstance().sendGameUpdate(data.toString()); 
 	}
 	
-
+	private void freePools(){
+		Bomb item;
+        int len = activeBombs.size;
+        for (int i = len; --i >= 0;) {
+            item = activeBombs.get(i);
+            if (item.alive == false) {
+            	activeBombs.removeIndex(i);
+                bombsPool.free(item);
+            }
+        }
+	}
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+		freePools();
 		handleBlinking();
 		if(jumpSensor > 0)
 			inAir = false;
@@ -289,7 +332,7 @@ public class Player extends Actor{
 	
 	public void incrementJumpSensor(){
 		if(jumpSensor <= 0 && alive){
-			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING)
+			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING || currentAnimationState == PlayerAnimationState.FLYBOMB)
 				land();
 		}
 		jumpSensor++;
