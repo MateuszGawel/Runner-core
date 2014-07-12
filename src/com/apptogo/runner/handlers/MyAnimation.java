@@ -42,12 +42,20 @@ public class MyAnimation extends Animation{
 		this.animationFinished = false;
 	}
 
+	public void setFrameDuration(float frameDuration){
+		for(int i=0; i<keyFrames.length; i++){
+			this.frameDuration[i] = frameDuration;
+		}
+	}
 
 	@Override
 	public int getKeyFrameIndex (float stateTime) {
+		if(stateTime < frameDuration[0])
+			resetLoops();
 		if (keyFrames.length == 1) return 0;
-
+		//Logger.log(this, "timeElapsed: " + timeElapsed + " stateTime " + stateTime + " ROZNICA: " + (stateTime - timeElapsed));
 		if(loopCount <= maxLoopCount && (stateTime - timeElapsed) / frameDuration[frameNumber] >= 1){
+			//Logger.log(this, "ZWIEKSZAM");
 			timeElapsed += frameDuration[frameNumber];
 			frameNumber++;
 			if(playMode == PlayMode.LOOP)
@@ -87,8 +95,6 @@ public class MyAnimation extends Animation{
 	
 	@Override
 	public TextureRegion getKeyFrame (float stateTime, boolean looping) {
-		// we set the play mode by overriding the previous mode based on looping
-		// parameter value
 		PlayMode oldPlayMode = playMode;
 		if (looping && (playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {
 			if (playMode == PlayMode.NORMAL)
@@ -137,5 +143,8 @@ public class MyAnimation extends Animation{
 		this.maxLoopCount = 0;
 		this.animationFinished = false;
 		this.timeElapsed = 0;
+	}
+	public int getFrameNumber(){
+		return this.frameNumber;
 	}
 }

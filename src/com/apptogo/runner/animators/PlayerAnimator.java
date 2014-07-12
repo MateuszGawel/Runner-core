@@ -50,7 +50,7 @@ public class PlayerAnimator {
 	private AtlasRegion[] flyBombFrames;
 	private AtlasRegion[] runBombFrames;
 	
-	private Animation runAnimation;
+	private MyAnimation runAnimation;
 	private MyAnimation idleAnimation;
 	private Animation jumpAnimation;
 	private Animation landAnimation;
@@ -80,7 +80,7 @@ public class PlayerAnimator {
 		for(int i=0; i<RUN_FRAMES_COUNT; i++){
 			runFrames[i] = banditAtlas.findRegion("run" + i);
 		}
-		runAnimation = new Animation(0.03f, runFrames);
+		runAnimation = new MyAnimation(0.03f, runFrames);
 		
 		jumpFrames = new AtlasRegion[JUMP_FRAMES_COUNT];
 		for(int i=0; i<JUMP_FRAMES_COUNT; i++){
@@ -184,8 +184,11 @@ public class PlayerAnimator {
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.LANDING){
 			currentFrame = animateLand(delta);
 			if(landAnimation.isAnimationFinished(stateTime)){
-				if(player.getPlayerSpeed() > 0)
+				if(player.getPlayerSpeed() > 0){
+					resetTime();
+					runAnimation.resetLoops();
 					player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
+				}
 				else
 					player.setCurrentAnimationState(PlayerAnimationState.IDLE);
 			}
@@ -199,6 +202,8 @@ public class PlayerAnimator {
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.STANDINGUP){
 			currentFrame = animateStandUp(delta);
 			if(standUpAnimation.isAnimationFinished(stateTime)){
+				resetTime();
+				runAnimation.resetLoops();
 				player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
 			}
 		}
@@ -226,13 +231,15 @@ public class PlayerAnimator {
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.RUNBOMB){
 			currentFrame = animateRunBomb(delta);
 			if(runBombAnimation.isAnimationFinished(stateTime)){
+				resetTime();
+				runAnimation.resetLoops();
 				player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
+				Logger.log(this, "RESET");
 			}
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.FLYBOMB){
 			currentFrame = animateFlyBomb(delta);
 			if(flyBombAnimation.isAnimationFinished(stateTime)){
-				Logger.log(this,  "finished");
 				player.setCurrentAnimationState(PlayerAnimationState.FLYING);
 			}
 		}
@@ -247,6 +254,7 @@ public class PlayerAnimator {
 	}
 	
 	private TextureRegion animateRun(float delta){
+		runAnimation.setFrameDuration(1/player.getPlayerSpeed() * 0.24f);
 		stateTime += delta;
 		return runAnimation.getKeyFrame(stateTime, true);
 	}

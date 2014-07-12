@@ -30,7 +30,6 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
 	
-	private Image back;
 	private Image jumpButton;
 	private Image slideButton;
 	private Image slowButton;
@@ -67,8 +66,13 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		slowButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				Logger.log(this, "slooow");
+				if(world.player.isAlive())
+					world.player.setRunning(false);
 		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				world.player.setRunning(true);
 		    }
 		});
 		guiStage.addActor(slowButton);

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.apptogo.runner.animators.PlayerAnimator;
 import com.apptogo.runner.appwarp.WarpController;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,16 +34,15 @@ public class Player extends Actor{
 	private PlayerAnimator playerAnimator;
 	private TextureRegion currentFrame;
 	private float playerSpeed;
+	private float playerMaxSpeed = 8;
 	private float playerJumpHeight;
 	private int jumpSensor;
 	private Vector2 playerBodySize;
 	private Vector2 deathPosition;
 	private Player player = this;
 	
-    // array containing the active bullets.
     private final Array<Bomb> activeBombs = new Array<Bomb>();
 
-    // bullet pool.
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
@@ -59,12 +59,12 @@ public class Player extends Actor{
 	private boolean immortal;
 	private boolean blinking;
 	private boolean visible;
+	private boolean running;
 	
 	public Player(World world){
 		this.world = world;
 		playerAnimator = new PlayerAnimator(this);
 		currentAnimationState = PlayerAnimationState.IDLE;
-		playerSpeed = 0;
 		jumpSensor = 0;
 		alive = true;
 		blinking = false;
@@ -167,7 +167,7 @@ public class Player extends Actor{
 			alive = false;
 			currentAnimationState = PlayerAnimationState.DIEINGTOP;
 			playerAnimator.resetTime();
-			playerSpeed = 0;
+			running = false;
 			notifyDie();
 			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
 		}
@@ -179,7 +179,7 @@ public class Player extends Actor{
 			deathPosition = new Vector2(playerBody.getPosition());
 			currentAnimationState = PlayerAnimationState.DIEINGBOTTOM;
 			playerAnimator.resetTime();
-			playerSpeed = 0;
+			running = false;
 			notifyDie();
 			respawn();
 			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
@@ -204,11 +204,13 @@ public class Player extends Actor{
 	}
 	
 	public void startRunning(){
-		if(playerSpeed == 0 && alive){
+		if(!running && alive){
 			currentAnimationState = PlayerAnimationState.RUNNING;
 			playerAnimator.resetTime();
-			playerSpeed = 8;
+			//playerSpeed = 8;
+			//speedUp();
 			notifyStartRunning();
+			running = true;
 		}
 	}
 	
@@ -250,6 +252,18 @@ public class Player extends Actor{
             }
         }
 	}
+	
+	private void speedUp(){
+		Timer.schedule(new Task() {
+			@Override
+			public void run() {
+				playerSpeed++;
+				if(playerSpeed < playerMaxSpeed)
+					speedUp();
+			}
+		}, 0.1f);
+	}
+	
 	@Override
 	public void act(float delta) {
 		super.act(delta);
@@ -262,9 +276,10 @@ public class Player extends Actor{
 			//if(currentAnimationState != PlayerAnimationState.JUMPING)
 			//	currentAnimationState = PlayerAnimationState.FLYING;
 		}
-		
-		if(playerSpeed > 0 && !sliding)
-			playerBody.setLinearVelocity(playerSpeed, playerBody.getLinearVelocity().y);
+		playerSpeed = playerBody.getLinearVelocity().x;
+		if(running && !sliding && playerSpeed < playerMaxSpeed)
+			playerBody.applyForceToCenter(new Vector2(4000, 0), true);
+			//playerBody.setLinearVelocity(playerSpeed, playerBody.getLinearVelocity().y);
 		
 		currentFrame = playerAnimator.animate(delta);
 		
@@ -351,4 +366,8 @@ public class Player extends Actor{
 	public boolean isAlive(){ return this.alive; }
 	public boolean isImmortal(){ return this.immortal; }
 	public void setAlive(boolean alive){ this.alive = alive; }
+	public PlayerAnimator getPlayerAnimator(){ return this.playerAnimator; }
+	public boolean isInAir(){ return inAir; }
+	public boolean isRunning(){ return running; }
+	public void setRunning(boolean running){ this.running = running; }
 }
