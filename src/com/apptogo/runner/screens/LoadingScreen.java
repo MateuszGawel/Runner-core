@@ -41,7 +41,7 @@ public class LoadingScreen extends BaseScreen{
 		
 		slider = new ProgressBar(0.1f, 1.0f, 0.05f, false, skin);
 		
-		slider.setSize(400, 25);
+		slider.setSize(600, 40);
 		slider.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - slider.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - slider.getHeight()/2.0f );
 		slider.setValue(0.1f);
 		
