@@ -18,8 +18,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SplashScreen extends BaseScreen{	
 	
-	private Stage stage;
-	private Viewport viewport;
 	private Image splashImage;
 	private float splashImageOpacity;
 	private AlphaAction action;
@@ -27,15 +25,14 @@ public class SplashScreen extends BaseScreen{
 	float percent;
 	
 	private TextButton button;
-	private Skin skin;
 	
 	public SplashScreen(Runner runner){
 		super(runner);	
 	}
 	
 	@Override
-	public void show() {
-	
+	public void prepare()
+	{	
 		ResourcesManager.getInstance().loadResources(this);
 		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
 
@@ -43,19 +40,12 @@ public class SplashScreen extends BaseScreen{
 		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
 		splashImageOpacity = 0.0f;
 		action = new AlphaAction();
-
-		stage = new Stage();
-		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		stage.setViewport(viewport);
 		
-		stage.addActor(splashImage);
+		addToScreen(splashImage);
 	}
 	
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+	public void step()
+	{
 		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		
 		splashImageOpacity += 0.025f;
@@ -63,9 +53,6 @@ public class SplashScreen extends BaseScreen{
 		action.reset();
 		action.setAlpha( ((splashImageOpacity>1.0f)?1.0f:splashImageOpacity) * (float)Math.sin(((splashImageOpacity>1.0f)?1.0f:splashImageOpacity)) );
 		splashImage.addAction( action );
-		
-		stage.act();
-		stage.draw();
 	}
 	
 	@Override

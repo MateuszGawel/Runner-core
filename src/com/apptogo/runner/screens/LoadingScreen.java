@@ -21,13 +21,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class LoadingScreen extends BaseScreen{	
     
-	private Skin skin;
 	private ScreenType screenToLoad;
-	private Stage stage;
-	private Viewport viewport;
-	
 	private ResourcesManager resourcesManager;
-	
+
 	private ProgressBar slider;
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad)
@@ -39,39 +35,27 @@ public class LoadingScreen extends BaseScreen{
         resourcesManager.loadResources(screenToLoad);
 	}
 	
-	@Override
-	public void show() {
-		
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+	public void prepare() 
+	{
 		slider = new ProgressBar(0.1f, 1.0f, 0.05f, false, skin);
 		
 		slider.setSize(400, 25);
 		slider.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - slider.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - slider.getHeight()/2.0f );
 		slider.setValue(0.1f);
-
-		stage = new Stage();
-		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		stage.setViewport(viewport);
 		
-		stage.addActor(slider);
+		addToScreen(slider);
 	}
 	
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		if(resourcesManager.getAssetManager(screenToLoad).update()) {
+	public void step()
+	{		
+		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
+		{
 			ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
 		}	
 		
 		float progress = resourcesManager.getAssetManager(screenToLoad).getProgress();
 		
-		slider.setValue(progress);
-		
-		stage.act();
-		stage.draw();
-		
+		slider.setValue(progress);		
 	}
 	
 	@Override

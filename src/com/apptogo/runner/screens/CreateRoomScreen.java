@@ -22,24 +22,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class CreateRoomScreen extends BaseScreen{	
 	
-	private Stage stage;
-	private Viewport viewport;
-	
-	private Skin skin;
-	
 	private Label label;
 	private TextButton button;
 	private TextButton backButton;
 	
-	public CreateRoomScreen(Runner runner){
+	public CreateRoomScreen(Runner runner)
+	{
 		super(runner);	
 	}
-	
-	@Override
-	public void show() {
-		
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-		
+
+	public void prepare() 
+	{
 		label = new Label( getLangString("createRoomLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
@@ -64,24 +57,15 @@ public class CreateRoomScreen extends BaseScreen{
             	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
             }
          });
-        
-		stage = new Stage();
-		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		stage.setViewport(viewport);
-		
-		stage.addActor(button);
-		stage.addActor(backButton);
-		stage.addActor(label);
-		Gdx.input.setInputProcessor(stage);
+        		
+        addToScreen(button);
+        addToScreen(backButton);
+        addToScreen(label);
 	}
 	
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	public void step() 
+	{
 		
-		stage.act();
-		stage.draw();
 	}
 	
 	@Override

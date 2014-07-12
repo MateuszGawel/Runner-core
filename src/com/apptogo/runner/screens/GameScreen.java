@@ -30,43 +30,27 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
 	
-	
-	public Stage guiStage;
-	public StretchViewport guiStretchViewport;
-	public OrthographicCamera guiCamera;
 	private Image back;
 	private Image jumpButton;
 	private Image slideButton;
 	private Image slowButton;
 	private Image bombButton;
-	private InputMultiplexer inputMultiplexer;
 	
 	public GameScreen(Runner runner){
 		super(runner);	
 		//WarpController.getInstance().setListener(this);
 	}
 	
-	@Override
-	public void show() {
-
-		
-		
+	public void prepare() 
+	{
 		world = new GameWorld();
 		worldRenderer = new GameWorldRenderer(world);
 		
-		guiStage = new Stage();
-		guiCamera = (OrthographicCamera) guiStage.getCamera();  
-		guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
-		
 		createGui();
-		
-		inputMultiplexer = new InputMultiplexer(); 
-		inputMultiplexer.addProcessor(guiStage);
-		inputMultiplexer.addProcessor(new InputHandler());  
-		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 	
-	private void createGui(){
+	private void createGui()
+	{
 		jumpButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/jumpButton.png"));
 		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, jumpButton.getHeight() + 20 + 40);
 		jumpButton.addListener(new InputListener() {
@@ -116,19 +100,12 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		guiStage.addActor(bombButton);
 	}
 	
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+	public void step() 
+	{
 		handleInput();
 		world.update(delta);
 		worldRenderer.render();
 		Input.update();
-		guiStage.act(delta);
-		guiCamera.update();
-    	guiStage.draw();
-
 	}
 	
 	@Override

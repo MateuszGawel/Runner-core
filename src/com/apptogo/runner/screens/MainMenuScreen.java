@@ -23,26 +23,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainMenuScreen extends BaseScreen{	
 	
-	private Stage stage;
-	private Viewport viewport;
 	private TextButton upgradeButton;
 	private TextButton campaignButton;
 	private TextButton multiplayerButton;
 	private Label label;
-	
-	private Skin skin;
 	
 	public MainMenuScreen(Runner runner){
 		super(runner);	
 	}
 	
 	@Override
-	public void show() {
-		
-		Logger.log(this, "MAIN MENU SCREEN SHOWED");
-		
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-		       
+	public void prepare() 
+	{		       
         upgradeButton = new TextButton( getLangString("upgradeButton"), skin, "default");
         upgradeButton.setWidth(200f);
         upgradeButton.setHeight(20f);
@@ -78,26 +70,16 @@ public class MainMenuScreen extends BaseScreen{
         
         label = new Label( getLangString("mainMenuLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
-        
-        
-		stage = new Stage();
-		viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		stage.setViewport(viewport);
 		
-		stage.addActor(upgradeButton);
-		stage.addActor(campaignButton);
-		stage.addActor(multiplayerButton);
-		stage.addActor(label);
-		Gdx.input.setInputProcessor(stage);
+        addToScreen(upgradeButton);
+        addToScreen(campaignButton);
+        addToScreen(multiplayerButton);
+        addToScreen(label);
 	}
 	
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	public void step()
+	{
 		
-		stage.act();
-		stage.draw();
 	}
 	
 	@Override

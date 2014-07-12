@@ -1,6 +1,7 @@
 package com.apptogo.runner.vars;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +13,8 @@ import org.w3c.dom.Element;
 
 import com.apptogo.runner.handlers.Logger;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
 
 public class LanguageManager {
 
@@ -22,47 +25,40 @@ public class LanguageManager {
 	}
 	
 	
-	private final String STR_FILE_PATH = "gfx/game/levels/ground.png";
-	private Document document;
-	private NodeList languages;
-	private Node currentLanguage;
+	private final String STR_FILE_PATH = "ui/lang/str.xml";
+	private XmlReader.Element document;
+	private XmlReader.Element currentLanguage;
+	private Array<XmlReader.Element> languages;
 	
 	private String currentLanguageId;
 	
 	private LanguageManager()
 	{
+		XmlReader reader = new XmlReader();
+		
 		try
 		{
-			File file = new File( "C:\\Users\\Comarch\\Desktop\\materia³y\\_Run_ner_12302013\\Runner\\android\\assets\\ui\\lang\\str.xml" ); // new File(STR_FILE_PATH);
-			if( file.exists() ) Logger.log(this, "Istnieje :)");
-			else Logger.log(this, "Nie istnieje :(");
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			document = documentBuilder.parse(file);
-			
-			document.getDocumentElement().normalize();
-			
-			languages = document.getElementsByTagName("language");
+			document = reader.parse( Gdx.files.internal(STR_FILE_PATH) );
 		}
-		catch(Exception e){}
-		
-		currentLanguageId = "en"; //tu bedzie odczytywanie z ustawien
-		
-		setCurrentLanguage(currentLanguageId);
+		catch(IOException e) { Logger.log(this, "IO problem with language pack strings file!"); }
+				
+		languages = document.getChildrenByName("language");
 	}	
 	
 	public String getString(String key)
 	{
+		if( currentLanguage == null ) setDefaultLanguage();
+		
 		String string = "";
-		NodeList stringNodes = ((Element)currentLanguage).getElementsByTagName("string");
+		Array<XmlReader.Element> stringNodes = currentLanguage.getChildrenByName("string");
 				
-		for(int i = 0; i < stringNodes.getLength(); i++)
+		for(int i = 0; i < stringNodes.size; i++)
 		{
-			Node stringNode = stringNodes.item(i);
+			XmlReader.Element stringNode = stringNodes.get(i);
 
-			if( (stringNode.getNodeType() == Node.ELEMENT_NODE) && ((Element)stringNode).getAttribute("key").equals(key) )
+			if( stringNode.getAttribute("key").equals(key) )
 			{
-				string = stringNode.getTextContent();
+				string = stringNode.getText();
 				break;
 			}
 		}
@@ -70,21 +66,34 @@ public class LanguageManager {
 		return string;
 	}
 		
-	public Element getCurrentLanguage()
+	public XmlReader.Element getCurrentLanguage()
 	{
-		return (Element)currentLanguage;
+		return currentLanguage;
 	}
 	public void setCurrentLanguage(String id)
 	{
-		for(int i = 0; i < languages.getLength(); i++)
+		for(int i = 0; i < languages.size; i++)
 		{
-			Node node = languages.item(i);
+			XmlReader.Element node = languages.get(i);
 
-			if( (node.getNodeType() == Node.ELEMENT_NODE) && ((Element)node).getAttribute("id").equals(id) )
+			if( node.getAttribute("id").equals(id) )
 			{
 				currentLanguage = node;
 				break;
 			}
 		}
 	}	
+	public void setDefaultLanguage()
+	{
+		for(int i = 0; i < languages.size; i++)
+		{
+			XmlReader.Element node = languages.get(i);
+
+			if( node.getAttribute("default").equals("true") )
+			{
+				currentLanguage = node;
+				break;
+			}
+		}
+	}
 }
