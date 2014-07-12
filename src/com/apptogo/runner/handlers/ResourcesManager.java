@@ -131,6 +131,7 @@ public class ResourcesManager {
 		gameMeta.addTextures( new String[]{"slowButton","jumpButton","slideButton","bombButton"} );
 		
 		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
+		gameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
 		
 		gameMeta.addMusic("mfx/game/gameMusic.ogg");
 		
