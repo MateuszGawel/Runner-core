@@ -107,7 +107,7 @@ public abstract class BaseScreen implements Screen{
 	protected void setBackground(String path)
 	{
 		background = new Image( new Texture( Gdx.files.internal(path) ) );
-		background.setPosition(0, 0);
+		background.setPosition(0 - (runner.SCREEN_WIDTH/2.0f), 0 - (runner.SCREEN_HEIGHT/2.0f));
 		stage.addActor( background );
 	}
 	

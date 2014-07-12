@@ -34,7 +34,9 @@ public class MainMenuScreen extends BaseScreen{
 	
 	@Override
 	public void prepare() 
-	{		       
+	{		
+		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		
         upgradeButton = new TextButton( getLangString("upgradeButton"), skin, "default");
         upgradeButton.setWidth(200f);
         upgradeButton.setHeight(20f);

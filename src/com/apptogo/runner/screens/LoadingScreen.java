@@ -37,6 +37,8 @@ public class LoadingScreen extends BaseScreen{
 	
 	public void prepare() 
 	{
+		setBackground("ui/menuBackgrounds/loadingScreenBackground.png");
+		
 		slider = new ProgressBar(0.1f, 1.0f, 0.05f, false, skin);
 		
 		slider.setSize(400, 25);

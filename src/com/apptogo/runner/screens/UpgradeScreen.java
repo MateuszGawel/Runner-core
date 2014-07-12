@@ -32,6 +32,8 @@ public class UpgradeScreen extends BaseScreen{
 	@Override
 	public void prepare() 
 	{
+		setBackground("ui/menuBackgrounds/upgradeScreenBackground.png");
+		
 		button = new TextButton( getLangString("backButton"), skin, "default");
         
         button.setWidth(200f);

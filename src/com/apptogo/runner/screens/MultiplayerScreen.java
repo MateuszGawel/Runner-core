@@ -34,6 +34,8 @@ public class MultiplayerScreen extends BaseScreen{
 	@Override
 	public void prepare()
 	{		
+		setBackground("ui/menuBackgrounds/multiplayerScreenBackground.png");
+		
 		label = new Label( getLangString("multiplayerLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		

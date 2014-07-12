@@ -21,12 +21,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class FindRoomScreen extends BaseScreen{	
-	
-	private Stage stage;
-	private Viewport viewport;
-	
-	private Skin skin;
-	
+		
 	private Label label;
 	private TextButton button;
 	private TextButton randomRoomButton;
@@ -39,6 +34,8 @@ public class FindRoomScreen extends BaseScreen{
 	
 	public void prepare() 
 	{		
+		setBackground("ui/menuBackgrounds/findRoomScreenBackground.png");
+		
 		label = new Label( getLangString("joinRoomLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
@@ -123,7 +120,7 @@ public class FindRoomScreen extends BaseScreen{
 
 	@Override
 	public ScreenType getSceneType() {
-		return ScreenType.SCREEN_UPGRADE;
+		return ScreenType.SCREEN_FIND_ROOM;
 	}
 
 

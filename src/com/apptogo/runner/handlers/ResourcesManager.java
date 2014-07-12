@@ -118,6 +118,9 @@ public class ResourcesManager {
 		
 		//|2. MAIN MENU SCREEN
 		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
+		
+		mainMenuMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		
 		screenMetaArray.add( mainMenuMeta );
 		
 		//|3. GAME SCREEN
@@ -141,26 +144,44 @@ public class ResourcesManager {
 		
 		//|4. UPGRADE SCREEN
 		ScreenMeta upgradeMeta = new ScreenMeta(ScreenType.SCREEN_UPGRADE);
+		
+		upgradeMeta.addTexture("ui/menuBackgrounds/upgradeScreenBackground.png");
+		
 		screenMetaArray.add( upgradeMeta );
 		
 		//|5. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
+		
+		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackground.png");
+		
 		screenMetaArray.add( loadingMeta );
 		
 		//|6. CAMPAIGN SCREEN
 		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
+		
+		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackground.png");
+		
 		screenMetaArray.add( campaignMeta );
 		
 		//|7. MULTIPLAYER SCREEN
 		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
+		
+		multiplayerMeta.addTexture("ui/menuBackgrounds/multiplayerScreenBackground.png");
+		
 		screenMetaArray.add( multiplayerMeta );
 
 		//|8. CREATE ROOM SCREEN
 		ScreenMeta createRoomMeta = new ScreenMeta(ScreenType.SCREEN_CREATE_ROOM);
+		
+		createRoomMeta.addTexture("ui/menuBackgrounds/createRoomScreenBackground.png");
+		
 		screenMetaArray.add( createRoomMeta );
 		
 		//|9. FIND ROOM SCREEN
 		ScreenMeta findRoomMeta = new ScreenMeta(ScreenType.SCREEN_FIND_ROOM);
+		
+		findRoomMeta.addTexture("ui/menuBackgrounds/findRoomScreenBackground.png");
+		
 		screenMetaArray.add( findRoomMeta );
 	}
 	

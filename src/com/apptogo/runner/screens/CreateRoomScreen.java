@@ -33,6 +33,8 @@ public class CreateRoomScreen extends BaseScreen{
 
 	public void prepare() 
 	{
+		setBackground("ui/menuBackgrounds/createRoomScreenBackground.png");
+		
 		label = new Label( getLangString("createRoomLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
 		
