@@ -28,8 +28,14 @@ public class MyContactListener implements ContactListener{
 			Logger.log(this, "Dotyka killing");
 		}
 		
-		if(("player".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("player".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+			world.player.incrementJumpSensor();
+			world.player.incrementFootSensor();
+			world.player.land();
+		}
+		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
 			world.player.incrementJumpSensor();
 		}
 	}
@@ -39,8 +45,13 @@ public class MyContactListener implements ContactListener{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
-		if(("player".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("player".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+			world.player.decrementJumpSensor();
+			world.player.decrementFootSensor();
+		}
+		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
+				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
 			world.player.decrementJumpSensor();
 		}
 		

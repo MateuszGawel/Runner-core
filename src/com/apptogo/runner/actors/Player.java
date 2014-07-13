@@ -37,6 +37,7 @@ public class Player extends Actor{
 	private float playerMaxSpeed = 8;
 	private float playerJumpHeight;
 	private int jumpSensor;
+	private int footSensor;
 	private Vector2 playerBodySize;
 	private Vector2 deathPosition;
 	private Player player = this;
@@ -60,12 +61,14 @@ public class Player extends Actor{
 	private boolean blinking;
 	private boolean visible;
 	private boolean running;
+	private boolean stopped;
 	
 	public Player(World world){
 		this.world = world;
 		playerAnimator = new PlayerAnimator(this);
 		currentAnimationState = PlayerAnimationState.IDLE;
 		jumpSensor = 0;
+		footSensor = 0;
 		alive = true;
 		blinking = false;
 		visible = true;
@@ -103,19 +106,20 @@ public class Player extends Actor{
 		fixtureDef.shape = shape;
 		playerBody.createFixture(fixtureDef).setUserData("player");
 		playerBody.getFixtureList().get(1).setSensor(true);
-		/*
+		
 		//wall sensor
-		shape.setAsBox(2 / PPM, 25 / PPM, new Vector2(50 / PPM, 0), 0);
+		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
-		playerBody.createFixture(fixtureDef).setUserData("player");
+		playerBody.createFixture(fixtureDef).setUserData("wallSensor");
+		
 		
 		//foot sensor
-		shape.setAsBox(30 / PPM, 30 / PPM, new Vector2(0 / PPM, -40 / PPM), 0);
+		shape.setAsBox(25 / PPM, 10 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
 		fixtureDef = Materials.footSensorBody;
 		fixtureDef.shape = shape;
-		playerBody.createFixture(fixtureDef).setUserData("player");
-		*/
+		playerBody.createFixture(fixtureDef).setUserData("footSensor");
+		
 		
 		
 	}
@@ -133,10 +137,12 @@ public class Player extends Actor{
 	}
 	
 	public void land(){
-		if(alive && inAir){
-			currentAnimationState = PlayerAnimationState.LANDING;
-			playerAnimator.resetTime();
-			notifyJump();
+		if(alive){
+			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING || currentAnimationState == PlayerAnimationState.FLYBOMB){
+				currentAnimationState = PlayerAnimationState.LANDING;
+				playerAnimator.resetTime();
+				notifyJump();
+			}
 		}
 	}
 	
@@ -205,7 +211,8 @@ public class Player extends Actor{
 	
 	public void startRunning(){
 		if(!running && alive){
-			currentAnimationState = PlayerAnimationState.RUNNING;
+			if(footSensor > 0)
+				currentAnimationState = PlayerAnimationState.RUNNING;
 			playerAnimator.resetTime();
 			//playerSpeed = 8;
 			//speedUp();
@@ -269,6 +276,22 @@ public class Player extends Actor{
 		super.act(delta);
 		freePools();
 		handleBlinking();
+		
+		
+		if(alive && playerSpeed < 0.001f && !stopped){
+			playerAnimator.idleAnimation.resetLoops();
+			playerAnimator.resetTime();
+			currentAnimationState = PlayerAnimationState.IDLE;
+			stopped = true;
+		}
+		else if(alive && playerSpeed > 0.001f && stopped){
+			if(footSensor > 0)
+				currentAnimationState = PlayerAnimationState.RUNNING;
+			else
+				currentAnimationState = PlayerAnimationState.JUMPING;
+			stopped = false;
+		}
+		
 		if(jumpSensor > 0)
 			inAir = false;
 		else{
@@ -280,6 +303,8 @@ public class Player extends Actor{
 		if(running && !sliding && playerSpeed < playerMaxSpeed)
 			playerBody.applyForceToCenter(new Vector2(4000, 0), true);
 			//playerBody.setLinearVelocity(playerSpeed, playerBody.getLinearVelocity().y);
+		
+
 		
 		currentFrame = playerAnimator.animate(delta);
 		
@@ -348,15 +373,19 @@ public class Player extends Actor{
 	}
 	
 	public void incrementJumpSensor(){
-		if(jumpSensor <= 0 && alive){
-			if(currentAnimationState == PlayerAnimationState.JUMPING || currentAnimationState == PlayerAnimationState.FLYING || currentAnimationState == PlayerAnimationState.FLYBOMB)
-				land();
-		}
 		jumpSensor++;
 	}
 	
 	public void decrementJumpSensor(){
 		jumpSensor--;
+	}
+	
+	public void incrementFootSensor(){
+		footSensor++;
+	}
+	
+	public void decrementFootSensor(){
+		footSensor--;
 	}
 	
 	public Body getPlayerBody(){ return this.playerBody; }

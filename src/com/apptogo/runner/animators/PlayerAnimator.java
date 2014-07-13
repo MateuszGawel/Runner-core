@@ -51,7 +51,7 @@ public class PlayerAnimator {
 	private AtlasRegion[] runBombFrames;
 	
 	private MyAnimation runAnimation;
-	private MyAnimation idleAnimation;
+	public MyAnimation idleAnimation;
 	private Animation jumpAnimation;
 	private Animation landAnimation;
 	private Animation flyAnimation;
@@ -189,8 +189,11 @@ public class PlayerAnimator {
 					runAnimation.resetLoops();
 					player.setCurrentAnimationState(PlayerAnimationState.RUNNING);
 				}
-				else
+				else{
+					resetTime();
+					idleAnimation.resetLoops();
 					player.setCurrentAnimationState(PlayerAnimationState.IDLE);
+				}
 			}
 		}
 		else if(player.getCurrentAnimationState() == PlayerAnimationState.FLYING){
