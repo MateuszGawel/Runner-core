@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,9 +24,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainMenuScreen extends BaseScreen{	
 	
-	private TextButton upgradeButton;
+	//private TextButton upgradeButton;
+	
+	Button soundButton;
+	Button settingsButton;
+	
 	private TextButton campaignButton;
 	private TextButton multiplayerButton;
+	Button joinRandomRoomButton;
 	private Label label;
 	
 	public MainMenuScreen(Runner runner){
@@ -37,7 +43,7 @@ public class MainMenuScreen extends BaseScreen{
 	{		
 		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
-        upgradeButton = new TextButton( getLangString("upgradeButton"), skin, "default");
+        /*upgradeButton = new TextButton( getLangString("upgradeButton"), skin, "default");
         upgradeButton.setWidth(200f);
         upgradeButton.setHeight(20f);
         upgradeButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - upgradeButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - upgradeButton.getHeight()/2.0f );
@@ -46,12 +52,22 @@ public class MainMenuScreen extends BaseScreen{
             {
                  ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_UPGRADE);
             }
-         });
+         });*/
+		
+		soundButton = new Button(skin, "sound");
+		soundButton.setWidth(80);
+		soundButton.setHeight(80);
+		soundButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - soundButton.getWidth()/2.0f - 530f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - soundButton.getHeight()/2.0f + 300f );
+		
+		settingsButton = new Button(skin, "settings");
+		settingsButton.setWidth(80);
+		settingsButton.setHeight(80);
+		settingsButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - settingsButton.getWidth()/2.0f - 530f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - settingsButton.getHeight()/2.0f + 200f );
         
-        campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");  //campaignButton = new TextButton("CAMPAIGN", skin, "default");
-		campaignButton.setWidth(200f);
-		campaignButton.setHeight(20f);
-		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f - 30f );
+        campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
+		campaignButton.setWidth(500f);
+		campaignButton.setHeight(200f);
+		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f + 50f );
 		campaignButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -60,9 +76,9 @@ public class MainMenuScreen extends BaseScreen{
          });
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
-		multiplayerButton.setWidth(200f);
-		multiplayerButton.setHeight(20f);
-		multiplayerButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - multiplayerButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - multiplayerButton.getHeight()/2.0f - 60f );
+		multiplayerButton.setWidth(500f);
+		multiplayerButton.setHeight(200f);
+		multiplayerButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - multiplayerButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - multiplayerButton.getHeight()/2.0f - 170f );
 		multiplayerButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -70,12 +86,26 @@ public class MainMenuScreen extends BaseScreen{
             }
          });
         
-        label = new Label( getLangString("mainMenuLabel"), skin);
-        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
+		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
+		joinRandomRoomButton.setWidth(200);
+		joinRandomRoomButton.setHeight(200);
+		joinRandomRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - joinRandomRoomButton.getWidth()/2.0f + 370f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - joinRandomRoomButton.getHeight()/2.0f - 170f );
+		joinRandomRoomButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+            }
+         });
 		
-        addToScreen(upgradeButton);
+        label = new Label( getLangString("mainMenuLabel"), skin, "title");
+        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
+		
+        //addToScreen(upgradeButton);
+        addToScreen(soundButton);
+        addToScreen(settingsButton);
         addToScreen(campaignButton);
         addToScreen(multiplayerButton);
+        addToScreen(joinRandomRoomButton);
         addToScreen(label);
 	}
 	
