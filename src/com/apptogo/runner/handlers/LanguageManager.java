@@ -1,4 +1,4 @@
-package com.apptogo.runner.vars;
+package com.apptogo.runner.handlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
-import com.apptogo.runner.handlers.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;

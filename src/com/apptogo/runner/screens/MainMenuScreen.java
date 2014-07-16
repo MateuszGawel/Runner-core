@@ -1,12 +1,13 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
-import com.apptogo.runner.vars.LanguageManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -93,7 +94,7 @@ public class MainMenuScreen extends BaseScreen{
 		joinRandomRoomButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+                 ScreensManager.getInstance().createLoadingScreen( new Level("", "gfx/game/levels/map.tmx") );
             }
          });
 		

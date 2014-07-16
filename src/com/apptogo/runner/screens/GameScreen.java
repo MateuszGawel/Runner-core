@@ -9,6 +9,7 @@ import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
@@ -30,6 +31,8 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
 	
+	private Level level;
+	
 	private Image jumpButton;
 	private Image slideButton;
 	private Image slowButton;
@@ -40,9 +43,14 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		//WarpController.getInstance().setListener(this);
 	}
 	
+	public void setLevel(Level level)
+	{
+		this.level = level;
+	}
+	
 	public void prepare() 
 	{
-		world = new GameWorld();
+		world = new GameWorld( level.mapPath );
 		worldRenderer = new GameWorldRenderer(world);
 		
 		createGui();
