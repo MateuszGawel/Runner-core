@@ -24,8 +24,8 @@ public class GameWorldRenderer {
         this.debugRenderer = new Box2DDebugRenderer();  
         this.camera = (OrthographicCamera) gameWorld.worldStage.getCamera();  
        
-        camera.position.x = gameWorld.player.getPlayerBody().getPosition().x;  
-        camera.position.y = gameWorld.player.getPlayerBody().getPosition().y;  
+        camera.position.x = gameWorld.player.getBody().getPosition().x;  
+        camera.position.y = gameWorld.player.getBody().getPosition().y;  
         
         tiledMapRenderer = TiledMapLoader.getInstance().getMapRenderer();
         
@@ -35,8 +35,8 @@ public class GameWorldRenderer {
 		tiledMapRenderer.setView(camera);
 		
 	    camera.position.set(
-	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.getPlayerBody().getPosition().x, gameWorld.minCameraX)),
-	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.getPlayerBody().getPosition().y, gameWorld.minCameraY)),
+	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.getBody().getPosition().x, gameWorld.minCameraX)),
+	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.getBody().getPosition().y, gameWorld.minCameraY)),
 	            0);
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
 		

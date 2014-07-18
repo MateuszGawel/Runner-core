@@ -1,6 +1,5 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.actors.Player.PlayerAnimationState;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;

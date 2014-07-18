@@ -4,7 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Enemy;
-import com.apptogo.runner.actors.Player;
+import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
@@ -47,7 +47,7 @@ public class GameWorld {
 	public StretchViewport backgroundStretchViewport;
 	public OrthographicCamera backgroundCamera;
 	
-	public Player player;
+	public Bandit player;
 	public Enemy enemy;
 	
 	public Group background;
@@ -84,7 +84,7 @@ public class GameWorld {
 	private void createWorld(){
 		backgroundStage.addActor(background);
 
-		player = new Player(world);
+		player = new Bandit(world);
 		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
@@ -115,7 +115,7 @@ public class GameWorld {
 	
 	public void handleInput(){
 		if(Input.isPressed()) {
-			player.startRunning();
+			player.start();
 		}
 		/*
 		if(Input.isDown(Input.RIGHT)) {

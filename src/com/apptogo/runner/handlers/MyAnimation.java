@@ -1,5 +1,6 @@
 package com.apptogo.runner.handlers;
 
+import com.apptogo.runner.actors.Character.CharacterAnimationState;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -14,33 +15,42 @@ public class MyAnimation extends Animation{
 	private boolean animationFinished;
 	private float timeElapsed = 0;
 	private int frameNumber = 0;
-
+	private boolean looping;
+	private Object animationState;
 	
 	private PlayMode playMode = PlayMode.NORMAL;
 	
-	public MyAnimation (float[] frameDuration, TextureRegion... keyFrames) {
+	public MyAnimation (float[] frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping) {
 		super(frameDuration[0], keyFrames);
 		this.frameDuration = frameDuration;
 		this.keyFrames = keyFrames;
-		this.animationFinished = false;
+		this.animationState = animationState;
+		this.looping = looping;
 	}
 	
-	public MyAnimation (float[] frameDuration, AtlasRegion[] keyFrames) {
-		super(frameDuration[0], keyFrames);
-		this.frameDuration = frameDuration;
-		this.keyFrames = keyFrames;
-		this.animationFinished = false;
-	}
-	
-	public MyAnimation (float frameDuration, AtlasRegion[] keyFrames) {
+	public MyAnimation (float frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping) {
 		super(frameDuration, keyFrames);
 		this.frameDuration = new float[keyFrames.length];
 		for(int i=0; i<keyFrames.length; i++){
 			this.frameDuration[i] = frameDuration;
 		}
 		this.keyFrames = keyFrames;
-		this.animationFinished = false;
+		this.animationState = animationState;
+		this.looping = looping;
 	}
+	
+	public MyAnimation (float frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping, int loopCount) {
+		super(frameDuration, keyFrames);
+		this.frameDuration = new float[keyFrames.length];
+		for(int i=0; i<keyFrames.length; i++){
+			this.frameDuration[i] = frameDuration;
+		}
+		this.keyFrames = keyFrames;
+		this.animationState = animationState;
+		this.looping = looping;
+		this.maxLoopCount = loopCount;
+	}
+	
 
 	public void setFrameDuration(float frameDuration){
 		for(int i=0; i<keyFrames.length; i++){
@@ -53,9 +63,7 @@ public class MyAnimation extends Animation{
 		if(stateTime < frameDuration[0])
 			resetLoops();
 		if (keyFrames.length == 1) return 0;
-		//Logger.log(this, "timeElapsed: " + timeElapsed + " stateTime " + stateTime + " ROZNICA: " + (stateTime - timeElapsed));
 		if(loopCount <= maxLoopCount && (stateTime - timeElapsed) / frameDuration[frameNumber] >= 1){
-			//Logger.log(this, "ZWIEKSZAM");
 			timeElapsed += frameDuration[frameNumber];
 			frameNumber++;
 			if(playMode == PlayMode.LOOP)
@@ -93,8 +101,9 @@ public class MyAnimation extends Animation{
 		return frameNumber;
 	}
 	
+	/*
 	@Override
-	public TextureRegion getKeyFrame (float stateTime, boolean looping) {
+	public TextureRegion getKeyFrame (float stateTime) {
 		PlayMode oldPlayMode = playMode;
 		if (looping && (playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {
 			if (playMode == PlayMode.NORMAL)
@@ -111,10 +120,9 @@ public class MyAnimation extends Animation{
 		TextureRegion frame = getKeyFrame(stateTime);
 		playMode = oldPlayMode;
 		return frame;
-	}
+	}*/
 	
-	public TextureRegion getKeyFrame (float stateTime, boolean looping, int maxLoopCount) {
-		this.maxLoopCount = maxLoopCount;
+	public TextureRegion getKeyFrame (float stateTime) {
 		PlayMode oldPlayMode = playMode;
 		if (looping && (playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {
 			if (playMode == PlayMode.NORMAL)
@@ -147,4 +155,5 @@ public class MyAnimation extends Animation{
 	public int getFrameNumber(){
 		return this.frameNumber;
 	}
+	public Object getAnimationState(){ return this.animationState; }
 }

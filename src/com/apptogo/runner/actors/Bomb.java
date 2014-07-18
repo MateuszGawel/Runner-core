@@ -29,7 +29,7 @@ public class Bomb extends Actor implements Poolable{
 	private Vector2 position;
 	public boolean alive;
 	private Body bombBody;
-	private Player player;
+	private Bandit player;
 	private World world;
 	private float timeToExplode = 2;
 	
@@ -47,7 +47,7 @@ public class Bomb extends Actor implements Poolable{
 	private float stateTime;
 	private boolean exploding;
 	
-	public Bomb(Player player, World world){
+	public Bomb(Bandit player, World world){
 		this.position = new Vector2();
         this.alive = false;
         this.player = player;
@@ -88,7 +88,7 @@ public class Bomb extends Actor implements Poolable{
     	stateTime = 0;
         exploding = false;
         bombBody.setTransform(position, 0);
-        bombBody.setLinearVelocity(player.getPlayerSpeed()/2, 0);
+        bombBody.setLinearVelocity(player.getSpeed()/2, 0);
         alive = true;
 		Timer.schedule(new Task() {
 			@Override
