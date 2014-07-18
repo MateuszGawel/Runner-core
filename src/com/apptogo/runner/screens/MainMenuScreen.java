@@ -5,12 +5,14 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.handlers.Widget;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -34,6 +36,7 @@ public class MainMenuScreen extends BaseScreen{
 	private TextButton multiplayerButton;
 	Button joinRandomRoomButton;
 	private Label label;
+	private Widget widget;
 	
 	public MainMenuScreen(Runner runner){
 		super(runner);	
@@ -101,13 +104,18 @@ public class MainMenuScreen extends BaseScreen{
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
 		
+        widget = new Widget(0, 0, 50, 50);
+        widget.addActor(campaignButton);
+        widget.addActor(multiplayerButton);
+        
         //addToScreen(upgradeButton);
         addToScreen(soundButton);
         addToScreen(settingsButton);
-        addToScreen(campaignButton);
-        addToScreen(multiplayerButton);
+        //addToScreen(campaignButton);
+        //addToScreen(multiplayerButton);
         addToScreen(joinRandomRoomButton);
         addToScreen(label);
+        addToScreen( widget.actor() );
 	}
 	
 	public void step()
