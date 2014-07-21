@@ -3,26 +3,22 @@ package com.apptogo.runner.world;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.RayHandler;
 
-import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.controller.Input;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -59,7 +55,7 @@ public class GameWorld {
 	private Vector2 mapSize;
 	
 	public RayHandler rayHandler;
-	
+	public FPSLogger fpsLogger;
 	public GameWorld(){
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
@@ -79,6 +75,8 @@ public class GameWorld {
 		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
 		createWorld();
+		
+		fpsLogger = new FPSLogger();
 	}
 	
 	private void createWorld(){
@@ -149,5 +147,6 @@ public class GameWorld {
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
+        fpsLogger.log();
     }  
 }

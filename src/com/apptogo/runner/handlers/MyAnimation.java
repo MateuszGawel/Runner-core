@@ -135,12 +135,10 @@ public class MyAnimation extends Animation{
 			else
 				playMode = PlayMode.LOOP;
 		}
-
-		TextureRegion frame = getKeyFrame(stateTime);
+		TextureRegion frame = keyFrames[getKeyFrameIndex(stateTime)];
 		playMode = oldPlayMode;
 		return frame;
 	}
-	
 	@Override
 	public boolean isAnimationFinished (float stateTime) {
 		return animationFinished;
