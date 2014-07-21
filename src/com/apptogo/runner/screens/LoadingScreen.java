@@ -4,7 +4,6 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
-import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
@@ -36,13 +35,6 @@ public class LoadingScreen extends BaseScreen{
         resourcesManager.loadResources(screenToLoad);
 	}
 	
-	//przeladowanie dla gameScreen
-	public LoadingScreen(Runner runner, ScreenType gameScreen, Level level)
-	{
-		this(runner, gameScreen);
-		
-	}
-
 	public void prepare() 
 	{
 		setBackground("ui/menuBackgrounds/loadingScreenBackground.png");
