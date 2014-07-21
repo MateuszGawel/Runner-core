@@ -14,8 +14,8 @@ public class Materials {
 	
 	static
 	{
-		playerBody = createFixtureDef(5f, 0.2f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_GROUND | Box2DVars.BIT_KILLING), false);
-		playerSlidingBody = createFixtureDef(30f, 0.01f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_GROUND | Box2DVars.BIT_KILLING), false);
+		playerBody = createFixtureDef(12f, 0.2f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_GROUND | Box2DVars.BIT_KILLING), false);
+		playerSlidingBody = createFixtureDef(2f, 0.15f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_GROUND | Box2DVars.BIT_KILLING), false);
 		wallSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_WALLSENSOR, Box2DVars.BIT_GROUND, true);
 		footSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_FOOTSENSOR, Box2DVars.BIT_GROUND, true);
 		enemyBody = createFixtureDef(30f, 10f, 0f, Box2DVars.BIT_ENEMY, Box2DVars.BIT_GROUND, false);

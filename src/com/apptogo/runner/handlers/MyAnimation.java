@@ -41,6 +41,7 @@ public class MyAnimation extends Animation{
 	
 	public MyAnimation (float frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping, int loopCount) {
 		super(frameDuration, keyFrames);
+		//Logger.log(this, "dostalem maxa: " + loopCount);
 		this.frameDuration = new float[keyFrames.length];
 		for(int i=0; i<keyFrames.length; i++){
 			this.frameDuration[i] = frameDuration;
@@ -60,6 +61,7 @@ public class MyAnimation extends Animation{
 
 	@Override
 	public int getKeyFrameIndex (float stateTime) {
+		//Logger.log(this, "maxLoop: " + maxLoopCount + " currentLoop: " + loopCount);
 		if(stateTime < frameDuration[0])
 			resetLoops();
 		if (keyFrames.length == 1) return 0;
@@ -75,6 +77,8 @@ public class MyAnimation extends Animation{
 		
 		switch (playMode) {
 		case NORMAL:
+			if(frameNumber > keyFrames.length - 1)
+				this.animationFinished = true;
 			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
 			break;
 		case LOOP:
@@ -98,6 +102,7 @@ public class MyAnimation extends Animation{
 			frameNumber = keyFrames.length - frameNumber - 1;
 			break;
 		}
+		//Logger.log(this, "zwracam numer: " + frameNumber);
 		return frameNumber;
 	}
 	
@@ -137,18 +142,29 @@ public class MyAnimation extends Animation{
 		}
 		TextureRegion frame = keyFrames[getKeyFrameIndex(stateTime)];
 		playMode = oldPlayMode;
+		if(isAnimationFinished())
+			onAnimationFinished();
+		additionalTaskDuringAnimation();
 		return frame;
 	}
-	@Override
-	public boolean isAnimationFinished (float stateTime) {
+
+	public boolean isAnimationFinished () {
 		return animationFinished;
+	}
+	
+	public void onAnimationFinished(){
+		//to override
+	}
+	
+	public void additionalTaskDuringAnimation(){
+		//to override
 	}
 	
 	public void resetLoops(){
 		this.loopCount = 0;
-		this.maxLoopCount = 0;
 		this.animationFinished = false;
 		this.timeElapsed = 0;
+		this.frameNumber = 0;
 	}
 	public int getFrameNumber(){
 		return this.frameNumber;

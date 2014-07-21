@@ -147,6 +147,6 @@ public class GameWorld {
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
-        fpsLogger.log();
+        //fpsLogger.log();
     }  
 }

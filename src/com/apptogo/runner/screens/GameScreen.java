@@ -35,6 +35,8 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private Image slowButton;
 	private Image bombButton;
 	
+	private boolean slideButtonTouched;
+	
 	public GameScreen(Runner runner){
 		super(runner);	
 		//WarpController.getInstance().setListener(this);
@@ -82,11 +84,12 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		slideButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				world.player.slide();
+				slideButtonTouched = true;
 		        return true;
 		    }
 			@Override
 		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				slideButtonTouched = false;
 				world.player.standUp();
 		    }
 		});
@@ -115,6 +118,8 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	@Override
 	public void handleInput() {
 		world.handleInput();
+		if(slideButtonTouched)
+			world.player.slide();
 	}
 	
 	@Override

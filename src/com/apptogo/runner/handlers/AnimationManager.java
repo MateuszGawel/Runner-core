@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimationManager {
 
-	private TextureAtlas atlas;
+	private static TextureAtlas atlas;
 	private Object currentAnimationState;
 	private Object prevAnimationState;
 	private List<MyAnimation> animations = new ArrayList<MyAnimation>();
@@ -22,13 +22,25 @@ public class AnimationManager {
 		atlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, atlasName);
 	}
 	
+	public static AtlasRegion[] createFrames(int framesCount, String name){
+		AtlasRegion[] frames = new AtlasRegion[framesCount];
+		for(int i=0; i<framesCount; i++){
+			frames[i] = atlas.findRegion(name + i);
+		}
+		return frames;
+	}
+	
+	public void createAnimation(MyAnimation animation){
+		animations.add(animation);
+	}
+	
 	public void createAnimation(int framesCount, float frameTime, String name, CharacterAnimationState animationState, boolean looping){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
 		}
 		//narazie obsluguje utworzenie tylko z rownym czasem i framemami podanymi w tablicy
-		animations.add(new MyAnimation(0.03f, animationState, frames, looping));
+		animations.add(new MyAnimation(frameTime, animationState, frames, looping));
 	}
 	
 	public void createAnimation(int framesCount, float frameTime, String name, CharacterAnimationState animationState, boolean looping, int loopCount){
@@ -37,7 +49,7 @@ public class AnimationManager {
 			frames[i] = atlas.findRegion(name + i);
 		}
 		//narazie obsluguje utworzenie tylko z rownym czasem i framemami podanymi w tablicy
-		animations.add(new MyAnimation(0.03f, animationState, frames, looping, loopCount));
+		animations.add(new MyAnimation(frameTime, animationState, frames, looping, loopCount));
 	}
 	
 	public void setCurrentAnimationState(Object animationState){
@@ -46,12 +58,15 @@ public class AnimationManager {
 	}
 	
 	public TextureRegion animate(float delta){
-		if(prevAnimationState != currentAnimationState)
+		if(prevAnimationState != currentAnimationState){
 			stateTime = 0;
+		}
 		prevAnimationState = currentAnimationState;
 		
 		for(MyAnimation animation : animations){
 			if(animation.getAnimationState() == currentAnimationState){
+				if(stateTime == 0)
+					animation.resetLoops();
 				stateTime += delta;
 				currentFrame = animation.getKeyFrame(stateTime);
 			}
@@ -59,4 +74,6 @@ public class AnimationManager {
 		
 		return currentFrame;
 	}
+	
+	public Object getCurrentAnimationState(){ return this.currentAnimationState; }
 }

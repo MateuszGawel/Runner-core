@@ -47,7 +47,7 @@ public class GameWorldRenderer {
     	gameWorld.backgroundStage.draw();
     	tiledMapRenderer.render();
     	gameWorld.worldStage.draw();
-    	//debugRenderer.render(gameWorld.world, camera.combined);
+    	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	
     	

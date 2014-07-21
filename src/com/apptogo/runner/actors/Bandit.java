@@ -2,10 +2,10 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import org.omg.CORBA.portable.IDLEntity;
-
+import com.apptogo.runner.handlers.AnimationManager;
+import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.MyAnimation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -39,25 +39,79 @@ public class Bandit extends Character{
 	}
 	
 	private void initAnimations(){
-		animationManager.createAnimation(18, 0.03f, "run", CharacterAnimationState.RUNNING, true);
-		animationManager.createAnimation(22, 0.06f, "idle", CharacterAnimationState.IDLE, true);
-		animationManager.createAnimation(6, 0.03f, "jump", CharacterAnimationState.JUMPING, false);
-		animationManager.createAnimation(6, 0.03f, "land", CharacterAnimationState.LANDING, false);
+
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, AnimationManager.createFrames(6, "jump"), false){
+			@Override
+			public void onAnimationFinished(){
+					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
+			}
+		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, AnimationManager.createFrames(6, "land"), false){
+			@Override
+			public void onAnimationFinished(){
+				if(getSpeed() < 0.001f)
+					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+				else
+					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			}
+		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, AnimationManager.createFrames(6, "beginslide"), false){
+			@Override
+			public void onAnimationFinished(){
+					animationManager.setCurrentAnimationState(CharacterAnimationState.SLIDING);
+			}
+		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, AnimationManager.createFrames(6, "standup"), false){
+			@Override
+			public void onAnimationFinished(){
+				if(getSpeed() < 0.001f)
+					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+				else
+					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			}
+		});		
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, AnimationManager.createFrames(18, "run"), true){
+			@Override
+			public void additionalTaskDuringAnimation(){
+				this.setFrameDuration(1/getSpeed() * 0.24f);
+			}
+		});
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, AnimationManager.createFrames(22, "idle"), true, 10){
+			@Override
+			public void onAnimationFinished(){
+				animationManager.setCurrentAnimationState(CharacterAnimationState.MOONWALKING);
+			}
+		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.MOONWALKING, AnimationManager.createFrames(31, "moonwalk"), true, 5){
+			@Override
+			public void onAnimationFinished(){
+				this.resetLoops();
+				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+			}
+		});	
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, AnimationManager.createFrames(10, "flybomb"), false){
+			@Override
+			public void onAnimationFinished(){
+				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
+			}
+		});	
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, AnimationManager.createFrames(10, "runbomb"), false){
+			@Override
+			public void onAnimationFinished(){
+				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			}
+		});	
+		
 		animationManager.createAnimation(33, 0.03f, "fly", CharacterAnimationState.FLYING, true);
 		animationManager.createAnimation(8, 0.03f, "slide", CharacterAnimationState.SLIDING, true);
-		animationManager.createAnimation(6, 0.03f, "beginslide", CharacterAnimationState.BEGINSLIDING, false);
-		animationManager.createAnimation(6, 0.03f, "standup", CharacterAnimationState.STANDINGUP, false);
 		animationManager.createAnimation(9, 0.03f, "diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
-		animationManager.createAnimation(31, 0.03f, "moonwalk", CharacterAnimationState.MOONWALKING, true);
-		animationManager.createAnimation(10, 0.03f, "flybomb", CharacterAnimationState.FLYBOMB, false);
-		animationManager.createAnimation(10, 0.03f, "runbomb", CharacterAnimationState.RUNBOMB, false);
 	}
 	
 
 	public void throwBombs(){
 		if(alive){
-			if(inAir){
+			if(!touchGround){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
 			}
 			else{

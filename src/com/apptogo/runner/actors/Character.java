@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.AnimationManager;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,15 +27,17 @@ public class Character extends Actor{
 	private World world;
 	
 	protected boolean alive = true;
-	protected boolean inAir = false;
+	protected boolean touchGround = false;
 	protected boolean sliding = false;
 	protected boolean immortal = false;
 	protected boolean blinking = false;
 	protected boolean visible = true;
 	protected boolean running = false;
 	protected boolean stopped = false;
+	protected boolean touchWall = false;
+	protected boolean jumped = false;
 	
-	protected int jumpSensor = 0;
+	protected int wallSensor = 0;
 	protected int footSensor = 0;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
@@ -54,6 +57,7 @@ public class Character extends Actor{
 	public Character(World world, String atlasName){
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
+		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 	}
 	
 	protected void createBody(Vector2 bodySize){
@@ -90,7 +94,7 @@ public class Character extends Actor{
 		
 		
 		//foot sensor
-		shape.setAsBox(25 / PPM, 10 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
+		shape.setAsBox(25 / PPM, 20 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
 		fixtureDef = Materials.footSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData("footSensor");
@@ -101,13 +105,16 @@ public class Character extends Actor{
 		if(!running && alive){
 			notifyStartRunning();
 			running = true;
-			if(footSensor > 0)
+			if(touchGround){
+				Logger.log(this, "JAZDA");
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			}
 		}
 	}
 	public void jump(){
-		if(!inAir && alive){
+		if(alive && (touchWall || touchGround)){
 			sliding = false;
+			jumped = true;
 			float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
 			body.setLinearVelocity(0, v0); 
 			notifyJump();
@@ -115,19 +122,20 @@ public class Character extends Actor{
 		}
 	}	
 	public void land(){
-		if(alive){
-			//if(currentAnimationState == BanditAnimationState.JUMPING || currentAnimationState == BanditAnimationState.FLYING || currentAnimationState == BanditAnimationState.FLYBOMB){
-			inAir = false;
-			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
-			//}
+		if(alive && !sliding && footSensor > 0){
+			if(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB){
+				touchGround = true;
+				jumped = false;
+				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+			}
 		}
 	}
 	public void slide(){
-		if(alive && !inAir && !sliding){
+		if(alive && touchGround && !sliding){
 			sliding = true;
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
-			animationManager.setCurrentAnimationState(CharacterAnimationState.SLIDING);
+			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
 		}
 	}
 	public void standUp(){
@@ -150,23 +158,30 @@ public class Character extends Actor{
 		if(alive){
 			alive = false;
 			running = false;
+			sliding = false;
+			jumped = false;
+			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			deathPosition = new Vector2(body.getPosition());
 			notifyDie();
 			Timer.schedule(new Task() {
 				@Override
 				public void run() {
 					respawn();
-					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 				}
 			}, 1);
 		}
 	}
 	public void respawn(){
+		body.getFixtureList().get(0).setSensor(false);
+		body.getFixtureList().get(1).setSensor(true);
 		handleImmortality(2);
 		alive = true;
-		//body.setTransform(deathPosition, 0);
+		body.setTransform(deathPosition, 0);
 		start();
 	}
+	
+	
 	/*---NOTIFIERS---*/
 	private void notifyJump(){
 		JSONObject data = new JSONObject();  
@@ -194,12 +209,12 @@ public class Character extends Actor{
 	    WarpController.getInstance().sendGameUpdate(data.toString()); 
 	}
 	
-	public void incrementJumpSensor(){
-		jumpSensor++;
+	public void incrementWallSensor(){
+		wallSensor++;
 	}
 	
-	public void decrementJumpSensor(){
-		jumpSensor--;
+	public void decrementWallSensor(){
+		wallSensor--;
 	}
 	
 	public void incrementFootSensor(){
@@ -248,37 +263,47 @@ public class Character extends Actor{
 	}
 	
 	private void handleStopping(){
-		if(alive && speed < 0.001f && !stopped){
+		if(alive && speed < 0.001f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			stopped = true;
+			Logger.log(this,  "STOPPED");
 		}
 		else if(alive && speed > 0.001f && stopped){
-			if(footSensor > 0)
+			if(touchGround)
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			stopped = false;
+			Logger.log(this,  " KONIEC STOPPED");
 		}
 	}
-	
-	private void handleInAir(){
-		if(jumpSensor > 0)
-			inAir = false;
+
+	private void handleSensors(){
+		if(wallSensor > 0)
+			touchWall = true;
 		else
-			inAir = true;
+			touchWall = false;
+		
+		if(footSensor > 0)
+			touchGround = true;
+		else
+			touchGround = false;
 	}
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
 		if(running && !sliding && speed < playerMaxSpeed)
-			body.applyForceToCenter(new Vector2(4000, 0), true);
+			body.applyForceToCenter(new Vector2(3000, 0), true);
+		else if(sliding){
+			body.applyForceToCenter(new Vector2(200, 0), true);
+		}
 	}
 
 	@Override
 	public void act(float delta) {
 		handleBlinking();
 		handleStopping();
-		handleInAir();
+		handleSensors();
 		handleRunning();
 		
 		currentFrame = animationManager.animate(delta);

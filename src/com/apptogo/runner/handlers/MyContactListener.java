@@ -29,13 +29,12 @@ public class MyContactListener implements ContactListener{
 		
 		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.incrementJumpSensor();
 			world.player.incrementFootSensor();
 			world.player.land();
 		}
 		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.incrementJumpSensor();
+			world.player.incrementWallSensor();
 		}
 	}
 
@@ -46,12 +45,11 @@ public class MyContactListener implements ContactListener{
 		
 		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.decrementJumpSensor();
 			world.player.decrementFootSensor();
 		}
 		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.decrementJumpSensor();
+			world.player.decrementWallSensor();
 		}
 		
 	}
