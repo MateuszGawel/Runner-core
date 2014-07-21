@@ -60,7 +60,8 @@ public class GameWorld {
 	
 	public RayHandler rayHandler;
 	
-	public GameWorld(){
+	public GameWorld(String mapPath)
+	{
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
 		
@@ -78,17 +79,18 @@ public class GameWorld {
 		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
 		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
-		createWorld();
+		createWorld(mapPath);
 	}
 	
-	private void createWorld(){
+	private void createWorld(String mapPath)
+	{
 		backgroundStage.addActor(background);
 
 		player = new Player(world);
 		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
-		mapSize = TiledMapLoader.getInstance().loadMap("gfx/game/levels/map.tmx");
+		mapSize = TiledMapLoader.getInstance().loadMap(mapPath);
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
 		createBackground();

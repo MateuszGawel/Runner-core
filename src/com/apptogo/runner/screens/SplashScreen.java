@@ -22,11 +22,10 @@ public class SplashScreen extends BaseScreen{
 	private float splashImageOpacity;
 	private AlphaAction action;
 	
-	float percent;
+	private final float FADE_IN_TIME = 0.5f; //finalnie powinno byc ~80
 	
-	private TextButton button;
-	
-	public SplashScreen(Runner runner){
+	public SplashScreen(Runner runner)
+	{
 		super(runner);	
 	}
 	
@@ -48,7 +47,7 @@ public class SplashScreen extends BaseScreen{
 	{
 		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		
-		splashImageOpacity += 0.025f;
+		splashImageOpacity += 2.0f / FADE_IN_TIME;
 		
 		action.reset();
 		action.setAlpha( ((splashImageOpacity>1.0f)?1.0f:splashImageOpacity) * (float)Math.sin(((splashImageOpacity>1.0f)?1.0f:splashImageOpacity)) );
