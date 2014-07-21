@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CampaignScreen;
@@ -46,16 +47,24 @@ public class ScreensManager {
 	private BaseScreen loadingScreen; //to niestety jest wyjatek i trzeba go obrobic osobno
 	private BaseScreen currentScreen;
 	private ScreenType currentScreenType;
+	
+	private Level levelToLoad;
 		
 	public void createScreen(ScreenType screenType)
 	{
 		int index = getScreenIndex(screenType);
 		setScreen( screens.get(index) );
 	}
+	
 	public void createLoadingScreen(ScreenType screenToLoad)
 	{
 		loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
+	}
+	public void createLoadingScreen(Level level) //przeladowanie dla gameScreen!
+	{
+		this.levelToLoad = level;
+		createLoadingScreen(ScreenType.SCREEN_GAME);
 	}
 	
 	private void addNewScreen(ScreenType screenType)
@@ -109,9 +118,23 @@ public class ScreensManager {
 	
 	public void setScreen(BaseScreen screen)
 	{
-		runner.setScreen(screen);
+		//--brzydkie czyszczenie DO ZMIANY--//
+		ScreenType previousScreenType = null;
+		if( currentScreenType != null && currentScreenType != ScreenType.SCREEN_SPLASH )
+			previousScreenType = currentScreenType;
+		//----------------------------------//
+		
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
+	
+		if( currentScreenType == ScreenType.SCREEN_GAME ) ((GameScreen)screen).setLevel( levelToLoad );
+		
+		runner.setScreen(screen);
+		
+		//--brzydkie czyszczenie DO ZMIANY--//
+		if( previousScreenType != null && previousScreenType != ScreenType.SCREEN_SPLASH )
+			ResourcesManager.getInstance().unloadAllResources( previousScreenType );
+		//----------------------------------//
 	}
 	
     public ScreenType getCurrentScreenType(){ return currentScreenType; }

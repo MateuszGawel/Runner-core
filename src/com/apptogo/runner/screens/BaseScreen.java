@@ -1,9 +1,9 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.controller.InputHandler;
+import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.LanguageManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
