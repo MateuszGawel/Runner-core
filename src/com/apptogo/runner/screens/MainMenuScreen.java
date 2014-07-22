@@ -5,11 +5,14 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.handlers.Widget.WidgetFadingType;
+import com.apptogo.runner.handlers.Widget.WidgetType;
 import com.apptogo.runner.handlers.Widget;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -21,9 +24,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
+import com.sun.org.apache.xml.internal.security.keys.content.KeyName;
 
 public class MainMenuScreen extends BaseScreen{	
 	
@@ -37,6 +43,12 @@ public class MainMenuScreen extends BaseScreen{
 	Button joinRandomRoomButton;
 	private Label label;
 	private Widget widget;
+	
+	//DO WYWALENIA!!!!!!!!!!!!!!!!
+	private boolean wasntPressed = true;
+	private boolean wasntPressed2 = true;
+	private int framesToChange = 160;
+	//----------------------------
 	
 	public MainMenuScreen(Runner runner){
 		super(runner);	
@@ -104,15 +116,13 @@ public class MainMenuScreen extends BaseScreen{
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
 		
-        widget = new Widget(0, 0, 50, 50);
-        widget.addActor(campaignButton);
-        widget.addActor(multiplayerButton);
+        widget = new Widget(Align.center, Align.center, 400f, WidgetType.BIG, WidgetFadingType.NONE);
         
         //addToScreen(upgradeButton);
         addToScreen(soundButton);
         addToScreen(settingsButton);
-        //addToScreen(campaignButton);
-        //addToScreen(multiplayerButton);
+        addToScreen(campaignButton);
+        addToScreen(multiplayerButton);
         addToScreen(joinRandomRoomButton);
         addToScreen(label);
         addToScreen( widget.actor() );
@@ -120,7 +130,16 @@ public class MainMenuScreen extends BaseScreen{
 	
 	public void step()
 	{
-		
+		if( Gdx.input.isKeyPressed(Keys.A) && wasntPressed )
+		{
+			widget.showWidget();
+			wasntPressed = false;
+		}
+		if( Gdx.input.isKeyPressed(Keys.S) && wasntPressed2 )
+		{
+			widget.hideWidget();
+			wasntPressed2 = false;
+		}		
 	}
 	
 	@Override

@@ -6,11 +6,13 @@ import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class ResourcesManager {
 
@@ -333,5 +335,10 @@ public class ResourcesManager {
 		}
 		
 		return index;
+	}
+	
+	public Skin getUiSkin()
+	{
+		return new Skin(Gdx.files.internal("ui/uiskin.json"));
 	}
 }

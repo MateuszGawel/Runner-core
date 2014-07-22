@@ -2,6 +2,7 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.LanguageManager;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
@@ -57,7 +58,7 @@ public abstract class BaseScreen implements Screen{
 			stage = new Stage();
 			viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			stage.setViewport(viewport);
-			skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+			skin = ResourcesManager.getInstance().getUiSkin();
 			
 			this.prepare();
 			
