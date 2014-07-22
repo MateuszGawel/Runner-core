@@ -60,9 +60,11 @@ public class Widget
 	 *  @param y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w poziomie*/
 	public Widget(float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType)//, float width, float height, WidgetOrientation orientation)
 	{	
+		this.widgetType = widgetType;
+		this.fadeInType = fadeInType;
+		
 		createWindow();	
-		Logger.log(this, x);
-		Logger.log(this, y);
+
 		if( x == (float)Align.center ) this.x = ((Runner.SCREEN_WIDTH - this.width) / 2.0f) - (Runner.SCREEN_WIDTH / 2.0f);
 		else this.x = x;
 		
@@ -72,9 +74,6 @@ public class Widget
 		this.win.setPosition(this.x, this.y);
 		
 		this.hiddenPartWidth = hiddenPartWidth;
-		
-		this.widgetType = widgetType;
-		this.fadeInType = fadeInType;
 		
 		group = new Group();
 		
