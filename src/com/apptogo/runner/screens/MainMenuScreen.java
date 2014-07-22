@@ -119,6 +119,8 @@ public class MainMenuScreen extends BaseScreen{
         widget = new Widget(Align.center, 410f, 400f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
         widget.setToggleButton(true);
         
+        soundButton.addListener( widget.getToggleListener() ); //podpiecie listenera z widgetu do przycisku na scenie :)
+        
         //addToScreen(upgradeButton);
         addToScreen(soundButton);
         addToScreen(settingsButton);

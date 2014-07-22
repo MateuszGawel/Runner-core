@@ -315,4 +315,14 @@ public class Widget
 		
 		groupWithBlackOutButton.addActor(blackOutButton);
 	}
+	
+	public ClickListener getToggleListener()
+	{
+		return new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	widget.toggleWidget();
+            }
+		};
+	}
 }
