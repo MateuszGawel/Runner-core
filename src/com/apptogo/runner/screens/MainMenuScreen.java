@@ -116,7 +116,8 @@ public class MainMenuScreen extends BaseScreen{
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
 		
-        widget = new Widget(Align.center, Align.center, 400f, WidgetType.SMALL, WidgetFadingType.NONE);
+        widget = new Widget(Align.center, 410f, 400f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
+        widget.setToggleButton(true);
         
         //addToScreen(upgradeButton);
         addToScreen(soundButton);
