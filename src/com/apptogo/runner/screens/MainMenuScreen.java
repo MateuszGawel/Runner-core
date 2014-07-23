@@ -98,7 +98,7 @@ public class MainMenuScreen extends BaseScreen{
 		campaignButton.setWidth(500f);
 		campaignButton.setHeight(200f);
 		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f + 50f );
-		campaignButton.addListener(new ClickListener() {
+		campaignButton.addListener(new ClickListener() { //brzydkie jak chuj zmienic koniecznie [chociaz jakas metoda generujaca listenery
             public void clicked(InputEvent event, float x, float y) 
             {
                  ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_CAMPAIGN);
