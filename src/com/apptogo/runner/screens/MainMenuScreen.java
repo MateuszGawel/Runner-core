@@ -4,6 +4,7 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.SettingsManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.Widget.WidgetFadingType;
 import com.apptogo.runner.handlers.Widget.WidgetType;
@@ -116,8 +117,19 @@ public class MainMenuScreen extends BaseScreen{
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
 		
-        widget = new Widget(Align.center, 410f, 400f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
+        Image plflag = new Image( new Texture(languageManager.getIcoFile("pl")) );
+        plflag.setPosition(-150f, 600f);
+        plflag.addListener( settingsManager.getSetLanguageListener("pl") );
+        
+        Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
+        enflag.setPosition(-50f, 600f);
+        enflag.addListener( settingsManager.getSetLanguageListener("en") );
+        
+        widget = new Widget(Align.center, 400f, 400f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, false);
         widget.setToggleButton(true);
+        
+        widget.addActor(plflag);
+        widget.addActor(enflag);
         
         soundButton.addListener( widget.getToggleListener() ); //podpiecie listenera z widgetu do przycisku na scenie :)
         
@@ -135,7 +147,8 @@ public class MainMenuScreen extends BaseScreen{
 	{
 		if( Gdx.input.isKeyPressed(Keys.A) && wasntPressed )
 		{
-			widget.showWidget();
+			SettingsManager.getInstance().setLanguage("pl");
+			//widget.showWidget();
 			wasntPressed = false;
 		}
 		if( Gdx.input.isKeyPressed(Keys.S) && wasntPressed2 )

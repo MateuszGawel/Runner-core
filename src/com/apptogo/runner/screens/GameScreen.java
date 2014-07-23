@@ -8,6 +8,7 @@ import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
@@ -15,6 +16,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -128,6 +130,11 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		world.handleInput();
 		if(slideButtonTouched)
 			world.player.slide();
+		
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
+		{
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}
 	}
 	
 	@Override

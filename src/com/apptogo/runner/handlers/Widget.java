@@ -41,7 +41,7 @@ public class Widget
 		BOTTOM_TO_TOP
 	}
 	
-	private float FADE_IN_DURATION = 0.15f;
+	private float FADE_IN_DURATION = 0.55f;
 	
 	private float x;
 	private float y;
@@ -170,7 +170,7 @@ public class Widget
 		}
 		else if( this.fadeInType == WidgetFadingType.BOTTOM_TO_TOP )
 		{			
-			action = Actions.moveTo( 0f, this.hiddenPartWidth, FADE_IN_DURATION);	
+			action = Actions.moveTo( 0f, this.hiddenPartWidth, FADE_IN_DURATION);
 		}
 		else if( this.fadeInType == WidgetFadingType.LEFT_TO_RIGHT )
 		{			
@@ -183,7 +183,7 @@ public class Widget
 		
 		action.restart();
 		action.setReverse(hide);
-		
+		action.setInterpolation(Interpolation.elasticOut);
 		this.group.setVisible(true);
 		this.group.addAction(action);
 	}

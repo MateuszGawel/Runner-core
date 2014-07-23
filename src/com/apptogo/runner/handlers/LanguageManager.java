@@ -12,6 +12,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 
@@ -44,10 +47,9 @@ public class LanguageManager {
 		languages = document.getChildrenByName("language");
 	}	
 	
+	/** Nalezy zadbac aby currentLanguage byl wczesniej ustawiony! */
 	public String getString(String key)
-	{
-		if( currentLanguage == null ) setDefaultLanguage();
-		
+	{		
 		String string = "";
 		Array<XmlReader.Element> stringNodes = currentLanguage.getChildrenByName("string");
 				
@@ -82,17 +84,42 @@ public class LanguageManager {
 			}
 		}
 	}	
-	public void setDefaultLanguage()
+	public String getDefaultLanguageId()
 	{
+		String defaultLanguage = "";
+		
 		for(int i = 0; i < languages.size; i++)
 		{
 			XmlReader.Element node = languages.get(i);
-
+			
 			if( node.getAttribute("default").equals("true") )
 			{
-				currentLanguage = node;
+				defaultLanguage = node.getAttribute("id");
 				break;
 			}
 		}
+		
+		return defaultLanguage;
+	}
+	public FileHandle getIcoFile(String key)
+	{
+		FileHandle icon = null;
+		
+		for(int i = 0; i < languages.size; i++)
+		{
+			XmlReader.Element node = languages.get(i);
+			
+			if( node.getAttribute("id").equals(key) )
+			{
+				if( currentLanguage.getAttribute("id").equals(key) )
+				{
+					icon = Gdx.files.internal( node.getAttribute("chosenIcoFilePath") );
+				}
+				else icon = Gdx.files.internal( node.getAttribute("icoFilePath") );
+				break;
+			}
+		}
+		
+		return icon;
 	}
 }
