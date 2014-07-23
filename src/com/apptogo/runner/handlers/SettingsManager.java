@@ -63,15 +63,5 @@ public class SettingsManager
 	{
 		preferences.putString(LANGUAGE_ID, language);
 		preferences.flush();
-	}
-	public ClickListener getSetLanguageListener(final String key)
-	{
-		return new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	INSTANCE.setLanguage(key);
-            }
-		};
-	}
-		
+	}		
 }

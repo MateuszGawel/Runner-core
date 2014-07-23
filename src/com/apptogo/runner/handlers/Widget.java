@@ -62,6 +62,8 @@ public class Widget
 	private WidgetType widgetType;
 	private WidgetFadingType fadeInType;
 	
+	private Interpolation interpolation;
+	
 	private boolean isShowed = false;
 	private boolean setBlackOut = false;
 	
@@ -183,7 +185,9 @@ public class Widget
 		
 		action.restart();
 		action.setReverse(hide);
-		action.setInterpolation(Interpolation.elasticOut);
+		
+		action.setInterpolation(interpolation);
+		
 		this.group.setVisible(true);
 		this.group.addAction(action);
 	}
@@ -324,5 +328,10 @@ public class Widget
             	widget.toggleWidget();
             }
 		};
+	}
+	
+	public void setEasing(Interpolation interpolation)
+	{
+		this.interpolation = interpolation;
 	}
 }
