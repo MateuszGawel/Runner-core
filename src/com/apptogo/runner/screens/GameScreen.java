@@ -58,6 +58,8 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		createGui();
 	}
 	
+	
+	
 	private void createGui()
 	{
 		jumpButton = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/buttons/jumpButton.png"));
@@ -76,13 +78,14 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		slowButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if(world.player.isAlive())
+				if(world.player.isAlive() && world.player.isStarted())
 					world.player.setRunning(false);
 		        return true;
 		    }
 			@Override
 		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				world.player.setRunning(true);
+				if(world.player.isAlive() && world.player.isStarted())
+					world.player.setRunning(true);
 		    }
 		});
 		guiStage.addActor(slowButton);

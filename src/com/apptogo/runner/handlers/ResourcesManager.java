@@ -130,7 +130,7 @@ public class ResourcesManager {
 		
 		gameMeta.setTexturesDirectory("gfx/game/levels/");
 		gameMeta.setTexturesExtension(".png");
-		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand"} );
+		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
 		
 		gameMeta.setTexturesDirectory("gfx/game/characters/buttons/");
 		gameMeta.addTextures( new String[]{"slowButton","jumpButton","slideButton","bombButton"} );

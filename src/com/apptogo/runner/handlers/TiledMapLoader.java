@@ -7,7 +7,9 @@ import java.util.Iterator;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.vars.Materials;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -45,6 +47,8 @@ public class TiledMapLoader {
 	private Array<Body> killingBodies = new Array<Body>();
 	private FixtureDef groundFixture;
 	private FixtureDef killingFixture;
+	private GameWorld gameWorld;
+	
 	private TiledMap tiledMap;
 	MapProperties mapProperties;
 	private RayHandler rayHandler;
@@ -148,18 +152,28 @@ public class TiledMapLoader {
 				if (object instanceof TextureMapObject){
 					continue;
 				}
-
-				BodyDef bodyDef = new BodyDef();
-				bodyDef.type = BodyDef.BodyType.StaticBody;
-				
-				killingFixture.shape = createShape(object);
-				Body body = world.createBody(bodyDef);
-				body.createFixture(killingFixture).setUserData("killing");
-				body.setUserData("killing");
-				
-				killingBodies.add(body);
+		
+				if(!handleCustomObjects(object)){
+					BodyDef bodyDef = new BodyDef();
+					bodyDef.type = BodyDef.BodyType.StaticBody;
+					
+					killingFixture.shape = createShape(object);
+					Body body = world.createBody(bodyDef);
+					body.createFixture(killingFixture).setUserData("killing");
+					body.setUserData("killing");
+					killingBodies.add(body);
+				}
 			}
 		}
+	}
+	
+	private boolean handleCustomObjects(MapObject object){
+		if(object.getName() != null && object.getName().equals("barrel")){
+			Barrel barrel = new Barrel(createShape(object), object, world, gameWorld);
+			killingBodies.add(barrel.getBody());
+			return true;
+		}
+		return false;
 	}
 	
 	private void createLights(MapObject object){
@@ -256,6 +270,7 @@ public class TiledMapLoader {
 	
 	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	public void setWorld(World world){ this.world = world; }
+	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
 	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
 	public RayHandler getRayHandler(){ return rayHandler; }
 }

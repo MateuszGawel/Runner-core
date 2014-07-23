@@ -1,5 +1,6 @@
 package com.apptogo.runner.world;
 
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;

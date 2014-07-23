@@ -111,7 +111,7 @@ public abstract class BaseScreen implements Screen{
 		background.setPosition(0 - (runner.SCREEN_WIDTH/2.0f), 0 - (runner.SCREEN_HEIGHT/2.0f));
 		stage.addActor( background );
 	}
-	
+
 	protected void addToScreen(Actor actor)
 	{
 		this.stage.addActor(actor);

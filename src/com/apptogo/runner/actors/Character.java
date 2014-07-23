@@ -36,6 +36,7 @@ public class Character extends Actor{
 	protected boolean stopped = false;
 	protected boolean touchWall = false;
 	protected boolean jumped = false;
+	protected boolean started = false;
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
@@ -105,6 +106,7 @@ public class Character extends Actor{
 		if(!running && alive){
 			notifyStartRunning();
 			running = true;
+			started = true;
 			if(touchGround){
 				Logger.log(this, "JAZDA");
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
@@ -112,7 +114,7 @@ public class Character extends Actor{
 		}
 	}
 	public void jump(){
-		if(alive && (touchWall || touchGround)){
+		if(started && alive && (touchWall || touchGround)){
 			sliding = false;
 			jumped = true;
 			float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
@@ -131,7 +133,7 @@ public class Character extends Actor{
 		}
 	}
 	public void slide(){
-		if(alive && touchGround && !sliding){
+		if(started && alive && touchGround && !sliding){
 			sliding = true;
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
@@ -305,7 +307,7 @@ public class Character extends Actor{
 		handleStopping();
 		handleSensors();
 		handleRunning();
-		
+		Logger.log(this, body.getPosition().x + " ");
 		currentFrame = animationManager.animate(delta);
 		
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
@@ -319,4 +321,5 @@ public class Character extends Actor{
 	public Body getBody(){ return this.body; }
 	public boolean isImmortal(){ return this.immortal; }
 	public float getSpeed(){ return this.speed; }
+	public boolean isStarted(){ return this.started; }
 }

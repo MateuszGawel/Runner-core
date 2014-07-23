@@ -6,6 +6,7 @@ import box2dLight.RayHandler;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -88,6 +89,7 @@ public class GameWorld {
 		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
+		TiledMapLoader.getInstance().setGameWorld(this);
 		mapSize = TiledMapLoader.getInstance().loadMap(mapPath);
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
@@ -151,4 +153,6 @@ public class GameWorld {
         worldStage.act(delta);
         //fpsLogger.log();
     }  
+    
+    public Stage getWorldStage(){ return this.worldStage; }
 }
