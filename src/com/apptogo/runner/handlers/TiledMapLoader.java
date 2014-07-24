@@ -169,7 +169,7 @@ public class TiledMapLoader {
 	
 	private boolean handleCustomObjects(MapObject object){
 		if(object.getName() != null && object.getName().equals("barrel")){
-			Barrel barrel = new Barrel(createShape(object), object, world, gameWorld);
+			Barrel barrel = new Barrel(object, world, gameWorld);
 			killingBodies.add(barrel.getBody());
 			return true;
 		}
@@ -254,6 +254,7 @@ public class TiledMapLoader {
 		float radius = ( (ellipse.width < ellipse.height) ? ellipse.width : ellipse.height ) / 2f; //minimalizowanie elipsy do kolka
 		
 		ellipseShape.setRadius(radius / PPM);
+		Logger.log(this, "tworze wektor elipsy: " + (ellipse.x + radius) / PPM + " : " + (ellipse.x + radius) / PPM);
 		ellipseShape.setPosition(new Vector2( (ellipse.x + radius) / PPM, (ellipse.y + radius) / PPM));
 
 		return ellipseShape;

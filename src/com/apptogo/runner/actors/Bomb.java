@@ -102,7 +102,7 @@ public class Bomb extends Actor implements Poolable{
 				animationManager.setCurrentAnimationState(BombAnimationState.EXPLODING);
 			}
 		}, timeToExplode);
-		setOrigin(position.x/PPM,  position.y/PPM);
+		setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
     }
     
 	@Override
@@ -125,6 +125,6 @@ public class Bomb extends Actor implements Poolable{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX(), getY(), currentFrame.getRegionWidth()/2/PPM, currentFrame.getRegionHeight()/2/PPM -7/PPM, getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 }

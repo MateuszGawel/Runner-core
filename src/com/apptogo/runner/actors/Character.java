@@ -307,7 +307,7 @@ public class Character extends Actor{
 		handleStopping();
 		handleSensors();
 		handleRunning();
-		Logger.log(this, body.getPosition().x + " ");
+		//Logger.log(this, body.getPosition().x + " ");
 		currentFrame = animationManager.animate(delta);
 		
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);

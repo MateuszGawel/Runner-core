@@ -12,9 +12,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -28,33 +31,48 @@ public class Barrel extends Actor{
 	private GameWorld gameWorld;
 	private MapObject object;
 	
-	public Barrel(Shape shape, MapObject object, World world, GameWorld gameWorld){
+	public Barrel(MapObject object, World world, GameWorld gameWorld){
 		this.texture = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/barrelSmall.png"));
 		this.world = world;
 		this.gameWorld = gameWorld;
 		this.object = object;
-		createBody(shape);
+		createBody();
 		
 		gameWorld.getWorldStage().addActor(this);
+		
+		
+		
+		
+
 	}
 
-	private void createBody(Shape shape){
+	private void createBody(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-
+				
 		FixtureDef fixtureDef = Materials.barrelBody;
-		fixtureDef.shape = shape;
+		Ellipse ellipse = ((EllipseMapObject)object).getEllipse();
+		CircleShape ellipseShape = new CircleShape();
+
+		float radius = ((ellipse.width < ellipse.height) ? ellipse.width : ellipse.height)/2f;
+		ellipseShape.setRadius(radius/PPM);
+		ellipseShape.setPosition(new Vector2(radius/PPM, radius/PPM));
+		fixtureDef.shape = ellipseShape;
 		
+		bodyDef.position.set(new Vector2(ellipse.x/PPM, ellipse.y/PPM));
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef).setUserData("barrel");
 		body.setUserData("barrel");
 		
-		body.setTransform(((EllipseMapObject)object).getEllipse().x/PPM, ((EllipseMapObject)object).getEllipse().x/PPM, 0);
+		setOrigin(0, 0);
+		//body.setTransform(((EllipseMapObject)object).getEllipse().x/PPM, ((EllipseMapObject)object).getEllipse().x/PPM, 0);
+		Logger.log(this, "shape x: " + ((EllipseMapObject)object).getEllipse().x + " shape y: " + ((EllipseMapObject)object).getEllipse().y);
+		Logger.log(this, "body x: " + body.getPosition().x + " body y: " + body.getPosition().y);
 	}
 	
 	@Override
 	public void act(float delta){
-		Logger.log(this, body.getPosition().x + " " + texture.getRegionWidth());
+		//Logger.log(this, body.getPosition().x + " " + texture.getRegionWidth());
         setPosition(body.getPosition().x, body.getPosition().y);
         setWidth(texture.getRegionWidth() / PPM);
         setHeight(texture.getRegionHeight() / PPM);
@@ -65,7 +83,7 @@ public class Barrel extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		//batch.draw(texture, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
-		batch.draw(texture, getX(), getY(), texture.getRegionWidth()/2/PPM, texture.getRegionHeight()/2/PPM -7/PPM, getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(texture, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 	
 	public Body getBody(){ return this.body; }
