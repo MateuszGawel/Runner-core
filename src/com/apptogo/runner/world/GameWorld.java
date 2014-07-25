@@ -63,18 +63,19 @@ public class GameWorld {
 		world.setContactListener(new MyContactListener(this));
 		
 		worldStage = new Stage();
-		viewport = new StretchViewport(WIDTH, HEIGHT, worldStage.getCamera());
-		worldStage.setViewport(viewport);
 		camera = (OrthographicCamera)worldStage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
+		viewport = new StretchViewport(WIDTH, HEIGHT, camera);
+		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
 	    
 
 		background = new Group();
 		backgroundStage = new Stage();
-		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
-		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
+		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera(); 
+		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
+		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
 		createWorld(mapPath);
 		
