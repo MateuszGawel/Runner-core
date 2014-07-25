@@ -4,7 +4,7 @@ public class Box2DVars {
 	
 	public static final float PPM = 64; //64 pixeli to jeden metr
 	public static final boolean DRAW_DEBUG = true;
-	public static double ZERO_GROUND_POSITION = 655.0348;
+	public static double ZERO_GROUND_POSITION = 655.0348/PPM;
 	
 	public static final short BIT_PLAYER = 2;
 	public static final short BIT_ENEMY = 4;

@@ -101,16 +101,16 @@ public class GameWorld {
 	private void createBackground(){
 
 		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/skyBlue.png"));
-		skyBlue.setPosition(0, 500);
+		skyBlue.setPosition(0, 500/PPM);
 		background.addActor(skyBlue);
 		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80/PPM);
 		background.addActor(sand);
 	}
 	

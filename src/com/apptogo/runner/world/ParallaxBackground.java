@@ -24,6 +24,8 @@ public class ParallaxBackground extends Image{
 		this.x = x;
 		this.y = y;
 		setPosition(x, y);
+		setWidth(getWidth()/PPM);
+		setHeight(getHeight()/PPM);
 	}
 	public ParallaxBackground(Texture texture, float xFactor, float yFactor, Bandit player, float x, float y){
 		this(texture, player, x, y);
@@ -46,6 +48,6 @@ public class ParallaxBackground extends Image{
 	@Override
 	public void act(float delta){
 		if(xFactor != 0)
-			setPosition(player.getX()*PPM*xFactor, y + (player.getY()*PPM - (float)ZERO_GROUND_POSITION) * yFactor);
+			setPosition(player.getX()*xFactor, y + (player.getY() - (float)ZERO_GROUND_POSITION) * yFactor);
 	}
 }

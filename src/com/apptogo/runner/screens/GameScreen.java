@@ -154,6 +154,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	@Override
 	public void resize(int width, int height) {
 		guiStage.getViewport().update(width, height, true);
+		world.backgroundStage.getViewport().update(width, height, true);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.apptogo.runner.world;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
@@ -34,12 +35,12 @@ public class GameWorldRenderer {
     
     public void render(){  	
 		tiledMapRenderer.setView(camera);
-		
+	
 	    camera.position.set(
 	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.getBody().getPosition().x, gameWorld.minCameraX)),
 	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.getBody().getPosition().y, gameWorld.minCameraY)),
 	            0);
-		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2, 0); 
+		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
 		
     	camera.update();
 		gameWorld.backgroundCamera.update();
