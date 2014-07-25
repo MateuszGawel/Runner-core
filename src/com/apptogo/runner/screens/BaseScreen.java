@@ -3,8 +3,10 @@ package com.apptogo.runner.screens;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.LanguageManager;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.handlers.SettingsManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -25,6 +27,7 @@ public abstract class BaseScreen implements Screen{
 	
 	protected Runner runner;
 	protected LanguageManager languageManager;
+	protected SettingsManager settingsManager;
 	protected Image background;
 	
 	protected Stage stage;
@@ -47,8 +50,9 @@ public abstract class BaseScreen implements Screen{
 	protected BaseScreen(Runner runner) 
 	{
 		this.runner = runner;
+		this.settingsManager = SettingsManager.getInstance();
 		this.languageManager = LanguageManager.getInstance();
-		this.languageManager.setCurrentLanguage("pl");
+		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
 	}
 	
 	@Override

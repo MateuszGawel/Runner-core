@@ -41,7 +41,7 @@ public class Widget
 		BOTTOM_TO_TOP
 	}
 	
-	private float FADE_IN_DURATION = 0.15f;
+	private float FADE_IN_DURATION = 0.55f;
 	
 	private float x;
 	private float y;
@@ -61,6 +61,8 @@ public class Widget
 	
 	private WidgetType widgetType;
 	private WidgetFadingType fadeInType;
+	
+	private Interpolation interpolation;
 	
 	private boolean isShowed = false;
 	private boolean setBlackOut = false;
@@ -170,7 +172,7 @@ public class Widget
 		}
 		else if( this.fadeInType == WidgetFadingType.BOTTOM_TO_TOP )
 		{			
-			action = Actions.moveTo( 0f, this.hiddenPartWidth, FADE_IN_DURATION);	
+			action = Actions.moveTo( 0f, this.hiddenPartWidth, FADE_IN_DURATION);
 		}
 		else if( this.fadeInType == WidgetFadingType.LEFT_TO_RIGHT )
 		{			
@@ -183,6 +185,8 @@ public class Widget
 		
 		action.restart();
 		action.setReverse(hide);
+		
+		action.setInterpolation(interpolation);
 		
 		this.group.setVisible(true);
 		this.group.addAction(action);
@@ -324,5 +328,10 @@ public class Widget
             	widget.toggleWidget();
             }
 		};
+	}
+	
+	public void setEasing(Interpolation interpolation)
+	{
+		this.interpolation = interpolation;
 	}
 }
