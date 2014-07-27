@@ -20,7 +20,7 @@ public class MyAnimation extends Animation{
 	
 	private PlayMode playMode = PlayMode.NORMAL;
 	
-	public MyAnimation (float[] frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping) {
+	public MyAnimation (float[] frameDuration, Object animationState, AtlasRegion[] keyFrames, boolean looping) {
 		super(frameDuration[0], keyFrames);
 		this.frameDuration = frameDuration;
 		this.keyFrames = keyFrames;
@@ -28,7 +28,7 @@ public class MyAnimation extends Animation{
 		this.looping = looping;
 	}
 	
-	public MyAnimation (float frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping) {
+	public MyAnimation (float frameDuration, Object animationState, AtlasRegion[] keyFrames, boolean looping) {
 		super(frameDuration, keyFrames);
 		this.frameDuration = new float[keyFrames.length];
 		for(int i=0; i<keyFrames.length; i++){
@@ -39,7 +39,7 @@ public class MyAnimation extends Animation{
 		this.looping = looping;
 	}
 	
-	public MyAnimation (float frameDuration, CharacterAnimationState animationState, AtlasRegion[] keyFrames, boolean looping, int loopCount) {
+	public MyAnimation (float frameDuration, Object animationState, AtlasRegion[] keyFrames, boolean looping, int loopCount) {
 		super(frameDuration, keyFrames);
 		//Logger.log(this, "dostalem maxa: " + loopCount);
 		this.frameDuration = new float[keyFrames.length];

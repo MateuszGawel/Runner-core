@@ -6,6 +6,7 @@ import box2dLight.RayHandler;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -62,18 +63,19 @@ public class GameWorld {
 		world.setContactListener(new MyContactListener(this));
 		
 		worldStage = new Stage();
-		viewport = new StretchViewport(WIDTH, HEIGHT, worldStage.getCamera());
-		worldStage.setViewport(viewport);
 		camera = (OrthographicCamera)worldStage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
+		viewport = new StretchViewport(WIDTH, HEIGHT, camera);
+		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
 	    
 
 		background = new Group();
 		backgroundStage = new Stage();
-		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
-		backgroundStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, backgroundCamera);
+		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera(); 
+		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
+		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
 		createWorld(mapPath);
 		
@@ -88,6 +90,7 @@ public class GameWorld {
 		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);
+		TiledMapLoader.getInstance().setGameWorld(this);
 		mapSize = TiledMapLoader.getInstance().loadMap(mapPath);
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
@@ -98,16 +101,16 @@ public class GameWorld {
 	private void createBackground(){
 
 		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/skyBlue.png"));
-		skyBlue.setPosition(0, 500);
+		skyBlue.setPosition(0, 500/PPM);
 		background.addActor(skyBlue);
 		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80/PPM);
 		background.addActor(sand);
 	}
 	
@@ -151,4 +154,6 @@ public class GameWorld {
         worldStage.act(delta);
         //fpsLogger.log();
     }  
+    
+    public Stage getWorldStage(){ return this.worldStage; }
 }

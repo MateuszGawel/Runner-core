@@ -2,9 +2,10 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static com.apptogo.runner.vars.Box2DVars.ZERO_GROUND_POSITION;
-
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.handlers.Logger;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -35,7 +36,17 @@ public class RepeatingParallaxBackground extends Actor{
 	}
 	
 	@Override
-	public void draw(Batch batch, float delta){
-		batch.draw(texture, player.getX()*PPM*xFactor, y + (player.getY()*PPM - (float)ZERO_GROUND_POSITION) * yFactor, texture.getWidth()*xWrapCount, texture.getHeight(), 0, 1, xWrapCount, 0);
+	public void act(float delta){
+        setPosition(player.getX()*xFactor, y + (player.getY() - (float)ZERO_GROUND_POSITION) * yFactor);
+        setWidth(texture.getWidth()/PPM * xWrapCount);
+        setHeight(texture.getHeight()/PPM);
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha){
+		super.draw(batch, parentAlpha); 
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.draw(texture, getX(), getY(), getWidth(), getHeight(), 0, 1, xWrapCount, 0);
+		//Logger.log(this, "rysuje na x: " + getX() + " y: " + getY() + " width: " + getWidth() + " height: " + getHeight() + " a player ma x: " + player.getX() + " y: " + player.getY());
 	}
 }

@@ -2,7 +2,10 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.actors.Character.CharacterAnimationState;
+import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
@@ -47,11 +50,17 @@ public class Bomb extends Actor implements Poolable{
 	private float stateTime;
 	private boolean exploding;
 	
+	private AnimationManager animationManager;
+	public enum BombAnimationState{
+		NORMAL, EXPLODING
+	}
+	
 	public Bomb(Bandit player, World world){
 		this.position = new Vector2();
         this.alive = false;
         this.player = player;
         this.world = world;
+        
         bombAtlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/bomb.pack");
 
         
@@ -69,18 +78,15 @@ public class Bomb extends Actor implements Poolable{
 		fixtureDef.shape = shape;
 		bombBody.createFixture(fixtureDef).setUserData("player");
 		
-		//animation
-		bombFrames = new AtlasRegion[BOMB_FRAMES_COUNT];
-		for(int i=0; i<BOMB_FRAMES_COUNT; i++){
-			bombFrames[i] = bombAtlas.findRegion("bomb" + i);
-		}
-		bombAnimation = new Animation(0.1f, bombFrames);
-		
-		explosionFrames = new AtlasRegion[EXPLOSION_FRAMES_COUNT];
-		for(int i=0; i<EXPLOSION_FRAMES_COUNT; i++){
-			explosionFrames[i] = bombAtlas.findRegion("bombExplosion" + i);
-		}
-		explosionAnimation = new Animation(0.05f, explosionFrames);
+		animationManager = new AnimationManager("gfx/game/characters/bomb.pack");	
+		animationManager.createAnimation(5, 0.1f, "bomb", BombAnimationState.NORMAL, true);
+		animationManager.createAnimation(new MyAnimation(0.05f, BombAnimationState.EXPLODING, AnimationManager.createFrames(6, "bombExplosion"), false){
+			@Override
+			public void onAnimationFinished(){
+				alive = false;
+			}
+		});
+		animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
 	}
 
     public void init() {
@@ -93,11 +99,10 @@ public class Bomb extends Actor implements Poolable{
 		Timer.schedule(new Task() {
 			@Override
 			public void run() {
-				stateTime = 0;
-				exploding = true;
+				animationManager.setCurrentAnimationState(BombAnimationState.EXPLODING);
 			}
 		}, timeToExplode);
-		setOrigin(position.x/PPM,  position.y/PPM);
+		setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
     }
     
 	@Override
@@ -109,16 +114,7 @@ public class Bomb extends Actor implements Poolable{
 	
 	@Override
 	public void act(float delta){
-		stateTime += delta;
-		if(!exploding)
-			currentFrame = bombAnimation.getKeyFrame(stateTime, true);
-		else{
-			currentFrame = explosionAnimation.getKeyFrame(stateTime, false);
-			if(explosionAnimation.isAnimationFinished(stateTime)){
-				alive = false;
-			}
-		}
-		
+		currentFrame = animationManager.animate(delta);
         setPosition(bombBody.getPosition().x - currentFrame.getRegionWidth()/2/PPM, bombBody.getPosition().y - currentFrame.getRegionHeight()/2/PPM + 7/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
@@ -129,6 +125,6 @@ public class Bomb extends Actor implements Poolable{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX(), getY(), currentFrame.getRegionWidth()/2/PPM, currentFrame.getRegionHeight()/2/PPM -7/PPM, getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 }

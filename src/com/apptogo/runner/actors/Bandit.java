@@ -15,14 +15,14 @@ public class Bandit extends Character{
 
 	private World world;
 	private Vector2 bodySize;
-	private Bandit player = this;
+	private Bandit bandit = this;
 
     private final Array<Bomb> activeBombs = new Array<Bomb>();
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb(player, world);
-	    	player.getStage().addActor(bomb);
+	    	Bomb bomb = new Bomb(bandit, world);
+	    	bandit.getStage().addActor(bomb);
 	    	return bomb;
 	    }
     };
@@ -98,7 +98,10 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, AnimationManager.createFrames(10, "runbomb"), false){
 			@Override
 			public void onAnimationFinished(){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+				if(speed > 0.001f)
+					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+				else
+					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
 		
@@ -110,7 +113,7 @@ public class Bandit extends Character{
 	
 
 	public void throwBombs(){
-		if(alive){
+		if(started && alive){
 			if(!touchGround){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
 			}

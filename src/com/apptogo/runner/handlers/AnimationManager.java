@@ -34,7 +34,7 @@ public class AnimationManager {
 		animations.add(animation);
 	}
 	
-	public void createAnimation(int framesCount, float frameTime, String name, CharacterAnimationState animationState, boolean looping){
+	public void createAnimation(int framesCount, float frameTime, String name, Object animationState, boolean looping){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
@@ -43,7 +43,7 @@ public class AnimationManager {
 		animations.add(new MyAnimation(frameTime, animationState, frames, looping));
 	}
 	
-	public void createAnimation(int framesCount, float frameTime, String name, CharacterAnimationState animationState, boolean looping, int loopCount){
+	public void createAnimation(int framesCount, float frameTime, String name, Object animationState, boolean looping, int loopCount){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
