@@ -1,5 +1,7 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.widget;
 
+import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
@@ -43,11 +45,11 @@ public class Widget
 	
 	private float FADE_IN_DURATION = 0.55f;
 	
-	private float x;
-	private float y;
+	protected float x;
+	protected float y;
 	private float hiddenPartWidth;
-	private float width;
-	private float height;
+	protected float width;
+	protected float height;
 	private Group group;
 	
 	private Group groupWithBlackOutButton;
@@ -223,6 +225,8 @@ public class Widget
 		
 		this.win = new Window("", this.skin, styleName);
 		this.win.setSize(this.width, this.height);
+		
+		this.win.clearListeners();
 	}
 	
 	private void resetPosition()
