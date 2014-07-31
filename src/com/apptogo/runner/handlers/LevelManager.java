@@ -52,7 +52,7 @@ public class LevelManager {
 		{
 			XmlReader.Element level = levelsList.get(i);
 			
-			levels.add( new Level( level.getAttribute("buttonLabel"), level.getAttribute("mapPath") ) );
+			levels.add( new Level( level.getAttribute("buttonLabel"), level.getAttribute("mapPath"), level.getAttribute("unlockKey") ) );
 		}
 		
 		return levels;

@@ -36,13 +36,6 @@ public class LoadingScreen extends BaseScreen{
         resourcesManager.loadResources(screenToLoad);
 	}
 	
-	//przeladowanie dla gameScreen
-	public LoadingScreen(Runner runner, ScreenType gameScreen, Level level)
-	{
-		this(runner, gameScreen);
-		
-	}
-
 	public void prepare() 
 	{
 		setBackground("ui/menuBackgrounds/loadingScreenBackground.png");

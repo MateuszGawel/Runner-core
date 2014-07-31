@@ -131,10 +131,7 @@ public class ResourcesManager {
 		gameMeta.setTexturesDirectory("gfx/game/levels/");
 		gameMeta.setTexturesExtension(".png");
 		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
-		
-		gameMeta.setTexturesDirectory("gfx/game/characters/buttons/");
-		gameMeta.addTextures( new String[]{"slowButton","jumpButton","slideButton","bombButton"} );
-		
+				
 		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
 		gameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
 		
@@ -340,5 +337,10 @@ public class ResourcesManager {
 	public Skin getUiSkin()
 	{
 		return new Skin(Gdx.files.internal("ui/uiskin.json"));
+	}
+	
+	public Skin getGuiSkin()
+	{
+		return new Skin(Gdx.files.internal("gui/guiskin.json"));
 	}
 }

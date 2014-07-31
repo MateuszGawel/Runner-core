@@ -2,12 +2,19 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
@@ -15,14 +22,13 @@ public class Bandit extends Character{
 
 	private World world;
 	private Vector2 bodySize;
-	private Bandit bandit = this;
 
     private final Array<Bomb> activeBombs = new Array<Bomb>();
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb(bandit, world);
-	    	bandit.getStage().addActor(bomb);
+	    	Bomb bomb = new Bomb((Bandit)character, world);
+	    	((Bandit)character).getStage().addActor(bomb);
 	    	return bomb;
 	    }
     };
@@ -148,5 +154,32 @@ public class Bandit extends Character{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
+	}
+	
+	@Override
+	public Button getAbilityButton(CharacterAbilityType ability)
+	{
+		if( ability == CharacterAbilityType.BOMB ) return getBombAbilityButton();
+		
+		return new Button();
+	}
+	
+	private Button getBombAbilityButton()
+	{
+Button bombButton = new Button(guiSkin, "banditBombAbilityButton");
+		
+		bombButton.setPosition(20/PPM, bombButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		bombButton.setSize(bombButton.getWidth()/PPM, bombButton.getHeight()/PPM);
+		bombButton.setBounds(bombButton.getX(), bombButton.getY(), bombButton.getWidth(), bombButton.getHeight());
+		
+		bombButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				((Bandit)character).throwBombs();
+		        return true;
+		    }
+		});
+		
+		return bombButton;
 	}
 }

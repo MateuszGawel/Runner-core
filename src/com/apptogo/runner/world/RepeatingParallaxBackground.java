@@ -2,7 +2,7 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static com.apptogo.runner.vars.Box2DVars.ZERO_GROUND_POSITION;
-import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.handlers.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,13 +16,13 @@ public class RepeatingParallaxBackground extends Actor{
 
 	float xFactor = 0;
 	float yFactor = 0;
-	Bandit player;
+	Character player;
 	Vector2 mapSize;
 	Texture texture;
 	float x, y;
 	int xWrapCount;
 	
-	public RepeatingParallaxBackground(Texture texture, float xFactor, float yFactor, Vector2 mapSize, Bandit player, float x, float y){
+	public RepeatingParallaxBackground(Texture texture, float xFactor, float yFactor, Vector2 mapSize, Character player, float x, float y){
 		this.texture = texture;
 		this.xFactor = xFactor;
 		this.yFactor = yFactor;

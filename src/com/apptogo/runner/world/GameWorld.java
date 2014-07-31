@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Enemy;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
@@ -44,7 +45,7 @@ public class GameWorld {
 	public StretchViewport backgroundStretchViewport;
 	public OrthographicCamera backgroundCamera;
 	
-	public Bandit player;
+	public Character player;
 	public Enemy enemy;
 	
 	public Group background;
@@ -57,7 +58,7 @@ public class GameWorld {
 	
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger;
-	public GameWorld(String mapPath)
+	public GameWorld(String mapPath, String characterType)
 	{
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
@@ -77,16 +78,22 @@ public class GameWorld {
 		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
 		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
-		createWorld(mapPath);
+		createWorld(mapPath, characterType);
 		
 		fpsLogger = new FPSLogger();
 	}
 	
-	private void createWorld(String mapPath)
+	private void createWorld(String mapPath, String characterType)
 	{
 		backgroundStage.addActor(background);
-
-		player = new Bandit(world);
+		
+		//uwaga to jest brzydkie - pasuje to chociaz przerobic na enumy czy cos - btw czy na pewno tworzenie playera tu? - niestety potrzebuje Worlda bo mozna by zrobic w gameScene:(
+		if( characterType.equals("BANDIT") )player = new Bandit(world);
+		else player = new Character(world, "to_i_tak_bez_sensu_ale_musze_zrobic_druga_galaz");
+		//tak szczerze to bedzie trzeba zupelnie inaczej zrobic
+		//przeciez ja tu chce tego swojego playera, tak zebym mogl potem sie odwolywac do odpowiednich :>
+		//mowa o enemies
+		
 		worldStage.addActor(player);
 		
 		TiledMapLoader.getInstance().setWorld(world);

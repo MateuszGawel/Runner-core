@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +21,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -49,8 +54,16 @@ public class Character extends Actor{
 	
 	protected TextureRegion currentFrame;
 	
+	protected Skin guiSkin;
+	protected Character character = this;
+	
 	public enum CharacterAnimationState{
 		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB
+	}
+	
+	public enum CharacterAbilityType
+	{
+		BOMB
 	}
 			
 	protected AnimationManager animationManager;
@@ -59,6 +72,8 @@ public class Character extends Actor{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+		
+		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 	}
 	
 	protected void createBody(Vector2 bodySize){
@@ -322,4 +337,74 @@ public class Character extends Actor{
 	public boolean isImmortal(){ return this.immortal; }
 	public float getSpeed(){ return this.speed; }
 	public boolean isStarted(){ return this.started; }
+	
+	public Button getJumpButton()
+	{
+		Button jumpButton = new Button(guiSkin, "banditJumpButton");
+		
+		jumpButton.setPosition(Runner.SCREEN_WIDTH/PPM - jumpButton.getWidth()/PPM - 20/PPM, jumpButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		jumpButton.setSize(jumpButton.getWidth()/PPM, jumpButton.getHeight()/PPM);
+		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
+		
+		jumpButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				character.jump();
+		        return true;
+		    }
+		});
+		
+		return jumpButton;
+	}
+	public Button getSlideButton()
+	{
+		Button slideButton = new Button(guiSkin, "banditSlideButton");
+		
+		slideButton.setPosition(Runner.SCREEN_WIDTH/PPM - slideButton.getWidth()/PPM - 20/PPM, 20/PPM);
+		slideButton.setSize(slideButton.getWidth()/PPM, slideButton.getHeight()/PPM);
+		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
+		
+		slideButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				character.slide();
+		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				character.standUp();
+		    }
+		});
+		
+		return slideButton;
+	}
+	public Button getSlowButton()
+	{
+		Button slowButton = new Button(guiSkin, "banditSlowButton");
+		
+		slowButton.setPosition(20/PPM, 20/PPM);
+		slowButton.setSize(slowButton.getWidth()/PPM, slowButton.getHeight()/PPM);
+		slowButton.setBounds(slowButton.getX(), slowButton.getY(), slowButton.getWidth(), slowButton.getHeight());
+		
+		slowButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if(character.isAlive() && character.isStarted())
+					character.setRunning(false);
+		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				if(character.isAlive() && character.isStarted())
+					character.setRunning(true);
+		    }
+		});
+		
+		return slowButton;
+	}
+	public Button getAbilityButton(CharacterAbilityType ability)
+	{
+		return new Button();
+	}
 }

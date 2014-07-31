@@ -102,6 +102,9 @@ public class Bomb extends Actor implements Poolable{
 				animationManager.setCurrentAnimationState(BombAnimationState.EXPLODING);
 			}
 		}, timeToExplode);
+		
+		currentFrame = animationManager.animate(0f); //nie wiem czy tak powinno byc wtedy nie ma nulla, tak czy siak jednak rzuca tylko jedna bombe tez nie wiem czy to ok
+		
 		setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
     }
     

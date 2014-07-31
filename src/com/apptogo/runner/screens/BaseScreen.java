@@ -1,21 +1,21 @@
 package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.LanguageManager;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.SettingsManager;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
+import com.apptogo.runner.player.SaveManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -41,6 +41,8 @@ public abstract class BaseScreen implements Screen{
 	
 	protected float delta;
 	
+	protected Player player; //to jest wazne - musi byc dostep do playera juz na poziomie menu - chcemy miec o nim info w menu
+	
 	public abstract void handleInput();
 	public abstract ScreenType getSceneType();
 	public abstract void step();
@@ -53,6 +55,8 @@ public abstract class BaseScreen implements Screen{
 		this.settingsManager = SettingsManager.getInstance();
 		this.languageManager = LanguageManager.getInstance();
 		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
+		
+		this.player = SaveManager.getInstance().loadPlayer();
 	}
 	
 	@Override
