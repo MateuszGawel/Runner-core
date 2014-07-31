@@ -15,6 +15,7 @@ import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.UpgradeScreen;
+import com.apptogo.runner.screens.WaitingRoom;
 import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 
 public class ScreensManager {
@@ -40,7 +41,8 @@ public class ScreensManager {
 		SCREEN_MULTIPLAYER,
 		SCREEN_CREATE_ROOM,
 		SCREEN_FIND_ROOM,
-		SCREEN_GAME
+		SCREEN_GAME,
+		SCREEN_WAITING_ROOM
 	}
 		
 	private ArrayList<BaseScreen> screens;
@@ -87,6 +89,8 @@ public class ScreensManager {
 			screen = new FindRoomScreen(runner);
 		else if(screenType == ScreenType.SCREEN_GAME)
 			screen = new GameScreen(runner);
+		else if(screenType == ScreenType.SCREEN_WAITING_ROOM)
+			screen = new WaitingRoom(runner);
 		else
 			screen = null;
 		

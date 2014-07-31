@@ -85,7 +85,7 @@ public class MainMenuScreen extends BaseScreen{
 		joinRandomRoomButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 ScreensManager.getInstance().createLoadingScreen( new Level("", "gfx/game/levels/map.tmx", "") );
+                 ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
             }
          });//na totalna pale na razie
 		

@@ -182,6 +182,13 @@ public class ResourcesManager {
 		findRoomMeta.addTexture("ui/menuBackgrounds/findRoomScreenBackground.png");
 		
 		screenMetaArray.add( findRoomMeta );
+		
+		//|10. WAITING ROOM SCREEN
+		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
+		
+		findRoomMeta.addTexture("ui/menuBackgrounds/waitingRoomScreenBackground.png");
+		
+		screenMetaArray.add( waitingRoomMeta );
 	}
 	
 	//--------- LOADING RESOURCES

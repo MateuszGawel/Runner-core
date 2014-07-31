@@ -11,6 +11,7 @@ import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -166,8 +167,9 @@ public class GameScreen extends BaseScreen implements WarpListener{
 			//jesli to przedstawienie sie
 			if( data.has("INITIAL_NOTIFICATION") )
 			{
-				String enemy_name = (String)data.getString("PLAYER_NAME");
 				
+				String enemy_name = (String)data.getString("PLAYER_NAME");
+				Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemy_name);
 				Player enemy = new Player();
 				enemy.setName( enemy_name );
 				enemy.setCurrentCharacter(CharacterType.BANDIT);
