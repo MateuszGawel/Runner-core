@@ -6,6 +6,7 @@ import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -32,8 +33,6 @@ public class Bandit extends Character{
 	    	return bomb;
 	    }
     };
-	
-
 	
 	public Bandit(World world){
 		super(world, "gfx/game/characters/bandit.pack");
@@ -117,8 +116,14 @@ public class Bandit extends Character{
 		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
 	
-
-	public void throwBombs(){
+	@Override
+	public void useAbility(CharacterAbilityType abilityType)
+	{
+		if( abilityType == CharacterAbilityType.BOMB ) ((Bandit)character).throwBombs();
+	}
+	
+	public void throwBombs()
+	{
 		if(started && alive){
 			if(!touchGround){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
@@ -156,17 +161,102 @@ public class Bandit extends Character{
 		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 	}
 	
-	@Override
-	public Button getAbilityButton(CharacterAbilityType ability)
+	public Button getJumpButton()
 	{
-		if( ability == CharacterAbilityType.BOMB ) return getBombAbilityButton();
+		Button jumpButton = new Button(guiSkin, "banditJumpButton");
 		
-		return new Button();
+		jumpButton.setPosition(Runner.SCREEN_WIDTH/PPM - jumpButton.getWidth()/PPM - 20/PPM, jumpButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		jumpButton.setSize(jumpButton.getWidth()/PPM, jumpButton.getHeight()/PPM);
+		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
+		
+		jumpButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				if( character.jump() )
+				{
+					NotificationManager.getInstance().notifyJump();
+				}
+				
+		        return true;
+		    }
+		});
+		
+		return jumpButton;
 	}
-	
-	private Button getBombAbilityButton()
+	public Button getSlideButton()
 	{
-Button bombButton = new Button(guiSkin, "banditBombAbilityButton");
+		Button slideButton = new Button(guiSkin, "banditSlideButton");
+		
+		slideButton.setPosition(Runner.SCREEN_WIDTH/PPM - slideButton.getWidth()/PPM - 20/PPM, 20/PPM);
+		slideButton.setSize(slideButton.getWidth()/PPM, slideButton.getHeight()/PPM);
+		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
+		
+		slideButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if( character.slide() )
+				{
+					NotificationManager.getInstance().notifySlide();
+				}
+		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if( character.standUp() )
+				{
+					NotificationManager.getInstance().notifyStandUp();
+				}
+		    }
+		});
+		
+		return slideButton;
+	}
+	public Button getSlowButton()
+	{
+		Button slowButton = new Button(guiSkin, "banditSlowButton");
+		
+		slowButton.setPosition(20/PPM, 20/PPM);
+		slowButton.setSize(slowButton.getWidth()/PPM, slowButton.getHeight()/PPM);
+		slowButton.setBounds(slowButton.getX(), slowButton.getY(), slowButton.getWidth(), slowButton.getHeight());
+		
+		slowButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				if(character.isAlive() && character.isStarted())
+				{
+					if( character.setRunning(false))
+					{
+						NotificationManager.getInstance().notifySlow();
+					}
+				}
+				
+				return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if(character.isAlive() && character.isStarted())
+				{
+					if( character.setRunning(true) )
+					{
+						NotificationManager.getInstance().notifyAbortSlow();
+					}
+				}
+		    }
+		});
+		
+		return slowButton;
+	}
+		
+	public Button getAbilityButton(final CharacterAbilityType abilityType)
+	{
+		Button bombButton = new Button(guiSkin, "banditBombAbilityButton");
 		
 		bombButton.setPosition(20/PPM, bombButton.getHeight()/PPM + 20/PPM + 40/PPM);
 		bombButton.setSize(bombButton.getWidth()/PPM, bombButton.getHeight()/PPM);
@@ -175,11 +265,17 @@ Button bombButton = new Button(guiSkin, "banditBombAbilityButton");
 		bombButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				((Bandit)character).throwBombs();
+				character.useAbility(abilityType);
 		        return true;
 		    }
 		});
 		
 		return bombButton;
+	}
+	
+	@Override
+	public CharacterType getCharacterType()
+	{
+		return CharacterType.BANDIT;
 	}
 }

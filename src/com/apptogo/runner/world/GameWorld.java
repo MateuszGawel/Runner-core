@@ -1,18 +1,23 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
+
+import java.util.HashMap;
+
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Enemy;
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,8 +50,9 @@ public class GameWorld {
 	public StretchViewport backgroundStretchViewport;
 	public OrthographicCamera backgroundCamera;
 	
-	public Character player;
-	public Enemy enemy;
+	private Player player;
+	public Character character;
+	public HashMap<String, Character> enemies;
 	
 	public Group background;
 	public Image mountains;
@@ -57,8 +63,9 @@ public class GameWorld {
 	private Vector2 mapSize;
 	
 	public RayHandler rayHandler;
-	public FPSLogger fpsLogger;
-	public GameWorld(String mapPath, String characterType)
+	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
+	
+	public GameWorld(String mapPath, Player player)
 	{
 		world = new World(GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
@@ -78,23 +85,21 @@ public class GameWorld {
 		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
 		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);	
-		createWorld(mapPath, characterType);
+		
+		this.enemies = new HashMap<String, Character>();
+		this.player = player;
+		
+		createWorld(mapPath, player.getCurrentCharacter());
 		
 		fpsLogger = new FPSLogger();
 	}
 	
-	private void createWorld(String mapPath, String characterType)
+	private void createWorld(String mapPath, CharacterType characterType)
 	{
 		backgroundStage.addActor(background);
 		
-		//uwaga to jest brzydkie - pasuje to chociaz przerobic na enumy czy cos - btw czy na pewno tworzenie playera tu? - niestety potrzebuje Worlda bo mozna by zrobic w gameScene:(
-		if( characterType.equals("BANDIT") )player = new Bandit(world);
-		else player = new Character(world, "to_i_tak_bez_sensu_ale_musze_zrobic_druga_galaz");
-		//tak szczerze to bedzie trzeba zupelnie inaczej zrobic
-		//przeciez ja tu chce tego swojego playera, tak zebym mogl potem sie odwolywac do odpowiednich :>
-		//mowa o enemies
-		
-		worldStage.addActor(player);
+		character = createCharacter(characterType);
+		worldStage.addActor(character);
 		
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
@@ -111,47 +116,24 @@ public class GameWorld {
 		skyBlue.setPosition(0, 500/PPM);
 		background.addActor(skyBlue);
 		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, player, 0, 350/PPM);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, character, 0, 350/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, player, 0, 400/PPM);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 400/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, player, 0, 80/PPM);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
 		background.addActor(sand);
 	}
 	
 
 	
-	public void handleInput(){
-		if(Input.isPressed()) {
-			player.start();
+	public void handleInput()
+	{
+		if( Input.isPressed() ) 
+		{
+			if( character.start() ) NotificationManager.getInstance().notifyStartRunning();
 		}
-		/*
-		if(Input.isDown(Input.RIGHT)) {
-			player.jump();
-		}
-		if(Input.isDown(Input.LEFT)) {
-			player.slide();
-		}
-		if(Input.isReleased(Input.LEFT)) {
-			player.standUp();
-		}
-		if(Input.isPressed(Input.START)) {
-			player.startRunning();
-		}
-		
-		if(Input.isPressed()) {
-			if(Input.x < Gdx.graphics.getWidth() / 2) {
-				Logger.log(this, "LEWO");
-				player.startRunning();
-			}
-			else {
-				Logger.log(this, "PRAWO");
-				player.jump();
-			}
-		}
-		*/
 	}
 	
     public void update(float delta) {  
@@ -159,8 +141,43 @@ public class GameWorld {
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
-        //fpsLogger.log();
+        fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }
+    
+    
+    /** ta i metode getEnemy() nalezy obstawic wyjatkami */
+    public void addEnemy(Player enemy) //na razie przesylanie Playera jest mocno nadmiarowe ale bd konieczne gdy zaczniemy dodawac umiejetnosci itp
+    {
+    	if( enemies.containsKey( enemy.getName() ) )
+		{
+    		Logger.log(this, "tu powinien byc wyjatek, ale generalnie gosc juz jest dodany ;)");
+		}
+    	else //dodajemy wroga
+    	{
+    		Character enemyCharacter = createCharacter( enemy.getCurrentCharacter() );
+    		enemies.put(enemy.getName(), enemyCharacter);
+    		
+    		worldStage.addActor(enemyCharacter);
+    	}
+    }
+    
+    public Character getEnemy(String enemyName)
+    {
+    	Character characterTemp;
+    	
+    	characterTemp = enemies.get(enemyName); //zwroci nulla jesli nie ma!
+    	
+    	return characterTemp;
+    }
+    
+    private Character createCharacter(CharacterType characterType)
+    {
+    	Character characterTemp = null;
+    	
+    	if( characterType == CharacterType.BANDIT ) characterTemp = new Bandit(world);
+    	
+    	return characterTemp;
+    }
 }

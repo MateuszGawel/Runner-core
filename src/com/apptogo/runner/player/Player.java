@@ -1,5 +1,8 @@
 package com.apptogo.runner.player;
 
+import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.levels.Level;
 
 
@@ -8,7 +11,9 @@ public class Player
 
 	private String name;
 	private String password;
-	private String currentCharacter;
+	
+	private CharacterType currentCharacter;
+	
 	private String unlockedLevels;
 	
 	private Statistics statistics;	
@@ -17,7 +22,7 @@ public class Player
 	{
 		
 	}
-	
+		
 	public boolean isAnonymous()
 	{
 		if( name == "" )
@@ -58,10 +63,10 @@ public class Player
 		this.password = password;
 	}
 
-	public String getCurrentCharacter() {
+	public CharacterType getCurrentCharacter() {
 		return currentCharacter;
 	}
-	public void setCurrentCharacter(String currentCharacter) {
+	public void setCurrentCharacter(CharacterType currentCharacter) {
 		this.currentCharacter = currentCharacter;
 	}
 

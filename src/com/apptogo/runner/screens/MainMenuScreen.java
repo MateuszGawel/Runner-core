@@ -1,9 +1,11 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.InfoWidget;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -30,6 +33,7 @@ public class MainMenuScreen extends BaseScreen{
 	Button joinRandomRoomButton;
 	private Label label;
 	private Widget widget;
+	private Widget playerNameWidget;
 	private DialogWidget changeLanguageDialog;
 		
 	private boolean languageChanged = false;
@@ -121,6 +125,25 @@ public class MainMenuScreen extends BaseScreen{
         widget.addActor(plflag);
         widget.addActor(enflag);
         
+        
+        //---
+        final TextField textField = new TextField(player.getName(), skin);
+        textField.setSize(300f, 50f);
+        textField.setPosition(-150f, -25f);
+        
+        ClickListener savePlayerListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				player.setName( textField.getText() );
+				SaveManager.getInstance().savePlayer(player);
+				playerNameWidget.toggleWidget();
+            }
+		};
+        
+        playerNameWidget = new DialogWidget("Imie gracza:", null, savePlayerListener);
+        playerNameWidget.addActor(textField);
+        
+        settingsButton.addListener(playerNameWidget.getToggleListener());
         //soundButton.addListener( widget.getToggleListener() ); //podpiecie listenera z widgetu do przycisku na scenie :)
 
         addToScreen(soundButton);
@@ -132,6 +155,9 @@ public class MainMenuScreen extends BaseScreen{
         addToScreen( widget.actor() );
         addToScreen( changeLanguageDialog.actor() );
         addToScreen( i.actor() );
+        addToScreen(playerNameWidget.actor());
+        
+        if( player.isAnonymous() ) playerNameWidget.toggleWidget();
 	}
 	
 	public void step()

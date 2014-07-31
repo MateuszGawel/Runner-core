@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
@@ -28,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class Character extends Actor{
+public abstract class Character extends Actor{
 	private World world;
 	
 	protected boolean alive = true;
@@ -54,8 +55,9 @@ public class Character extends Actor{
 	
 	protected TextureRegion currentFrame;
 	
-	protected Skin guiSkin;
 	protected Character character = this;
+	
+	protected Skin guiSkin;
 	
 	public enum CharacterAnimationState{
 		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB
@@ -63,12 +65,42 @@ public class Character extends Actor{
 	
 	public enum CharacterAbilityType
 	{
-		BOMB
+		BOMB;
+		
+		static public CharacterAbilityType parseFromString(String key)
+		{
+			if( key.equals( CharacterAbilityType.BOMB.toString() ) )
+			{
+				return CharacterAbilityType.BOMB;
+			}
+			//else if()
+			//else if() kolejne abilities
+			else return null;
+		}
+	}
+	
+	/** przy dodawaniu kolejnego typu pamietac o obsluzeniu go w funkcji createCharacter klasy gameWorld
+	 *  oraz createGui() i onGameUpdateReceived() w gameScreen - tam te typy sa ifowane                   */
+	public enum CharacterType
+	{
+		BANDIT;
+		
+		static public CharacterType parseFromString(String key)
+		{
+			if( key.equals( CharacterType.BANDIT.toString() ) )
+			{
+				return CharacterType.BANDIT;
+			}
+			//else if()
+			//else if() kolejni bohaterowie
+			else return null;
+		}
 	}
 			
 	protected AnimationManager animationManager;
-	
-	public Character(World world, String atlasName){
+		
+	public Character(World world, String atlasName)
+	{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
@@ -117,62 +149,92 @@ public class Character extends Actor{
 	}
 	
 	
-	public void start(){
-		if(!running && alive){
-			notifyStartRunning();
+	public boolean start()
+	{
+		if(!running && alive && touchGround)
+		{			
 			running = true;
 			started = true;
-			if(touchGround){
-				Logger.log(this, "JAZDA");
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
-			}
+			//if(touchGround)
+			//{
+			Logger.log(this, "JAZDA");
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			//}
+			
+			return true;
 		}
+		else return false;
 	}
-	public void jump(){
-		if(started && alive && (touchWall || touchGround)){
+	public boolean jump()
+	{
+		if(started && alive && (touchWall || touchGround))
+		{
 			sliding = false;
 			jumped = true;
 			float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
-			body.setLinearVelocity(0, v0); 
-			notifyJump();
+			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
+			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+			
+			return true;
 		}
+		else return false;
 	}	
-	public void land(){
-		if(alive && !sliding && footSensor > 0){
-			if(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB){
+	public void land()
+	{
+		if(alive && !sliding && footSensor > 0)
+		{
+			if(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB)
+			{
 				touchGround = true;
 				jumped = false;
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
 			}
 		}
 	}
-	public void slide(){
-		if(started && alive && touchGround && !sliding){
+	public boolean slide()
+	{
+		if(started && alive && touchGround && !sliding)
+		{
 			sliding = true;
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
+			
+			return true;
 		}
+		else return false;
 	}
-	public void standUp(){
+	public boolean standUp()
+	{
 		if(alive && sliding){
 			sliding = false;
 			body.getFixtureList().get(0).setSensor(false);
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
+			
+			return true;
 		}
+		else return false;
 	}
-	public void dieTop(){
-		die();
+	/** NotificationManager.getInstance().notifyDieTop() przy uzyciu i zwroceniu true */
+	public boolean dieTop()
+	{
+		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
+		return success;
 	}
-	public void dieBottom(){
-		die();
+	/** NotificationManager.getInstance().notifyDieBottom() przy uzyciu i zwroceniu true */
+	public boolean dieBottom()
+	{
+		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
+		return success;
 	}
-	private void die(){
-		if(alive){
+	private boolean die()
+	{
+		if(alive)
+		{
 			alive = false;
 			running = false;
 			sliding = false;
@@ -180,52 +242,33 @@ public class Character extends Actor{
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			deathPosition = new Vector2(body.getPosition());
-			notifyDie();
+			
 			Timer.schedule(new Task() {
 				@Override
 				public void run() {
 					respawn();
 				}
 			}, 1);
+			
+			return true;
 		}
+		else return false;
 	}
-	public void respawn(){
+	public void respawn()
+	{
 		body.getFixtureList().get(0).setSensor(false);
 		body.getFixtureList().get(1).setSensor(true);
-		handleImmortality(2);
+		
+		handleImmortality(2.0f);
+		
 		alive = true;
 		body.setTransform(deathPosition, 0);
+		
 		start();
 	}
 	
-	
-	/*---NOTIFIERS---*/
-	private void notifyJump(){
-		JSONObject data = new JSONObject();  
-	    try {
-			data.put("jump", true);
-			data.put("startRunning", false);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}    
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
-	}
-	
-	private void notifyDie(){
+	abstract public void useAbility(CharacterAbilityType abilityType);
 		
-	}
-	
-	private void notifyStartRunning(){
-		JSONObject data = new JSONObject();  
-	    try {
-			data.put("startRunning", true);
-			data.put("jump", false);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}    
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
-	}
-	
 	public void incrementWallSensor(){
 		wallSensor++;
 	}
@@ -243,7 +286,8 @@ public class Character extends Actor{
 	}
 	
 	/*--- HANDLERS ---*/
-	public void handleImmortality(float immortalityLenght){
+	public void handleImmortality(float immortalityLenght)
+	{
 		immortal = true;
 		blinking = true;
 		Timer.schedule(new Task() {
@@ -255,7 +299,8 @@ public class Character extends Actor{
 		}, immortalityLenght);
 	}
 	
-	private void handleBlinking(){
+	private void handleBlinking()
+	{
 		setVisible(visible);
 		
 		if(blinking && visible){
@@ -317,7 +362,8 @@ public class Character extends Actor{
 	}
 
 	@Override
-	public void act(float delta) {
+	public void act(float delta) 
+	{
 		handleBlinking();
 		handleStopping();
 		handleSensors();
@@ -332,79 +378,14 @@ public class Character extends Actor{
 	}
 	
 	public boolean isAlive(){ return this.alive; }
-	public void setRunning(boolean running){ this.running = running; }
+	public boolean setRunning(boolean running){ this.running = running; return true; } //zwracanie true jest oczywiscie bez sensu ale juz sie chce trzymac jakiejs konwencji x)
 	public Body getBody(){ return this.body; }
 	public boolean isImmortal(){ return this.immortal; }
 	public float getSpeed(){ return this.speed; }
 	public boolean isStarted(){ return this.started; }
 	
-	public Button getJumpButton()
+	public CharacterType getCharacterType()
 	{
-		Button jumpButton = new Button(guiSkin, "banditJumpButton");
-		
-		jumpButton.setPosition(Runner.SCREEN_WIDTH/PPM - jumpButton.getWidth()/PPM - 20/PPM, jumpButton.getHeight()/PPM + 20/PPM + 40/PPM);
-		jumpButton.setSize(jumpButton.getWidth()/PPM, jumpButton.getHeight()/PPM);
-		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
-		
-		jumpButton.addListener(new InputListener() 
-		{
-			@Override
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				character.jump();
-		        return true;
-		    }
-		});
-		
-		return jumpButton;
-	}
-	public Button getSlideButton()
-	{
-		Button slideButton = new Button(guiSkin, "banditSlideButton");
-		
-		slideButton.setPosition(Runner.SCREEN_WIDTH/PPM - slideButton.getWidth()/PPM - 20/PPM, 20/PPM);
-		slideButton.setSize(slideButton.getWidth()/PPM, slideButton.getHeight()/PPM);
-		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
-		
-		slideButton.addListener(new InputListener() {
-			@Override
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				character.slide();
-		        return true;
-		    }
-			@Override
-		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				character.standUp();
-		    }
-		});
-		
-		return slideButton;
-	}
-	public Button getSlowButton()
-	{
-		Button slowButton = new Button(guiSkin, "banditSlowButton");
-		
-		slowButton.setPosition(20/PPM, 20/PPM);
-		slowButton.setSize(slowButton.getWidth()/PPM, slowButton.getHeight()/PPM);
-		slowButton.setBounds(slowButton.getX(), slowButton.getY(), slowButton.getWidth(), slowButton.getHeight());
-		
-		slowButton.addListener(new InputListener() {
-			@Override
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if(character.isAlive() && character.isStarted())
-					character.setRunning(false);
-		        return true;
-		    }
-			@Override
-		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if(character.isAlive() && character.isStarted())
-					character.setRunning(true);
-		    }
-		});
-		
-		return slowButton;
-	}
-	public Button getAbilityButton(CharacterAbilityType ability)
-	{
-		return new Button();
+		return null;
 	}
 }

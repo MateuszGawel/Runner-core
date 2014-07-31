@@ -21,20 +21,25 @@ public class MyContactListener implements ContactListener{
 		//Logger.log(this, "WYKRYTO: " + fa.getUserData() + ", " + fb.getUserData());
 		
 		
-		if((!world.player.isImmortal() && world.player.isAlive() && "killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())) 
+		if((!world.character.isImmortal() && world.character.isAlive() && "killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())) 
 				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData()))){
-			world.player.dieBottom();
+			
+			if( world.character.dieBottom() )
+			{
+				NotificationManager.getInstance().notifyDieBottom();
+			}
+			
 			Logger.log(this, "Dotyka killing");
 		}
 		
 		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.incrementFootSensor();
-			world.player.land();
+			world.character.incrementFootSensor();
+			world.character.land();
 		}
 		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.incrementWallSensor();
+			world.character.incrementWallSensor();
 		}
 	}
 
@@ -45,11 +50,11 @@ public class MyContactListener implements ContactListener{
 		
 		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.decrementFootSensor();
+			world.character.decrementFootSensor();
 		}
 		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
 				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
-			world.player.decrementWallSensor();
+			world.character.decrementWallSensor();
 		}
 		
 	}

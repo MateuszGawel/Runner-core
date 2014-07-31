@@ -1,28 +1,28 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
+import java.lang.reflect.Type;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Character.CharacterAbilityType;
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameScreen extends BaseScreen implements WarpListener{
@@ -35,7 +35,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private Button jumpButton;
 	private Button slideButton;
 	private Button slowButton;
-	private Button bombButton;
+	private Button abilityButton;
 	
 	public GameScreen(Runner runner){
 		super(runner);	
@@ -49,29 +49,34 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	
 	public void prepare() 
 	{		
-		world = new GameWorld( level.mapPath, player.getCurrentCharacter() );
+		world = new GameWorld( level.mapPath, player );
 		worldRenderer = new GameWorldRenderer(world);
 		
 		createGui();
+		
+		NotificationManager.getInstance().screamMyName();
 	}
-	
-	
-	
+		
 	private void createGui()
 	{
 		Skin guiskin = ResourcesManager.getInstance().getGuiSkin();
+		Type type;
 		
-		jumpButton = world.player.getJumpButton();
+		if( player.getCurrentCharacter() == CharacterType.BANDIT )
+		{
+			jumpButton = ((Bandit)world.character).getJumpButton();
+			slowButton = ((Bandit)world.character).getSlowButton();
+			slideButton = ((Bandit)world.character).getSlideButton();
+			abilityButton = ((Bandit)world.character).getAbilityButton(CharacterAbilityType.BOMB);
+		}
+		//else if()
+		//else if() kolejne typy
+		
+		guiStage.addActor(abilityButton);
+		guiStage.addActor(slideButton);
 		guiStage.addActor(jumpButton);
-		
-		slowButton = world.player.getSlowButton();
 		guiStage.addActor(slowButton);
 		
-		slideButton = world.player.getSlideButton();
-		guiStage.addActor(slideButton);
-		
-		bombButton = world.player.getAbilityButton(CharacterAbilityType.BOMB);
-		guiStage.addActor(bombButton);
 	}
 	
 	public void step() 
@@ -152,21 +157,61 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	}
 
 	@Override
-	public void onGameUpdateReceived(String message) {
-		try {
+	public void onGameUpdateReceived(String message) 
+	{
+		try 
+		{
 			JSONObject data = new JSONObject(message);
-			boolean jump = (boolean)data.getBoolean("jump");
-			boolean startRunning = (boolean)data.getBoolean("startRunning");
-			if(jump){
-				world.enemy.jump(2);
-				Logger.log(this, "enemy skok");
+			
+			//jesli to przedstawienie sie
+			if( data.has("INITIAL_NOTIFICATION") )
+			{
+				String enemy_name = (String)data.getString("PLAYER_NAME");
+				
+				Player enemy = new Player();
+				enemy.setName( enemy_name );
+				enemy.setCurrentCharacter(CharacterType.BANDIT);
+				
+				world.addEnemy(enemy);
+				
+				NotificationManager.getInstance().screamMyName();
 			}
-			if(startRunning)
-				world.enemy.startRunning();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			else
+			{
+				//rozparsowuje do zmiennych
+				String enemyName = (String)data.getString("PLAYER_NAME");
+				
+				boolean startRunning = (boolean)data.getBoolean("START_RUNNING");
+				boolean dieTop = (boolean)data.getBoolean("DIE_TOP");
+				boolean dieBottom = (boolean)data.getBoolean("DIE_BOTTOM");
+				boolean jump = (boolean)data.getBoolean("JUMP");
+				boolean slide = (boolean)data.getBoolean("SLIDE");
+				boolean standUp = (boolean)data.getBoolean("STAND_UP");
+				boolean slow = (boolean)data.getBoolean("SLOW");
+				boolean abortSlow = (boolean)data.getBoolean("ABORT_SLOW");
+				boolean ability = (boolean)data.getBoolean("ABILITY");
+				CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
+				
+				//i teraz wykonuje dzialanie na odpowiednim enemy
+				Character enemy = world.getEnemy(enemyName);
+				
+				if(startRunning) enemy.start();
+				if(dieTop) enemy.dieTop();
+				if(dieBottom) enemy.dieBottom();
+				if(jump) enemy.jump();
+				if(slide) enemy.slide();
+				if(standUp) enemy.standUp();
+				if(slow) enemy.setRunning(false);
+				if(abortSlow) enemy.setRunning(true);
+				
+				//bardziej skomplikowany przypadek
+				if(ability) 
+				{
+					enemy.useAbility(abilityType);
+				}
+			}
+		} 
+		catch (JSONException e) { e.printStackTrace(); }
 		
 	}
 

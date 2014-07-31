@@ -2,8 +2,10 @@ package com.apptogo.runner.player;
 
 import java.util.Date;
 
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
+import com.apptogo.runner.handlers.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -19,6 +21,11 @@ public class SaveManager
 	private Preferences save;
 	private long lastSynchronization;
 	
+	private final String DEFAULT_NAME = "";
+	private final String DEFAULT_PASSWORD = "";
+	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0";
+	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
+	
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
 	public SaveManager()
 	{
@@ -32,8 +39,8 @@ public class SaveManager
 		
 		String playerName = save.getString("PLAYER_NAME", "");
 		String playerPassword = save.getString("PLAYER_PASSWORD", "");
-		String unlockedLevels = save.getString("PLAYER_UNLOCKED_LEVELS", "map1.0");
-		String currentCharacter = save.getString("PLAYER_CURRENT_CHARACTER", "BANDIT"); //dobrze by tez bylo takie inicjalizacyjne wartosci jakos wyrzucic na zew
+		String unlockedLevels = save.getString("PLAYER_UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
+		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("PLAYER_CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
 		
 		player.setName(playerName);
 		player.setPassword(playerPassword);
@@ -44,11 +51,11 @@ public class SaveManager
 	}
 	
 	public boolean savePlayer(Player player)
-	{
+	{if(player.getName() == null) Logger.log(this, "DUPA :(");
 		save.putString("PLAYER_NAME", player.getName());
 		save.putString("PLAYER_PASSWORD", player.getPassword());
 		save.putString("PLAYER_UNLOCKED_LEVELS", player.getUnlockedLevels());
-		save.putString("PLAYER_CURRENT_CHARACTER", player.getCurrentCharacter());
+		save.putString("PLAYER_CURRENT_CHARACTER", player.getCurrentCharacter().toString());
 		save.flush();
 		
 		return true; //if(not everything is ok) return false;
