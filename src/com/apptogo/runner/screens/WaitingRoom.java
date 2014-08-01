@@ -1,7 +1,5 @@
 package com.apptogo.runner.screens;
 
-import java.util.Random;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +13,7 @@ import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -147,7 +146,13 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	@Override
 	public void onGameStarted(String message) 
 	{
-		ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+			}
+		});
+		
 	}
 
 	@Override
