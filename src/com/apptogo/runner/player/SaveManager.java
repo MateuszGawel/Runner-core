@@ -24,12 +24,13 @@ public class SaveManager
 	private final String DEFAULT_NAME = "";
 	private final String DEFAULT_PASSWORD = "";
 	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0";
-	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
+	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.ARCHER.toString();
 	
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
 	public SaveManager()
 	{
 		save = Gdx.app.getPreferences("gameSave");
+		save.remove("PLAYER_CURRENT_CHARACTER");
 	}
 	
 	

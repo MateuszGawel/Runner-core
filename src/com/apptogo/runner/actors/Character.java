@@ -65,7 +65,7 @@ public abstract class Character extends Actor{
 	
 	public enum CharacterAbilityType
 	{
-		BOMB;
+		BOMB, ARROW;
 		
 		static public CharacterAbilityType parseFromString(String key)
 		{
@@ -73,7 +73,10 @@ public abstract class Character extends Actor{
 			{
 				return CharacterAbilityType.BOMB;
 			}
-			//else if()
+			else if( key.equals( CharacterAbilityType.ARROW.toString() ) )
+			{
+				return CharacterAbilityType.ARROW;
+			}
 			//else if() kolejne abilities
 			else return null;
 		}
@@ -83,7 +86,7 @@ public abstract class Character extends Actor{
 	 *  oraz createGui() i onGameUpdateReceived() w gameScreen - tam te typy sa ifowane                   */
 	public enum CharacterType
 	{
-		BANDIT;
+		BANDIT, ARCHER;
 		
 		static public CharacterType parseFromString(String key)
 		{
@@ -91,7 +94,10 @@ public abstract class Character extends Actor{
 			{
 				return CharacterType.BANDIT;
 			}
-			//else if()
+			else if( key.equals( CharacterType.ARCHER.toString() ) )
+			{
+				return CharacterType.ARCHER;
+			}
 			//else if() kolejni bohaterowie
 			else return null;
 		}

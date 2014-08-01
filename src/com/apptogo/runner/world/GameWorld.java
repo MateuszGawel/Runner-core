@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import box2dLight.RayHandler;
 
+import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Character.CharacterType;
@@ -177,6 +178,7 @@ public class GameWorld {
     	Character characterTemp = null;
     	
     	if( characterType == CharacterType.BANDIT ) characterTemp = new Bandit(world);
+    	else if( characterType == CharacterType.ARCHER ) characterTemp = new Archer(world);
     	
     	return characterTemp;
     }

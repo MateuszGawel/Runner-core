@@ -134,6 +134,7 @@ public class ResourcesManager {
 				
 		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
 		gameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
+		gameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
 		
 		gameMeta.addMusic("mfx/game/gameMusic.ogg");
 		

@@ -1,34 +1,24 @@
 package com.apptogo.runner.screens;
 
+import java.util.Random;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;
-import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.vars.Box2DVars;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class WaitingRoom extends BaseScreen implements WarpListener{	
 		
@@ -39,6 +29,8 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	public WaitingRoom(Runner runner)
 	{
 		super(runner);	
+		WarpController.getInstance().startApp(player.getName());
+		WarpController.getInstance().setListener(this);
 	}
 	
 	public void prepare() 
@@ -154,7 +146,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 
 	@Override
 	public void onGameStarted(String message) {
-		// TODO Auto-generated method stub
+		ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
 		
 	}
 

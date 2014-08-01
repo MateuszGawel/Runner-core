@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Character.CharacterAbilityType;
@@ -70,7 +71,13 @@ public class GameScreen extends BaseScreen implements WarpListener{
 			slideButton = ((Bandit)world.character).getSlideButton();
 			abilityButton = ((Bandit)world.character).getAbilityButton(CharacterAbilityType.BOMB);
 		}
-		//else if()
+		else if( player.getCurrentCharacter() == CharacterType.ARCHER )
+		{
+			jumpButton = ((Archer)world.character).getJumpButton();
+			slowButton = ((Archer)world.character).getSlowButton();
+			slideButton = ((Archer)world.character).getSlideButton();
+			abilityButton = ((Archer)world.character).getAbilityButton(CharacterAbilityType.ARROW);
+		}
 		//else if() kolejne typy
 		
 		guiStage.addActor(abilityButton);
