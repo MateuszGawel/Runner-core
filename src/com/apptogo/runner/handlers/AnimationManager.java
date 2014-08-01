@@ -19,7 +19,7 @@ public class AnimationManager {
 	private TextureRegion currentFrame;
 	
 	public AnimationManager(String atlasName){
-		atlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, atlasName);
+		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasName);
 	}
 	
 	public static AtlasRegion[] createFrames(int framesCount, String name){

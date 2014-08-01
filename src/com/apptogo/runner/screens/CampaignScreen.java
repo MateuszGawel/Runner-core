@@ -78,7 +78,7 @@ public class CampaignScreen extends BaseScreen{
 	        button.addListener(new ClickListener() {
 	            public void clicked(InputEvent event, float x, float y) 
 	            {
-	            	ScreensManager.getInstance().createLoadingScreen( level );
+	            	ScreensManager.getInstance().createLoadingScreen( level, ScreenType.SCREEN_GAME_SINGLE );
 	            }
 	         });
 	        

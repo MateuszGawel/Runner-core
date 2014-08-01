@@ -59,6 +59,10 @@ public abstract class Character extends Actor{
 	
 	protected Skin guiSkin;
 	
+	protected String jumpButtonStyleName;
+	protected String slideButtonStyleName; 
+	protected String slowButtonStyleName;
+	
 	public enum CharacterAnimationState{
 		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB
 	}
@@ -105,13 +109,17 @@ public abstract class Character extends Actor{
 			
 	protected AnimationManager animationManager;
 		
-	public Character(World world, String atlasName)
+	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 		
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
+		
+		this.jumpButtonStyleName = jumpButtonStyleName;
+		this.slideButtonStyleName = slideButtonStyleName;
+		this.slowButtonStyleName = slowButtonStyleName;
 	}
 	
 	protected void createBody(Vector2 bodySize){
@@ -391,8 +399,99 @@ public abstract class Character extends Actor{
 	public boolean isStarted(){ return this.started; }
 	
 	public abstract CharacterType getCharacterType();	
-	public abstract Button getJumpButton();
-	public abstract Button getSlideButton();
-	public abstract Button getSlowButton();
+
 	public abstract Button getAbilityButton(final CharacterAbilityType abilityType);
+	
+	public Button getJumpButton()
+	{
+		Button jumpButton = new Button(guiSkin, this.jumpButtonStyleName);
+		
+		jumpButton.setPosition(Runner.SCREEN_WIDTH/PPM - jumpButton.getWidth()/PPM - 20/PPM, jumpButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		jumpButton.setSize(jumpButton.getWidth()/PPM, jumpButton.getHeight()/PPM);
+		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
+		
+		jumpButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				if( character.jump() )
+				{
+					NotificationManager.getInstance().notifyJump();
+				}
+				
+		        return true;
+		    }
+		});
+		
+		return jumpButton;
+	}
+	public Button getSlideButton()
+	{
+		Button slideButton = new Button(guiSkin, this.slideButtonStyleName);
+		
+		slideButton.setPosition(Runner.SCREEN_WIDTH/PPM - slideButton.getWidth()/PPM - 20/PPM, 20/PPM);
+		slideButton.setSize(slideButton.getWidth()/PPM, slideButton.getHeight()/PPM);
+		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
+		
+		slideButton.addListener(new InputListener() {
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if( character.slide() )
+				{
+					NotificationManager.getInstance().notifySlide();
+				}
+		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if( character.standUp() )
+				{
+					NotificationManager.getInstance().notifyStandUp();
+				}
+		    }
+		});
+		
+		return slideButton;
+	}
+	public Button getSlowButton()
+	{
+		Button slowButton = new Button(guiSkin, this.slowButtonStyleName);
+		
+		slowButton.setPosition(20/PPM, 20/PPM);
+		slowButton.setSize(slowButton.getWidth()/PPM, slowButton.getHeight()/PPM);
+		slowButton.setBounds(slowButton.getX(), slowButton.getY(), slowButton.getWidth(), slowButton.getHeight());
+		
+		slowButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				if(character.isAlive() && character.isStarted())
+				{
+					if( character.setRunning(false))
+					{
+						NotificationManager.getInstance().notifySlow();
+					}
+				}
+				
+				return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
+			{
+				if(character.isAlive() && character.isStarted())
+				{
+					if( character.setRunning(true) )
+					{
+						NotificationManager.getInstance().notifyAbortSlow();
+					}
+				}
+		    }
+		});
+		
+		return slowButton;
+	}
 }

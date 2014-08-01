@@ -15,6 +15,7 @@ import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
@@ -113,17 +114,17 @@ public class GameWorld {
 	
 	private void createBackground(){
 
-		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/skyBlue.png"));
+		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/skyBlue.png"));
 		skyBlue.setPosition(0, 500/PPM);
 		background.addActor(skyBlue);
 		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/mountains.png"), mapSize, -0.05f, character, 0, 350/PPM);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.05f, character, 0, 350/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 400/PPM);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 400/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
 		background.addActor(sand);
 	}
 	

@@ -101,8 +101,7 @@ public class ResourcesManager {
 		}	
 	}
 	//---
-	
-	TextureAtlas stickmanAtlas;
+
 	ArrayList<ScreenMeta> screenMetaArray;
 		
 	public ResourcesManager() 
@@ -125,66 +124,83 @@ public class ResourcesManager {
 		
 		screenMetaArray.add( mainMenuMeta );
 		
-		//|3. GAME SCREEN
-		ScreenMeta gameMeta = new ScreenMeta(ScreenType.SCREEN_GAME);
+		//|3. GAME SCREEN SINGLE
+		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);
 		
-		gameMeta.setTexturesDirectory("gfx/game/levels/");
-		gameMeta.setTexturesExtension(".png");
-		gameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
+		singleGameMeta.setTexturesDirectory("gfx/game/levels/");
+		singleGameMeta.setTexturesExtension(".png");
+		singleGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
 				
-		gameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
-		gameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
-		gameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
+		singleGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
+		singleGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
+		singleGameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
 		
-		gameMeta.addMusic("mfx/game/gameMusic.ogg");
+		singleGameMeta.addMusic("mfx/game/gameMusic.ogg");
 		
-		gameMeta.addSound("mfx/game/gameClick.ogg");
+		singleGameMeta.addSound("mfx/game/gameClick.ogg");
 		
-		screenMetaArray.add( gameMeta );
+		screenMetaArray.add( singleGameMeta );
 		
-		//|4. UPGRADE SCREEN
+		//|4. GAME SCREEN MULTI
+		ScreenMeta multiplayerGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_MULTI);
+		
+		multiplayerGameMeta.setTexturesDirectory("gfx/game/levels/");
+		multiplayerGameMeta.setTexturesExtension(".png");
+		multiplayerGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
+				
+		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
+		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
+		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
+		
+		multiplayerGameMeta.addMusic("mfx/game/gameMusic.ogg");
+		
+		multiplayerGameMeta.addSound("mfx/game/gameClick.ogg");
+		
+		screenMetaArray.add( multiplayerGameMeta );
+		
+		//|5. UPGRADE SCREEN
 		ScreenMeta upgradeMeta = new ScreenMeta(ScreenType.SCREEN_UPGRADE);
 		
 		upgradeMeta.addTexture("ui/menuBackgrounds/upgradeScreenBackground.png");
 		
 		screenMetaArray.add( upgradeMeta );
 		
-		//|5. LOADING SCREEN
+		//|6. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
 		
 		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackground.png");
 		
 		screenMetaArray.add( loadingMeta );
 		
-		//|6. CAMPAIGN SCREEN
+		//|7. CAMPAIGN SCREEN
 		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
 		
 		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackground.png");
 		
 		screenMetaArray.add( campaignMeta );
 		
-		//|7. MULTIPLAYER SCREEN
+		//|8. MULTIPLAYER SCREEN
 		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
 		
 		multiplayerMeta.addTexture("ui/menuBackgrounds/multiplayerScreenBackground.png");
 		
 		screenMetaArray.add( multiplayerMeta );
 
-		//|8. CREATE ROOM SCREEN
+		//|9. CREATE ROOM SCREEN
 		ScreenMeta createRoomMeta = new ScreenMeta(ScreenType.SCREEN_CREATE_ROOM);
 		
 		createRoomMeta.addTexture("ui/menuBackgrounds/createRoomScreenBackground.png");
 		
 		screenMetaArray.add( createRoomMeta );
 		
-		//|9. FIND ROOM SCREEN
+		//|10. FIND ROOM SCREEN
 		ScreenMeta findRoomMeta = new ScreenMeta(ScreenType.SCREEN_FIND_ROOM);
 		
 		findRoomMeta.addTexture("ui/menuBackgrounds/findRoomScreenBackground.png");
 		
 		screenMetaArray.add( findRoomMeta );
 		
-		//|10. WAITING ROOM SCREEN
+		//|11. WAITING ROOM SCREEN
 		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
 		
 		findRoomMeta.addTexture("ui/menuBackgrounds/waitingRoomScreenBackground.png");

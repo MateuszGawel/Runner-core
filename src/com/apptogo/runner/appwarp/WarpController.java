@@ -73,6 +73,7 @@ public class WarpController {
 	
 	public void stopApp(){
 		if(isConnected){
+			Logger.log(this, "BYL POLACZONY");
 			warpClient.unsubscribeRoom(roomId);
 			warpClient.leaveRoom(roomId);
 		}

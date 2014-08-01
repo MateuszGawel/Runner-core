@@ -7,6 +7,7 @@ import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -61,7 +62,7 @@ public class Bomb extends Actor implements Poolable{
         this.player = player;
         this.world = world;
         
-        bombAtlas = ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/characters/bomb.pack");
+        bombAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/bomb.pack");
 
         
 		BodyDef bodyDef = new BodyDef();

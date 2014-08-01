@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -32,7 +33,7 @@ public class Barrel extends Actor{
 	private MapObject object;
 	
 	public Barrel(MapObject object, World world, GameWorld gameWorld){
-		this.texture = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_GAME, "gfx/game/levels/barrelSmall.png"));
+		this.texture = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/barrelSmall.png"));
 		this.world = world;
 		this.gameWorld = gameWorld;
 		this.object = object;

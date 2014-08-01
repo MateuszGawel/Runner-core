@@ -8,7 +8,8 @@ import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CampaignScreen;
 import com.apptogo.runner.screens.CreateRoomScreen;
 import com.apptogo.runner.screens.FindRoomScreen;
-import com.apptogo.runner.screens.GameScreen;
+import com.apptogo.runner.screens.GameScreenMulti;
+import com.apptogo.runner.screens.GameScreenSingle;
 //import com.apptogo.runner.screens.LoadingMenuScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
@@ -41,7 +42,8 @@ public class ScreensManager {
 		SCREEN_MULTIPLAYER,
 		SCREEN_CREATE_ROOM,
 		SCREEN_FIND_ROOM,
-		SCREEN_GAME,
+		SCREEN_GAME_SINGLE,
+		SCREEN_GAME_MULTI,
 		SCREEN_WAITING_ROOM
 	}
 		
@@ -63,10 +65,13 @@ public class ScreensManager {
 		loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
 	}
-	public void createLoadingScreen(Level level) //przeladowanie dla gameScreen!
+	/** @param screenType albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala */
+	public void createLoadingScreen(Level level, ScreenType screenType) //przeladowanie dla gameScreen!
 	{
+		if(screenType != ScreenType.SCREEN_GAME_SINGLE && screenType != ScreenType.SCREEN_GAME_MULTI) screenType = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
+		
 		this.levelToLoad = level;
-		createLoadingScreen(ScreenType.SCREEN_GAME);
+		createLoadingScreen(screenType);
 	}
 	
 	private void addNewScreen(ScreenType screenType)
@@ -87,8 +92,10 @@ public class ScreensManager {
 			screen = new CreateRoomScreen(runner);
 		else if(screenType == ScreenType.SCREEN_FIND_ROOM)
 			screen = new FindRoomScreen(runner);
-		else if(screenType == ScreenType.SCREEN_GAME)
-			screen = new GameScreen(runner);
+		else if(screenType == ScreenType.SCREEN_GAME_SINGLE)
+			screen = new GameScreenSingle(runner);
+		else if(screenType == ScreenType.SCREEN_GAME_MULTI)
+			screen = new GameScreenMulti(runner);
 		else if(screenType == ScreenType.SCREEN_WAITING_ROOM)
 			screen = new WaitingRoom(runner);
 		else
@@ -131,7 +138,8 @@ public class ScreensManager {
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	
-		if( currentScreenType == ScreenType.SCREEN_GAME ) ((GameScreen)screen).setLevel( levelToLoad );
+		if( currentScreenType == ScreenType.SCREEN_GAME_SINGLE ) ((GameScreenSingle)screen).setLevel( levelToLoad );
+		else if( currentScreenType == ScreenType.SCREEN_GAME_MULTI ) ((GameScreenMulti)screen).setLevel( levelToLoad );
 		
 		runner.setScreen(screen);
 		

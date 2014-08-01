@@ -14,6 +14,7 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -41,7 +42,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 ScreensManager.getInstance().createLoadingScreen( new Level("", "gfx/game/levels/map.tmx", "") );
+                 ScreensManager.getInstance().createLoadingScreen( new Level("", "gfx/game/levels/map.tmx", ""), ScreenType.SCREEN_GAME_MULTI );
             }
          });
 		
@@ -53,13 +54,16 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	
 	public void step()
 	{
-
+		handleInput();
 	}
 	
 	@Override
 	public void handleInput() {
-		// TODO Auto-generated method stub
-		
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
+		{
+			WarpController.getInstance().stopApp();
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}		
 	}
 	
 	@Override
@@ -87,8 +91,6 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -108,11 +110,9 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 			{
 				
 				String enemyName = (String)data.getString("PLAYER_NAME");
-				Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
-				Player enemy = new Player();
-				enemy.setName( enemyName );
-				enemy.setCurrentCharacter(CharacterType.BANDIT);
 				
+				Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
+								
 				addLabel(enemyName);
 				
 				NotificationManager.getInstance().screamMyName();
@@ -149,7 +149,8 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run () {
-				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+				//nie chcemy na razie nic robic - dopiero jak ktos kliknie play
+				//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI);
 			}
 		});
 		
@@ -158,6 +159,5 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	@Override
 	public void onGameFinished(int code, boolean isRemote) {
 		// TODO Auto-generated method stub
-		
 	}
 }

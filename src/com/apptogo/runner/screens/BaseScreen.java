@@ -67,7 +67,7 @@ public abstract class BaseScreen implements Screen{
 	@Override
 	public void show() 
 	{
-		if( !(this.getSceneType() == ScreenType.SCREEN_GAME) )
+		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI)  )
 		{
 			stage = new Stage();
 			viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
@@ -102,7 +102,7 @@ public abstract class BaseScreen implements Screen{
 	{
 		this.delta = delta;
 		
-		if( !(this.getSceneType() == ScreenType.SCREEN_GAME) )
+		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI) )
 		{
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

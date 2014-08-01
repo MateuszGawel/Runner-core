@@ -28,7 +28,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class GameScreen extends BaseScreen implements WarpListener{
+public class GameScreenSingle extends BaseScreen{
 	
 	private GameWorld world;
 	private GameWorldRenderer worldRenderer;
@@ -40,7 +40,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	private Button slowButton;
 	private Button abilityButton;
 	
-	public GameScreen(Runner runner){
+	public GameScreenSingle(Runner runner){
 		super(runner);	
 		//WarpController.getInstance().setListener(this);
 	}
@@ -51,7 +51,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	}
 	
 	public void prepare() 
-	{	this.player = SaveManager.getInstance().loadPlayer(); //workarround ale do poprawy!
+	{	
 		world = new GameWorld( level.mapPath, player );
 		worldRenderer = new GameWorldRenderer(world);
 		
@@ -126,108 +126,6 @@ public class GameScreen extends BaseScreen implements WarpListener{
 
 	@Override
 	public ScreenType getSceneType() {
-		return ScreenType.SCREEN_GAME;
+		return ScreenType.SCREEN_GAME_SINGLE;
 	}
-
-	@Override
-	public void onWaitingStarted(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onError(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGameStarted(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGameFinished(int code, boolean isRemote) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onGameUpdateReceived(String message) 
-	{
-		try 
-		{
-			JSONObject data = new JSONObject(message);
-			
-			//jesli to przedstawienie sie
-			if( data.has("INITIAL_NOTIFICATION") )
-			{
-				
-				String enemy_name = (String)data.getString("PLAYER_NAME");
-				Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemy_name);
-				Player enemy = new Player();
-				enemy.setName( enemy_name );
-				enemy.setCurrentCharacter(CharacterType.BANDIT);
-				
-				world.addEnemy(enemy);
-				
-				NotificationManager.getInstance().screamMyName();
-			}
-			else
-			{
-				//rozparsowuje do zmiennych
-				String enemyName = (String)data.getString("PLAYER_NAME");
-				
-				Character enemy = world.getEnemy(enemyName);
-				
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("START_RUNNING") ) 
-				{
-					enemy.start();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("DIE_TOP") )
-				{
-					enemy.dieTop();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("DIE_BOTTOM") )
-				{
-					enemy.dieBottom();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("JUMP") )
-				{
-					enemy.jump();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("SLIDE") )
-				{
-					enemy.slide();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("STAND_UP") )
-				{
-					enemy.standUp();
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("SLOW") )
-				{
-					enemy.setRunning(false);
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("ABORT_SLOW") )
-				{
-					enemy.setRunning(true);
-				}
-				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("ABILITY") )
-				{
-					if( !(data.getString("ABILITY_TYPE").equals("")) )
-					{
-						CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-						enemy.useAbility(abilityType);
-					}
-				}
-				//mala uwaga
-				//wydaje mi sie ze wydajnosc bylaby lepsza gdyby uzyc else ifow ale raczej tylko ciut a na dodatek stracilibysmy mozliwosci przeslania dwoch rzeczy na raz [choc nie wiem czy w ogole tego potrzebujemy :)]
-			}
-		} 
-		catch (JSONException e) { e.printStackTrace(); }
-		
-	}
-
-
 }

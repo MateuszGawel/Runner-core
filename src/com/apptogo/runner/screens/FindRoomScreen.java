@@ -46,7 +46,7 @@ public class FindRoomScreen extends BaseScreen{
         button.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI);
             }
          });
         
@@ -57,7 +57,7 @@ public class FindRoomScreen extends BaseScreen{
         randomRoomButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME);
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI);
             }
          });
         
