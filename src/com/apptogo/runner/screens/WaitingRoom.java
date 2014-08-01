@@ -145,9 +145,9 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	}
 
 	@Override
-	public void onGameStarted(String message) {
+	public void onGameStarted(String message) 
+	{
 		ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
-		
 	}
 
 	@Override

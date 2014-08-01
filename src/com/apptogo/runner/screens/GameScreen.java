@@ -20,6 +20,7 @@ import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
@@ -50,7 +51,7 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	}
 	
 	public void prepare() 
-	{		
+	{	this.player = SaveManager.getInstance().loadPlayer(); //workarround ale do poprawy!
 		world = new GameWorld( level.mapPath, player );
 		worldRenderer = new GameWorldRenderer(world);
 		
@@ -64,21 +65,10 @@ public class GameScreen extends BaseScreen implements WarpListener{
 		Skin guiskin = ResourcesManager.getInstance().getGuiSkin();
 		Type type;
 		
-		if( player.getCurrentCharacter() == CharacterType.BANDIT )
-		{
-			jumpButton = ((Bandit)world.character).getJumpButton();
-			slowButton = ((Bandit)world.character).getSlowButton();
-			slideButton = ((Bandit)world.character).getSlideButton();
-			abilityButton = ((Bandit)world.character).getAbilityButton(CharacterAbilityType.BOMB);
-		}
-		else if( player.getCurrentCharacter() == CharacterType.ARCHER )
-		{
-			jumpButton = ((Archer)world.character).getJumpButton();
-			slowButton = ((Archer)world.character).getSlowButton();
-			slideButton = ((Archer)world.character).getSlideButton();
-			abilityButton = ((Archer)world.character).getAbilityButton(CharacterAbilityType.ARROW);
-		}
-		//else if() kolejne typy
+		jumpButton = world.character.getJumpButton();
+		slowButton = world.character.getSlowButton();
+		slideButton = world.character.getSlideButton();
+		abilityButton = world.character.getAbilityButton(CharacterAbilityType.BOMB);
 		
 		guiStage.addActor(abilityButton);
 		guiStage.addActor(slideButton);
@@ -132,7 +122,6 @@ public class GameScreen extends BaseScreen implements WarpListener{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -190,34 +179,50 @@ public class GameScreen extends BaseScreen implements WarpListener{
 				//rozparsowuje do zmiennych
 				String enemyName = (String)data.getString("PLAYER_NAME");
 				
-				boolean startRunning = (boolean)data.getBoolean("START_RUNNING");
-				boolean dieTop = (boolean)data.getBoolean("DIE_TOP");
-				boolean dieBottom = (boolean)data.getBoolean("DIE_BOTTOM");
-				boolean jump = (boolean)data.getBoolean("JUMP");
-				boolean slide = (boolean)data.getBoolean("SLIDE");
-				boolean standUp = (boolean)data.getBoolean("STAND_UP");
-				boolean slow = (boolean)data.getBoolean("SLOW");
-				boolean abortSlow = (boolean)data.getBoolean("ABORT_SLOW");
-				boolean ability = (boolean)data.getBoolean("ABILITY");
-				CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-				
-				//i teraz wykonuje dzialanie na odpowiednim enemy
 				Character enemy = world.getEnemy(enemyName);
 				
-				if(startRunning) enemy.start();
-				if(dieTop) enemy.dieTop();
-				if(dieBottom) enemy.dieBottom();
-				if(jump) enemy.jump();
-				if(slide) enemy.slide();
-				if(standUp) enemy.standUp();
-				if(slow) enemy.setRunning(false);
-				if(abortSlow) enemy.setRunning(true);
-				
-				//bardziej skomplikowany przypadek
-				if(ability) 
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("START_RUNNING") ) 
 				{
-					enemy.useAbility(abilityType);
+					enemy.start();
 				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("DIE_TOP") )
+				{
+					enemy.dieTop();
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("DIE_BOTTOM") )
+				{
+					enemy.dieBottom();
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("JUMP") )
+				{
+					enemy.jump();
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("SLIDE") )
+				{
+					enemy.slide();
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("STAND_UP") )
+				{
+					enemy.standUp();
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("SLOW") )
+				{
+					enemy.setRunning(false);
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("ABORT_SLOW") )
+				{
+					enemy.setRunning(true);
+				}
+				if( data.has("INITIAL_NOTIFICATION") && (boolean)data.getBoolean("ABILITY") )
+				{
+					if( !(data.getString("ABILITY_TYPE").equals("")) )
+					{
+						CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
+						enemy.useAbility(abilityType);
+					}
+				}
+				//mala uwaga
+				//wydaje mi sie ze wydajnosc bylaby lepsza gdyby uzyc else ifow ale raczej tylko ciut a na dodatek stracilibysmy mozliwosci przeslania dwoch rzeczy na raz [choc nie wiem czy w ogole tego potrzebujemy :)]
 			}
 		} 
 		catch (JSONException e) { e.printStackTrace(); }

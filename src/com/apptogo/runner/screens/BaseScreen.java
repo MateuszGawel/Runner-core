@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.handlers.LanguageManager;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -57,7 +58,9 @@ public abstract class BaseScreen implements Screen{
 		this.languageManager = LanguageManager.getInstance();
 		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
 		
+		this.player = null;
 		this.player = SaveManager.getInstance().loadPlayer();
+
 		NotificationManager.prepareManager( player.getName() );
 	}
 	

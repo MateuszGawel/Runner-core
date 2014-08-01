@@ -1,9 +1,8 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
-import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.vars.Box2DVars;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -129,12 +129,19 @@ public class MainMenuScreen extends BaseScreen{
         //---
         final TextField textField = new TextField(player.getName(), skin);
         textField.setSize(300f, 50f);
-        textField.setPosition(-150f, -25f);
+        textField.setPosition(-230f, -25f);
+        
+        final SelectBox selectCharacter = new SelectBox<String>(skin, "default");
+        selectCharacter.setSize(250f, 50f);
+        selectCharacter.setPosition(90f, -25f);
+        selectCharacter.setItems(new String[]{ CharacterType.BANDIT.toString(), CharacterType.ARCHER.toString() });
+        selectCharacter.setSelected( player.getCurrentCharacter().toString() );
         
         ClickListener savePlayerListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
 				player.setName( textField.getText() );
+				player.setCurrentCharacter( CharacterType.parseFromString( (String)selectCharacter.getSelected() ) );
 				SaveManager.getInstance().savePlayer(player);
 				playerNameWidget.toggleWidget();
             }
@@ -142,6 +149,7 @@ public class MainMenuScreen extends BaseScreen{
         
         playerNameWidget = new DialogWidget("Imie gracza:", null, savePlayerListener);
         playerNameWidget.addActor(textField);
+        playerNameWidget.addActor(selectCharacter);
         
         settingsButton.addListener(playerNameWidget.getToggleListener());
         //soundButton.addListener( widget.getToggleListener() ); //podpiecie listenera z widgetu do przycisku na scenie :)

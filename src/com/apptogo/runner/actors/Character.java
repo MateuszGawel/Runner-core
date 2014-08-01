@@ -83,7 +83,7 @@ public abstract class Character extends Actor{
 	}
 	
 	/** przy dodawaniu kolejnego typu pamietac o obsluzeniu go w funkcji createCharacter klasy gameWorld
-	 *  oraz createGui() i onGameUpdateReceived() w gameScreen - tam te typy sa ifowane                   */
+	 *  oraz w tablicy z selectCharacter w MainMenuScreen                                              */
 	public enum CharacterType
 	{
 		BANDIT, ARCHER;
@@ -390,8 +390,9 @@ public abstract class Character extends Actor{
 	public float getSpeed(){ return this.speed; }
 	public boolean isStarted(){ return this.started; }
 	
-	public CharacterType getCharacterType()
-	{
-		return null;
-	}
+	public abstract CharacterType getCharacterType();	
+	public abstract Button getJumpButton();
+	public abstract Button getSlideButton();
+	public abstract Button getSlowButton();
+	public abstract Button getAbilityButton(final CharacterAbilityType abilityType);
 }

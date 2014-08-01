@@ -89,7 +89,7 @@ public class GameWorld {
 		
 		this.enemies = new HashMap<String, Character>();
 		this.player = player;
-		
+
 		createWorld(mapPath, player.getCurrentCharacter());
 		
 		fpsLogger = new FPSLogger();

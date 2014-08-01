@@ -24,7 +24,7 @@ public class SaveManager
 	private final String DEFAULT_NAME = "";
 	private final String DEFAULT_PASSWORD = "";
 	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0";
-	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.ARCHER.toString();
+	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
 	
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
 	public SaveManager()
@@ -40,8 +40,8 @@ public class SaveManager
 		
 		String playerName = save.getString("PLAYER_NAME", "");
 		String playerPassword = save.getString("PLAYER_PASSWORD", "");
-		String unlockedLevels = save.getString("PLAYER_UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
-		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("PLAYER_CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
+		String unlockedLevels = save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
+		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
 		
 		player.setName(playerName);
 		player.setPassword(playerPassword);
@@ -52,11 +52,11 @@ public class SaveManager
 	}
 	
 	public boolean savePlayer(Player player)
-	{if(player.getName() == null) Logger.log(this, "DUPA :(");
+	{
 		save.putString("PLAYER_NAME", player.getName());
 		save.putString("PLAYER_PASSWORD", player.getPassword());
-		save.putString("PLAYER_UNLOCKED_LEVELS", player.getUnlockedLevels());
-		save.putString("PLAYER_CURRENT_CHARACTER", player.getCurrentCharacter().toString());
+		save.putString("UNLOCKED_LEVELS", player.getUnlockedLevels());
+		save.putString("CURRENT_CHARACTER", player.getCurrentCharacter().toString());
 		save.flush();
 		
 		return true; //if(not everything is ok) return false;
