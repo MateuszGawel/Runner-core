@@ -123,7 +123,7 @@ public abstract class Character extends Actor{
 	}
 	
 	protected void createBody(Vector2 bodySize){
-		bodySize = new Vector2(25 / PPM, 65 / PPM);
+		bodySize = new Vector2(25 / PPM, 63 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));

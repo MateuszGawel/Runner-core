@@ -36,7 +36,7 @@ public class GameWorld {
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
-	public static final Vector2 GRAVITY = new Vector2(0f, -60f);
+	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0f, -60f);
 	
 	public World world;
 	
@@ -55,21 +55,15 @@ public class GameWorld {
 	private Player player;
 	public Character character;
 	public HashMap<String, Character> enemies;
-	
 	public Group background;
-	public Image mountains;
-	public ParallaxBackground rocks;
-	public Image skyBlue;
-	public Actor sand;
-	
-	private Vector2 mapSize;
+	protected Vector2 mapSize;
 	
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
 	public GameWorld(String mapPath, Player player)
 	{
-		world = new World(GRAVITY, true);
+		world = new World(DEFAULT_GRAVITY, true);
 		world.setContactListener(new MyContactListener(this));
 		
 		worldStage = new Stage();
@@ -79,27 +73,24 @@ public class GameWorld {
 		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
-	    
-
+		
+		this.enemies = new HashMap<String, Character>();
+		this.player = player;
+		
 		background = new Group();
 		backgroundStage = new Stage();
 		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera(); 
 		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
 		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
-		backgroundStage.setViewport(backgroundStretchViewport);	
-		
-		this.enemies = new HashMap<String, Character>();
-		this.player = player;
-
+		backgroundStage.setViewport(backgroundStretchViewport);
+		backgroundStage.addActor(background);
 		createWorld(mapPath, player.getCurrentCharacter());
 		
-		fpsLogger = new FPSLogger();
+		//fpsLogger = new FPSLogger();
 	}
 	
 	private void createWorld(String mapPath, CharacterType characterType)
 	{
-		backgroundStage.addActor(background);
-		
 		character = createCharacter(characterType);
 		worldStage.addActor(character);
 		
@@ -108,27 +99,8 @@ public class GameWorld {
 		mapSize = TiledMapLoader.getInstance().loadMap(mapPath);
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
-		createBackground();
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 	}
-	
-	private void createBackground(){
-
-		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/skyBlue.png"));
-		skyBlue.setPosition(0, 500/PPM);
-		background.addActor(skyBlue);
-		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.05f, character, 0, 350/PPM);
-		background.addActor(mountains);
-		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 400/PPM);
-		background.addActor(rocks);
-		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
-		background.addActor(sand);
-	}
-	
-
 	
 	public void handleInput()
 	{
@@ -143,7 +115,7 @@ public class GameWorld {
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
-        fpsLogger.log();
+        //fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }

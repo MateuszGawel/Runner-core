@@ -129,7 +129,7 @@ public class ResourcesManager {
 		
 		singleGameMeta.setTexturesDirectory("gfx/game/levels/");
 		singleGameMeta.setTexturesExtension(".png");
-		singleGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
+		singleGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
 				
 		singleGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
 		singleGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
@@ -146,7 +146,7 @@ public class ResourcesManager {
 		
 		multiplayerGameMeta.setTexturesDirectory("gfx/game/levels/");
 		multiplayerGameMeta.setTexturesExtension(".png");
-		multiplayerGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
+		multiplayerGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
 				
 		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
 		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");

@@ -40,10 +40,6 @@ public class Barrel extends Actor{
 		createBody();
 		
 		gameWorld.getWorldStage().addActor(this);
-		
-		
-		
-		
 
 	}
 
