@@ -38,8 +38,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 
-public class TiledMapLoader {	
+public class TiledMapLoader 
+{	
 	private static final TiledMapLoader INSTANCE = new TiledMapLoader();
+	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
@@ -78,7 +80,8 @@ public class TiledMapLoader {
 		return new Vector2(mapPixelWidth, mapPixelHeight);
 	}
 	
-	private void initLights(){
+	private void initLights()
+	{
 		//enabling lights if enableLight parameter is set
 		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
 		{
@@ -194,12 +197,14 @@ public class TiledMapLoader {
 		}
 	}
 	
-	private Shape createShape(MapObject object){
+	private Shape createShape(MapObject object)
+	{
 		Shape shape = null;
 		if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
 		else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
 		else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
-		else{                                           
+		else
+		{                                           
 				try
 		     	{
 					shape = getShape( (RectangleMapObject)object );
@@ -209,7 +214,8 @@ public class TiledMapLoader {
 		return shape;
 	}
 	
-	private Shape getShape(RectangleMapObject obj){
+	private Shape getShape(RectangleMapObject obj)
+	{
 		Rectangle rectangle = obj.getRectangle();
 		PolygonShape polygon = new PolygonShape();
 		Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
@@ -220,7 +226,9 @@ public class TiledMapLoader {
 		                 0.0f);
 		return polygon;
 	}
-	private Shape getShape(PolygonMapObject obj){
+	
+	private Shape getShape(PolygonMapObject obj)
+	{
 		PolygonShape polygon = new PolygonShape();
 		float[] vertices = obj.getPolygon().getTransformedVertices();
 
@@ -233,7 +241,9 @@ public class TiledMapLoader {
 		polygon.set(worldVertices);
 		return polygon;
 	}
-	private Shape getShape(PolylineMapObject obj){
+	
+	private Shape getShape(PolylineMapObject obj)
+	{
 		float[] vertices = obj.getPolyline().getTransformedVertices();
 		Vector2[] worldVertices = new Vector2[vertices.length / 2];
 
@@ -247,7 +257,9 @@ public class TiledMapLoader {
 		chain.createChain(worldVertices);
 		return chain;
 	}
-	private Shape getShape(EllipseMapObject obj){
+	
+	private Shape getShape(EllipseMapObject obj)
+	{
 		Ellipse ellipse = obj.getEllipse();
 		CircleShape ellipseShape = new CircleShape();
 
@@ -260,16 +272,6 @@ public class TiledMapLoader {
 		return ellipseShape;
 	}
 
-	
-	
-	public void destroyPhysics() {
-		for (Body body : groundBodies) {
-			world.destroyBody(body);
-		}
-		groundBodies.clear();
-	}
-	
-	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	public void setWorld(World world){ this.world = world; }
 	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
 	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }

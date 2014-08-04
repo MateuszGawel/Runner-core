@@ -15,76 +15,92 @@ public class NotificationListener implements NotifyListener{
 	
 	private WarpController callBack;
 	
-	public NotificationListener(WarpController callBack) {
+	public NotificationListener(WarpController callBack) 
+	{
 		this.callBack = callBack;
 	}
 	
-	public void onChatReceived(ChatEvent event) {
+	public void onChatReceived(ChatEvent event) 
+	{
 		
 	}
 
-	public void onRoomCreated(RoomData arg0) {
+	public void onRoomCreated(RoomData arg0) 
+	{
 		
 	}
 
-	public void onRoomDestroyed(RoomData arg0) {
+	public void onRoomDestroyed(RoomData arg0) 
+	{
 		
 	}
 
-	public void onUpdatePeersReceived(UpdateEvent event) {
+	public void onUpdatePeersReceived(UpdateEvent event) 
+	{
 		System.out.println("AAAAAA");
 		callBack.onGameUpdateReceived(new String(event.getUpdate()));
 	}
 
-	public void onUserJoinedLobby(LobbyData arg0, String arg1) {
+	public void onUserJoinedLobby(LobbyData arg0, String arg1) 
+	{
 		
 	}
 
-	public void onUserJoinedRoom(RoomData data, String username) {
+	public void onUserJoinedRoom(RoomData data, String username) 
+	{
 		callBack.onUserJoinedRoom(data.getId(), username);
 	}
 
-	public void onUserLeftLobby(LobbyData arg0, String arg1) {
+	public void onUserLeftLobby(LobbyData arg0, String arg1) 
+	{
 		
 	}
 
-	public void onUserLeftRoom(RoomData roomData, String userName) {
+	public void onUserLeftRoom(RoomData roomData, String userName) 
+	{
 		callBack.onUserLeftRoom(roomData.getId(), userName);
 	}
 
 	@Override
-	public void onGameStarted (String arg0, String arg1, String arg2) {
+	public void onGameStarted (String arg0, String arg1, String arg2) 
+	{
 		
 	}
 	
 	@Override
-	public void onGameStopped (String arg0, String arg1) {
+	public void onGameStopped (String arg0, String arg1) 
+	{
 		
 	}
 
 	@Override
-	public void onMoveCompleted (MoveEvent me) {
+	public void onMoveCompleted (MoveEvent me) 
+	{
 		
 	}
 
 	@Override
-	public void onPrivateChatReceived (String arg0, String arg1) {
+	public void onPrivateChatReceived (String arg0, String arg1) 
+	{
 		
 	}
 
 	@Override
-	public void onUserChangeRoomProperty (RoomData roomData, String userName, HashMap<String, Object> properties, HashMap<String, String> lockProperties) {
+	public void onUserChangeRoomProperty (RoomData roomData, String userName, HashMap<String, Object> properties, HashMap<String, String> lockProperties) 
+	{
 		int code = Integer.parseInt(properties.get("result").toString());
 		callBack.onResultUpdateReceived(userName, code);
 	}
 
 	@Override
-	public void onUserPaused (String arg0, boolean arg1, String arg2) {
+	public void onUserPaused (String arg0, boolean arg1, String arg2) 
+	{
 		
 	}
 
 	@Override
-	public void onUserResumed (String arg0, boolean arg1, String arg2) {
+	public void onUserResumed (String arg0, boolean arg1, String arg2) 
+	{
 		
 	}
 	

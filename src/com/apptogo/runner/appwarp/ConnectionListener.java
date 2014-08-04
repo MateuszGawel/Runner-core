@@ -9,14 +9,19 @@ public class ConnectionListener implements ConnectionRequestListener {
 
 	WarpController callBack;
 	
-	public ConnectionListener(WarpController callBack){
+	public ConnectionListener(WarpController callBack)
+	{
 		this.callBack = callBack;
 	}
 	
-	public void onConnectDone(ConnectEvent e) {
-		if(e.getResult()==WarpResponseResultCode.SUCCESS){
+	public void onConnectDone(ConnectEvent e) 
+	{
+		if(e.getResult()==WarpResponseResultCode.SUCCESS)
+		{
 			callBack.onConnectDone(true);
-		}else{
+		}
+		else
+		{
 			Logger.log(this, "nie uda³o siê po³¹czyæ bo: " + e.getResult());
 			callBack.onConnectDone(false);
 		}
