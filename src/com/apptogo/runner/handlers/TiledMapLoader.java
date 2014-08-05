@@ -4,13 +4,11 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import java.util.Iterator;
 
-import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -45,28 +43,34 @@ public class TiledMapLoader
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;
 	private World world;
-	private Array<Body> groundBodies = new Array<Body>();
-	private Array<Body> killingBodies = new Array<Body>();
+	private Array<Body> bodies = new Array<Body>();
+
 	private FixtureDef groundFixture;
-	private FixtureDef killingFixture;
+	private FixtureDef objectFixture;
+	private FixtureDef obstacleFixture;
+	
 	private GameWorld gameWorld;
 	
 	private TiledMap tiledMap;
 	MapProperties mapProperties;
 	private RayHandler rayHandler;
 	
-	public Vector2 loadMap(String mapPath){
+	public void loadMap(String mapPath)
+	{
+		groundFixture = Materials.groundBody;
+		objectFixture = Materials.objectBody;
+		obstacleFixture = Materials.obstacleBody;
+		
 		tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
-		groundFixture = Materials.groundBody;
-		killingFixture = Materials.killingBody;
-		//initLights();
-		createPhysics(tiledMap);
 		
-		return calculateMapSize();
+		//initLights();
+		
+		createPhysics(tiledMap);
 	}
 	
-	private Vector2 calculateMapSize(){
+	public Vector2 getMapSize()
+	{
 		mapProperties = tiledMap.getProperties();
 		
 		int mapWidth = mapProperties.get("width", Integer.class);
@@ -76,37 +80,21 @@ public class TiledMapLoader
 
 		int mapPixelWidth = mapWidth * tilePixelWidth;
 		int mapPixelHeight = mapHeight * tilePixelHeight;
-		Logger.log(this,  mapPixelWidth);
+
 		return new Vector2(mapPixelWidth, mapPixelHeight);
 	}
 	
 	private void initLights()
 	{
-		//enabling lights if enableLight parameter is set
-		if( "true".equals( (String)tiledMap.getProperties().get("enableLight") ) )
+		if( isPropertyTrue(tiledMap, "LightsEnabled") )
 		{
-			if( "true".equals( (String)tiledMap.getProperties().get("enableGammaCorrection") ) )
-			{
-				//RayHandler.setGammaCorrection(true);
-			}
-			
 			rayHandler = new RayHandler(world);		
-			
-			if( "true".equals( (String)tiledMap.getProperties().get("enableAmbientLight") ) )
-			{
-				String[] colors = ( (String)tiledMap.getProperties().get("ambientLightColor") ).split(",");
-				
-				rayHandler.setAmbientLight(new Color( Float.parseFloat(colors[0]), 
-													  Float.parseFloat(colors[1]),
-													  Float.parseFloat(colors[2]),
-													  Float.parseFloat(colors[3]) ));
-			}
 		}
 		else rayHandler = null;
 	}
 	
-	private void createPhysics(TiledMap map) {
-		
+	private void createPhysics(TiledMap map) 
+	{	
 		MapLayers layers = map.getLayers();
 		Iterator<MapLayer> layersIt = layers.iterator();
 		
@@ -114,89 +102,119 @@ public class TiledMapLoader
 		{
 			MapLayer layer = layersIt.next();
 			
-			if("true".equals((String)layer.getProperties().get("physicsEnabled")))
-			{
+			if( isPropertyTrue(layer, "PhysicsEnabled") )
+			{Logger.log(this, "MAMY FIZYKE");
 				MapObjects objects = layer.getObjects();
 				Iterator<MapObject> objectIt = objects.iterator();
 				
-				createGroundLayer(layer, objectIt);
-				createKillingLayer(layer, objectIt);
+				if( isPropertyTrue(layer, "GroundLayer") )
+				{
+					createGroundLayer(layer, objectIt);
+				}
+				else if( isPropertyTrue(layer, "ObjectsLayer") )
+				{
+					createObjectsLayer(layer, objectIt);
+				}
+				else if( isPropertyTrue(layer, "ObstaclesLayer") )
+				{
+					createObstaclesLayer(layer, objectIt);
+				}
+				
+				if( rayHandler != null )
+				{
+					//objectIt.remove();
+					//objectIt = objects.iterator(); - to i powyzsze zeby go "przewinac" na poczatek
+					//createLights(layerm objectIt); - tego na razie nie obslugujemy
+				}
 			}
 		}	
 	}
 	
-	private void createGroundLayer(MapLayer layer, Iterator<MapObject> objectIt){
-		if("true".equals( (String)layer.getProperties().get("terrain"))){
-			while(objectIt.hasNext()) 
+	private void createGroundLayer(MapLayer layer, Iterator<MapObject> objectIt)
+	{
+		while(objectIt.hasNext()) 
+		{
+			MapObject mapObject = objectIt.next();
+			if (mapObject instanceof TextureMapObject)
 			{
-				MapObject object = objectIt.next();
-				if (object instanceof TextureMapObject){
-					continue;
-				}
+				continue;
+			}
 
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.type = BodyDef.BodyType.StaticBody;
+			
+			groundFixture.shape = createShape(mapObject);
+			Body body = world.createBody(bodyDef);
+			body.createFixture(groundFixture).setUserData("nonkilling");
+			body.setUserData("nonkilling");
+			
+			bodies.add(body);
+		}
+	}
+	
+	private void createObjectsLayer(MapLayer layer, Iterator<MapObject> objectIt)
+	{
+		while(objectIt.hasNext()) 
+		{
+			MapObject object = objectIt.next();
+			if (object instanceof TextureMapObject)
+			{
+				continue;
+			}
+	
+			if( checkObjectType(object, "jakisObiekt") )
+			{
+				//stworzJakisObiekt(object);
+			}
+			//else if ( checkObjectType(object, "innyobiekt") ) { do sth... }
+			else
+			{
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.StaticBody;
 				
-				groundFixture.shape = createShape(object);
+				objectFixture.shape = createShape(object);
 				Body body = world.createBody(bodyDef);
-				body.createFixture(groundFixture).setUserData("ground");
-				body.setUserData("ground");
-				
-				groundBodies.add(body);
+				body.createFixture(objectFixture).setUserData("nonkilling");
+				body.setUserData("nonkilling");
+				bodies.add(body);
 			}
 		}
 	}
 	
-	private void createKillingLayer(MapLayer layer, Iterator<MapObject> objectIt){
-		if("true".equals( (String)layer.getProperties().get("killing"))){
-			while(objectIt.hasNext()) 
-			{
-				MapObject object = objectIt.next();
-				if (object instanceof TextureMapObject){
-					continue;
-				}
-		
-				if(!handleCustomObjects(object)){
-					BodyDef bodyDef = new BodyDef();
-					bodyDef.type = BodyDef.BodyType.StaticBody;
-					
-					killingFixture.shape = createShape(object);
-					Body body = world.createBody(bodyDef);
-					body.createFixture(killingFixture).setUserData("killing");
-					body.setUserData("killing");
-					killingBodies.add(body);
-				}
-			}
-		}
-	}
-	
-	private boolean handleCustomObjects(MapObject object){
-		if(object.getName() != null && object.getName().equals("barrel")){
-			Barrel barrel = new Barrel(object, world, gameWorld);
-			killingBodies.add(barrel.getBody());
-			return true;
-		}
-		return false;
-	}
-	
-	private void createLights(MapObject object){
-		if( object.getProperties().get("light") != null && object.getName().toString().equals("light") )
+	private void createObstaclesLayer(MapLayer layer, Iterator<MapObject> objectIt)
+	{
+		while(objectIt.hasNext()) 
 		{
-			if( rayHandler != null )
+			MapObject object = objectIt.next();
+			if (object instanceof TextureMapObject){
+				continue;
+			}		
+			
+			if( checkObjectType(object, "barrel") )
 			{
-				float x = ( (EllipseMapObject)object ).getEllipse().x / PPM;
-				float y = ( (EllipseMapObject)object ).getEllipse().y / PPM;
-				int rays = Integer.parseInt( (String)object.getProperties().get("lightRays") );
-				float distance = Float.parseFloat( (String)object.getProperties().get("lightDistance") );
+				createBarrel(object);
+			}
+			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
+			else
+			{
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.type = BodyDef.BodyType.StaticBody;
 				
-				Color lightColor = object.getColor();
-				lightColor.a = Float.parseFloat( (String)object.getProperties().get("opacity") );
-				
-				new PointLight(rayHandler, rays, lightColor, distance, x, y);
+				obstacleFixture.shape = createShape(object);
+				Body body = world.createBody(bodyDef);
+				body.createFixture(obstacleFixture).setUserData("killing");
+				body.setUserData("killing");
+				bodies.add(body);
 			}
 		}
 	}
 	
+	private void createBarrel(MapObject object)
+	{
+		Barrel barrel = new Barrel(object, world, gameWorld);
+		bodies.add(barrel.getBody());
+	}
+			
 	private Shape createShape(MapObject object)
 	{
 		Shape shape = null;
@@ -226,7 +244,6 @@ public class TiledMapLoader
 		                 0.0f);
 		return polygon;
 	}
-	
 	private Shape getShape(PolygonMapObject obj)
 	{
 		PolygonShape polygon = new PolygonShape();
@@ -241,7 +258,6 @@ public class TiledMapLoader
 		polygon.set(worldVertices);
 		return polygon;
 	}
-	
 	private Shape getShape(PolylineMapObject obj)
 	{
 		float[] vertices = obj.getPolyline().getTransformedVertices();
@@ -257,7 +273,6 @@ public class TiledMapLoader
 		chain.createChain(worldVertices);
 		return chain;
 	}
-	
 	private Shape getShape(EllipseMapObject obj)
 	{
 		Ellipse ellipse = obj.getEllipse();
@@ -271,7 +286,29 @@ public class TiledMapLoader
 
 		return ellipseShape;
 	}
-
+	
+	private boolean isPropertyTrue(TiledMap map, String propertyKey)
+	{
+		if( "true".equals((String)map.getProperties().get( propertyKey )) ) return true;
+		return false;
+	}
+	private boolean isPropertyTrue(MapLayer layer, String propertyKey)
+	{
+		if( "true".equals((String)layer.getProperties().get( propertyKey )) ) return true;
+		return false;
+	}
+	private boolean isPropertyTrue(MapObject object, String propertyKey)
+	{
+		if( "true".equals((String)object.getProperties().get( propertyKey )) ) return true;
+		return false;
+	}
+	
+	private boolean checkObjectType(MapObject object, String typeName)
+	{
+		if( typeName.equals((String)object.getProperties().get( "type" )) ) return true;
+		return false;
+	}
+	
 	public void setWorld(World world){ this.world = world; }
 	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
 	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }

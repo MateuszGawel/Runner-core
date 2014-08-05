@@ -28,28 +28,14 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class GameScreenMulti extends BaseScreen implements WarpListener{
-	
-	private GameWorld world;
-	private GameWorldRenderer worldRenderer;
-	
-	private Level level;
-	
-	private Button jumpButton;
-	private Button slideButton;
-	private Button slowButton;
-	private Button abilityButton;
-	
-	public GameScreenMulti(Runner runner){
+public class GameScreenMulti extends GameScreen implements WarpListener{
+		
+	public GameScreenMulti(Runner runner)
+	{
 		super(runner);	
 		//WarpController.getInstance().setListener(this);
 	}
-	
-	public void setLevel(Level level)
-	{
-		this.level = level;
-	}
-	
+		
 	public void prepare() 
 	{	
 		world = new GameWorld( level.mapPath, player );
@@ -59,71 +45,7 @@ public class GameScreenMulti extends BaseScreen implements WarpListener{
 		
 		NotificationManager.getInstance().screamMyName();
 	}
-		
-	private void createGui()
-	{
-		Skin guiskin = ResourcesManager.getInstance().getGuiSkin();
-		Type type;
-		
-		jumpButton = world.character.getJumpButton();
-		slowButton = world.character.getSlowButton();
-		slideButton = world.character.getSlideButton();
-		abilityButton = world.character.getAbilityButton(CharacterAbilityType.BOMB);
-		
-		guiStage.addActor(abilityButton);
-		guiStage.addActor(slideButton);
-		guiStage.addActor(jumpButton);
-		guiStage.addActor(slowButton);
-		
-	}
-	
-	public void step() 
-	{
-		handleInput();
-		world.update(delta);
-		worldRenderer.render();
-		Input.update();
-	}
-	
-	@Override
-	public void handleInput() {
-		world.handleInput();
-		
-		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
-		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
-		}
-	}
-	
-	@Override
-	public void resize(int width, int height) {
-		guiStage.getViewport().update(width, height, true);
-		world.backgroundStage.getViewport().update(width, height, true);
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-	}
-
+					
 	@Override
 	public ScreenType getSceneType() {
 		return ScreenType.SCREEN_GAME_MULTI;

@@ -24,11 +24,13 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class GameWorld {
@@ -86,7 +88,7 @@ public class GameWorld {
 		backgroundStage.addActor(background);
 		createWorld(mapPath, player.getCurrentCharacter());
 		
-		//fpsLogger = new FPSLogger();
+		fpsLogger = new FPSLogger();
 	}
 	
 	private void createWorld(String mapPath, CharacterType characterType)
@@ -96,10 +98,23 @@ public class GameWorld {
 		
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
-		mapSize = TiledMapLoader.getInstance().loadMap(mapPath);
+		TiledMapLoader.getInstance().loadMap(mapPath);
+		
+		mapSize = TiledMapLoader.getInstance().getMapSize();
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
+	}
+	
+	public void destroyWorld()
+	{
+		Array<Body> bodies = new Array<Body>();
+		world.getBodies(bodies);
+		
+		for(Body body: bodies)
+		{
+			world.destroyBody(body);
+		}
 	}
 	
 	public void handleInput()
@@ -115,7 +130,7 @@ public class GameWorld {
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
-        //fpsLogger.log();
+        fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }

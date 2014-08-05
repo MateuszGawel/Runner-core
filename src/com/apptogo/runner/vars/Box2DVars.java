@@ -8,7 +8,7 @@ public class Box2DVars {
 	
 	public static final short BIT_PLAYER = 2;
 	public static final short BIT_ENEMY = 4;
-	public static final short BIT_GROUND = 8;
+	public static final short BIT_NONKILLING = 8;
 	public static final short BIT_KILLING = 16;
 	public static final short BIT_WALLSENSOR = 32;
 	public static final short BIT_FOOTSENSOR = 64;

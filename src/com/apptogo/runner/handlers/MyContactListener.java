@@ -32,13 +32,13 @@ public class MyContactListener implements ContactListener{
 			Logger.log(this, "Dotyka killing");
 		}
 		
-		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("footSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
+				|| ("footSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
 			world.character.incrementFootSensor();
 			world.character.land();
 		}
-		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("wallSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
+				|| ("wallSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
 			world.character.incrementWallSensor();
 		}
 	}
@@ -48,12 +48,12 @@ public class MyContactListener implements ContactListener{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
-		if(("footSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("footSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("footSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
+				|| ("footSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
 			world.character.decrementFootSensor();
 		}
-		if(("wallSensor".equals(fa.getUserData()) && "ground".equals(fb.getUserData())) 
-				|| ("wallSensor".equals(fb.getUserData()) && "ground".equals(fa.getUserData()))){
+		if(("wallSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
+				|| ("wallSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
 			world.character.decrementWallSensor();
 		}
 		
