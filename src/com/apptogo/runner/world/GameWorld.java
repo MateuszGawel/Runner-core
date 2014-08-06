@@ -33,8 +33,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public class GameWorld {
+public class GameWorld 
+{
 
+	public enum GameWorldType
+	{
+		WILDWEST,
+		FOSTER,
+		SPACE
+	}
+	
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;

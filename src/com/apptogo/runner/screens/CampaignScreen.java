@@ -1,27 +1,18 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.LevelManager;
 import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.levels.LevelManager;
+import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class CampaignScreen extends BaseScreen{	
 		
@@ -58,14 +49,16 @@ public class CampaignScreen extends BaseScreen{
         addToScreen(backButton);
         addToScreen(label);
         
+        Array<LevelWorld> worlds = levelManager.getMultiplayerLevelWorlds();
         
-        Array<Level> levels = levelManager.getLevels();
         float buttonXStart = ((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2f) - 425f,  buttonX = buttonXStart;
         float buttonYStart = ((runner.SCREEN_HEIGHT/Box2DVars.PPM) / 2f) + 80f, buttonY = buttonYStart;
         float buttonSize = 140f;
         float buttonMargin = 20f;
         float maxInRow = 4f;
         
+        for(int i=0; i<worlds.size; i++) Logger.log(this, worlds.get(i).name + " levelsCount = " + String.valueOf( worlds.get(i).levels.size ) );
+        /*
         for(int i = 0; i < levels.size; i++)
         {
         	final Level level = levels.get(i);
@@ -91,7 +84,7 @@ public class CampaignScreen extends BaseScreen{
 	        	buttonY -= (buttonSize + buttonMargin);
 	        }
 	        else buttonX += buttonSize + buttonMargin;
-        }
+        }*/
 	}
 	
 	public void step()

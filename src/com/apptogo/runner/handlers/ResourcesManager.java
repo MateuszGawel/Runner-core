@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
-import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;

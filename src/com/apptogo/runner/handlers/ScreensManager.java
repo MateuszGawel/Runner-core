@@ -17,7 +17,6 @@ import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.UpgradeScreen;
 import com.apptogo.runner.screens.WaitingRoom;
-import com.apptogo.runner.vars.Box2DVars.GameCharacter;
 
 public class ScreensManager {
 	
