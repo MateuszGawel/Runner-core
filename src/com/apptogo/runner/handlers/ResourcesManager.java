@@ -2,9 +2,11 @@ package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
 
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
+import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 
 public class ResourcesManager {
 
@@ -101,11 +104,11 @@ public class ResourcesManager {
 	}
 	//---
 
-	ArrayList<ScreenMeta> screenMetaArray;
+	Array<ScreenMeta> screenMetaArray;
 		
 	public ResourcesManager() 
 	{
-		screenMetaArray = new ArrayList<ScreenMeta>();
+		screenMetaArray = new Array<ScreenMeta>();
 		
 		//ADDING SCREENS:
 		//-----------------------------------------------------------------------------
@@ -124,6 +127,7 @@ public class ResourcesManager {
 		screenMetaArray.add( mainMenuMeta );
 		
 		//|3. GAME SCREEN SINGLE
+		//generalnie to i tak nie do konca potrzebne bo potem polowe z tego wywali funkcja adjust...() ale zeby cos bylo na poczatku to przypisujemy
 		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);
 		
 		singleGameMeta.setTexturesDirectory("gfx/game/levels/");
@@ -141,19 +145,7 @@ public class ResourcesManager {
 		screenMetaArray.add( singleGameMeta );
 		
 		//|4. GAME SCREEN MULTI
-		ScreenMeta multiplayerGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_MULTI);
-		
-		multiplayerGameMeta.setTexturesDirectory("gfx/game/levels/");
-		multiplayerGameMeta.setTexturesExtension(".png");
-		multiplayerGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
-				
-		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
-		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
-		multiplayerGameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
-		
-		multiplayerGameMeta.addMusic("mfx/game/gameMusic.ogg");
-		
-		multiplayerGameMeta.addSound("mfx/game/gameClick.ogg");
+		ScreenMeta multiplayerGameMeta = singleGameMeta; // - potrzeba rozroznienia ale poczatkowo ladujemy tu wszystko to co do single
 		
 		screenMetaArray.add( multiplayerGameMeta );
 		
@@ -205,6 +197,48 @@ public class ResourcesManager {
 		findRoomMeta.addTexture("ui/menuBackgrounds/waitingRoomScreenBackground.png");
 		
 		screenMetaArray.add( waitingRoomMeta );
+	}
+	
+	public void adjustCampaignResources(GameWorldType worldType, Array<CharacterType> characterTypes)
+	{Logger.log(this, "FITUJEMY");
+		for(int i = 0; i < screenMetaArray.size; i++)
+		{		
+			if( screenMetaArray.get(i).screenType == ScreenType.SCREEN_GAME_SINGLE )
+			{
+				screenMetaArray.get(i).textures = new ArrayList<String>();
+				screenMetaArray.get(i).setTexturesDirectory("gfx/game/levels/");
+				screenMetaArray.get(i).setTexturesExtension(".png");
+				
+				if( worldType == GameWorldType.WILDWEST )
+				{
+					screenMetaArray.get(i).addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
+				}
+				else //if( worldType == GameWorldType.FOREST )
+				{
+					screenMetaArray.get(i).addTextures( new String[]{"barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
+				}
+				
+				if( characterTypes != null)
+				{
+					screenMetaArray.get(i).textureAtlases = new ArrayList<String>();
+					
+					screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bomb.pack");
+					
+					if( characterTypes.contains(CharacterType.BANDIT, true) )
+					{
+						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bandit.pack");
+					}
+					
+					if( characterTypes.contains(CharacterType.BANDIT, true) )
+					{
+						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/archer.pack");
+					}
+				}
+				
+				break;
+			}
+			else continue;
+		}
 	}
 	
 	//--------- LOADING RESOURCES
@@ -345,7 +379,7 @@ public class ResourcesManager {
 	{
 		int index = -1;
 		
-		for(int i=0; i<screenMetaArray.size(); i++)
+		for(int i=0; i<screenMetaArray.size; i++)
 		{
 			if( screenMetaArray.get(i).screenType == screenType )
 			{

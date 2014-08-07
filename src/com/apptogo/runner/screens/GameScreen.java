@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 
 import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -12,6 +13,7 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
+import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.Gdx;
@@ -33,15 +35,32 @@ public abstract class GameScreen extends BaseScreen{
 	
 	public GameScreen(Runner runner)
 	{
-		super(runner);
+		super(runner);		
 	}
-	
+		
 	public void setLevel(Level level)
 	{
 		this.level = level;
 	}
 	
-	public abstract void prepare(); //te funkcje beda prawdopodobnie b podobne ale mimo wszystko warto je rozdzielic
+	public void prepare()
+	{Logger.log(this, "TYPE: "+level.worldType.toString());
+		if( level.worldType == GameWorldType.WILDWEST ) 
+		{
+			world = new WildWestWorld( level.mapPath, player );
+		}
+		else if( level.worldType == GameWorldType.FOREST )
+		{
+			Logger.log(this, "MAMY FORERSTA!");
+			world = new ForestWorld( level.mapPath, player );
+		}
+		//else if( level.worldType == GameWorldType.SPACE )
+		//{
+		//	world = new ForestWorld( level.mapPath, player );
+		//}
+		
+		worldRenderer = new GameWorldRenderer(world);
+	}
 	
 	protected void createGui()
 	{

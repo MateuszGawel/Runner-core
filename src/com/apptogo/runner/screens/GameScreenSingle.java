@@ -28,10 +28,7 @@ public class GameScreenSingle extends GameScreen{
 		
 	public void prepare() 
 	{	
-		//world = new WildWestWorld( level.mapPath, player );
-		world = new ForestWorld( level.mapPath, player );
-		
-		worldRenderer = new GameWorldRenderer(world);
+		super.prepare();
 		
 		createGui();
 	}

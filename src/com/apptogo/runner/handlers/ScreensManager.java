@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
@@ -17,6 +18,7 @@ import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.UpgradeScreen;
 import com.apptogo.runner.screens.WaitingRoom;
+import com.badlogic.gdx.utils.Array;
 
 public class ScreensManager {
 	
@@ -64,13 +66,17 @@ public class ScreensManager {
 		loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
 	}
-	/** @param screenType albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala */
-	public void createLoadingScreen(Level level, ScreenType screenType) //przeladowanie dla gameScreen!
+	/** @param screenToLoad albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala 
+	 * 	@param level obiekt typu Level z informacjami o levelu do zaladowania
+	 * 	@param characterTypes tablica WSZYSTKICH typow playerow wystepujacych na planszy - jesli null to ResourceManager zaladuje atlasy wszystkich dostepnych*/
+	public void createLoadingScreen(ScreenType screenToLoad, Level level, Array<CharacterType> characterTypes) //przeladowanie dla gameScreen!
 	{
-		if(screenType != ScreenType.SCREEN_GAME_SINGLE && screenType != ScreenType.SCREEN_GAME_MULTI) screenType = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
+		if(screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI) screenToLoad = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
+		
+		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE) ResourcesManager.getInstance().adjustCampaignResources(level.worldType, characterTypes);
 		
 		this.levelToLoad = level;
-		createLoadingScreen(screenType);
+		createLoadingScreen(screenToLoad);
 	}
 	
 	private void addNewScreen(ScreenType screenType)

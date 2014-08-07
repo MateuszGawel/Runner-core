@@ -39,7 +39,7 @@ public class GameWorld
 	public enum GameWorldType
 	{
 		WILDWEST,
-		FOSTER,
+		FOREST,
 		SPACE
 	}
 	

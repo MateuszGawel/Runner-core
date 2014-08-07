@@ -33,6 +33,7 @@ public class LoadingScreen extends BaseScreen{
 		resourcesManager = ResourcesManager.getInstance();
 		
         this.screenToLoad = screenToLoad;
+        
         resourcesManager.loadResources(screenToLoad);
 	}
 	

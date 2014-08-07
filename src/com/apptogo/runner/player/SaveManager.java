@@ -23,7 +23,7 @@ public class SaveManager
 	
 	private final String DEFAULT_NAME = "";
 	private final String DEFAULT_PASSWORD = "";
-	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0";
+	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0map7.0";
 	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
 	
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
@@ -40,7 +40,7 @@ public class SaveManager
 		
 		String playerName = save.getString("PLAYER_NAME", "");
 		String playerPassword = save.getString("PLAYER_PASSWORD", "");
-		String unlockedLevels = save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
+		String unlockedLevels = DEFAULT_UNLOCKED_LEVELS;//save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
 		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
 		
 		player.setName(playerName);

@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class WaitingRoom extends BaseScreen implements WarpListener{	
 		
@@ -42,7 +43,14 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 ScreensManager.getInstance().createLoadingScreen( new Level("", "gfx/game/levels/map.tmx", ""), ScreenType.SCREEN_GAME_MULTI );
+            	Array<CharacterType> characterTypes = new Array<CharacterType>();
+            	//for(int i=0; i<players.size; i++)
+            	//{
+            	//	Player player = player.get(i);
+            		characterTypes.add(player.getCurrentCharacter());            	
+                //} --obslugujemy wszystkich podlaczonych
+            		
+            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", ""), characterTypes );
             }
          });
 		

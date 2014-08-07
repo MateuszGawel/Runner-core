@@ -71,9 +71,9 @@ public class LevelManager {
 			{
 				levelWorldType = GameWorldType.WILDWEST;
 			}
-			else if( levelWorldName.toUpperCase().equals("FOSTER") )
+			else if( levelWorldName.toUpperCase().equals("FOREST") )
 			{
-				levelWorldType = GameWorldType.FOSTER;
+				levelWorldType = GameWorldType.FOREST;
 			}
 			else //if( levelWorldName.toUpperCase().equals("SPACE") )
 			{

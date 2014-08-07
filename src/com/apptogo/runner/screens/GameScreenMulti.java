@@ -37,12 +37,10 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 	}
 		
 	public void prepare() 
-	{	
-		world = new GameWorld( level.mapPath, player );
-		worldRenderer = new GameWorldRenderer(world);
+	{			
+		super.prepare();
 		
 		createGui();
-		
 		NotificationManager.getInstance().screamMyName();
 	}
 					
