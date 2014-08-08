@@ -57,11 +57,13 @@ public abstract class BaseScreen implements Screen{
 		this.settingsManager = SettingsManager.getInstance();
 		this.languageManager = LanguageManager.getInstance();
 		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
-		
-		this.player = null;
+	}
+	
+	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
+	protected void loadPlayer()
+	{
 		this.player = SaveManager.getInstance().loadPlayer();
-
-		NotificationManager.prepareManager( player.getName() );
+		Logger.log(this, "ZALADOWANY PLAYER " + player.getCurrentCharacter().toString() );
 	}
 	
 	@Override
@@ -132,5 +134,13 @@ public abstract class BaseScreen implements Screen{
 	protected void addToScreen(Actor actor)
 	{
 		this.stage.addActor(actor);
+	}
+	
+	@Override
+	public void dispose() 
+	{
+		//skin.dispose();
+		stage.clear();
+		stage.dispose();
 	}
 }

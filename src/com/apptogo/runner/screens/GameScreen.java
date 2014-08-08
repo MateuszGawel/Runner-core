@@ -36,6 +36,7 @@ public abstract class GameScreen extends BaseScreen{
 	public GameScreen(Runner runner)
 	{
 		super(runner);		
+		loadPlayer();
 	}
 		
 	public void setLevel(Level level)
@@ -46,7 +47,7 @@ public abstract class GameScreen extends BaseScreen{
 	public void prepare()
 	{Logger.log(this, "TYPE: "+level.worldType.toString());
 		if( level.worldType == GameWorldType.WILDWEST ) 
-		{
+		{Logger.log(this, "A TU DOSTAJE: " + player.getCurrentCharacter().toString() );
 			world = new WildWestWorld( level.mapPath, player );
 		}
 		else if( level.worldType == GameWorldType.FOREST )

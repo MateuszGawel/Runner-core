@@ -38,7 +38,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		
 	public void prepare() 
 	{			
-		super.prepare();
+		super.prepare();	
 		
 		createGui();
 		NotificationManager.getInstance().screamMyName();

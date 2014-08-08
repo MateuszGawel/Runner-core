@@ -36,6 +36,7 @@ public class CampaignScreen extends BaseScreen
 	public CampaignScreen(Runner runner)
 	{
 		super(runner);	
+		loadPlayer();
 		levelManager = LevelManager.getInstance();
 	}
 	
@@ -238,13 +239,13 @@ public class CampaignScreen extends BaseScreen
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		super.dispose();
 		
 	}
 
 	@Override
 	public ScreenType getSceneType() {
-		return ScreenType.SCREEN_UPGRADE;
+		return ScreenType.SCREEN_CAMPAIGN;
 	}
 
 

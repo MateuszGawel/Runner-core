@@ -338,4 +338,14 @@ public class Widget
 	{
 		this.interpolation = interpolation;
 	}
+	
+	public void dispose()
+	{
+		this.widget = null;
+		this.blackOutButton.clear();
+		this.win.clear();
+		this.group.clear();
+		this.groupWithBlackOutButton.clear();
+		//this.skin.dispose();
+	}
 }

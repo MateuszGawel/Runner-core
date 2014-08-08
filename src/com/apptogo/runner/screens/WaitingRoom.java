@@ -29,7 +29,8 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	
 	public WaitingRoom(Runner runner)
 	{
-		super(runner);	
+		super(runner);		
+		loadPlayer();
 		WarpController.getInstance().startApp( player.getName() );
 		WarpController.getInstance().setListener(this);
 	}

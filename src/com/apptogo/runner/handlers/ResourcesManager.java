@@ -104,7 +104,9 @@ public class ResourcesManager {
 	}
 	//---
 
-	Array<ScreenMeta> screenMetaArray;
+	private Array<ScreenMeta> screenMetaArray;
+	private Skin uiskin;
+	private Skin guiskin;
 		
 	public ResourcesManager() 
 	{
@@ -197,10 +199,17 @@ public class ResourcesManager {
 		findRoomMeta.addTexture("ui/menuBackgrounds/waitingRoomScreenBackground.png");
 		
 		screenMetaArray.add( waitingRoomMeta );
+		
+		//|... INITIALIZING SKINS
+		this.uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+	    this.guiskin = new Skin(Gdx.files.internal("gui/guiskin.json"));
 	}
 	
 	public void adjustCampaignResources(GameWorldType worldType, Array<CharacterType> characterTypes)
-	{Logger.log(this, "FITUJEMY");
+	{
+		Logger.log(this, "FITUJEMY");
+		for(int i=0; i<characterTypes.size; i++) Logger.log(this, "CH #" + String.valueOf(i) + " "  + characterTypes.get(i).toString());
+		
 		for(int i = 0; i < screenMetaArray.size; i++)
 		{		
 			if( screenMetaArray.get(i).screenType == ScreenType.SCREEN_GAME_SINGLE )
@@ -217,6 +226,8 @@ public class ResourcesManager {
 				{
 					screenMetaArray.get(i).addTextures( new String[]{"barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
 				}
+				//else - SPACE
+				//{}
 				
 				if( characterTypes != null)
 				{
@@ -229,7 +240,7 @@ public class ResourcesManager {
 						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bandit.pack");
 					}
 					
-					if( characterTypes.contains(CharacterType.BANDIT, true) )
+					if( characterTypes.contains(CharacterType.ARCHER, true) )
 					{
 						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/archer.pack");
 					}
@@ -277,7 +288,7 @@ public class ResourcesManager {
 		loadTextureAtlases(screenType);
 	}
 	public void loadTextureAtlases(ScreenType screenType)
-	{Logger.log(this,  "LOADED");
+	{
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
@@ -327,11 +338,15 @@ public class ResourcesManager {
 		unloadAllResources(screenType);
 	}
 	public void unloadAllResources(ScreenType screenType)
-	{
+	{		
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
+		Logger.log(this, "UNLOADUJE! screen = " + screenType.toString() + " | " + manager.getDiagnostics() );
+		
 		manager.clear();
+		
+		Logger.log(this, "AFTER CLEAR | " + manager.getDiagnostics() );
 		//manager.dispose();
 	}
 	
@@ -393,11 +408,11 @@ public class ResourcesManager {
 	
 	public Skin getUiSkin()
 	{
-		return new Skin(Gdx.files.internal("ui/uiskin.json"));
+		return this.uiskin;//new Skin(Gdx.files.internal("ui/uiskin.json"));
 	}
 	
 	public Skin getGuiSkin()
 	{
-		return new Skin(Gdx.files.internal("gui/guiskin.json"));
+		return this.guiskin;//new Skin(Gdx.files.internal("gui/guiskin.json"));
 	}
 }

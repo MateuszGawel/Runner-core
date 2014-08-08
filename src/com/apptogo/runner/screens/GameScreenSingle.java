@@ -28,7 +28,7 @@ public class GameScreenSingle extends GameScreen{
 		
 	public void prepare() 
 	{	
-		super.prepare();
+		super.prepare();	
 		
 		createGui();
 	}

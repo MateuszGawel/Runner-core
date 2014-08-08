@@ -1,6 +1,8 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
@@ -11,6 +13,8 @@ import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class MainMenuScreen extends BaseScreen{	
 	
@@ -40,13 +45,15 @@ public class MainMenuScreen extends BaseScreen{
 	private ClickListener languageChangedListener = null;
 	private String languageToChange;
 	
-	public MainMenuScreen(Runner runner){
+	public MainMenuScreen(Runner runner)
+	{
 		super(runner);	
+		loadPlayer();
 	}
 	
 	@Override
 	public void prepare() 
-	{		
+	{
 		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
 				
 		languageChangedListener = new ClickListener(){
@@ -91,7 +98,7 @@ public class MainMenuScreen extends BaseScreen{
 		
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
-		
+        
         changeLanguageDialog = new DialogWidget("Are you sure?", null, languageChangedListener);
         InfoWidget i = new InfoWidget("cokolwiek");
         soundButton.addListener(i.getToggleListener());
@@ -206,11 +213,14 @@ public class MainMenuScreen extends BaseScreen{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() 
+	{
+		super.dispose();
+		widget.dispose(); widget = null;
+	    changeLanguageDialog.dispose(); changeLanguageDialog = null;
+	    playerNameWidget.dispose(); playerNameWidget = null;
 	}
 
 	@Override

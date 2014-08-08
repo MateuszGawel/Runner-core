@@ -29,10 +29,8 @@ public class ScreensManager {
 	public static void prepareManager(Runner runner)
 	{ 
 		getInstance().runner = runner; 
-		getInstance().screens = new ArrayList<BaseScreen>();
 	}
 
-	
 	public enum ScreenType
 	{
 		SCREEN_SPLASH,
@@ -48,8 +46,6 @@ public class ScreensManager {
 		SCREEN_WAITING_ROOM
 	}
 		
-	private ArrayList<BaseScreen> screens;
-	private BaseScreen loadingScreen; //to niestety jest wyjatek i trzeba go obrobic osobno
 	private BaseScreen currentScreen;
 	private ScreenType currentScreenType;
 	
@@ -57,15 +53,16 @@ public class ScreensManager {
 		
 	public void createScreen(ScreenType screenType)
 	{
-		int index = getScreenIndex(screenType);
-		setScreen( screens.get(index) );
+		BaseScreen screen = getScreen(screenType);
+		setScreen( screen );
 	}
 	
 	public void createLoadingScreen(ScreenType screenToLoad)
 	{
-		loadingScreen = new LoadingScreen(runner, screenToLoad);
+		BaseScreen loadingScreen = new LoadingScreen(runner, screenToLoad);
 		setScreen(loadingScreen);
 	}
+	
 	/** @param screenToLoad albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala 
 	 * 	@param level obiekt typu Level z informacjami o levelu do zaladowania
 	 * 	@param characterTypes tablica WSZYSTKICH typow playerow wystepujacych na planszy - jesli null to ResourceManager zaladuje atlasy wszystkich dostepnych*/
@@ -73,13 +70,17 @@ public class ScreensManager {
 	{
 		if(screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI) screenToLoad = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
 		
-		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE) ResourcesManager.getInstance().adjustCampaignResources(level.worldType, characterTypes);
+		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE) 
+		{
+			Logger.log( this, "ADJUSTUJE" );
+			ResourcesManager.getInstance().adjustCampaignResources(level.worldType, characterTypes);
+		}
 		
 		this.levelToLoad = level;
 		createLoadingScreen(screenToLoad);
 	}
 	
-	private void addNewScreen(ScreenType screenType)
+	private BaseScreen getScreen(ScreenType screenType)
 	{
 		BaseScreen screen;
 		
@@ -106,40 +107,17 @@ public class ScreensManager {
 		else
 			screen = null;
 		
-		if(screen != null)
-			screens.add(screen);
-	}
-	private int getScreenIndex(ScreenType screenType)
-	{
-		//ta funkcja jest zasadniczo nadmiarowa ale moze bedziemy chcieli miec dostep do scen w danym stanie
-		int index = -1;
-		
-		for(int i=0; i<screens.size(); i++)
-		{
-			if( screens.get(i).getSceneType() == screenType )
-			{
-				index = i;
-				break;
-			}
-		}
-		
-		if( index == -1 )
-		{
-			addNewScreen(screenType);
-			index = screens.size() - 1;
-		}
-		
-		return index;
+		return screen;
 	}
 	
 	public void setScreen(BaseScreen screen)
 	{
-		//--brzydkie czyszczenie DO ZMIANY--//
 		ScreenType previousScreenType = null;
+		
 		if( currentScreenType != null && currentScreenType != ScreenType.SCREEN_SPLASH )
 			previousScreenType = currentScreenType;
-		//----------------------------------//
 		
+		if( currentScreen != null ) currentScreen.dispose();
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	
@@ -148,10 +126,10 @@ public class ScreensManager {
 		
 		runner.setScreen(screen);
 		
-		//--brzydkie czyszczenie DO ZMIANY--//
-		if( previousScreenType != null && previousScreenType != ScreenType.SCREEN_SPLASH )
+		if( previousScreenType != null ) Logger.log(this, "PREVIOUS: " + previousScreenType.toString());
+		
+		if( previousScreenType != null )
 			ResourcesManager.getInstance().unloadAllResources( previousScreenType );
-		//----------------------------------//
 	}
 	
     public ScreenType getCurrentScreenType(){ return currentScreenType; }

@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
@@ -26,7 +27,10 @@ public class SplashScreen extends BaseScreen{
 	
 	public SplashScreen(Runner runner)
 	{
-		super(runner);	
+		super(runner);
+		
+		loadPlayer();
+		NotificationManager.prepareManager( player.getName() );
 	}
 	
 	@Override
@@ -84,9 +88,9 @@ public class SplashScreen extends BaseScreen{
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() 
+	{
+		super.dispose();	
 	}
 
 	@Override
