@@ -240,11 +240,11 @@ public class CampaignScreen extends BaseScreen
 	@Override
 	public void dispose() {
 		super.dispose();
-		
 	}
 
 	@Override
-	public ScreenType getSceneType() {
+	public ScreenType getSceneType() 
+	{
 		return ScreenType.SCREEN_CAMPAIGN;
 	}
 

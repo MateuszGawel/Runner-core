@@ -31,6 +31,7 @@ public abstract class BaseScreen implements Screen{
 	protected LanguageManager languageManager;
 	protected SettingsManager settingsManager;
 	protected Image background;
+	protected Texture backgroundTexture;
 	
 	protected Stage stage;
 	protected Viewport viewport;
@@ -126,7 +127,8 @@ public abstract class BaseScreen implements Screen{
 	
 	protected void setBackground(String path)
 	{
-		background = new Image( new Texture( Gdx.files.internal(path) ) );
+		backgroundTexture = new Texture( Gdx.files.internal(path) );
+		background = new Image( backgroundTexture );
 		background.setPosition(0 - (runner.SCREEN_WIDTH/2.0f), 0 - (runner.SCREEN_HEIGHT/2.0f));
 		stage.addActor( background );
 	}
@@ -140,6 +142,7 @@ public abstract class BaseScreen implements Screen{
 	public void dispose() 
 	{
 		//skin.dispose();
+		if(backgroundTexture != null) backgroundTexture.dispose();
 		stage.clear();
 		stage.dispose();
 	}

@@ -32,10 +32,11 @@ public class MainMenuScreen extends BaseScreen{
 	
 	Button soundButton;
 	Button settingsButton;
+	Button joinRandomRoomButton;
 	
 	private TextButton campaignButton;
 	private TextButton multiplayerButton;
-	Button joinRandomRoomButton;
+	
 	private Label label;
 	private Widget widget;
 	private Widget playerNameWidget;
@@ -218,9 +219,9 @@ public class MainMenuScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();
-		widget.dispose(); widget = null;
-	    changeLanguageDialog.dispose(); changeLanguageDialog = null;
-	    playerNameWidget.dispose(); playerNameWidget = null;
+		widget.dispose();
+	    changeLanguageDialog.dispose();
+	    playerNameWidget.dispose();
 	}
 
 	@Override
