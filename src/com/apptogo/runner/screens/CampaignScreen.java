@@ -142,7 +142,7 @@ public class CampaignScreen extends BaseScreen
         	            	Array<CharacterType> characterTypes = new Array<CharacterType>();
         	            	characterTypes.add(player.getCurrentCharacter());
         	            	
-        	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, characterTypes );
+        	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, player, null );
         	            }
         	         });
             	}

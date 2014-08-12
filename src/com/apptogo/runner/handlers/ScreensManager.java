@@ -1,14 +1,14 @@
  package com.apptogo.runner.handlers;
 
-import java.util.ArrayList;
-
 import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CampaignScreen;
 import com.apptogo.runner.screens.CreateRoomScreen;
 import com.apptogo.runner.screens.FindRoomScreen;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.screens.GameScreenMulti;
 import com.apptogo.runner.screens.GameScreenSingle;
 //import com.apptogo.runner.screens.LoadingMenuScreen;
@@ -50,6 +50,7 @@ public class ScreensManager {
 	private ScreenType currentScreenType;
 	
 	private Level levelToLoad;
+	private Array<Player> enemies;
 		
 	public void createScreen(ScreenType screenType)
 	{
@@ -66,17 +67,30 @@ public class ScreensManager {
 	/** @param screenToLoad albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala 
 	 * 	@param level obiekt typu Level z informacjami o levelu do zaladowania
 	 * 	@param characterTypes tablica WSZYSTKICH typow playerow wystepujacych na planszy - jesli null to ResourceManager zaladuje atlasy wszystkich dostepnych*/
-	public void createLoadingScreen(ScreenType screenToLoad, Level level, Array<CharacterType> characterTypes) //przeladowanie dla gameScreen!
+	public void createLoadingScreen(ScreenType screenToLoad, Level level, Player player, Array<Player> enemies) //przeladowanie dla gameScreen!
 	{
 		if(screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI) screenToLoad = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
 		
 		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE) 
 		{
+			Array<CharacterType> characterTypes = new Array<CharacterType>();
+			
+			characterTypes.add( player.getCurrentCharacter() );
+			
+			if( enemies != null)
+			{
+				for(int i = 0; i < enemies.size; i++) 
+				{
+					characterTypes.add( enemies.get(i).getCurrentCharacter() );
+				}
+			}
+			
 			Logger.log( this, "ADJUSTUJE" );
 			ResourcesManager.getInstance().adjustCampaignResources(level.worldType, characterTypes);
 		}
 		
 		this.levelToLoad = level;
+		this.enemies = enemies;
 		createLoadingScreen(screenToLoad);
 	}
 	
@@ -121,8 +135,11 @@ public class ScreensManager {
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	
-		if( currentScreenType == ScreenType.SCREEN_GAME_SINGLE ) ((GameScreenSingle)screen).setLevel( levelToLoad );
-		else if( currentScreenType == ScreenType.SCREEN_GAME_MULTI ) ((GameScreenMulti)screen).setLevel( levelToLoad );
+		if( currentScreenType == ScreenType.SCREEN_GAME_SINGLE || currentScreenType == ScreenType.SCREEN_GAME_MULTI )
+		{
+			((GameScreen)screen).setLevel( levelToLoad );
+			((GameScreen)screen).setEnemies( enemies );
+		}
 		
 		runner.setScreen(screen);
 		

@@ -28,9 +28,6 @@ public class SplashScreen extends BaseScreen{
 	public SplashScreen(Runner runner)
 	{
 		super(runner);
-		
-		loadPlayer();
-		NotificationManager.prepareManager( player.getName() );
 	}
 	
 	@Override

@@ -172,7 +172,7 @@ public class GameWorld
     private Character createCharacter(CharacterType characterType)
     {
     	Character characterTemp = null;
-    	
+
     	if( characterType == CharacterType.BANDIT ) characterTemp = new Bandit(world);
     	else if( characterType == CharacterType.ARCHER ) characterTemp = new Archer(world);
     	

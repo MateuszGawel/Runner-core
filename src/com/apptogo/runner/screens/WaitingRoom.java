@@ -13,6 +13,7 @@ import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,10 +28,15 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	private TextButton playButton;
 	private float lastLabelY = 300f;
 	
+	private Array<Player> enemies;
+	
 	public WaitingRoom(Runner runner)
 	{
-		super(runner);		
+		super(runner);	
+		
 		loadPlayer();
+		NotificationManager.prepareManager( player.getName(), player.getCurrentCharacter() );
+		
 		WarpController.getInstance().startApp( player.getName() );
 		WarpController.getInstance().setListener(this);
 	}
@@ -39,26 +45,22 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	{		
 		setBackground("ui/menuBackgrounds/waitingRoomScreenBackground.png");
 		
+		enemies = new Array<Player>();
+		
 		playButton = new TextButton("PLAY", skin, "default");
 		playButton.setPosition(-500f, -300f);
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	Array<CharacterType> characterTypes = new Array<CharacterType>();
-            	//for(int i=0; i<players.size; i++)
-            	//{
-            	//	Player player = player.get(i);
-            		characterTypes.add(player.getCurrentCharacter());            	
-                //} --obslugujemy wszystkich podlaczonych
-            		
-            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", ""), characterTypes );
+            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), player, enemies );
             }
          });
 		
         addToScreen(playButton);
         
         addLabel(player.getName());
-        NotificationManager.getInstance().screamMyName();
+        
+        //NotificationManager.getInstance().screamMyName();
 	}
 	
 	public void step()
@@ -117,14 +119,40 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 			//jesli to przedstawienie sie
 			if( data.has("INITIAL_NOTIFICATION") )
 			{
-				
 				String enemyName = (String)data.getString("PLAYER_NAME");
 				
-				Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
-								
-				addLabel(enemyName);
+				boolean presentAlready = false;
+
+				if( player.getName().equals(enemyName) )
+				{
+					presentAlready = true;
+				}
 				
-				NotificationManager.getInstance().screamMyName();
+				for(int i = 0; i < enemies.size; i++)
+				{
+					if( enemies.get(i).getName().equals(enemyName) ) 
+					{
+						presentAlready = true;
+						break;
+					}
+				}
+				
+				if( !presentAlready )			
+				{Logger.log(this, "BUM NOTYFIKACJA I TO INICJALIZACYJNA");
+					CharacterType enemyCharacter = CharacterType.parseFromString( (String)data.getString("PLAYER_CHARACTER") );
+					Logger.log(this, "OTO CO DOSTALEM: " + (String)data.getString("PLAYER_CHARACTER"));
+					Player enemy = new Player();
+					enemy.setName(enemyName);
+					enemy.setCurrentCharacter(enemyCharacter);
+					
+					Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
+									
+					addLabel(enemyName);
+					
+					enemies.add(enemy);
+					
+					NotificationManager.getInstance().screamMyName();
+				}
 			}
 		} 
 		catch (JSONException e) { e.printStackTrace(); }
@@ -159,7 +187,10 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 			@Override
 			public void run () {
 				//nie chcemy na razie nic robic - dopiero jak ktos kliknie play
-				//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI);
+				//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), player, enemies);
+			
+					NotificationManager.getInstance().screamMyName();
+			
 			}
 		});
 		

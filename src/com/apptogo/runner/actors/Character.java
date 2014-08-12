@@ -6,7 +6,6 @@ import static java.lang.Math.sqrt;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;

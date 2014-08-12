@@ -5,12 +5,12 @@ import java.lang.reflect.Type;
 import com.apptogo.runner.actors.Character.CharacterAbilityType;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorld.GameWorldType;
@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 
 public abstract class GameScreen extends BaseScreen{
 	
@@ -27,6 +28,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected GameWorldRenderer worldRenderer;
 	
 	protected Level level;
+	protected Array<Player> enemies;
 	
 	protected Button jumpButton;
 	protected Button slideButton;
@@ -44,8 +46,13 @@ public abstract class GameScreen extends BaseScreen{
 		this.level = level;
 	}
 	
+	public void setEnemies(Array<Player> enemies)
+	{
+		this.enemies = enemies;
+	}
+	
 	public void prepare()
-	{Logger.log(this, "TYPE: "+level.worldType.toString());
+	{
 		if( level.worldType == GameWorldType.WILDWEST ) 
 		{Logger.log(this, "A TU DOSTAJE: " + player.getCurrentCharacter().toString() );
 			world = new WildWestWorld( level.mapPath, player );
@@ -59,6 +66,15 @@ public abstract class GameScreen extends BaseScreen{
 		//{
 		//	world = new ForestWorld( level.mapPath, player );
 		//}
+		
+		if(enemies != null)
+		{
+			for(int i = 0; i < enemies.size; i++)
+			{
+				world.addEnemy( enemies.get(i) );
+			}
+		}
+		else Logger.log(this, "JEST CHUJOWO");
 		
 		worldRenderer = new GameWorldRenderer(world);
 	}

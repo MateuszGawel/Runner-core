@@ -15,4 +15,10 @@ public class Level
 		this.mapPath = mapPath;
 		this.unlockKey = unlockKey;
 	}
+	
+	public Level(String buttonLabel, String mapPath, String unlockKey, GameWorldType worldType)
+	{
+		this(buttonLabel, mapPath, unlockKey);
+		this.worldType = worldType;
+	}
 }

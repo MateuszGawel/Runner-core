@@ -5,66 +5,49 @@ import com.shephertz.app42.gaming.multiplayer.client.events.AllRoomsEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.AllUsersEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.LiveRoomInfoEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.LiveUserInfoEvent;
+import com.shephertz.app42.gaming.multiplayer.client.events.LobbyEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.MatchedRoomsEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.RoomEvent;
+import com.shephertz.app42.gaming.multiplayer.client.listener.LobbyRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.RoomRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.ZoneRequestListener;
 
-public class ZoneListener implements ZoneRequestListener
+public class LobbyListener implements LobbyRequestListener
 {
 	private WarpController callBack;
 	
-	public ZoneListener(WarpController callBack) 
+	public LobbyListener(WarpController callBack) 
 	{
 		this.callBack = callBack;
 	}
 
 	@Override
-	public void onCreateRoomDone(RoomEvent e) 
-	{
-		if( e.getResult() == WarpResponseResultCode.SUCCESS )
-		{
-			callBack.onCreateRoomDone(e.getData().getId());
-		}
-		else
-		{
-			callBack.onCreateRoomDone(null);
-		}
-	}
-
-	@Override
-	public void onDeleteRoomDone(RoomEvent arg0) 
-	{		
+	public void onGetLiveLobbyInfoDone(LiveRoomInfoEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onGetAllRoomsDone (AllRoomsEvent arg0) 
+	public void onJoinLobbyDone(LobbyEvent e) 
 	{
-			
+		callBack.onJoinLobbyDone( e.getInfo() );
 	}
 
 	@Override
-	public void onGetLiveUserInfoDone (LiveUserInfoEvent arg0) 
-	{	
+	public void onLeaveLobbyDone(LobbyEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onGetMatchedRoomsDone (MatchedRoomsEvent me) 
+	public void onSubscribeLobbyDone(LobbyEvent e) 
 	{
-		
+		callBack.onSubscribeLobbyDone( e.getInfo() );	
 	}
 
 	@Override
-	public void onGetOnlineUsersDone (AllUsersEvent arg0) 
-	{
-			
-	}
-
-	@Override
-	public void onSetCustomUserDataDone (LiveUserInfoEvent arg0) 
-	{	
+	public void onUnSubscribeLobbyDone(LobbyEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 }

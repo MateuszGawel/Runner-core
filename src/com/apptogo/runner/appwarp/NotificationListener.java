@@ -10,9 +10,8 @@ import com.shephertz.app42.gaming.multiplayer.client.events.RoomData;
 import com.shephertz.app42.gaming.multiplayer.client.events.UpdateEvent;
 import com.shephertz.app42.gaming.multiplayer.client.listener.NotifyListener;
 
-public class NotificationListener implements NotifyListener{
-
-	
+public class NotificationListener implements NotifyListener
+{	
 	private WarpController callBack;
 	
 	public NotificationListener(WarpController callBack) 
@@ -37,13 +36,12 @@ public class NotificationListener implements NotifyListener{
 
 	public void onUpdatePeersReceived(UpdateEvent event) 
 	{
-		System.out.println("AAAAAA");
-		callBack.onGameUpdateReceived(new String(event.getUpdate()));
+		callBack.onUpdatePeersReceived(new String(event.getUpdate()));
 	}
 
-	public void onUserJoinedLobby(LobbyData arg0, String arg1) 
+	public void onUserJoinedLobby(LobbyData e, String userName) 
 	{
-		
+		callBack.onUserJoinedLobby(e, userName);
 	}
 
 	public void onUserJoinedRoom(RoomData data, String username) 
@@ -88,8 +86,8 @@ public class NotificationListener implements NotifyListener{
 	@Override
 	public void onUserChangeRoomProperty (RoomData roomData, String userName, HashMap<String, Object> properties, HashMap<String, String> lockProperties) 
 	{
-		int code = Integer.parseInt(properties.get("result").toString());
-		callBack.onResultUpdateReceived(userName, code);
+		int code = Integer.parseInt( properties.get("result").toString() );
+		callBack.onUserChangeRoomProperty(userName, code);
 	}
 
 	@Override
@@ -103,5 +101,4 @@ public class NotificationListener implements NotifyListener{
 	{
 		
 	}
-	
 }

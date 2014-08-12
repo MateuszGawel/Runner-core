@@ -4,8 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.apptogo.runner.actors.Character.CharacterAbilityType;
+import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.appwarp.WarpController;
-import com.apptogo.runner.main.Runner;
 
 public class NotificationManager 
 {
@@ -14,12 +14,14 @@ public class NotificationManager
 	{
 		return INSTANCE;
 	}
-	public static void prepareManager(String playerName)
+	public static void prepareManager(String playerName, CharacterType playerCharacterType)
 	{
     	getInstance().playerName = playerName;
+    	getInstance().playerCharacterType = playerCharacterType;
     }
 	
 	private String playerName;
+	private CharacterType playerCharacterType;
 		
 	public void notifyStartRunning()
 	{
@@ -106,13 +108,14 @@ public class NotificationManager
 	}
 	
 	public void screamMyName()
-	{
+	{Logger.log(this, "wywolane");
 		JSONObject data = new JSONObject();
 		
 		try 
-	    {
+	    {Logger.log(this, "wywolane2");
 			data.put("INITIAL_NOTIFICATION", true); 
 			data.put("PLAYER_NAME", playerName); 
+			data.put("PLAYER_CHARACTER", playerCharacterType); 
 			//tu musza byc jeszcze inne info nt statsow itp
 	    } 
 	    catch (JSONException e) { e.printStackTrace(); }

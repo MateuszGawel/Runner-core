@@ -29,8 +29,8 @@ public class SaveManager
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
 	public SaveManager()
 	{
-		//save = Gdx.app.getPreferences("gameSave");
-		//save.remove("PLAYER_CURRENT_CHARACTER");
+		save = Gdx.app.getPreferences("gameSave");
+		save.remove("PLAYER_CURRENT_CHARACTER");
 	}
 	
 	
@@ -38,33 +38,34 @@ public class SaveManager
 	{
 		Player player = new Player();
 		
-		//String playerName = save.getString("PLAYER_NAME", "");
-		//String playerPassword = save.getString("PLAYER_PASSWORD", "");
-		//String unlockedLevels = DEFAULT_UNLOCKED_LEVELS;//save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
-		//CharacterType currentCharacter = CharacterType.parseFromString( save.getString("CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
+		String playerName = save.getString("PLAYER_NAME", "");
+		String playerPassword = save.getString("PLAYER_PASSWORD", "");
+		String unlockedLevels = DEFAULT_UNLOCKED_LEVELS;//save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
+		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
 		
-		/*player.setName(playerName);
+		player.setName(playerName);
 		player.setPassword(playerPassword);
 		player.setUnlockedLevels(unlockedLevels);
 		player.setCurrentCharacter(currentCharacter);
-		*/
 		
-		player.setName("KTOS");
-		player.setPassword("123");
-		player.setUnlockedLevels("map1.0");
-		player.setCurrentCharacter(CharacterType.BANDIT);
-		
+		//workarround
+		if( playerName.equals("") )
+		{
+			player.setName("NONAME");
+			this.savePlayer(player);
+		}
+				
 		return player;
 	}
 	
 	public boolean savePlayer(Player player)
-	{/*
+	{
 		save.putString("PLAYER_NAME", player.getName());
 		save.putString("PLAYER_PASSWORD", player.getPassword());
 		save.putString("UNLOCKED_LEVELS", player.getUnlockedLevels());
 		save.putString("CURRENT_CHARACTER", player.getCurrentCharacter().toString());
 		save.flush();
-		*/
+		
 		return true; //if(not everything is ok) return false;
 	}
 	

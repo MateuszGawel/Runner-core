@@ -148,6 +148,7 @@ public class ResourcesManager {
 		
 		//|4. GAME SCREEN MULTI
 		ScreenMeta multiplayerGameMeta = singleGameMeta; // - potrzeba rozroznienia ale poczatkowo ladujemy tu wszystko to co do single
+		multiplayerGameMeta.screenType = ScreenType.SCREEN_GAME_MULTI;
 		
 		screenMetaArray.add( multiplayerGameMeta );
 		
