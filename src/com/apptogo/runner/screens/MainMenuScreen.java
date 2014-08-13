@@ -1,8 +1,6 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.actors.Character.CharacterType;
-import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
@@ -13,8 +11,6 @@ import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,9 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.OnscreenKeyboard;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 public class MainMenuScreen extends BaseScreen{	
 	
@@ -38,9 +34,6 @@ public class MainMenuScreen extends BaseScreen{
 	private TextButton multiplayerButton;
 	
 	private Label label;
-	private Widget widget;
-	private Widget playerNameWidget;
-	private DialogWidget changeLanguageDialog;
 		
 	private boolean languageChanged = false;
 	private ClickListener languageChangedListener = null;
@@ -100,44 +93,23 @@ public class MainMenuScreen extends BaseScreen{
         label = new Label( getLangString("mainMenuLabel"), skin, "title");
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
         
-        changeLanguageDialog = new DialogWidget("Are you sure?", null, languageChangedListener);
-        InfoWidget i = new InfoWidget("cokolwiek");
-        soundButton.addListener(i.getToggleListener());
         
-        Image plflag = new Image( new Texture(languageManager.getIcoFile("pl")) );
-        plflag.setPosition(-150f, 600f);        
-        plflag.addListener( changeLanguageDialog.getToggleListener() );
-        plflag.addListener( new ClickListener()
-        {  
-        	public void clicked(InputEvent event, float x, float y) 
-            {
-            	languageToChange = "pl";
-            }
-        } );
         
-        Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
-        enflag.setPosition(-50f, 600f);
-        enflag.addListener( changeLanguageDialog.getToggleListener() );
-        enflag.addListener( new ClickListener()
+        //Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
+        //enflag.setPosition(-50f, 600f);
+        //enflag.addListener( changeLanguageDialog.getToggleListener() );
+        /*enflag.addListener( new ClickListener()
         {  
         	public void clicked(InputEvent event, float x, float y) 
             {
             	languageToChange = "en";
             }
         } );
-        
-        widget = new Widget(Align.center, 400f, 400f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, false);
-        widget.setToggleButton(true);
-        widget.setEasing(Interpolation.bounceOut);
-        
-        widget.addActor(plflag);
-        widget.addActor(enflag);
-        
-        
-        //---
+               
         final TextField textField = new TextField(player.getName(), skin);
         textField.setSize(300f, 50f);
         textField.setPosition(-230f, -25f);
+        textField.setOnscreenKeyboard( textField.getOnscreenKeyboard() );
         
         final SelectBox selectCharacter = new SelectBox<String>(skin, "default");
         selectCharacter.setSize(250f, 50f);
@@ -153,27 +125,14 @@ public class MainMenuScreen extends BaseScreen{
 				SaveManager.getInstance().savePlayer(player);
 				playerNameWidget.toggleWidget();
             }
-		};
+		};*/
         
-        playerNameWidget = new DialogWidget("Imie gracza:", null, savePlayerListener);
-        playerNameWidget.addActor(textField);
-        playerNameWidget.addActor(selectCharacter);
-        
-        settingsButton.addListener(playerNameWidget.getToggleListener());
-        //soundButton.addListener( widget.getToggleListener() ); //podpiecie listenera z widgetu do przycisku na scenie :)
-
         addToScreen(soundButton);
         addToScreen(settingsButton);
         addToScreen(campaignButton);
         addToScreen(multiplayerButton);
         addToScreen(joinRandomRoomButton);
         addToScreen(label);
-        addToScreen( widget.actor() );
-        addToScreen( changeLanguageDialog.actor() );
-        addToScreen( i.actor() );
-        addToScreen(playerNameWidget.actor());
-        
-        if( player.isAnonymous() ) playerNameWidget.toggleWidget();
 	}
 	
 	public void step()
@@ -219,9 +178,6 @@ public class MainMenuScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();
-		widget.dispose();
-	    changeLanguageDialog.dispose();
-	    playerNameWidget.dispose();
 	}
 
 	@Override

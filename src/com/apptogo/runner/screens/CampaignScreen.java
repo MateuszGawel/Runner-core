@@ -42,7 +42,7 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
-		setBackground("ui/menuBackgrounds/campaignScreenBackground.png");
+		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		label = new Label( getLangString("campaignLabel"), skin);
         label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
@@ -99,8 +99,8 @@ public class CampaignScreen extends BaseScreen
 	private void drawButtons()
 	{
 		float buttonMargin = 20f;
-        int maxInRow = 4;
-        int maxInColumn = 3;
+        int maxInRow = 3;
+        int maxInColumn = 4;
         
         for(int w = 0; w < worlds.size; w++)
         {

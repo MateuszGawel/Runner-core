@@ -132,23 +132,16 @@ public class ResourcesManager {
 		//generalnie to i tak nie do konca potrzebne bo potem polowe z tego wywali funkcja adjust...() ale zeby cos bylo na poczatku to przypisujemy
 		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);
 		
-		singleGameMeta.setTexturesDirectory("gfx/game/levels/");
-		singleGameMeta.setTexturesExtension(".png");
-		singleGameMeta.addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
-				
-		singleGameMeta.addTextureAtlas("gfx/game/characters/bandit.pack");
-		singleGameMeta.addTextureAtlas("gfx/game/characters/bomb.pack");
-		singleGameMeta.addTextureAtlas("gfx/game/characters/archer.pack");
-		
 		singleGameMeta.addMusic("mfx/game/gameMusic.ogg");
-		
 		singleGameMeta.addSound("mfx/game/gameClick.ogg");
 		
 		screenMetaArray.add( singleGameMeta );
 		
 		//|4. GAME SCREEN MULTI
-		ScreenMeta multiplayerGameMeta = singleGameMeta; // - potrzeba rozroznienia ale poczatkowo ladujemy tu wszystko to co do single
-		multiplayerGameMeta.screenType = ScreenType.SCREEN_GAME_MULTI;
+		ScreenMeta multiplayerGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_MULTI);
+		
+		multiplayerGameMeta.addMusic("mfx/game/gameMusic.ogg");
+		multiplayerGameMeta.addSound("mfx/game/gameClick.ogg");
 		
 		screenMetaArray.add( multiplayerGameMeta );
 		
@@ -162,7 +155,11 @@ public class ResourcesManager {
 		//|6. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
 		
-		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackground.png");
+		loadingMeta.addTexture("ui/menuBackgrounds/sliderMask.png");
+		
+		loadingMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackgroundWildWest.png");
+		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackgroundForest.png");//za duzo - to trzeba zoptymalizowac
 		
 		screenMetaArray.add( loadingMeta );
 		
@@ -236,14 +233,17 @@ public class ResourcesManager {
 					
 					screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bomb.pack");
 					
-					if( characterTypes.contains(CharacterType.BANDIT, true) )
-					{
-						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bandit.pack");
-					}
-					
-					if( characterTypes.contains(CharacterType.ARCHER, true) )
-					{
-						screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/archer.pack");
+					for(int j = 0; j < characterTypes.size; j++)
+					{			
+						if( characterTypes.get(j) == CharacterType.BANDIT )
+						{Logger.log(this, "ATLAS BANDITA");
+							screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bandit.pack");
+						}
+						
+						else if( characterTypes.get(j) == CharacterType.ARCHER )
+						{
+							screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/archer.pack");
+						}
 					}
 				}
 				
