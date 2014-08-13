@@ -57,7 +57,7 @@ public class MainMenuScreen extends BaseScreen{
             }
 		};
 		
-		soundButton = new Button(skin, "sound");
+		soundButton = new Button(skin, "soundOn");
 		soundButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - soundButton.getWidth()/2.0f - 530f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - soundButton.getHeight()/2.0f + 300f );
 		
 		settingsButton = new Button(skin, "settings");
