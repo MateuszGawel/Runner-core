@@ -43,7 +43,7 @@ public class Widget
 		BOTTOM_TO_TOP
 	}
 	
-	private float FADE_IN_DURATION = 0.55f;
+	private float FADE_IN_DURATION = 0.75f;
 	
 	protected float x;
 	protected float y;
@@ -219,8 +219,8 @@ public class Widget
 		else //if( this.widgetType == WidgetType.BIG )
 		{
 			styleName = "big";
-			this.width = 1024f;
-			this.height = 640f;
+			this.width = 1180f;
+			this.height = 700f;
 		}		
 		
 		this.win = new Window("", this.skin, styleName);

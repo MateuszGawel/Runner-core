@@ -1,5 +1,7 @@
 package com.apptogo.runner.screens;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 import com.apptogo.runner.actors.Character.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -10,9 +12,11 @@ import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.world.GameWorld.GameWorldType;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -21,12 +25,14 @@ public class CampaignScreen extends BaseScreen
 {	
 		
 	private LevelManager levelManager;
-	
-	private Label label;
+
 	private TextButton button;
 	private TextButton backButton;
 	private TextButton previousWorldButton;
 	private TextButton nextWorldButton;
+	
+	private TextButton levelInformationWidget;
+	private TextButton playButton;
 	
 	private Array<LevelWorld> worlds;
 	private int currentLevelWorld;
@@ -42,14 +48,11 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
-		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 		
-		label = new Label( getLangString("campaignLabel"), skin);
-        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 250 );
-        
-        backButton = new TextButton( getLangString("backButton"), skin, "default");
-        backButton.setSize(300f, 100f);
-        backButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - backButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - backButton.getHeight()/2.0f - 330f );
+        backButton = new TextButton( "<--", skin, "default");
+        backButton.setSize(200f, 100f);
+        backButton.setPosition( -600f, 270f );
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -59,28 +62,41 @@ public class CampaignScreen extends BaseScreen
         
         previousWorldButton = new TextButton("<", skin, "default");
         previousWorldButton.setSize(100f, 100f);
-        previousWorldButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - previousWorldButton.getWidth()/2.0f - 420f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - previousWorldButton.getHeight()/2.0f );
-        previousWorldButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	changeCurrentLevelWorld( currentLevelWorld - 1 );
-            }
-         });
+        previousWorldButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - previousWorldButton.getWidth()/2.0f - 550f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - previousWorldButton.getHeight()/2.0f );
+        previousWorldButton.addListener( 
+        		new ClickListener(){
+        			public void clicked(InputEvent event, float x, float y) 
+                    {
+        				changeCurrentLevelWorld(currentLevelWorld-1);
+                    }
+        		}
+        		);
         
         nextWorldButton = new TextButton(">", skin, "default");
         nextWorldButton.setSize(100f, 100f);
-        nextWorldButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - nextWorldButton.getWidth()/2.0f + 420f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - nextWorldButton.getHeight()/2.0f );
-        nextWorldButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	changeCurrentLevelWorld( currentLevelWorld + 1 );
-            }
-         });
+        nextWorldButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - nextWorldButton.getWidth()/2.0f + 550f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - nextWorldButton.getHeight()/2.0f );
+        nextWorldButton.addListener( 
+        		new ClickListener(){
+        			public void clicked(InputEvent event, float x, float y) 
+                    {
+        				changeCurrentLevelWorld(currentLevelWorld+1);
+                    }
+        		}
+        		);
         
+        playButton = new TextButton("play", skin, "default");
+        playButton.setSize(420f, 130f);
+        playButton.setPosition(50f, -330f);
+        
+        levelInformationWidget = new TextButton("level Info", skin, "default");
+        levelInformationWidget.setSize(420f, 420f);
+        levelInformationWidget.setPosition(50f, -200f);
+               
         addToScreen(previousWorldButton);
         addToScreen(nextWorldButton);
         addToScreen(backButton);
-        addToScreen(label);
+        addToScreen(levelInformationWidget);
+        addToScreen(playButton);
                 
         missionButtons = new Array<Actor>();
         
@@ -98,7 +114,7 @@ public class CampaignScreen extends BaseScreen
 	
 	private void drawButtons()
 	{
-		float buttonMargin = 20f;
+		float buttonMargin = 15f;
         int maxInRow = 3;
         int maxInColumn = 4;
         
@@ -152,7 +168,7 @@ public class CampaignScreen extends BaseScreen
             	}
             	
             	//nalezy dostosowac grafiki, tymczasem jako workaround:
-            	button.setSize(140f, 140f);
+            	button.setSize(130f, 130f);
             	
             	float buttonX = ( ((Runner.SCREEN_WIDTH / Box2DVars.PPM) - ((maxInRow * button.getWidth()) + ((maxInRow - 1) * buttonMargin)) / 2f) + (currentColumnCounter * (button.getWidth() + buttonMargin)) );
             	float buttonY = ( -button.getHeight() ) - ( ((Runner.SCREEN_HEIGHT / Box2DVars.PPM) - ((maxInColumn * button.getHeight()) + ((maxInColumn - 1) * buttonMargin)) / 2f) + (currentRowCounter * (button.getHeight() + buttonMargin)) );
@@ -166,7 +182,7 @@ public class CampaignScreen extends BaseScreen
         			currentColumnCounter = 0;
         		}
             	        
-    	        button.setPosition( buttonX, buttonY );       
+    	        button.setPosition( buttonX - 220f, buttonY - 50f );       
     	        button.setUserObject( levelWorld.getWorldType() );
     	        button.setVisible(false);
     	        

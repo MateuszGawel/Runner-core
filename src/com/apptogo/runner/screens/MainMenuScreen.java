@@ -26,15 +26,27 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MainMenuScreen extends BaseScreen{	
 	
-	Button soundButton;
 	Button settingsButton;
+	Button soundButtonOn;
+	Button soundButtonOff;
+	Button googlePlusButton;
+	Button facebookButton;
 	Button joinRandomRoomButton;
 	
 	private TextButton campaignButton;
 	private TextButton multiplayerButton;
 	
-	private Label label;
-		
+	private Widget settingsWidget;
+	
+	private ClickListener settingsButtonListener;
+	private ClickListener soundButtonOnListener;
+	private ClickListener soundButtonOffListener;
+	private ClickListener googlePlusButtonListener;
+	private ClickListener facebookButtonListener;
+	private ClickListener campaignButtonListener;
+	private ClickListener multiplayerButtonListener;
+	private ClickListener joinRandomRoomButtonListener;
+	
 	private boolean languageChanged = false;
 	private ClickListener languageChangedListener = null;
 	private String languageToChange;
@@ -49,51 +61,40 @@ public class MainMenuScreen extends BaseScreen{
 	public void prepare() 
 	{
 		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
-				
-		languageChangedListener = new ClickListener(){
-			public void clicked(InputEvent event, float x, float y) 
-            {
-            	languageChanged = true;
-            }
-		};
-		
-		soundButton = new Button(skin, "soundOn");
-		soundButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - soundButton.getWidth()/2.0f - 530f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - soundButton.getHeight()/2.0f + 300f );
-		
+					
 		settingsButton = new Button(skin, "settings");
-		settingsButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - settingsButton.getWidth()/2.0f - 530f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - settingsButton.getHeight()/2.0f + 200f );
-        
+		settingsButton.setPosition(-570f, 240f);
+		
+		soundButtonOn = new Button(skin, "soundOn");
+		soundButtonOn.setPosition(-570f, 105f);
+		
+		soundButtonOff = new Button(skin, "soundOff");
+		soundButtonOff.setPosition(-570f, 105f);
+		soundButtonOff.setVisible(false);
+		
+		googlePlusButton = new Button(skin, "googlePlus");
+		googlePlusButton.setPosition(-570f, -30f);
+		
+		facebookButton = new Button(skin, "facebook");
+		facebookButton.setPosition(-570f, -165f);
+		
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
-		campaignButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - campaignButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - campaignButton.getHeight()/2.0f + 50f );
-		campaignButton.addListener(new ClickListener() { //brzydkie jak chuj zmienic koniecznie [chociaz jakas metoda generujaca listenery
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_CAMPAIGN);
-            }
-         });
+		campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), 0.0f );
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
-		multiplayerButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - multiplayerButton.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - multiplayerButton.getHeight()/2.0f - 170f );
-		multiplayerButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
-            }
-         });
-        
-		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
-		joinRandomRoomButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - joinRandomRoomButton.getWidth()/2.0f + 370f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - joinRandomRoomButton.getHeight()/2.0f - 170f );
-		joinRandomRoomButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
-            }
-         });//na totalna pale na razie
+		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -200.0f );
 		
-        label = new Label( getLangString("mainMenuLabel"), skin, "title");
-        label.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - label.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f + 200 );
-        
-        
+		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
+		joinRandomRoomButton.setSize(300f, 150f);
+		joinRandomRoomButton.setPosition( 75.0f, -300.0f );
+		
+		settingsWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
+		settingsWidget.setEasing( Interpolation.elasticOut );
+		
+		settingsWidget.actor().addListener(settingsWidget.getToggleListener()); // - tego nie ma tu byc - tylko chwilowe rozwiazanie zeby latwiej bylo zamykac widget
+		
+		createListeners();
+		setListeners();
         
         //Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
         //enflag.setPosition(-50f, 600f);
@@ -127,12 +128,16 @@ public class MainMenuScreen extends BaseScreen{
             }
 		};*/
         
-        addToScreen(soundButton);
-        addToScreen(settingsButton);
+		addToScreen(settingsButton);
+		addToScreen(soundButtonOn);
+		addToScreen(soundButtonOff);
+        addToScreen(googlePlusButton);
+        addToScreen(facebookButton);
         addToScreen(campaignButton);
-        addToScreen(multiplayerButton);
         addToScreen(joinRandomRoomButton);
-        addToScreen(label);
+        addToScreen(multiplayerButton);
+        
+        addToScreen(settingsWidget.actor());
 	}
 	
 	public void step()
@@ -143,6 +148,81 @@ public class MainMenuScreen extends BaseScreen{
 			settingsManager.setLanguage(languageToChange);
 			ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_MAIN_MENU );		
 		}
+	}
+	
+	private void createListeners()
+	{		
+		settingsButtonListener = settingsWidget.getToggleListener();
+		
+		soundButtonOnListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				soundButtonOff.setVisible(true);
+            	soundButtonOn.setVisible(false);
+            }
+		};
+		
+		soundButtonOffListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				soundButtonOn.setVisible(true);
+				soundButtonOff.setVisible(false);
+            }
+		};
+		
+		googlePlusButtonListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+            	languageChanged = true;
+            }
+		};
+		
+		facebookButtonListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+            	languageChanged = true;
+            }
+		};
+		
+		campaignButtonListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_CAMPAIGN);
+            }
+		};
+		
+		multiplayerButtonListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+            }
+		};
+		
+		joinRandomRoomButtonListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
+            }
+		};
+		
+		languageChangedListener = new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+            	languageChanged = true;
+            }
+		};
+	}
+	
+	private void setListeners()
+	{
+		settingsButton.addListener( settingsButtonListener );
+		soundButtonOn.addListener( soundButtonOnListener );
+		soundButtonOff.addListener( soundButtonOffListener );
+		googlePlusButton.addListener( googlePlusButtonListener );
+		facebookButton.addListener( facebookButtonListener );
+		campaignButton.addListener(campaignButtonListener );
+		multiplayerButton.addListener( multiplayerButtonListener );
+		joinRandomRoomButton.addListener( joinRandomRoomButtonListener );
 	}
 	
 	@Override
@@ -178,6 +258,8 @@ public class MainMenuScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();
+		
+		settingsWidget.dispose();
 	}
 
 	@Override

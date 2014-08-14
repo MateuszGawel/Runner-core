@@ -166,7 +166,9 @@ public class ResourcesManager {
 		//|7. CAMPAIGN SCREEN
 		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
 		
-		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackground.png");
+		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundForrest.png");
+		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundSpace.png");
 		
 		screenMetaArray.add( campaignMeta );
 		

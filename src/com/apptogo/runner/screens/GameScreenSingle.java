@@ -2,7 +2,8 @@ package com.apptogo.runner.screens;
 
 import java.lang.reflect.Type;
 
-import com.apptogo.runner.actors.Character.CharacterAbilityType;
+import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -24,6 +25,7 @@ public class GameScreenSingle extends GameScreen{
 	public GameScreenSingle(Runner runner)
 	{
 		super(runner);
+		NotificationManager.getInstance().disableAppWarpNotifications();//uwaga - to powoduje ze tak czy siak jest wywolywana funkcja z notifManagera w Character (i na starcie w gameWorld) - moze spowalniac program :<
 	}
 		
 	public void prepare() 

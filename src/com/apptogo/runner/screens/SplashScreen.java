@@ -17,8 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class SplashScreen extends BaseScreen{	
-	
+public class SplashScreen extends BaseScreen
+{	
+	private Texture splashImageTexture;
 	private Image splashImage;
 	private float splashImageOpacity;
 	private AlphaAction action;
@@ -36,9 +37,12 @@ public class SplashScreen extends BaseScreen{
 		ResourcesManager.getInstance().loadResources(this);
 		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
 
-		splashImage = new Image(((Texture)ResourcesManager.getInstance().getResource(this, "gfx/splash/splash.png")));
+		splashImageTexture = (Texture)ResourcesManager.getInstance().getResource(this, "gfx/splash/splash.png");
+		
+		splashImage = new Image( splashImageTexture );
 		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
 		splashImageOpacity = 0.0f;
+		
 		action = new AlphaAction();
 		
 		addToScreen(splashImage);
@@ -88,6 +92,7 @@ public class SplashScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();	
+		splashImageTexture.dispose();
 	}
 
 	@Override

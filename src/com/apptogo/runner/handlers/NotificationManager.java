@@ -22,59 +22,69 @@ public class NotificationManager
 	
 	private String playerName;
 	private CharacterType playerCharacterType;
+	
+	private boolean appWarpNotificationsEnabled = true;
 		
 	public void notifyStartRunning()
 	{
 		JSONObject data = getData(true, false, false, false, false, false, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyDieTop()
 	{
 		JSONObject data = getData(false, true, false, false, false, false, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyDieBottom()
 	{
 		JSONObject data = getData(false, false, true, false, false, false, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyJump()
 	{
 		JSONObject data = getData(false, false, false, true, false, false, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifySlide()
 	{
 		JSONObject data = getData(false, false, false, false, true, false, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyStandUp()
 	{
 		JSONObject data = getData(false, false, false, false, false, true, false, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifySlow()
 	{
 		JSONObject data = getData(false, false, false, false, false, false, true, false, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyAbortSlow()
 	{
 		JSONObject data = getData(false, false, false, false, false, false, false, true, false, null);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
 	}
 	
 	public void notifyAbility(CharacterAbilityType abilityType)
 	{
 		JSONObject data = getData(false, false, false, false, false, false, false, false, true, abilityType);
-	    WarpController.getInstance().sendGameUpdate(data.toString()); 
+		sendNotification(data);
+	}
+	
+	private void sendNotification(JSONObject data)
+	{
+		if( appWarpNotificationsEnabled )
+		{
+			WarpController.getInstance().sendGameUpdate(data.toString()); 
+		}
 	}
 	
 	private JSONObject getData(boolean startRunningState, boolean dieTopState, boolean dieBottomState, boolean jumpState, boolean slideState, boolean standUpState, boolean slowState, boolean abortSlowState, boolean abilityState, CharacterAbilityType abilityType)
@@ -121,5 +131,15 @@ public class NotificationManager
 	    catch (JSONException e) { e.printStackTrace(); }
 		
 		WarpController.getInstance().sendGameUpdate(data.toString()); 
+	}
+	
+	public void disableAppWarpNotifications()
+	{
+		appWarpNotificationsEnabled = false;
+	}
+	
+	public void enableAppWarpNotifications()
+	{
+		appWarpNotificationsEnabled = true;
 	}
 }
