@@ -54,7 +54,7 @@ public class WarpController
 		warpClient.addZoneRequestListener(new ZoneListener(this));
 		warpClient.addRoomRequestListener(new RoomListener(this));
 		warpClient.addNotificationListener(new NotificationListener(this));
-		warpClient.addLobbyRequestListener(new LobbyListener(this));
+		//warpClient.addLobbyRequestListener(new LobbyListener(this));
 	}
 	
 	public void setListener(WarpListener listener)

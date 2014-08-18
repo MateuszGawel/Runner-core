@@ -9,7 +9,7 @@ import box2dLight.RayHandler;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
@@ -171,11 +171,6 @@ public class GameWorld
     
     private Character createCharacter(CharacterType characterType)
     {
-    	Character characterTemp = null;
-
-    	if( characterType == CharacterType.BANDIT ) characterTemp = new Bandit(world);
-    	else if( characterType == CharacterType.ARCHER ) characterTemp = new Archer(world);
-    	
-    	return characterTemp;
+    	return CharacterType.convertToCharacter(characterType, world);
     }
 }

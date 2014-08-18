@@ -2,7 +2,7 @@ package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
 
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
@@ -237,15 +237,7 @@ public class ResourcesManager {
 					
 					for(int j = 0; j < characterTypes.size; j++)
 					{			
-						if( characterTypes.get(j) == CharacterType.BANDIT )
-						{Logger.log(this, "ATLAS BANDITA");
-							screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bandit.pack");
-						}
-						
-						else if( characterTypes.get(j) == CharacterType.ARCHER )
-						{
-							screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/archer.pack");
-						}
+						screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
 					}
 				}
 				

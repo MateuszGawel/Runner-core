@@ -3,7 +3,7 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.handlers.Logger;

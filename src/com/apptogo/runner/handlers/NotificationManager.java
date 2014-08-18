@@ -3,8 +3,8 @@ package com.apptogo.runner.handlers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.actors.Character.CharacterAbilityType;
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterAbilityType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.appwarp.WarpController;
 
 public class NotificationManager 

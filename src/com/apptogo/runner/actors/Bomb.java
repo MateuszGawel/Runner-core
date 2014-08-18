@@ -2,7 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.actors.Character.CharacterAnimationState;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;

@@ -2,7 +2,7 @@ package com.apptogo.runner.screens;
 
 import java.lang.reflect.Type;
 
-import com.apptogo.runner.actors.Character.CharacterAbilityType;
+import com.apptogo.runner.actors.CharacterAbilityType;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;

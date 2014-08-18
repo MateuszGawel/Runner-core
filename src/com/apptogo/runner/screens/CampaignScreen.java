@@ -1,9 +1,8 @@
 package com.apptogo.runner.screens;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
-
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
@@ -12,11 +11,12 @@ import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.world.GameWorld.GameWorldType;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -37,6 +37,16 @@ public class CampaignScreen extends BaseScreen
 	private Array<LevelWorld> worlds;
 	private int currentLevelWorld;
 	
+	private Group group;
+	private int worldsCount = 0;
+	
+	private ClickListener moveGroupLeftListener;
+	private ClickListener moveGroupRightListener;
+	
+	private Texture tww;
+	private Texture tf;
+	private Texture ts;
+	
 	private Array<Actor> missionButtons;
 
 	public CampaignScreen(Runner runner)
@@ -48,7 +58,36 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
-		setBackground("ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+		group = new Group();
+		group.setPosition(0.0f, 0.0f);
+		
+		moveGroupLeftListener = new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+            {
+            	moveGroup(-1.0f);
+            }
+		};
+		
+		moveGroupRightListener = new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+            {
+            	moveGroup(1.0f);
+            }
+		};
+
+		tww = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+		tf = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/campaignScreenBackgroundForrest.png");
+		ts = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/campaignScreenBackgroundSpace.png");
+		
+		Image ww = new Image( tww );
+		Image f = new Image( tf );
+		Image s = new Image( ts );
+		
+		addNewWorldToGroup(ww);
+		addNewWorldToGroup(f);
+		addNewWorldToGroup(s);
 		
         backButton = new TextButton( "<--", skin, "default");
         backButton.setSize(200f, 100f);
@@ -59,7 +98,7 @@ public class CampaignScreen extends BaseScreen
             	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
             }
          });
-        
+        /*
         previousWorldButton = new TextButton("<", skin, "default");
         previousWorldButton.setSize(100f, 100f);
         previousWorldButton.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - previousWorldButton.getWidth()/2.0f - 550f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - previousWorldButton.getHeight()/2.0f );
@@ -105,6 +144,56 @@ public class CampaignScreen extends BaseScreen
 	
         drawButtons();
         refreshButtons();
+        */
+		
+		addToScreen(group);
+		addToScreen(backButton);
+	}
+	
+	private void addNewWorldToGroup(Image worldBackground)
+	{
+		worldBackground.setPosition((-640.0f) + 1280.0f * worldsCount, -400.0f);
+		
+		previousWorldButton = new TextButton("<", skin, "default");
+        previousWorldButton.setSize(100f, 100f);
+        previousWorldButton.setPosition( -600.0f + (worldsCount * 1280.0f), -100.0f );
+        previousWorldButton.addListener( moveGroupRightListener );
+        
+        nextWorldButton = new TextButton(">", skin, "default");
+        nextWorldButton.setSize(100f, 100f);
+        nextWorldButton.setPosition( 500.0f + (worldsCount * 1280.0f), -100.0f );
+        nextWorldButton.addListener( moveGroupLeftListener );
+		
+        group.addActor(worldBackground);
+        group.addActor(previousWorldButton);
+        group.addActor(nextWorldButton);
+		
+		worldsCount++;		
+	}
+	
+	private void moveGroup(float direction)
+	{
+		if( (group.getX() == 0.0f && direction >= 0) || (-group.getX() == ((worldsCount - 1) * 1280.0f) && direction < 0) )
+		{
+			return;
+		}
+		else
+		{
+
+			MoveToAction action = new MoveToAction();
+			action.setDuration(0.2f);
+			
+			if( direction < 0 )
+			{
+				action.setX( group.getX() - 1280.0f );
+			}
+			else
+			{
+				action.setX( group.getX() + 1280.0f );
+			}
+			
+			group.addAction(action);
+		}
 	}
 	
 	public void step()
@@ -256,6 +345,9 @@ public class CampaignScreen extends BaseScreen
 	@Override
 	public void dispose() {
 		super.dispose();
+		tww.dispose();
+		tf.dispose();
+		ts.dispose();
 	}
 
 	@Override

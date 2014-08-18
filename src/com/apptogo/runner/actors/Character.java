@@ -62,50 +62,6 @@ public abstract class Character extends Actor{
 	protected String slideButtonStyleName; 
 	protected String slowButtonStyleName;
 	
-	public enum CharacterAnimationState{
-		IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB
-	}
-	
-	public enum CharacterAbilityType
-	{
-		BOMB, ARROW;
-		
-		static public CharacterAbilityType parseFromString(String key)
-		{
-			if( key.equals( CharacterAbilityType.BOMB.toString() ) )
-			{
-				return CharacterAbilityType.BOMB;
-			}
-			else if( key.equals( CharacterAbilityType.ARROW.toString() ) )
-			{
-				return CharacterAbilityType.ARROW;
-			}
-			//else if() kolejne abilities
-			else return null;
-		}
-	}
-	
-	/** przy dodawaniu kolejnego typu pamietac o obsluzeniu go w funkcji createCharacter klasy gameWorld
-	 *  oraz w tablicy z selectCharacter w MainMenuScreen                                              */
-	public enum CharacterType
-	{
-		BANDIT, ARCHER;
-		
-		static public CharacterType parseFromString(String key)
-		{
-			if( key.equals( CharacterType.BANDIT.toString() ) )
-			{
-				return CharacterType.BANDIT;
-			}
-			else if( key.equals( CharacterType.ARCHER.toString() ) )
-			{
-				return CharacterType.ARCHER;
-			}
-			//else if() kolejni bohaterowie
-			else return null;
-		}
-	}
-			
 	protected AnimationManager animationManager;
 		
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)

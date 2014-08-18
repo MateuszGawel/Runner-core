@@ -1,6 +1,5 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.actors.Character.CharacterAnimationState;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

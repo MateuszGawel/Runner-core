@@ -3,7 +3,6 @@ package com.apptogo.runner.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.apptogo.runner.actors.Character.CharacterAnimationState;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;

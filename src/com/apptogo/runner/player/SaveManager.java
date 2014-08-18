@@ -2,7 +2,7 @@ package com.apptogo.runner.player;
 
 import java.util.Date;
 
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
 import com.apptogo.runner.handlers.Logger;

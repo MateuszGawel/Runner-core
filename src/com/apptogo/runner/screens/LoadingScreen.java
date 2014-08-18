@@ -1,7 +1,6 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.Character.CharacterAbilityType;
-import com.apptogo.runner.actors.Character.CharacterType;
+import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -52,19 +51,12 @@ public class LoadingScreen extends BaseScreen{
 		{
 			loadPlayer();
 			
-			if( player.getCurrentCharacter() == CharacterType.BANDIT ) 
-			{
-				setBackground("ui/menuBackgrounds/loadingScreenBackgroundWildWest.png");
-			}
-			else if( player.getCurrentCharacter() == CharacterType.ARCHER ) 
-			{
-				setBackground("ui/menuBackgrounds/loadingScreenBackgroundForrest.png");
-			}
+			setBackground( CharacterType.convertToLoadingScreenBackground( player.getCurrentCharacter() ) );
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
 			smallLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (smallLabel.getWidth() / 2.0f), -250.0f);
 			
-			slider = new TextButton("", skin, "default");
+			slider = new TextButton("", skin, "loader");
 			slider.setSize(475.0f, 50.0f);
 			slider.setPosition( -712.0f, -275.0f);
 			
