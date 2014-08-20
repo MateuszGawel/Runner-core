@@ -10,6 +10,7 @@ import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -45,6 +46,9 @@ public class MainMenuScreen extends BaseScreen{
 	private ClickListener campaignButtonListener;
 	private ClickListener multiplayerButtonListener;
 	private ClickListener joinRandomRoomButtonListener;
+	
+	private Texture chainsDecorationTexture;
+	private Image chainsDecoration;	
 	
 	private boolean languageChanged = false;
 	private ClickListener languageChangedListener = null;
@@ -84,8 +88,7 @@ public class MainMenuScreen extends BaseScreen{
 		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -200.0f );
 		
 		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
-		joinRandomRoomButton.setSize(300f, 150f);
-		joinRandomRoomButton.setPosition( 75.0f, -300.0f );
+		joinRandomRoomButton.setPosition( 85.0f, -325.0f );
 		
 		settingsWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		settingsWidget.setEasing( Interpolation.elasticOut );
@@ -95,6 +98,10 @@ public class MainMenuScreen extends BaseScreen{
 		createListeners();
 		setListeners();
         
+		chainsDecorationTexture = new Texture( Gdx.files.internal("ui/menuBackgrounds/chainsDecoration.png") );
+		chainsDecoration = new Image( chainsDecorationTexture );
+		chainsDecoration.setPosition(100.0f, -240.0f);
+		
         //Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
         //enflag.setPosition(-50f, 600f);
         //enflag.addListener( changeLanguageDialog.getToggleListener() );
@@ -135,6 +142,7 @@ public class MainMenuScreen extends BaseScreen{
         addToScreen(campaignButton);
         addToScreen(joinRandomRoomButton);
         addToScreen(multiplayerButton);
+        addToScreen(chainsDecoration);
         
         addToScreen(settingsWidget.actor());
 	}

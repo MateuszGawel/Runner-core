@@ -1,4 +1,4 @@
-package com.apptogo.runner.actors;
+package com.apptogo.runner.enums;
 
 public enum CharacterAnimationState{
 	IDLE, RUNNING, JUMPING, DIEINGTOP, DIEINGBOTTOM, CROUCHING, MOONWALKING, LANDING, FLYING, BEGINSLIDING, SLIDING, STANDINGUP, FLYBOMB, RUNBOMB

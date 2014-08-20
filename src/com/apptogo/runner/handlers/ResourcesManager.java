@@ -2,11 +2,11 @@ package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
 
-import com.apptogo.runner.actors.CharacterType;
+import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
-import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -124,6 +124,7 @@ public class ResourcesManager {
 		//|2. MAIN MENU SCREEN
 		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
 		
+		mainMenuMeta.addTexture("ui/menuBackgrounds/chainsDecoration.png");
 		mainMenuMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		screenMetaArray.add( mainMenuMeta );
@@ -215,19 +216,8 @@ public class ResourcesManager {
 			if( screenMetaArray.get(i).screenType == ScreenType.SCREEN_GAME_SINGLE )
 			{
 				screenMetaArray.get(i).textures = new ArrayList<String>();
-				screenMetaArray.get(i).setTexturesDirectory("gfx/game/levels/");
-				screenMetaArray.get(i).setTexturesExtension(".png");
 				
-				if( worldType == GameWorldType.WILDWEST )
-				{
-					screenMetaArray.get(i).addTextures( new String[]{"mountains","rocks","skyBlue","sand", "barrelSmall", "barrelBig"} );
-				}
-				else //if( worldType == GameWorldType.FOREST )
-				{
-					screenMetaArray.get(i).addTextures( new String[]{"barrelSmall", "barrelBig", "tree1", "tree2", "tree3", "tree4"} );
-				}
-				//else - SPACE
-				//{}
+				screenMetaArray.get(i).addTextures( GameWorldType.convertToTexturesList( worldType ) );
 				
 				if( characterTypes != null)
 				{

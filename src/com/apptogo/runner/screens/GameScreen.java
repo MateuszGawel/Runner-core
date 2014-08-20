@@ -2,8 +2,9 @@ package com.apptogo.runner.screens;
 
 import java.lang.reflect.Type;
 
-import com.apptogo.runner.actors.CharacterAbilityType;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -13,7 +14,6 @@ import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
-import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.Gdx;
@@ -53,19 +53,7 @@ public abstract class GameScreen extends BaseScreen{
 	
 	public void prepare()
 	{
-		if( level.worldType == GameWorldType.WILDWEST ) 
-		{Logger.log(this, "A TU DOSTAJE: " + player.getCurrentCharacter().toString() );
-			world = new WildWestWorld( level.mapPath, player );
-		}
-		else if( level.worldType == GameWorldType.FOREST )
-		{
-			Logger.log(this, "MAMY FORERSTA!");
-			world = new ForestWorld( level.mapPath, player );
-		}
-		//else if( level.worldType == GameWorldType.SPACE )
-		//{
-		//	world = new ForestWorld( level.mapPath, player );
-		//}
+		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
 		
 		if(enemies != null)
 		{

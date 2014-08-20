@@ -9,8 +9,8 @@ import box2dLight.RayHandler;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.CharacterType;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.NotificationManager;
@@ -36,13 +36,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class GameWorld 
 {
 
-	public enum GameWorldType
-	{
-		WILDWEST,
-		FOREST,
-		SPACE
-	}
-	
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;

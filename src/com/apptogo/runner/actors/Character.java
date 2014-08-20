@@ -6,6 +6,9 @@ import static java.lang.Math.sqrt;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;

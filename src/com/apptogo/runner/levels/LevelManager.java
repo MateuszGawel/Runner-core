@@ -11,8 +11,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.world.GameWorld.GameWorldType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -66,19 +66,8 @@ public class LevelManager {
 			
 			String levelWorldName = world.getAttribute("name");
 			GameWorldType levelWorldType = null;
-			
-			if( levelWorldName.toUpperCase().equals("WILDWEST") )
-			{
-				levelWorldType = GameWorldType.WILDWEST;
-			}
-			else if( levelWorldName.toUpperCase().equals("FOREST") )
-			{
-				levelWorldType = GameWorldType.FOREST;
-			}
-			else //if( levelWorldName.toUpperCase().equals("SPACE") )
-			{
-				levelWorldType = GameWorldType.SPACE;
-			}
+
+			levelWorldType = GameWorldType.parseFromString( levelWorldName );
 			
 			LevelWorld levelWorld = new LevelWorld( levelWorldName, levelWorldType );
 			levelWorld.setLevels( levels );

@@ -1,4 +1,4 @@
-package com.apptogo.runner.actors;
+package com.apptogo.runner.enums;
 
 public enum CharacterAbilityType
 {

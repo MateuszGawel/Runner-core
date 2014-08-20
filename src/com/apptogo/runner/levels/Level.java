@@ -1,6 +1,6 @@
 package com.apptogo.runner.levels;
 
-import com.apptogo.runner.world.GameWorld.GameWorldType;
+import com.apptogo.runner.enums.GameWorldType;
 
 public class Level 
 {

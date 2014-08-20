@@ -2,7 +2,7 @@ package com.apptogo.runner.player;
 
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.CharacterType;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.levels.Level;
 
 

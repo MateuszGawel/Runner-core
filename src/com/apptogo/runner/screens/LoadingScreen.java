@@ -1,6 +1,6 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.CharacterType;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;

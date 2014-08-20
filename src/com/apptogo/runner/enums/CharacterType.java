@@ -1,5 +1,8 @@
-package com.apptogo.runner.actors;
+package com.apptogo.runner.enums;
 
+import com.apptogo.runner.actors.Archer;
+import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
 import com.badlogic.gdx.physics.box2d.World;
 
 /** przy dodawaniu kolejnego typu pamietac o obsluzeniu go w funkcji createCharacter klasy gameWorld
