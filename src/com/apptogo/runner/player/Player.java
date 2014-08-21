@@ -76,4 +76,8 @@ public class Player
 	public void setUnlockedLevels(String unlockedLevels) {
 		this.unlockedLevels = unlockedLevels;
 	}
+	public int getLevelScore(Level level)
+	{
+		return (int)(Math.random() * 400.0f);
+	}
 }

@@ -93,8 +93,6 @@ public class MainMenuScreen extends BaseScreen{
 		settingsWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		settingsWidget.setEasing( Interpolation.elasticOut );
 		
-		settingsWidget.actor().addListener(settingsWidget.getToggleListener()); // - tego nie ma tu byc - tylko chwilowe rozwiazanie zeby latwiej bylo zamykac widget
-		
 		createListeners();
 		setListeners();
         

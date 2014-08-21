@@ -171,12 +171,19 @@ public class ResourcesManager {
 		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundForrest.png");
 		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundSpace.png");
 		
+		campaignMeta.addTexture("ui/menuBackgrounds/starSmallEmpty.png");
+		campaignMeta.addTexture("ui/menuBackgrounds/starSmallFull.png");
+		
 		screenMetaArray.add( campaignMeta );
 		
 		//|8. MULTIPLAYER SCREEN
 		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
 		
-		multiplayerMeta.addTexture("ui/menuBackgrounds/multiplayerScreenBackground.png");
+		multiplayerMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		
+		multiplayerMeta.addTexture("ui/menuBackgrounds/alienHead.png");
+		multiplayerMeta.addTexture("ui/menuBackgrounds/archerHead.png");
+		multiplayerMeta.addTexture("ui/menuBackgrounds/banditHead.png");
 		
 		screenMetaArray.add( multiplayerMeta );
 

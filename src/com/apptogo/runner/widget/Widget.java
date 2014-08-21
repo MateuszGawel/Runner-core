@@ -54,9 +54,8 @@ public class Widget
 	
 	private Group groupWithBlackOutButton;
 	private Button blackOutButton;
+	private Button closeWidgetButton;
 	
-	private Container container;
-	private ScrollPane scrollPane;
 	private Window win;
 	
 	private Skin skin;
@@ -227,6 +226,17 @@ public class Widget
 		this.win.setSize(this.width, this.height);
 		
 		this.win.clearListeners();
+		
+		closeWidgetButton = new Button(skin, "closeWidget");
+		closeWidgetButton.setPosition(this.win.getWidth() - 60.0f, this.win.getHeight() - 60.0f);
+		closeWidgetButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+                 widget.hideWidget();
+            }
+         });
+		
+		this.win.addActor(closeWidgetButton);
 	}
 	
 	private void resetPosition()

@@ -68,4 +68,22 @@ public enum CharacterType
 		
 		return null;
 	}
+	
+	static public String convertToCharacterHead(String selectedCharacterString)
+	{
+		if( selectedCharacterString.equals( CharacterType.BANDIT.toString() ) )
+		{
+			return "ui/menuBackgrounds/banditHead.png";
+		}
+		else if( selectedCharacterString.equals( CharacterType.ARCHER.toString() ) )
+		{
+			return "ui/menuBackgrounds/archerHead.png";
+		}
+		//else if( selectedCharacterString.equals( CharacterType.ALIEN.toString() ) ) kolejni bohaterowie
+		//{
+		//	return "ui/menuBackgrounds/alienHead.png";
+		//}
+		else return null;
+	}
+	
 }

@@ -12,10 +12,12 @@ import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -27,9 +29,9 @@ public class CampaignScreen extends BaseScreen
 	private LevelManager levelManager;
 
 	private TextButton button;
-	private TextButton backButton;
-	private TextButton previousWorldButton;
-	private TextButton nextWorldButton;
+	private Button backButton;
+	private Button previousWorldButton;
+	private Button nextWorldButton;
 		
 	private Array<LevelWorld> worlds;
 	
@@ -38,6 +40,9 @@ public class CampaignScreen extends BaseScreen
 	
 	private ClickListener moveGroupLeftListener;
 	private ClickListener moveGroupRightListener;
+	
+	private Texture starEmptyTexture;
+	private Texture starFullTexture;
 	
 
 	public CampaignScreen(Runner runner)
@@ -49,6 +54,11 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
+		starEmptyTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/starSmallEmpty.png");
+		starFullTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/starSmallFull.png");
+		starFullTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		starEmptyTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
 		group = new Group();
 		group.setPosition(0.0f, 0.0f);
 		
@@ -77,9 +87,8 @@ public class CampaignScreen extends BaseScreen
         	addNewWorldToGroup( levelWorld );
         }
 		
-        backButton = new TextButton( "<--", skin, "default");
-        backButton.setSize(200f, 100f);
-        backButton.setPosition( -600f, -370f );
+        backButton = new Button( skin, "back");
+        backButton.setPosition( -580f, 240f );
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -96,14 +105,12 @@ public class CampaignScreen extends BaseScreen
 		Image worldBackground = GameWorldType.convertToWorldBackground( levelWorld.getWorldType(), this.getSceneType() );
 		worldBackground.setPosition((-640.0f) + 1280.0f * worldsCount, -400.0f);
 		
-		previousWorldButton = new TextButton("<", skin, "default");
-        previousWorldButton.setSize(100f, 100f);
-        previousWorldButton.setPosition( -500.0f + (worldsCount * 1280.0f), -100.0f );
+		previousWorldButton = new Button(skin, "campaignArrowLeft");
+        previousWorldButton.setPosition( -570.0f + (worldsCount * 1280.0f), -100.0f );
         previousWorldButton.addListener( moveGroupRightListener );
         
-        nextWorldButton = new TextButton(">", skin, "default");
-        nextWorldButton.setSize(100f, 100f);
-        nextWorldButton.setPosition( 400.0f + (worldsCount * 1280.0f), -100.0f );
+        nextWorldButton = new Button(skin, "campaignArrowRight");
+        nextWorldButton.setPosition( 470.0f + (worldsCount * 1280.0f), -100.0f );
         nextWorldButton.addListener( moveGroupLeftListener );
 		       
         group.addActor(worldBackground);
@@ -147,7 +154,7 @@ public class CampaignScreen extends BaseScreen
 	
 	private void drawButtons(LevelWorld levelWorld, float indent)
 	{
-		float buttonMargin = 30f;
+		float buttonMargin = 45f;
         int maxInRow = 4;
         int maxInColumn = 3;
         
@@ -182,7 +189,7 @@ public class CampaignScreen extends BaseScreen
         	}
         	else
         	{
-        		button = new TextButton( level.buttonLabel, skin, buttonLockedStyleName);
+        		button = new TextButton( "", skin, buttonLockedStyleName);
         	}
         	
         	//nalezy dostosowac grafiki, tymczasem jako workaround:
@@ -200,11 +207,65 @@ public class CampaignScreen extends BaseScreen
     			currentColumnCounter = 0;
     		}
         	        
-	        button.setPosition( buttonX + indent, buttonY );       
+	        button.setPosition( buttonX + indent, buttonY - 50.0f );       
 	        button.setUserObject( levelWorld.getWorldType() );
+	       	
 	        
+	        
+	        //if( player.isLevelUnlocked(level) )
+	        //{
+	        	button = drawStars( button, level );
+	        //}
 	        group.addActor(button);
     	}
+	}
+	
+	private TextButton drawStars(TextButton button, Level level)
+	{
+		Image firstStar;
+		Image secondStar;
+		Image thirdStar;
+		
+		float starWidth = starEmptyTexture.getWidth();
+		float margin = 0.0f;
+		float startX = ( button.getWidth() - (3 * starWidth) - (3 * margin) ) / 2.0f;
+		
+		int score = player.getLevelScore(level);
+		
+		if( score >= 100 && score < 200 )
+		{
+			firstStar = new Image( starFullTexture );
+			secondStar = new Image( starEmptyTexture );
+			thirdStar = new Image( starEmptyTexture );
+		}
+		else if( score >= 200 && score < 300 )
+		{
+			firstStar = new Image( starFullTexture );
+			secondStar = new Image( starFullTexture );
+			thirdStar = new Image( starEmptyTexture );
+		}
+		else if( score > 300 )
+		{
+			firstStar = new Image( starFullTexture );
+			secondStar = new Image( starFullTexture );
+			thirdStar = new Image( starFullTexture );
+		}
+		else
+		{
+			firstStar = new Image( starEmptyTexture );
+			secondStar = new Image( starEmptyTexture );
+			thirdStar = new Image( starEmptyTexture );
+		}
+				
+		firstStar.setPosition(startX, 0.0f);
+		secondStar.setPosition(startX + starWidth + margin, -20.0f);
+		thirdStar.setPosition(startX + (2 * starWidth) + (2 * margin), 0.0f);
+		
+		button.addActor(firstStar);
+		button.addActor(secondStar);
+		button.addActor(thirdStar);
+		
+		return button;
 	}
 	
 	@Override
