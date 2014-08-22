@@ -33,6 +33,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -183,6 +185,9 @@ public class TiledMapLoader
 	
 	private void createObstaclesLayer(MapLayer layer, Iterator<MapObject> objectIt)
 	{
+		//ponizej opisane czemu nie bd dzialac
+		//Array<MapObject> objectsToJoint = new Array<MapObject>();
+		
 		while(objectIt.hasNext()) 
 		{
 			MapObject object = objectIt.next();
@@ -194,6 +199,11 @@ public class TiledMapLoader
 			{
 				createBarrel(object);
 			}
+			//ponizej opisane czemu nie bd dzialac
+			//if( checkObjectType(object, "jointHandle") || isPropertyTrue(object, "isJointed") )
+			//{
+			//	objectsToJoint.add(object);
+			//}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -207,6 +217,9 @@ public class TiledMapLoader
 				bodies.add(body);
 			}
 		}
+		
+		//ponizej opisane czemu nie bd dzialac
+		//createJoints( objectsToJoint );
 	}
 	
 	private void createBarrel(MapObject object)
@@ -214,6 +227,84 @@ public class TiledMapLoader
 		Barrel barrel = new Barrel(object, world, gameWorld);
 		bodies.add(barrel.getBody());
 	}
+	
+	/* totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
+	private void createJoints( Array<MapObject> objectsToJoint )
+	{Logger.log(this, "ROBIMY JOINT");
+		while( objectsToJoint.size > 0 )
+		{Logger.log(this, "0| oTJ.size = " + objectsToJoint.size );
+			MapObject objectA = objectsToJoint.first();
+			objectsToJoint.removeIndex(0);
+			Logger.log(this, "1| oTJ.size = " + objectsToJoint.size );
+			
+			MapObject objectB = null;
+			int objectBIndex = 0;
+			
+			for(MapObject oB: objectsToJoint)
+			{
+				if( ((String)oB.getProperties().get("jointId")).equals( (String)objectA.getProperties().get("jointId") ) )
+				{
+					objectB = oB;
+					
+					break;
+				}
+				else
+				{
+					objectBIndex++;
+				}
+			}
+			
+			if( objectB != null )
+			{		
+				//biedoswap
+				if( !checkObjectType(objectA, "jointHandle") )
+				{
+					MapObject objectC = objectA;
+					objectA = objectB;
+					objectB = objectC;
+				}
+				
+				Logger.log(this, "OBJECTA jointId = " + objectA.getProperties().get("myName").toString() );
+				Logger.log(this, "OBJECTB jointId = " + objectB.getProperties().get("myName").toString() );
+				
+				objectsToJoint.removeIndex(objectBIndex);
+				Logger.log(this, "2| oTJ.size = " + objectsToJoint.size );
+				//---creating body A
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.type = BodyDef.BodyType.StaticBody;
+				bodyDef.position.set( new Vector2( 8.046875f, 10.39062f ) );
+				
+				obstacleFixture.shape = createShape(objectA);
+				
+				Body bodyA = world.createBody(bodyDef);
+				bodyA.createFixture(obstacleFixture).setUserData("killing");
+				bodyA.setUserData("killing");
+				bodies.add(bodyA);
+				
+				//---creating body B
+				bodyDef = new BodyDef();
+				bodyDef.type = BodyDef.BodyType.DynamicBody;
+				bodyDef.position.set( new Vector2( 13.015625f, 9.0f ) );
+				
+				obstacleFixture.shape = createShape(objectB);
+				
+				Body bodyB = world.createBody(bodyDef);
+				bodyB.createFixture(obstacleFixture).setUserData("killing");
+				bodyB.setUserData("killing");
+				bodies.add(bodyB);
+				
+				//---creating joint between body A and B
+				DistanceJointDef jointDef = new DistanceJointDef();
+				jointDef.initialize(bodyA, bodyB, bodyA.getPosition(), bodyB.getPosition());
+				jointDef.collideConnected = true;
+				jointDef.length = (float) Math.sqrt( Math.abs( (double)( ((bodyA.getLocalCenter().x - bodyB.getLocalCenter().x) * (bodyA.getLocalCenter().x - bodyB.getLocalCenter().x)) + ((bodyA.getLocalCenter().y - bodyB.getLocalCenter().y) * (bodyA.getLocalCenter().y - bodyB.getLocalCenter().y)) ) / PPM ) );
+				
+				Logger.log(this, "joint.length = " + jointDef.length);
+				
+				world.createJoint(jointDef);
+			}
+		}
+	}*/
 			
 	private Shape createShape(MapObject object)
 	{
@@ -283,7 +374,7 @@ public class TiledMapLoader
 		ellipseShape.setRadius(radius / PPM);
 		Logger.log(this, "tworze wektor elipsy: " + (ellipse.x + radius) / PPM + " : " + (ellipse.x + radius) / PPM);
 		ellipseShape.setPosition(new Vector2( (ellipse.x + radius) / PPM, (ellipse.y + radius) / PPM));
-
+		Logger.log(this, "ELLIPSE: x = " + String.valueOf( ellipse.x / PPM ) + ", y = " + String.valueOf( ellipse.y / PPM ) );
 		return ellipseShape;
 	}
 	
