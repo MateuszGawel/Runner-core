@@ -6,6 +6,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -65,7 +66,7 @@ public class MultiplayerScreen extends BaseScreen
 		final SelectBox<String> selectCharacter = new SelectBox<String>(skin, "default");
         selectCharacter.setSize(250f, 50f);
         selectCharacter.setPosition(-500.0f, -220.0f);
-        selectCharacter.setItems(new String[]{ CharacterType.BANDIT.toString(), CharacterType.ARCHER.toString() });
+        selectCharacter.setItems(new String[]{ CharacterType.BANDIT.toString(), CharacterType.ARCHER.toString(), CharacterType.ALIEN.toString() });
         selectCharacter.setSelected( player.getCurrentCharacter().toString() );
         
         selectCharacter.addListener( new ChangeListener()
@@ -96,6 +97,9 @@ public class MultiplayerScreen extends BaseScreen
 	private void setCurrentHead(String selectedCharacterString)
 	{
 		currentHeadTexture = new Texture( CharacterType.convertToCharacterHead( selectedCharacterString ) );
+		
+		player.setCurrentCharacter(CharacterType.parseFromString( selectedCharacterString ));
+		SaveManager.getInstance().savePlayer(player);
 		
 		if( currentHead != null )
 		{

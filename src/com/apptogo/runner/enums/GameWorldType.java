@@ -1,11 +1,11 @@
 package com.apptogo.runner.enums;
 
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
+import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -42,11 +42,11 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{ "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/tree1.png", "gfx/game/levels/tree2.png", "gfx/game/levels/tree3.png", "gfx/game/levels/tree4.png" };
+			return new String[]{ "gfx/game/levels/tree1.png", "gfx/game/levels/tree2.png", "gfx/game/levels/tree3.png", "gfx/game/levels/tree4.png" };
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new String[]{  };
+			return new String[]{ "gfx/game/levels/space1.png", "gfx/game/levels/space2.png", "gfx/game/levels/space3.png", "gfx/game/levels/space4.png" };
 		}
 		
 		return null;
@@ -100,7 +100,7 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == SPACE )
 		{
-			//return new WildWestWorld( level.mapPath, player );
+			return new SpaceWorld( mapPath, player );
 		}
 		
 		return null;

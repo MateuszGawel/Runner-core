@@ -34,7 +34,7 @@ public class ForestWorld extends GameWorld{
 	private void createBackground(){
 
 
-		tree4 = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree4.png"), mapSize, -0.05f, character, 0, 100/PPM);
+		tree4 = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree4.png"), mapSize, -0.05f, character, 0, 0);
 		background.addActor(tree4);
 		
 		tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -0.03f, mapSize, character, 0, 190/PPM);

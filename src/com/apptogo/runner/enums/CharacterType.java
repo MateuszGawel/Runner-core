@@ -1,5 +1,6 @@
 package com.apptogo.runner.enums;
 
+import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
  *  oraz w tablicy z selectCharacter w MainMenuScreen                                              */
 public enum CharacterType
 {
-	BANDIT, ARCHER;
+	BANDIT, ARCHER, ALIEN;
 	
 	static public CharacterType parseFromString(String key)
 	{
@@ -21,7 +22,10 @@ public enum CharacterType
 		{
 			return CharacterType.ARCHER;
 		}
-		//else if() kolejni bohaterowie
+		else if( key.equals( CharacterType.ALIEN.toString() ) )
+		{
+			return CharacterType.ALIEN;
+		}
 		else return null;
 	}
 	
@@ -34,6 +38,10 @@ public enum CharacterType
 		else if( characterType == ARCHER )
 		{
 			return new Archer(world);
+		}
+		else if( characterType == ALIEN )
+		{
+			return new Alien(world);
 		}
 		
 		return null;
@@ -51,6 +59,10 @@ public enum CharacterType
 		{
 			return new String[]{"gfx/game/characters/archer.pack"};
 		}
+		else if( characterType == ALIEN )
+		{
+			return new String[]{"gfx/game/characters/alien.pack"};
+		}
 		
 		return null;
 	}
@@ -64,6 +76,10 @@ public enum CharacterType
 		else if( characterType == ARCHER )
 		{
 			return "ui/menuBackgrounds/loadingScreenBackgroundForrest.png";
+		}
+		else if( characterType == ALIEN )
+		{
+			return "ui/menuBackgrounds/loadingScreenBackgroundSpace.png";
 		}
 		
 		return null;
@@ -79,10 +95,10 @@ public enum CharacterType
 		{
 			return "ui/menuBackgrounds/archerHead.png";
 		}
-		//else if( selectedCharacterString.equals( CharacterType.ALIEN.toString() ) ) kolejni bohaterowie
-		//{
-		//	return "ui/menuBackgrounds/alienHead.png";
-		//}
+		else if( selectedCharacterString.equals( CharacterType.ALIEN.toString() ) )
+		{
+			return "ui/menuBackgrounds/alienHead.png";
+		}
 		else return null;
 	}
 	

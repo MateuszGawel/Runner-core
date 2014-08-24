@@ -21,23 +21,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
-public class Archer extends Character{
+public class Alien extends Character{
 
 	private World world;
 	private Vector2 bodySize;
-
-    private final Array<Arrow> activeArrows = new Array<Arrow>();
-    private final Pool<Arrow> arrowsPool = new Pool<Arrow>() {
-	    @Override
-	    protected Arrow newObject() {
-	    	Arrow arrow = new Arrow((Archer)character, world);
-	    	((Archer)character).getStage().addActor(arrow);
-	    	return arrow;
-	    }
-    };
 	
-	public Archer(World world){
-		super(world, "gfx/game/characters/archer.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton");
+	public Alien(World world){
+		super(world, "gfx/game/characters/alien.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton");
 		initAnimations();
 		this.world = world;
 		bodySize = new Vector2(25 / PPM, 65 / PPM);
@@ -121,40 +111,17 @@ public class Archer extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.BOMB ) ((Archer)character).shootArrows();
+		if( abilityType == CharacterAbilityType.BOMB ) ((Alien)character).levitate();
 	}
 	
-	public void shootArrows()
+	public void levitate()
 	{
-		if(started && alive){
-			if(!touchGround){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
-			}
-			else{
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
-			}
-			Arrow arrow = arrowsPool.obtain();
-			arrow.init();
-	        activeArrows.add(arrow);
-		}
+		
 	}
-	
-	private void freePools(){
-		Arrow item;
-        int len = activeArrows.size;
-        for (int i = len; --i >= 0;) {
-            item = activeArrows.get(i);
-            if (item.alive == false) {
-            	activeArrows.removeIndex(i);
-                arrowsPool.free(item);
-            }
-        }
-	}
-	
+
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		freePools();
 	}
 	
 	@Override
