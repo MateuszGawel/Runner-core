@@ -24,7 +24,7 @@ public class ParallaxBackground extends Image{
 		this.player = player;
 		this.x = x;
 		this.y = y;
-		setPosition(x, y);
+		setPosition(x/PPM, y/PPM);
 		setWidth(getWidth()/PPM);
 		setHeight(getHeight()/PPM);
 	}

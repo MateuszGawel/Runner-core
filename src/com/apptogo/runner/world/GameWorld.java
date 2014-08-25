@@ -131,7 +131,7 @@ public class GameWorld
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
-        fpsLogger.log();
+       // fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }

@@ -46,7 +46,26 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new String[]{ "gfx/game/levels/space1.png", "gfx/game/levels/space2.png", "gfx/game/levels/space3.png", "gfx/game/levels/space4.png" };
+			return new String[]{ "gfx/game/levels/space.jpg", "gfx/game/levels/planet1.png" , "gfx/game/levels/planet2.png" , "gfx/game/levels/planet3.png", "gfx/game/levels/asteroid1.png", "gfx/game/levels/asteroid2.png", "gfx/game/levels/asteroid3.png", "gfx/game/levels/asteroid4.png", "gfx/game/levels/asteroid5.png" };
+		}
+		
+		return null;
+	}
+	
+	static public String[] convertToTextureAtlases(GameWorldType gameWorldType)
+	{
+		
+		if( gameWorldType == WILDWEST )
+		{
+			return null;
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return null;
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return new String[]{ "gfx/game/levels/asteroid.pack"};
 		}
 		
 		return null;

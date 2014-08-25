@@ -70,7 +70,7 @@ public class ResourcesManager {
 		
 		public void addTextures(String[] textures) { for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
 		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
-		public void addTextureAtlases(String[] textureAtlases) { for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
+		public void addTextureAtlases(String[] textureAtlases) { if( textureAtlases != null) for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
 		public void addTextureAtlas(String textureAtlas) { Logger.log(this, textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
 		public void addMusics(String[] musics) { for(String m: musics) this.musics.add(musicsDirectory+m+musicsExtension); }
 		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
@@ -216,22 +216,21 @@ public class ResourcesManager {
 	public void adjustCampaignResources(GameWorldType worldType, Array<CharacterType> characterTypes)
 	{
 		Logger.log(this, "FITUJEMY");
+		
 		for(int i=0; i<characterTypes.size; i++) Logger.log(this, "CH #" + String.valueOf(i) + " "  + characterTypes.get(i).toString());
 		
 		for(int i = 0; i < screenMetaArray.size; i++)
 		{		
+			screenMetaArray.get(i).textureAtlases = new ArrayList<String>();
 			if( screenMetaArray.get(i).screenType == ScreenType.SCREEN_GAME_SINGLE )
 			{
 				screenMetaArray.get(i).textures = new ArrayList<String>();
 				
 				screenMetaArray.get(i).addTextures( GameWorldType.convertToTexturesList( worldType ) );
-				
+				screenMetaArray.get(i).addTextureAtlases( GameWorldType.convertToTextureAtlases( worldType ) );
+
 				if( characterTypes != null)
 				{
-					screenMetaArray.get(i).textureAtlases = new ArrayList<String>();
-					
-					screenMetaArray.get(i).addTextureAtlas("gfx/game/characters/bomb.pack");
-					
 					for(int j = 0; j < characterTypes.size; j++)
 					{			
 						screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
@@ -286,6 +285,7 @@ public class ResourcesManager {
 		
 		for(String textureAtlas: (ArrayList<String>)screenMetaArray.get(index).textureAtlases) 
 		{
+			Logger.log(this, "do zaladowania: " + textureAtlas);
 			manager.load(textureAtlas, TextureAtlas.class); 
 		}
 	}
