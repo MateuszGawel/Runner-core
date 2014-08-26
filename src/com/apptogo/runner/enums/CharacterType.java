@@ -29,6 +29,24 @@ public enum CharacterType
 		else return null;
 	}
 	
+	public static String[] convertToTexturesList(CharacterType characterType)
+	{
+		if( characterType == BANDIT )
+		{
+			return null;
+		}
+		else if( characterType == ARCHER )
+		{
+			return new String[]{ "gfx/game/characters/arrow.png" };
+		}
+		else if( characterType == ALIEN )
+		{
+			return null;
+		}
+		
+		return null;
+	}
+	
 	static public Character convertToCharacter(CharacterType characterType, World world)
 	{
 		if( characterType == BANDIT )

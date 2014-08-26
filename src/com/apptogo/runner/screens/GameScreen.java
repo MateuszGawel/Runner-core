@@ -75,7 +75,7 @@ public abstract class GameScreen extends BaseScreen{
 		jumpButton = world.character.getJumpButton();
 		slowButton = world.character.getSlowButton();
 		slideButton = world.character.getSlideButton();
-		abilityButton = world.character.getAbilityButton(CharacterAbilityType.BOMB);
+		abilityButton = world.character.getAbilityButton();
 		
 		guiStage.addActor(abilityButton);
 		guiStage.addActor(slideButton);

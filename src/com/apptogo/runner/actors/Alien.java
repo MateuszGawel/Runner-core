@@ -25,6 +25,7 @@ public class Alien extends Character{
 
 	private World world;
 	private Vector2 bodySize;
+	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 	
 	public Alien(World world){
 		super(world, "gfx/game/characters/alien.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton");
@@ -76,10 +77,10 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, AnimationManager.createFrames(21, "idle"), true, 10){
 			@Override
 			public void onAnimationFinished(){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.MOONWALKING);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.MOONWALKING, AnimationManager.createFrames(30, "bored"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, AnimationManager.createFrames(30, "bored"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
@@ -130,7 +131,7 @@ public class Alien extends Character{
 		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 	}
 		
-	public Button getAbilityButton(final CharacterAbilityType abilityType)
+	public Button getAbilityButton()
 	{
 		Button bombButton = new Button(guiSkin, "archerArrowAbilityButton");
 		
@@ -141,7 +142,7 @@ public class Alien extends Character{
 		bombButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				character.useAbility(abilityType);
+				character.useAbility(defaultAbility);
 		        return true;
 		    }
 		});

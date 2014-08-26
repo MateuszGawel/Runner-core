@@ -25,6 +25,7 @@ public class Archer extends Character{
 
 	private World world;
 	private Vector2 bodySize;
+	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 
     private final Array<Arrow> activeArrows = new Array<Arrow>();
     private final Pool<Arrow> arrowsPool = new Pool<Arrow>() {
@@ -86,23 +87,23 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, AnimationManager.createFrames(21, "idle"), true, 10){
 			@Override
 			public void onAnimationFinished(){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.MOONWALKING);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.MOONWALKING, AnimationManager.createFrames(30, "bored"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, AnimationManager.createFrames(30, "bored"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, AnimationManager.createFrames(10, "flyarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYARROW, AnimationManager.createFrames(10, "flyarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, AnimationManager.createFrames(15, "runarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNARROW, AnimationManager.createFrames(15, "runarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)
@@ -121,17 +122,17 @@ public class Archer extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.BOMB ) ((Archer)character).shootArrows();
+		if( abilityType == CharacterAbilityType.ARROW ) ((Archer)character).shootArrows();
 	}
 	
 	public void shootArrows()
 	{
 		if(started && alive){
 			if(!touchGround){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
 			}
 			else{
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
 			}
 			Arrow arrow = arrowsPool.obtain();
 			arrow.init();
@@ -163,23 +164,23 @@ public class Archer extends Character{
 		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 	}
 		
-	public Button getAbilityButton(final CharacterAbilityType abilityType)
+	public Button getAbilityButton()
 	{
-		Button bombButton = new Button(guiSkin, "archerArrowAbilityButton");
+		Button abilityButton = new Button(guiSkin, "archerArrowAbilityButton");
 		
-		bombButton.setPosition(20/PPM, bombButton.getHeight()/PPM + 20/PPM + 40/PPM);
-		bombButton.setSize(bombButton.getWidth()/PPM, bombButton.getHeight()/PPM);
-		bombButton.setBounds(bombButton.getX(), bombButton.getY(), bombButton.getWidth(), bombButton.getHeight());
+		abilityButton.setPosition(20/PPM, abilityButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		abilityButton.setSize(abilityButton.getWidth()/PPM, abilityButton.getHeight()/PPM);
+		abilityButton.setBounds(abilityButton.getX(), abilityButton.getY(), abilityButton.getWidth(), abilityButton.getHeight());
 		
-		bombButton.addListener(new InputListener() {
+		abilityButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				character.useAbility(abilityType);
+				character.useAbility(defaultAbility);
 		        return true;
 		    }
 		});
 		
-		return bombButton;
+		return abilityButton;
 	}
 	
 	@Override

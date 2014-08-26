@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class SpaceWorld extends GameWorld{
-	public static final Vector2 GRAVITY = new Vector2(0f, -10f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -20f);
 
 	public Image space, planet2, planet3, asteroid1, asteroid2, asteroid3, asteroid4, asteroid5;
 	public ConstantParallaxBackground planet1;

@@ -68,7 +68,7 @@ public class ResourcesManager {
 			soundsExtension = "";
 		}
 		
-		public void addTextures(String[] textures) { for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
+		public void addTextures(String[] textures) { if( textures != null) for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
 		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
 		public void addTextureAtlases(String[] textureAtlases) { if( textureAtlases != null) for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
 		public void addTextureAtlas(String textureAtlas) { Logger.log(this, textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
@@ -234,6 +234,7 @@ public class ResourcesManager {
 					for(int j = 0; j < characterTypes.size; j++)
 					{			
 						screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
+						screenMetaArray.get(i).addTextures( CharacterType.convertToTexturesList( characterTypes.get(j) ) );
 					}
 				}
 				

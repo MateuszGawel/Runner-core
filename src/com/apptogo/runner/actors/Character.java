@@ -358,7 +358,7 @@ public abstract class Character extends Actor{
 	
 	public abstract CharacterType getCharacterType();	
 
-	public abstract Button getAbilityButton(final CharacterAbilityType abilityType);
+	public abstract Button getAbilityButton();
 	
 	public Button getJumpButton()
 	{
