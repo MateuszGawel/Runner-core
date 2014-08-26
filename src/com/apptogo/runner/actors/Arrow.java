@@ -46,7 +46,6 @@ public class Arrow extends Actor implements Poolable{
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
-		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
 		FixtureDef fixtureDef;
@@ -55,17 +54,22 @@ public class Arrow extends Actor implements Poolable{
 		arrowBody.setUserData("arrow");
 		
 		shape.setAsBox(bodySize.x, bodySize.y);
-		fixtureDef = Materials.bombBody;
+		fixtureDef = Materials.arrowBody;
 		fixtureDef.shape = shape;
 		arrowBody.createFixture(fixtureDef).setUserData("player");
 		arrowRegion = new TextureRegion(arrowTexture);
+		
+		shape.setAsBox(3/PPM, 3/PPM, new Vector2(12/PPM, 0), 0);
+		fixtureDef = Materials.arrowheadBody;
+		fixtureDef.shape = shape;
+		arrowBody.createFixture(fixtureDef).setUserData("player");
 	}
 
     public void init() {
-    	position.set(player.getX(), player.getY());
-
+    	position.set(player.getX()+10/PPM, player.getY()-10/PPM);
+    	//http://www.iforce2d.net/b2dtut/sticky-projectiles
     	arrowBody.setTransform(position, 0);
-    	arrowBody.setLinearVelocity(30, 0);
+    	arrowBody.setLinearVelocity(30, 30);
         alive = true;
 		Timer.schedule(new Task() {
 			@Override

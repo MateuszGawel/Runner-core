@@ -14,4 +14,5 @@ public class Box2DVars {
 	public static final short BIT_FOOTSENSOR = 64;
 	public static final short BIT_BOMB = 128;
 	public static final short BIT_BARREL = 256;
+	public static final short BIT_ARROW = 512;
 }
