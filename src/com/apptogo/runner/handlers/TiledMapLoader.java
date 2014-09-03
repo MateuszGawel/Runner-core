@@ -30,11 +30,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -129,7 +130,7 @@ public class TiledMapLoader
 					//createLights(layerm objectIt); - tego na razie nie obslugujemy
 				}
 			}
-		}	
+		}
 	}
 	
 	private void createGroundLayer(MapLayer layer, Iterator<MapObject> objectIt)
@@ -186,7 +187,7 @@ public class TiledMapLoader
 	private void createObstaclesLayer(MapLayer layer, Iterator<MapObject> objectIt)
 	{
 		//ponizej opisane czemu nie bd dzialac
-		//Array<MapObject> objectsToJoint = new Array<MapObject>();
+		Array<MapObject> objectsToJoint = new Array<MapObject>();
 		
 		while(objectIt.hasNext()) 
 		{
@@ -200,10 +201,10 @@ public class TiledMapLoader
 				createBarrel(object);
 			}
 			//ponizej opisane czemu nie bd dzialac
-			//if( checkObjectType(object, "jointHandle") || isPropertyTrue(object, "isJointed") )
-			//{
-			//	objectsToJoint.add(object);
-			//}
+			if( checkObjectType(object, "jointHandle") || isPropertyTrue(object, "isJointed") )
+			{
+				objectsToJoint.add(object);
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -219,7 +220,7 @@ public class TiledMapLoader
 		}
 		
 		//ponizej opisane czemu nie bd dzialac
-		//createJoints( objectsToJoint );
+		createJoints( objectsToJoint );
 	}
 	
 	private void createBarrel(MapObject object)
@@ -228,7 +229,7 @@ public class TiledMapLoader
 		bodies.add(barrel.getBody());
 	}
 	
-	/* totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
+	// totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
 	private void createJoints( Array<MapObject> objectsToJoint )
 	{Logger.log(this, "ROBIMY JOINT");
 		while( objectsToJoint.size > 0 )
@@ -267,44 +268,54 @@ public class TiledMapLoader
 				Logger.log(this, "OBJECTA jointId = " + objectA.getProperties().get("myName").toString() );
 				Logger.log(this, "OBJECTB jointId = " + objectB.getProperties().get("myName").toString() );
 				
+				Logger.log(this, "OBJECTA x = " + objectA.getProperties().get("x").toString() );
+				Logger.log(this, "OBJECTA y = " + objectA.getProperties().get("y").toString() );
+				
 				objectsToJoint.removeIndex(objectBIndex);
 				Logger.log(this, "2| oTJ.size = " + objectsToJoint.size );
 				//---creating body A
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.StaticBody;
-				bodyDef.position.set( new Vector2( 8.046875f, 10.39062f ) );
+				bodyDef.position.set( Float.parseFloat( objectA.getProperties().get("x").toString() ) / PPM, Float.parseFloat( objectA.getProperties().get("y").toString() ) / PPM );
 				
 				obstacleFixture.shape = createShape(objectA);
 				
 				Body bodyA = world.createBody(bodyDef);
-				bodyA.createFixture(obstacleFixture).setUserData("killing");
-				bodyA.setUserData("killing");
+				bodyA.createFixture(obstacleFixture).setUserData("nonkilling");
+				bodyA.setUserData("nonkilling");
 				bodies.add(bodyA);
 				
 				//---creating body B
 				bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.DynamicBody;
-				bodyDef.position.set( new Vector2( 13.015625f, 9.0f ) );
+				bodyDef.position.set( Float.parseFloat( objectA.getProperties().get("x").toString() ) / PPM, Float.parseFloat( objectA.getProperties().get("y").toString() ) / PPM );
 				
 				obstacleFixture.shape = createShape(objectB);
 				
 				Body bodyB = world.createBody(bodyDef);
-				bodyB.createFixture(obstacleFixture).setUserData("killing");
-				bodyB.setUserData("killing");
+				bodyB.createFixture(obstacleFixture).setUserData("nonkilling");
+				bodyB.setUserData("nonkilling");
 				bodies.add(bodyB);
 				
-				//---creating joint between body A and B
-				DistanceJointDef jointDef = new DistanceJointDef();
-				jointDef.initialize(bodyA, bodyB, bodyA.getPosition(), bodyB.getPosition());
-				jointDef.collideConnected = true;
-				jointDef.length = (float) Math.sqrt( Math.abs( (double)( ((bodyA.getLocalCenter().x - bodyB.getLocalCenter().x) * (bodyA.getLocalCenter().x - bodyB.getLocalCenter().x)) + ((bodyA.getLocalCenter().y - bodyB.getLocalCenter().y) * (bodyA.getLocalCenter().y - bodyB.getLocalCenter().y)) ) / PPM ) );
+				Logger.log(this, "BODYA position = " + bodyA.getPosition().toString() );
+				Logger.log(this, "BODYB position = " + bodyB.getPosition().toString() );
 				
-				Logger.log(this, "joint.length = " + jointDef.length);
+				//---creating joint between body A and B
+				RopeJointDef jointDef = new RopeJointDef();
+				jointDef.bodyA = bodyA;
+				jointDef.bodyB = bodyB;
+				jointDef.localAnchorA.set( new Vector2(0,0) );
+				jointDef.localAnchorB.set( new Vector2(0,0) );
+				jointDef.maxLength = 3;
+				jointDef.collideConnected = true;
+				//jointDef.length = (float) Math.sqrt( Math.abs( (double)( ((bodyA.getLocalCenter().x - bodyB.getLocalCenter().x) * (bodyA.getLocalCenter().x - bodyB.getLocalCenter().x)) + ((bodyA.getLocalCenter().y - bodyB.getLocalCenter().y) * (bodyA.getLocalCenter().y - bodyB.getLocalCenter().y)) ) / PPM ) );
 				
 				world.createJoint(jointDef);
+				//Logger.log(this, "joint count = " + String.valueOf( world.getJointCount() ));
+				
 			}
 		}
-	}*/
+	}
 			
 	private Shape createShape(MapObject object)
 	{
