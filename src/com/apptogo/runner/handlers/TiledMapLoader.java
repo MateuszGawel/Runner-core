@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -256,7 +257,7 @@ public class TiledMapLoader
 			}
 			
 			if( objectB != null )
-			{		
+			{		/*
 				//biedoswap
 				if( !checkObjectType(objectA, "jointHandle") )
 				{
@@ -311,8 +312,44 @@ public class TiledMapLoader
 				//jointDef.length = (float) Math.sqrt( Math.abs( (double)( ((bodyA.getLocalCenter().x - bodyB.getLocalCenter().x) * (bodyA.getLocalCenter().x - bodyB.getLocalCenter().x)) + ((bodyA.getLocalCenter().y - bodyB.getLocalCenter().y) * (bodyA.getLocalCenter().y - bodyB.getLocalCenter().y)) ) / PPM ) );
 				
 				world.createJoint(jointDef);
-				//Logger.log(this, "joint count = " + String.valueOf( world.getJointCount() ));
+				//Logger.log(this, "joint count = " + String.valueOf( world.getJointCount() ));*/
 				
+				BodyDef bD1 = new BodyDef();
+				FixtureDef fD1 = new FixtureDef();
+				BodyDef bD2 = new BodyDef();
+				FixtureDef fD2 = new FixtureDef();
+				
+				PolygonShape bS1 = new PolygonShape();
+				bS1.setAsBox(0.2f, 0.2f);
+				
+				PolygonShape bS2 = new PolygonShape();
+				bS2.setAsBox(0.2f, 0.2f);
+				
+				bD1.position.x = 10.0f;
+				bD1.position.y = 10.0f;
+				bD1.type = BodyType.DynamicBody;
+				bD2.position.x = 14.0f;
+				bD2.position.y = 10.0f;
+				bD2.type = BodyType.StaticBody;
+				
+				fD1.shape = bS1;
+				Body b1 = world.createBody(bD1);
+				b1.createFixture(fD1);
+				
+				fD2.shape = bS2;
+				Body b2 = world.createBody(bD2);
+				b2.createFixture(fD2).setUserData("nonkilling");
+				b2.setUserData("nonkilling");
+				
+				bodies.add(b1);
+				bodies.add(b2);
+				
+				DistanceJointDef dJD = new DistanceJointDef();
+				dJD.bodyA = b1;
+				dJD.bodyB = b2;
+				dJD.length = 4.0f;
+				
+				world.createJoint(dJD);
 			}
 		}
 	}
