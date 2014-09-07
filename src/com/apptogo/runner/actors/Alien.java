@@ -28,7 +28,7 @@ public class Alien extends Character{
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 	
 	public Alien(World world){
-		super(world, "gfx/game/characters/alien.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton");
+		super(world, "gfx/game/characters/alien.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton");
 		initAnimations();
 		this.world = world;
 		bodySize = new Vector2(25 / PPM, 65 / PPM);
@@ -133,7 +133,7 @@ public class Alien extends Character{
 		
 	public Button getAbilityButton()
 	{
-		Button bombButton = new Button(guiSkin, "archerArrowAbilityButton");
+		Button bombButton = new Button(guiSkin, "alienLiftAbilityButton");
 		
 		bombButton.setPosition(20/PPM, bombButton.getHeight()/PPM + 20/PPM + 40/PPM);
 		bombButton.setSize(bombButton.getWidth()/PPM, bombButton.getHeight()/PPM);
