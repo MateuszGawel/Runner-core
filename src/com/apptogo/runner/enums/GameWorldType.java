@@ -57,7 +57,7 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return null;
+			return new String[]{ "gfx/game/levels/bonfire.pack"};
 		}
 		else if( gameWorldType == FOREST )
 		{

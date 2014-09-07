@@ -60,14 +60,15 @@ public class GameWorld
 	public HashMap<String, Character> enemies;
 	public Group background;
 	protected Vector2 mapSize;
-	
+	private MyContactListener contactListener;
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
 	public GameWorld(String mapPath, Player player)
 	{
 		world = new World(DEFAULT_GRAVITY, true);
-		world.setContactListener(new MyContactListener(this));
+		contactListener = new MyContactListener(this);
+		world.setContactListener(contactListener);
 		
 		worldStage = new Stage();
 		camera = (OrthographicCamera)worldStage.getCamera();
@@ -131,6 +132,7 @@ public class GameWorld
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
+        contactListener.postStep();
        // fpsLogger.log();
     }  
     

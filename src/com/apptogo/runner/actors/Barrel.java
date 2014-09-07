@@ -45,7 +45,7 @@ public class Barrel extends Actor{
 
 	private void createBody(){
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.type = BodyDef.BodyType.StaticBody;
 				
 		FixtureDef fixtureDef = Materials.barrelBody;
 		Ellipse ellipse = ((EllipseMapObject)object).getEllipse();
@@ -60,7 +60,6 @@ public class Barrel extends Actor{
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef).setUserData("barrel");
 		body.setUserData("barrel");
-		
 		setOrigin(0, 0);
 		//body.setTransform(((EllipseMapObject)object).getEllipse().x/PPM, ((EllipseMapObject)object).getEllipse().x/PPM, 0);
 		Logger.log(this, "shape x: " + ((EllipseMapObject)object).getEllipse().x + " shape y: " + ((EllipseMapObject)object).getEllipse().y);

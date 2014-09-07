@@ -127,7 +127,7 @@ public class Archer extends Character{
 	
 	public void shootArrows()
 	{
-		if(started && alive){
+		if(alive){
 			if(!touchGround){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
 			}

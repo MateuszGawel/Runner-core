@@ -7,6 +7,7 @@ import java.util.Iterator;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
+import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapLayer;
@@ -31,12 +32,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -201,6 +200,10 @@ public class TiledMapLoader
 			{
 				createBarrel(object);
 			}
+			if( checkObjectType(object, "bonfire") )
+			{
+				createBonfire(object);
+			}
 			//ponizej opisane czemu nie bd dzialac
 			if( checkObjectType(object, "jointHandle") || isPropertyTrue(object, "isJointed") )
 			{
@@ -228,6 +231,12 @@ public class TiledMapLoader
 	{
 		Barrel barrel = new Barrel(object, world, gameWorld);
 		bodies.add(barrel.getBody());
+	}
+	
+	private void createBonfire(MapObject object)
+	{
+		Bonfire bonfire = new Bonfire(object, world, gameWorld);
+		bodies.add(bonfire.getBody());
 	}
 	
 	// totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
