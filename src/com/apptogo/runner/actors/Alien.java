@@ -6,20 +6,15 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
-import com.apptogo.runner.handlers.NotificationManager;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class Alien extends Character{
 
@@ -107,6 +102,31 @@ public class Alien extends Character{
 		animationManager.createAnimation(8, 0.03f, "slide", CharacterAnimationState.SLIDING, true);
 		animationManager.createAnimation(9, 0.03f, "diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
+	}
+	
+	public boolean dieDismemberment()
+	{
+		if(alive)
+		{
+			alive = false;
+			running = false;
+			sliding = false;
+			jumped = false;
+			dismemberment = true;
+			visible = false;
+			deathPosition = new Vector2(body.getPosition());
+	        
+			Timer.schedule(new Task() {
+				@Override
+				public void run() {
+					dismemberment = false;
+					respawn();
+				}
+			}, 1);
+			
+			return true;
+		}
+		else return false;
 	}
 	
 	@Override

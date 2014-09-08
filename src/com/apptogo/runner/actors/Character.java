@@ -45,6 +45,8 @@ public abstract class Character extends Actor{
 	protected boolean touchWall = false;
 	protected boolean jumped = false;
 	protected boolean started = false;
+	protected boolean dismemberment = false;
+	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
@@ -53,7 +55,7 @@ public abstract class Character extends Actor{
 	protected float playerMaxSpeed = 8;
 	
 	protected Body body;
-	private Vector2 deathPosition;
+	protected Vector2 deathPosition;
 	
 	protected TextureRegion currentFrame;
 	
@@ -203,6 +205,9 @@ public abstract class Character extends Actor{
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
 		return success;
 	}
+
+	public abstract boolean dieDismemberment();
+	
 	private boolean die()
 	{
 		if(alive)
@@ -275,24 +280,26 @@ public abstract class Character extends Actor{
 	{
 		setVisible(visible);
 		
-		if(blinking && visible){
-			Timer.schedule(new Task() {
-				@Override
-				public void run() {
-					visible = false;
-				}
-			}, 0.1f);
-		}
-		else if(blinking && !visible){
-			Timer.schedule(new Task() {
-				@Override
-				public void run() {
-					visible = true;
-				}
-			}, 0.08f);
-		}
-		else if(!blinking){
-			visible = true;
+		if(!dismemberment){
+			if(blinking && visible){
+				Timer.schedule(new Task() {
+					@Override
+					public void run() {
+						visible = false;
+					}
+				}, 0.1f);
+			}
+			else if(blinking && !visible){
+				Timer.schedule(new Task() {
+					@Override
+					public void run() {
+						visible = true;
+					}
+				}, 0.08f);
+			}
+			else if(!blinking){
+				visible = true;
+			}
 		}
 	}
 	

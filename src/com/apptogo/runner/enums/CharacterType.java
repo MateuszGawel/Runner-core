@@ -4,6 +4,7 @@ import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.World;
 
 /** przy dodawaniu kolejnego typu pamietac o obsluzeniu go w funkcji createCharacter klasy gameWorld
@@ -37,7 +38,8 @@ public enum CharacterType
 		}
 		else if( characterType == ARCHER )
 		{
-			return new String[]{ "gfx/game/characters/arrow.png" };
+			//to trzeba zapakowaæ w atlas
+			return new String[]{ "gfx/game/characters/arrow.png", "gfx/game/characters/archerHead.png", "gfx/game/characters/archerTorso.png", "gfx/game/characters/archerArm.png", "gfx/game/characters/archerHand.png", "gfx/game/characters/archerLeg.png", "gfx/game/characters/archerFoot.png", "gfx/game/characters/archerArrows.png", "gfx/game/characters/archerBow.png" };
 		}
 		else if( characterType == ALIEN )
 		{
@@ -47,7 +49,7 @@ public enum CharacterType
 		return null;
 	}
 	
-	static public Character convertToCharacter(CharacterType characterType, World world)
+	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld)
 	{
 		if( characterType == BANDIT )
 		{
@@ -55,7 +57,7 @@ public enum CharacterType
 		}
 		else if( characterType == ARCHER )
 		{
-			return new Archer(world);
+			return new Archer(world, gameWorld);
 		}
 		else if( characterType == ALIEN )
 		{

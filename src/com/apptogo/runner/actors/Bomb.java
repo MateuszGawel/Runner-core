@@ -3,17 +3,10 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -25,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.sun.org.apache.bcel.internal.generic.BALOAD;
 
 public class Bomb extends Actor implements Poolable{
 
@@ -33,22 +25,10 @@ public class Bomb extends Actor implements Poolable{
 	public boolean alive;
 	private Body bombBody;
 	private Bandit player;
-	private World world;
+
 	private float timeToExplode = 2;
-	
-	private TextureAtlas bombAtlas;
-	private final int BOMB_FRAMES_COUNT = 5;
-	private final int EXPLOSION_FRAMES_COUNT = 6;
-	
-	private AtlasRegion[] bombFrames;
-	private AtlasRegion[] explosionFrames;
-	
-	private Animation bombAnimation;
-	private Animation explosionAnimation;
-	
+
 	private TextureRegion currentFrame;
-	private float stateTime;
-	private boolean exploding;
 	
 	private AnimationManager animationManager;
 	public enum BombAnimationState{
@@ -59,10 +39,6 @@ public class Bomb extends Actor implements Poolable{
 		this.position = new Vector2();
         this.alive = false;
         this.player = player;
-        this.world = world;
-        
-        bombAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/bomb.pack");
-
         
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -91,8 +67,6 @@ public class Bomb extends Actor implements Poolable{
 
     public void init() {
     	position.set(player.getX(), player.getY());
-    	stateTime = 0;
-        exploding = false;
         bombBody.setTransform(position, 0);
         bombBody.setLinearVelocity(player.getSpeed()/2, 0);
         alive = true;

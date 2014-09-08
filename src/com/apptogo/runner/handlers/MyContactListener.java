@@ -30,7 +30,7 @@ public class MyContactListener implements ContactListener{
 		if(!world.character.isImmortal() && world.character.isAlive() && ("killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())
 				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
 			
-			if( world.character.dieBottom() )
+			if( world.character.dieDismemberment())
 			{
 				NotificationManager.getInstance().notifyDieBottom();
 			}

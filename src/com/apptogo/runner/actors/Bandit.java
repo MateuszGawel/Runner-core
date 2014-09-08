@@ -20,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class Bandit extends Character{
 
@@ -123,6 +125,31 @@ public class Bandit extends Character{
 	public void useAbility(CharacterAbilityType abilityType)
 	{
 		if( abilityType == CharacterAbilityType.BOMB ) ((Bandit)character).throwBombs();
+	}
+	
+	public boolean dieDismemberment()
+	{
+		if(alive)
+		{
+			alive = false;
+			running = false;
+			sliding = false;
+			jumped = false;
+			dismemberment = true;
+			visible = false;
+			deathPosition = new Vector2(body.getPosition());
+	        
+			Timer.schedule(new Task() {
+				@Override
+				public void run() {
+					dismemberment = false;
+					respawn();
+				}
+			}, 1);
+			
+			return true;
+		}
+		else return false;
 	}
 	
 	public void throwBombs()

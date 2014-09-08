@@ -166,6 +166,6 @@ public class GameWorld
     
     private Character createCharacter(CharacterType characterType)
     {
-    	return CharacterType.convertToCharacter(characterType, world);
+    	return CharacterType.convertToCharacter(characterType, world, this);
     }
 }
