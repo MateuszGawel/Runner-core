@@ -8,6 +8,7 @@ import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
+import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapLayer;
@@ -363,7 +364,7 @@ public class TiledMapLoader
 		}
 	}
 			
-	private Shape createShape(MapObject object)
+	public Shape createShape(MapObject object)
 	{
 		Shape shape = null;
 		if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
@@ -429,9 +430,7 @@ public class TiledMapLoader
 		float radius = ( (ellipse.width < ellipse.height) ? ellipse.width : ellipse.height ) / 2f; //minimalizowanie elipsy do kolka
 		
 		ellipseShape.setRadius(radius / PPM);
-		Logger.log(this, "tworze wektor elipsy: " + (ellipse.x + radius) / PPM + " : " + (ellipse.x + radius) / PPM);
 		ellipseShape.setPosition(new Vector2( (ellipse.x + radius) / PPM, (ellipse.y + radius) / PPM));
-		Logger.log(this, "ELLIPSE: x = " + String.valueOf( ellipse.x / PPM ) + ", y = " + String.valueOf( ellipse.y / PPM ) );
 		return ellipseShape;
 	}
 	

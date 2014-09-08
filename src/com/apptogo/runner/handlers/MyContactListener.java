@@ -27,15 +27,15 @@ public class MyContactListener implements ContactListener{
 		//Logger.log(this, "WYKRYTO: " + fa.getUserData() + ", " + fb.getUserData());
 		
 		//smierc od zabijajacych
-		if((!world.character.isImmortal() && world.character.isAlive() && "killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())) 
-				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData()))){
+		if(!world.character.isImmortal() && world.character.isAlive() && ("killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())
+				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
 			
 			if( world.character.dieBottom() )
 			{
 				NotificationManager.getInstance().notifyDieBottom();
 			}
 			
-			Logger.log(this, "Dotyka killing");
+			Logger.log(this, "Dotyka killing: " + fa.getUserData() + " oraz " + fb.getUserData() + " player jest niesmierelny: " + world.character.isImmortal());
 		}
 		
 		//skok i sciany
