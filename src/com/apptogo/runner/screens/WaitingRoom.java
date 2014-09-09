@@ -22,8 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
-public class WaitingRoom extends BaseScreen implements WarpListener{	
-		
+public class WaitingRoom extends BaseScreen implements WarpListener
+{			
 	private Label label;
 	private TextButton playButton;
 	private float lastLabelY = 300f;
@@ -69,7 +69,8 @@ public class WaitingRoom extends BaseScreen implements WarpListener{
 	}
 	
 	@Override
-	public void handleInput() {
+	public void handleInput() 
+	{
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
 		{
 			WarpController.getInstance().stopApp();

@@ -242,7 +242,7 @@ public class TiledMapLoader
 	
 	// totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
 	private void createJoints( Array<MapObject> objectsToJoint )
-	{Logger.log(this, "ROBIMY JOINT");
+	{Logger.log(this, "ROBIMY JOINT z " + String.valueOf(objectsToJoint.size) + " obiektow");
 		while( objectsToJoint.size > 0 )
 		{Logger.log(this, "0| oTJ.size = " + objectsToJoint.size );
 			MapObject objectA = objectsToJoint.first();
