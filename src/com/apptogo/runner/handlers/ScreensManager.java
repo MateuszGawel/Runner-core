@@ -64,6 +64,12 @@ public class ScreensManager {
 		setScreen(loadingScreen);
 	}
 	
+	public void createLoadingScreen(ScreenType screenToLoad, Level levelToLoad)
+	{
+		BaseScreen loadingScreen = new LoadingScreen(runner, screenToLoad, levelToLoad);
+		setScreen(loadingScreen);
+	}
+	
 	/** @param screenToLoad albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala 
 	 * 	@param level obiekt typu Level z informacjami o levelu do zaladowania
 	 * 	@param characterTypes tablica WSZYSTKICH typow playerow wystepujacych na planszy - jesli null to ResourceManager zaladuje atlasy wszystkich dostepnych*/
@@ -91,7 +97,7 @@ public class ScreensManager {
 		
 		this.levelToLoad = level;
 		this.enemies = enemies;
-		createLoadingScreen(screenToLoad);
+		createLoadingScreen(screenToLoad, levelToLoad);
 	}
 	
 	private BaseScreen getScreen(ScreenType screenType)

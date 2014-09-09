@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -35,12 +36,26 @@ public class LoadingScreen extends BaseScreen{
 	private Label label;
 	private Label smallLabel;
 	
+	private Level levelToLoad;
+	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad)
 	{
 		super(runner);	
 		resourcesManager = ResourcesManager.getInstance();
 		
         this.screenToLoad = screenToLoad;
+        this.levelToLoad = null;
+        
+        resourcesManager.loadResources(screenToLoad);
+	}
+	
+	public LoadingScreen(Runner runner, ScreenType screenToLoad, Level levelToLoad)
+	{
+		super(runner);	
+		resourcesManager = ResourcesManager.getInstance();
+		
+        this.screenToLoad = screenToLoad;
+        this.levelToLoad = levelToLoad;
         
         resourcesManager.loadResources(screenToLoad);
 	}
@@ -49,9 +64,18 @@ public class LoadingScreen extends BaseScreen{
 	{
 		if( screenToLoad == ScreenType.SCREEN_GAME_SINGLE || screenToLoad == ScreenType.SCREEN_GAME_MULTI )
 		{
-			loadPlayer();
-			
-			setBackground( CharacterType.convertToLoadingScreenBackground( player.getCurrentCharacter() ) );
+			if( screenToLoad == ScreenType.SCREEN_GAME_SINGLE ) 
+			{
+				if( levelToLoad != null )
+				{
+					setBackground( CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) ) );
+				}
+			}
+			else if( screenToLoad == ScreenType.SCREEN_GAME_MULTI )
+			{
+				loadPlayer();
+				setBackground( CharacterType.convertToLoadingScreenBackground( player.getCurrentCharacter() ) );
+			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
 			smallLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (smallLabel.getWidth() / 2.0f), -250.0f);

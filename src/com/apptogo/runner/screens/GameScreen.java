@@ -52,7 +52,7 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	public void prepare()
-	{
+	{		
 		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
 		
 		if(enemies != null)

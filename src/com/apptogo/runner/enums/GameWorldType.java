@@ -145,4 +145,40 @@ public enum GameWorldType
 		
 		return null;
 	}
+	
+	public static CharacterType convertToCharacterType( GameWorldType gameWorldType )
+	{
+		if( gameWorldType == WILDWEST )
+		{
+			return CharacterType.BANDIT;
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return CharacterType.ARCHER;
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return CharacterType.ALIEN;
+		}
+		
+		return null;
+	}
+	
+	public static String convertToFullName( GameWorldType gameWorldType )
+	{
+		if( gameWorldType == WILDWEST )
+		{
+			return "Wild West";
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return "Forest";
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return "Space";
+		}
+		
+		return null;
+	}
 }

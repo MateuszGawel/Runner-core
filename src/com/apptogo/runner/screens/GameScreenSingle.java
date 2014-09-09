@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -30,6 +31,8 @@ public class GameScreenSingle extends GameScreen{
 		
 	public void prepare() 
 	{	
+		player.setCurrentCharacter( GameWorldType.convertToCharacterType( level.worldType ) );
+		
 		super.prepare();	
 		
 		createGui();

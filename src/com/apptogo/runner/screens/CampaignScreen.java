@@ -1,6 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -13,12 +12,12 @@ import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -32,6 +31,10 @@ public class CampaignScreen extends BaseScreen
 	private Button backButton;
 	private Button previousWorldButton;
 	private Button nextWorldButton;
+	
+	private Label label;
+	
+	private Image star;
 		
 	private Array<LevelWorld> worlds;
 	
@@ -112,10 +115,20 @@ public class CampaignScreen extends BaseScreen
         nextWorldButton = new Button(skin, "campaignArrowRight");
         nextWorldButton.setPosition( 470.0f + (worldsCount * 1280.0f), -100.0f );
         nextWorldButton.addListener( moveGroupLeftListener );
+        
+        int achievedStarsCount = 0;
+        
+        label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
+        label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
+        
+        star = new Image( starFullTexture );
+        star.setPosition(label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - star.getHeight()) / 2.0f ));
 		       
         group.addActor(worldBackground);
         group.addActor(previousWorldButton);
         group.addActor(nextWorldButton);
+        group.addActor(label);
+        group.addActor(star);
 		
         drawButtons( levelWorld, (worldsCount * 1280.0f) );
         
@@ -180,8 +193,7 @@ public class CampaignScreen extends BaseScreen
         		{
     	            public void clicked(InputEvent event, float x, float y) 
     	            {
-    	            	Array<CharacterType> characterTypes = new Array<CharacterType>();
-    	            	characterTypes.add(player.getCurrentCharacter());
+    	            	player.setCurrentCharacter( GameWorldType.convertToCharacterType( level.worldType ) );
     	            	
     	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, player, null );
     	            }
