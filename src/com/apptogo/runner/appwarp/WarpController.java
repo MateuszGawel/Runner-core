@@ -189,7 +189,7 @@ public class WarpController
 			warpClient.initUDP();
 			warpClient.joinLobby();
 			warpClient.subscribeLobby();
-			//warpClient.joinRoomInRange(1, 3, false);
+			warpClient.joinRoomInRange(1, 3, false);
 		}
 		else
 		{
