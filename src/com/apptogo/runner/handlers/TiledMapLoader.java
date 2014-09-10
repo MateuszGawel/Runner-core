@@ -2,13 +2,14 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
-import com.apptogo.runner.actors.Bonfire;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapLayer;
@@ -29,7 +30,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -146,6 +146,8 @@ public class TiledMapLoader
 
 			BodyDef bodyDef = new BodyDef();
 			bodyDef.type = BodyDef.BodyType.StaticBody;
+			bodyDef.position.x = Float.parseFloat( mapObject.getProperties().get("x").toString() ) / Box2DVars.PPM;
+			bodyDef.position.y = Float.parseFloat( mapObject.getProperties().get("y").toString() ) / Box2DVars.PPM;
 			
 			groundFixture.shape = createShape(mapObject);
 			Body body = world.createBody(bodyDef);
@@ -175,6 +177,8 @@ public class TiledMapLoader
 			{
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.StaticBody;
+				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
+				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
 				objectFixture.shape = createShape(object);
 				Body body = world.createBody(bodyDef);
@@ -187,8 +191,8 @@ public class TiledMapLoader
 	
 	private void createObstaclesLayer(MapLayer layer, Iterator<MapObject> objectIt)
 	{
-		//ponizej opisane czemu nie bd dzialac
-		Array<MapObject> objectsToJoint = new Array<MapObject>();
+		HashMap<String, Body> jointHandles = new HashMap<String, Body>();
+		HashMap<String, Body> jointObjects = new HashMap<String, Body>();
 		
 		while(objectIt.hasNext()) 
 		{
@@ -199,167 +203,165 @@ public class TiledMapLoader
 			
 			if( checkObjectType(object, "barrel") )
 			{
-				createBarrel(object);
+				Body barrel = createBarrel(object);
+				
+				if( isPropertyTrue(object, "isJointed") )
+				{
+					jointObjects.put(((String)object.getProperties().get("jointId")), barrel);
+				}
+				
+				bodies.add( barrel );
 			}
 			if( checkObjectType(object, "bonfire") )
 			{
-				createBonfire(object);
-			}
-			//ponizej opisane czemu nie bd dzialac
-			if( checkObjectType(object, "jointHandle") || isPropertyTrue(object, "isJointed") )
-			{
-				objectsToJoint.add(object);
+				Body bonfire = createBonfire(object);
+				
+				if( isPropertyTrue(object, "isJointed") )
+				{
+					jointObjects.put(((String)object.getProperties().get("jointId")), bonfire);
+				}
+				
+				bodies.add( bonfire );
 			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
 				BodyDef bodyDef = new BodyDef();
+				
 				bodyDef.type = BodyDef.BodyType.StaticBody;
+				if( isPropertyTrue(object, "isDynamic"))
+				{
+					bodyDef.type = BodyDef.BodyType.DynamicBody;
+				}
+				
+				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
+				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
 				obstacleFixture.shape = createShape(object);
 				Body body = world.createBody(bodyDef);
 				body.createFixture(obstacleFixture).setUserData("killing");
 				body.setUserData("killing");
 				bodies.add(body);
+				
+				if( checkObjectType(object, "jointHandle") )
+				{
+					jointHandles.put(((String)object.getProperties().get("jointId")), body);
+				}
+				else if( isPropertyTrue(object, "isJointed") )
+				{
+					jointObjects.put(((String)object.getProperties().get("jointId")), body);
+				}
 			}
 		}
 		
-		//ponizej opisane czemu nie bd dzialac
-		createJoints( objectsToJoint );
+		createJoints(jointHandles, jointObjects );
 	}
 	
-	private void createBarrel(MapObject object)
+	private Body createBarrel(MapObject object)
 	{
 		Barrel barrel = new Barrel(object, world, gameWorld);
-		bodies.add(barrel.getBody());
+		return barrel.getBody();
 	}
 	
-	private void createBonfire(MapObject object)
+	private Body createBonfire(MapObject object)
 	{
 		Bonfire bonfire = new Bonfire(object, world, gameWorld);
-		bodies.add(bonfire.getBody());
+		return bonfire.getBody();
 	}
 	
-	// totalnie do obczajenia - mamy problem taki ze body sa ustawiane na 0,0 a ich fixtury dopiero maja odpowiednie pozycje i to chyba jest b niedobrze... zajme sie tym jak wroce z urlopu M.A.
-	private void createJoints( Array<MapObject> objectsToJoint )
-	{Logger.log(this, "ROBIMY JOINT z " + String.valueOf(objectsToJoint.size) + " obiektow");
-		while( objectsToJoint.size > 0 )
-		{Logger.log(this, "0| oTJ.size = " + objectsToJoint.size );
-			MapObject objectA = objectsToJoint.first();
-			objectsToJoint.removeIndex(0);
-			Logger.log(this, "1| oTJ.size = " + objectsToJoint.size );
+	private void createJoints(HashMap<String, Body> jointHandles, HashMap<String, Body> jointObjects)
+	{		
+		Iterator handlesIter = jointHandles.keySet().iterator();
+		
+		while(handlesIter.hasNext())
+		{
+			String jointId = (String)handlesIter.next();
+			Body bodyA = (Body)jointHandles.get(jointId);			
 			
-			MapObject objectB = null;
-			int objectBIndex = 0;
+			Body bodyB = null;
+			int anchorBIndex = 0;
+				
+			Iterator objectsIter = jointHandles.keySet().iterator();
 			
-			for(MapObject oB: objectsToJoint)
+			while(objectsIter.hasNext())
 			{
-				if( ((String)oB.getProperties().get("jointId")).equals( (String)objectA.getProperties().get("jointId") ) )
+				String bodyJointIds = (String)objectsIter.next();
+				Array<String> jointIds = new Array<String>( bodyJointIds.split(";") );
+				
+				if( jointIds.contains(jointId, false) )
 				{
-					objectB = oB;
+					bodyB = (Body)jointObjects.get(bodyJointIds);
+					anchorBIndex = jointIds.indexOf(jointId, false);
 					
 					break;
 				}
-				else
-				{
-					objectBIndex++;
-				}
+				else continue;
 			}
 			
-			if( objectB != null )
-			{		/*
-				//biedoswap
-				if( !checkObjectType(objectA, "jointHandle") )
-				{
-					MapObject objectC = objectA;
-					objectA = objectB;
-					objectB = objectC;
-				}
+			if( bodyB != null )
+			{	
+				/*
+				//--Body A
+				BodyDef bodyADef = new BodyDef();
+				bodyADef.type = BodyDef.BodyType.StaticBody;
+				bodyADef.position.x = Float.parseFloat( objectA.getProperties().get("x").toString() ) / Box2DVars.PPM;
+				bodyADef.position.y = Float.parseFloat( objectA.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
-				Logger.log(this, "OBJECTA jointId = " + objectA.getProperties().get("myName").toString() );
-				Logger.log(this, "OBJECTB jointId = " + objectB.getProperties().get("myName").toString() );
+				FixtureDef fixtureADef = Materials.objectBody; 	
+				fixtureADef.shape = createShape(objectA);
 				
-				Logger.log(this, "OBJECTA x = " + objectA.getProperties().get("x").toString() );
-				Logger.log(this, "OBJECTA y = " + objectA.getProperties().get("y").toString() );
-				
-				objectsToJoint.removeIndex(objectBIndex);
-				Logger.log(this, "2| oTJ.size = " + objectsToJoint.size );
-				//---creating body A
-				BodyDef bodyDef = new BodyDef();
-				bodyDef.type = BodyDef.BodyType.StaticBody;
-				bodyDef.position.set( Float.parseFloat( objectA.getProperties().get("x").toString() ) / PPM, Float.parseFloat( objectA.getProperties().get("y").toString() ) / PPM );
-				
-				obstacleFixture.shape = createShape(objectA);
-				
-				Body bodyA = world.createBody(bodyDef);
-				bodyA.createFixture(obstacleFixture).setUserData("nonkilling");
+				Body bodyA = world.createBody(bodyADef);
+				bodyA.createFixture(fixtureADef).setUserData("nonkilling");
 				bodyA.setUserData("nonkilling");
-				bodies.add(bodyA);
 				
-				//---creating body B
-				bodyDef = new BodyDef();
-				bodyDef.type = BodyDef.BodyType.DynamicBody;
-				bodyDef.position.set( Float.parseFloat( objectA.getProperties().get("x").toString() ) / PPM, Float.parseFloat( objectA.getProperties().get("y").toString() ) / PPM );
+				//--Body B
+				BodyDef bodyBDef = new BodyDef();
+				bodyBDef.type = BodyDef.BodyType.DynamicBody;
+				bodyBDef.position.x = Float.parseFloat( objectB.getProperties().get("x").toString() ) / Box2DVars.PPM;
+				bodyBDef.position.y = Float.parseFloat( objectB.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
-				obstacleFixture.shape = createShape(objectB);
+				FixtureDef fixtureBDef = Materials.objectBody; 	
+				fixtureBDef.shape = createShape(objectB);
 				
-				Body bodyB = world.createBody(bodyDef);
-				bodyB.createFixture(obstacleFixture).setUserData("nonkilling");
+				Body bodyB = world.createBody(bodyBDef);
+				bodyB.createFixture(fixtureBDef).setUserData("nonkilling");
 				bodyB.setUserData("nonkilling");
-				bodies.add(bodyB);
 				
-				Logger.log(this, "BODYA position = " + bodyA.getPosition().toString() );
-				Logger.log(this, "BODYB position = " + bodyB.getPosition().toString() );
+				bodies.add(bodyA);
+				bodies.add(bodyB);*/
 				
-				//---creating joint between body A and B
-				RopeJointDef jointDef = new RopeJointDef();
+				//--Joint
+				DistanceJointDef jointDef = new DistanceJointDef();
 				jointDef.bodyA = bodyA;
 				jointDef.bodyB = bodyB;
-				jointDef.localAnchorA.set( new Vector2(0,0) );
-				jointDef.localAnchorB.set( new Vector2(0,0) );
-				jointDef.maxLength = 3;
-				jointDef.collideConnected = true;
-				//jointDef.length = (float) Math.sqrt( Math.abs( (double)( ((bodyA.getLocalCenter().x - bodyB.getLocalCenter().x) * (bodyA.getLocalCenter().x - bodyB.getLocalCenter().x)) + ((bodyA.getLocalCenter().y - bodyB.getLocalCenter().y) * (bodyA.getLocalCenter().y - bodyB.getLocalCenter().y)) ) / PPM ) );
+				jointDef.length = ( new Vector2( bodyB.getPosition().x - bodyA.getPosition().x, bodyB.getPosition().y - bodyA.getPosition().y) ).len();
 				
-				world.createJoint(jointDef);
-				//Logger.log(this, "joint count = " + String.valueOf( world.getJointCount() ));*/
+				float anchorAX = 0.0f;
+				float anchorAY = 0.0f;
+				float anchorBX = 0.0f;
+				float anchorBY = 0.0f;
 				
-				BodyDef bD1 = new BodyDef();
-				FixtureDef fD1 = new FixtureDef();
-				BodyDef bD2 = new BodyDef();
-				FixtureDef fD2 = new FixtureDef();
+				/*if( objectA.getProperties().containsKey("jointX") )
+				{
+					anchorAX = Float.parseFloat( new Array<String>( objectA.getProperties().get("jointX").toString().split(";") ).get(anchorBIndex) );
+				}
+				if( objectA.getProperties().containsKey("jointY") )
+				{ 
+					anchorAY = Float.parseFloat(  new Array<String>( objectA.getProperties().get("jointY").toString().split(";") ).get(anchorBIndex) );
+				}
+				if( objectB.getProperties().containsKey("jointX") )
+				{
+					anchorBX = Float.parseFloat(  new Array<String>( objectB.getProperties().get("jointX").toString().split(";") ).get(anchorBIndex) );
+				}
+				if( objectB.getProperties().containsKey("jointY") )
+				{
+					anchorBY = Float.parseFloat(  new Array<String>( objectB.getProperties().get("jointY").toString().split(";") ).get(anchorBIndex) );
+				}*/
 				
-				PolygonShape bS1 = new PolygonShape();
-				bS1.setAsBox(0.2f, 0.2f);
+				jointDef.localAnchorA.set( new Vector2(anchorAX, anchorAY) );
+				jointDef.localAnchorB.set( new Vector2(anchorBX, anchorBY) );
 				
-				PolygonShape bS2 = new PolygonShape();
-				bS2.setAsBox(0.2f, 0.2f);
-				
-				bD1.position.x = 10.0f;
-				bD1.position.y = 10.0f;
-				bD1.type = BodyType.DynamicBody;
-				bD2.position.x = 14.0f;
-				bD2.position.y = 10.0f;
-				bD2.type = BodyType.StaticBody;
-				
-				fD1.shape = bS1;
-				Body b1 = world.createBody(bD1);
-				b1.createFixture(fD1);
-				
-				fD2.shape = bS2;
-				Body b2 = world.createBody(bD2);
-				b2.createFixture(fD2).setUserData("nonkilling");
-				b2.setUserData("nonkilling");
-				
-				bodies.add(b1);
-				bodies.add(b2);
-				
-				DistanceJointDef dJD = new DistanceJointDef();
-				dJD.bodyA = b1;
-				dJD.bodyB = b2;
-				dJD.length = 4.0f;
-				
-				world.createJoint(dJD);
+				world.createJoint(jointDef).setUserData(jointId);
 			}
 		}
 	}
@@ -371,7 +373,7 @@ public class TiledMapLoader
 		else if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
 		else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
 		else
-		{                                           
+		{                                        
 				try
 		     	{
 					shape = getShape( (RectangleMapObject)object );
@@ -385,22 +387,20 @@ public class TiledMapLoader
 	{
 		Rectangle rectangle = obj.getRectangle();
 		PolygonShape polygon = new PolygonShape();
-		Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
-		                           (rectangle.y + rectangle.height * 0.5f ) / PPM);
-		polygon.setAsBox(rectangle.width * 0.5f / PPM,
-		                 rectangle.height * 0.5f / PPM,
-		                 size,
-		                 0.0f);
+
+		polygon.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
 		return polygon;
 	}
 	private Shape getShape(PolygonMapObject obj)
 	{
 		PolygonShape polygon = new PolygonShape();
-		float[] vertices = obj.getPolygon().getTransformedVertices();
+		float[] vertices = obj.getPolygon().getVertices();
 
 		float[] worldVertices = new float[vertices.length];
 
-		for (int i = 0; i < vertices.length; ++i) {
+		for (int i = 0; i < vertices.length; ++i) 
+		{
+			Logger.log(this, "VERTICE: " + String.valueOf(vertices[i]) );
 		    worldVertices[i] = vertices[i] / PPM;
 		}
 
@@ -409,7 +409,7 @@ public class TiledMapLoader
 	}
 	private Shape getShape(PolylineMapObject obj)
 	{
-		float[] vertices = obj.getPolyline().getTransformedVertices();
+		float[] vertices = obj.getPolyline().getVertices();
 		Vector2[] worldVertices = new Vector2[vertices.length / 2];
 
 		for (int i = 0; i < vertices.length / 2; ++i) {
@@ -430,7 +430,6 @@ public class TiledMapLoader
 		float radius = ( (ellipse.width < ellipse.height) ? ellipse.width : ellipse.height ) / 2f; //minimalizowanie elipsy do kolka
 		
 		ellipseShape.setRadius(radius / PPM);
-		ellipseShape.setPosition(new Vector2( (ellipse.x + radius) / PPM, (ellipse.y + radius) / PPM));
 		return ellipseShape;
 	}
 	
