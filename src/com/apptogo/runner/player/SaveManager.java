@@ -1,13 +1,14 @@
 package com.apptogo.runner.player;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
-import com.apptogo.runner.handlers.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Array;
 
 /** klasa do zapisywania Playera NA DYSKU z opcja synchronizacji z appWarpem */
 public class SaveManager 
@@ -23,7 +24,7 @@ public class SaveManager
 	
 	private final String DEFAULT_NAME = "";
 	private final String DEFAULT_PASSWORD = "";
-	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0map7.0";
+	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0,200;map7.0,0";
 	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
 	
 	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
@@ -45,7 +46,7 @@ public class SaveManager
 		
 		player.setName(playerName);
 		player.setPassword(playerPassword);
-		player.setUnlockedLevels(unlockedLevels);
+		player.setUnlockedLevels(unserializeHashMap( unlockedLevels ) );
 		player.setCurrentCharacter(currentCharacter);
 		
 		//workarround
@@ -62,7 +63,7 @@ public class SaveManager
 	{
 		save.putString("PLAYER_NAME", player.getName());
 		save.putString("PLAYER_PASSWORD", player.getPassword());
-		save.putString("UNLOCKED_LEVELS", player.getUnlockedLevels());
+		save.putString("UNLOCKED_LEVELS", serializeHashMap( player.getUnlockedLevels() ) );
 		save.putString("CURRENT_CHARACTER", player.getCurrentCharacter().toString());
 		save.flush();
 		
@@ -82,5 +83,36 @@ public class SaveManager
 		//}
 		//else
 		throw new AppWarpConnectionException();	
+	}
+	
+	private String serializeHashMap( HashMap<String, Integer> map )
+	{
+		String serializedMap = "";
+		
+		Iterator<String> mapIter = map.keySet().iterator();
+		
+		while( mapIter.hasNext() )
+		{
+			String key = mapIter.next();
+			int value = map.get(key);
+			
+			serializedMap += ";" + key + "," + String.valueOf( value );
+		}
+		
+		return serializedMap;
+	}
+	
+	private HashMap<String, Integer> unserializeHashMap( String serializedMap )
+	{
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		
+		Array<String> records = new Array<String>( serializedMap.split(";") );
+		
+		for(String s: records)
+		{
+			map.put(s.split(",")[0], Integer.parseInt( s.split(",")[1] ) );
+		}
+		 
+		return map;
 	}
 }

@@ -1,9 +1,10 @@
 package com.apptogo.runner.player;
 
-import com.apptogo.runner.actors.Bandit;
-import com.apptogo.runner.actors.Character;
+import java.util.HashMap;
+
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.levels.LevelWorld;
 
 
 public class Player 
@@ -14,13 +15,13 @@ public class Player
 	
 	private CharacterType currentCharacter;
 	
-	private String unlockedLevels;
+	private HashMap<String, Integer> levels;
 	
 	private Statistics statistics;	
 	
 	public Player()
 	{
-		
+		levels = new HashMap<String, Integer>();
 	}
 		
 	public boolean isAnonymous()
@@ -37,13 +38,12 @@ public class Player
 	
 	public void unlockLevel(Level level)
 	{
-		unlockedLevels += ",";
-		unlockedLevels += level.unlockKey;
+		levels.put(level.unlockKey, 0);
 	}
 	
 	public boolean isLevelUnlocked(Level level)
 	{
-		if( unlockedLevels.contains(level.unlockKey) ) return true;
+		if( levels.containsKey( level.unlockKey ) ) return true;
 		else return false;
 	}
 	
@@ -70,14 +70,38 @@ public class Player
 		this.currentCharacter = currentCharacter;
 	}
 
-	public String getUnlockedLevels() {
-		return unlockedLevels;
-	}
-	public void setUnlockedLevels(String unlockedLevels) {
-		this.unlockedLevels = unlockedLevels;
+	/*ta funkcja ma sens wtedy kiedy przenosimy logike obliczania gwiazdek do campaignScreena ale czy to ma sens? takie rozwiazanie np praktycznie wymusza liniowa zaleznosc pkt od gwiazdek*/
+	public int getWorldScore(LevelWorld levelWorld)
+	{
+		int score = 0;
+		
+		for(Level level: levelWorld.getLevels() )
+		{
+			score += this.getLevelScore( level );
+		}
+		
+		return score;
 	}
 	public int getLevelScore(Level level)
 	{
-		return (int)(Math.random() * 400.0f);
+		if( levels.containsKey( level.unlockKey ) )
+		{
+			return (int)levels.get( level.unlockKey );
+		}
+		else
+			return 0;
+	}
+	public void setLevelScore(Level level, int score)
+	{
+		levels.put(level.unlockKey, score);
+	}
+	
+	public void setUnlockedLevels(HashMap<String, Integer> levels)
+	{
+		this.levels = levels;
+	}
+	public HashMap<String, Integer> getUnlockedLevels()
+	{
+		return this.levels;
 	}
 }

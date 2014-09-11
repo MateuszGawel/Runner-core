@@ -24,7 +24,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class CampaignScreen extends BaseScreen
 {	
-		
+	private final int POINTS_PER_STAR = 100;	
+	
 	private LevelManager levelManager;
 
 	private TextButton button;
@@ -116,7 +117,7 @@ public class CampaignScreen extends BaseScreen
         nextWorldButton.setPosition( 470.0f + (worldsCount * 1280.0f), -100.0f );
         nextWorldButton.addListener( moveGroupLeftListener );
         
-        int achievedStarsCount = 0;
+        int achievedStarsCount = player.getWorldScore(levelWorld) / POINTS_PER_STAR;
         
         label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
         label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
@@ -222,12 +223,11 @@ public class CampaignScreen extends BaseScreen
 	        button.setPosition( buttonX + indent, buttonY - 50.0f );       
 	        button.setUserObject( levelWorld.getWorldType() );
 	       	
-	        
-	        
-	        //if( player.isLevelUnlocked(level) )
-	        //{
+	        if( player.isLevelUnlocked(level) )
+	        {
 	        	button = drawStars( button, level );
-	        //}
+	        }
+	        
 	        group.addActor(button);
     	}
 	}
