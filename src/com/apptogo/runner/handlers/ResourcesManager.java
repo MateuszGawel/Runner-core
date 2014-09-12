@@ -185,6 +185,10 @@ public class ResourcesManager {
 		multiplayerMeta.addTexture("ui/menuBackgrounds/archerHead.png");
 		multiplayerMeta.addTexture("ui/menuBackgrounds/banditHead.png");
 		
+		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
+		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
+		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
+		
 		screenMetaArray.add( multiplayerMeta );
 
 		//|9. CREATE ROOM SCREEN
@@ -204,7 +208,7 @@ public class ResourcesManager {
 		//|11. WAITING ROOM SCREEN
 		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
 		
-		findRoomMeta.addTexture("ui/menuBackgrounds/waitingRoomScreenBackground.png");
+		findRoomMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		screenMetaArray.add( waitingRoomMeta );
 		
@@ -213,16 +217,20 @@ public class ResourcesManager {
 	    this.guiskin = new Skin(Gdx.files.internal("gui/guiskin.json"));
 	}
 	
-	public void adjustCampaignResources(GameWorldType worldType, Array<CharacterType> characterTypes)
+	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
 	{
 		Logger.log(this, "FITUJEMY");
+		
+		ScreenType desiredScreenType = ScreenType.SCREEN_GAME_SINGLE;
+		
+		if( !isCampaign ) desiredScreenType = ScreenType.SCREEN_GAME_MULTI;
 		
 		for(int i=0; i<characterTypes.size; i++) Logger.log(this, "CH #" + String.valueOf(i) + " "  + characterTypes.get(i).toString());
 		
 		for(int i = 0; i < screenMetaArray.size; i++)
 		{		
 			screenMetaArray.get(i).textureAtlases = new ArrayList<String>();
-			if( screenMetaArray.get(i).screenType == ScreenType.SCREEN_GAME_SINGLE )
+			if( screenMetaArray.get(i).screenType == desiredScreenType )
 			{
 				screenMetaArray.get(i).textures = new ArrayList<String>();
 				

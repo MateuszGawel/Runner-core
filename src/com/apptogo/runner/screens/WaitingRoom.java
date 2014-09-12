@@ -14,9 +14,11 @@ import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,10 +27,13 @@ import com.badlogic.gdx.utils.Array;
 public class WaitingRoom extends BaseScreen implements WarpListener
 {			
 	private Label label;
+	
 	private TextButton playButton;
-	private float lastLabelY = 300f;
+	private Button backButton;
 	
 	private Array<Player> enemies;
+	
+	private float lastLabelY = 250f;
 	
 	public WaitingRoom(Runner runner)
 	{
@@ -43,12 +48,21 @@ public class WaitingRoom extends BaseScreen implements WarpListener
 	
 	public void prepare() 
 	{		
-		setBackground("ui/menuBackgrounds/waitingRoomScreenBackground.png");
+		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
+		backButton = new Button( skin, "back");
+        backButton.setPosition( -580f, 240f );
+        backButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+            }
+         });
+        
 		enemies = new Array<Player>();
 		
 		playButton = new TextButton("PLAY", skin, "default");
-		playButton.setPosition(-500f, -300f);
+		playButton.setPosition( -( playButton.getWidth() / 2.0f ), -300f);
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -57,6 +71,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener
          });
 		
         addToScreen(playButton);
+        addToScreen(backButton);
         
         addLabel(player.getName());
         
@@ -163,7 +178,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener
 	{
 		Label nameLabel = new Label(enemyName, skin, "default");
 		nameLabel.setSize(300f, 60f);
-		nameLabel.setPosition(-500f, lastLabelY - 20f);
+		nameLabel.setPosition(-300f, lastLabelY - 20f);
 		lastLabelY -= 80f;
 		
 		stage.addActor(nameLabel);

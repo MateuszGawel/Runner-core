@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.CharacterAnimation;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -11,31 +12,38 @@ import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MultiplayerScreen extends BaseScreen
 {			
 	private TextButton createRoomButton;
 	private TextButton joinRandomButton;
-	private TextButton upgradeButton;
+	private TextButton manageProfileButton;
+	
+	private Widget manageWidget;
 	
     private Button backButton;
-	
-    private Widget characterWidget;
     
-	private Texture currentHeadTexture;
-	private Image currentHead;
+    private CharacterAnimation banditAnimation;
+    private CharacterAnimation archerAnimation;
+    private CharacterAnimation alienAnimation;
 	
+    private CharacterAnimation manageBanditAnimation;
+    private CharacterAnimation manageArcherAnimation;
+    private CharacterAnimation manageAlienAnimation;
+    
+    private Button manageBanditAnimationButton;
+    private Button manageArcherAnimationButton;
+    private Button manageAlienAnimationButton;
+    
 	public MultiplayerScreen(Runner runner)
 	{
 		super(runner);	
@@ -44,7 +52,7 @@ public class MultiplayerScreen extends BaseScreen
 	
 	@Override
 	public void prepare()
-	{		
+	{			
 		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
 				
 		backButton = new Button( skin, "back");
@@ -57,44 +65,146 @@ public class MultiplayerScreen extends BaseScreen
          });
         
         createRoomButton = new TextButton( "create room", skin, "default");
-        createRoomButton.setPosition( -(createRoomButton.getWidth() / 2.0f), 0.0f );
+        createRoomButton.setPosition( -(createRoomButton.getWidth() / 2.0f), 100.0f );
 		
-		joinRandomButton = new TextButton( "random room", skin, "default");
-		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -200.0f );
+        joinRandomButton = new TextButton( "random room", skin, "default");
+		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -100.0f );
 		
-		characterWidget = new Widget(350.0f, Align.center, 750.0f, WidgetType.BIG, WidgetFadingType.RIGHT_TO_LEFT, true);
-		characterWidget.setEasing( Interpolation.elasticOut );
+		banditAnimation = new CharacterAnimation("gfx/game/characters/bandit.pack", 275.0f, -300.0f);
+		archerAnimation = new CharacterAnimation("gfx/game/characters/archer.pack", 275.0f, -300.0f);
+		alienAnimation = new CharacterAnimation("gfx/game/characters/alien.pack", 275.0f, -300.0f);
 		
-		upgradeButton = new TextButton( "upgrade", skin, "default");
-		upgradeButton.setSize(220.0f, 220.0f);
-		upgradeButton.setPosition( 385.0f, -200.0f );
-		upgradeButton.addListener( characterWidget.getToggleListener() );
+		banditAnimation.setVisible(false);
+		archerAnimation.setVisible(false);
+		alienAnimation.setVisible(false);
 		
-		final SelectBox<String> selectCharacter = new SelectBox<String>(skin, "default");
-        selectCharacter.setSize(250f, 50f);
-        selectCharacter.setPosition(375.0f, 220.0f);
-        selectCharacter.setItems(new String[]{ CharacterType.BANDIT.toString(), CharacterType.ARCHER.toString(), CharacterType.ALIEN.toString() });
-        selectCharacter.setSelected( player.getCurrentCharacter().toString() );
-        
-        selectCharacter.addListener( new ChangeListener()
-        {
-			public void changed(ChangeListener.ChangeEvent event, Actor actor)
+		manageWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
+		manageWidget.setEasing( Interpolation.elasticOut );
+		
+		manageBanditAnimation = new CharacterAnimation("gfx/game/characters/bandit.pack", -550.0f, 1075.0f, false);
+		manageArcherAnimation = new CharacterAnimation("gfx/game/characters/archer.pack", -400.0f, 1075.0f, false);
+		manageAlienAnimation = new CharacterAnimation("gfx/game/characters/alien.pack", -250.0f, 1075.0f, false);
+		
+		manageBanditAnimationButton = new Button(skin, "blackOut");
+		manageBanditAnimationButton.setSize(130, 175);
+		manageBanditAnimationButton.setPosition(-525, 1075);
+		manageBanditAnimationButton.addListener( new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
             {
-				setCurrentHead( (String)selectCharacter.getSelected() );
+				manageBanditAnimation.start();
+				manageArcherAnimation.stop();
+				manageAlienAnimation.stop();
+				
+				player.setCurrentCharacter(CharacterType.BANDIT);
+				SaveManager.getInstance().savePlayer(player);
+				
+				banditAnimation.setVisible(true);
+				archerAnimation.setVisible(false);
+				alienAnimation.setVisible(false);
             }
 		});
-         
-        setCurrentHead( player.getCurrentCharacter().toString() );
+		
+		manageArcherAnimationButton = new Button(skin, "blackOut");
+		manageArcherAnimationButton.setSize(130, 175);
+		manageArcherAnimationButton.setPosition(-360, 1075);
+		manageArcherAnimationButton.addListener( new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				manageBanditAnimation.stop();
+				manageArcherAnimation.start();
+				manageAlienAnimation.stop();
+				
+				player.setCurrentCharacter(CharacterType.ARCHER);
+				SaveManager.getInstance().savePlayer(player);
+				
+				banditAnimation.setVisible(false);
+				archerAnimation.setVisible(true);
+				alienAnimation.setVisible(false);
+            }
+		});
+		
+		manageAlienAnimationButton = new Button(skin, "blackOut");
+		manageAlienAnimationButton.setSize(130, 175);
+		manageAlienAnimationButton.setPosition(-210, 1075);
+		manageAlienAnimationButton.addListener( new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				manageBanditAnimation.stop();
+				manageArcherAnimation.stop();
+				manageAlienAnimation.start();
+				
+				player.setCurrentCharacter(CharacterType.ALIEN);
+				SaveManager.getInstance().savePlayer(player);
+				
+				banditAnimation.setVisible(false);
+				archerAnimation.setVisible(false);
+				alienAnimation.setVisible(true);
+            }
+		});
+		
+		Label nameLabel = new Label("name:", skin, "default");
+		nameLabel.setPosition(-25, 1175);
+		
+		final TextField textField = new TextField(player.getName(), skin);
+        textField.setSize(450f, 50f);
+        textField.setPosition(0f, 1115f);
+        textField.setOnscreenKeyboard( textField.getOnscreenKeyboard() );
         
+        textField.addListener( new InputListener() 
+        {
+        	public boolean keyUp(InputEvent event, int keycode)
+        	{Logger.log(this, "POZMIENIALO SIE");
+        		player.setName( textField.getText() );
+        		SaveManager.getInstance().savePlayer(player);
+        		
+        		return true;
+        	}
+		});
+		
+		manageWidget.addActor(manageBanditAnimation);
+		manageWidget.addActor(manageArcherAnimation);
+		manageWidget.addActor(manageAlienAnimation);
+		
+		manageWidget.addActor(manageBanditAnimationButton);
+		manageWidget.addActor(manageArcherAnimationButton);
+		manageWidget.addActor(manageAlienAnimationButton);
+		
+		manageWidget.addActor(nameLabel);
+		manageWidget.addActor(textField);
+		
+		manageProfileButton = new TextButton( "your profile", skin, "default");
+		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
+		manageProfileButton.addListener( manageWidget.getToggleListener() );
+		
 		addToScreen(createRoomButton);
 		addToScreen(joinRandomButton);
+		addToScreen(manageProfileButton);
 		addToScreen(backButton);
 		
-		characterWidget.addActor(selectCharacter);
-		characterWidget.addActor(upgradeButton);
-		//addToScreen(selectCharacter);
+		addToScreen(banditAnimation);
+		addToScreen(archerAnimation);
+		addToScreen(alienAnimation);
 		
-		addToScreen( characterWidget.actor() );
+		addToScreen(manageWidget.actor());
+		
+		if( player.getCurrentCharacter() == CharacterType.BANDIT )
+		{
+			banditAnimation.setVisible(true);
+			manageBanditAnimation.start();
+		}
+		else if( player.getCurrentCharacter() == CharacterType.ARCHER )
+		{
+			archerAnimation.setVisible(true);
+			manageArcherAnimation.start();
+		}
+		else if( player.getCurrentCharacter() == CharacterType.ALIEN )
+		{
+			alienAnimation.setVisible(true);
+			manageAlienAnimation.start();
+		}
 	}
 	
 	public void step()
@@ -104,35 +214,7 @@ public class MultiplayerScreen extends BaseScreen
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		}
 	}
-	
-	private void setCurrentHead(String selectedCharacterString)
-	{
-		currentHeadTexture = new Texture( CharacterType.convertToCharacterHead( selectedCharacterString ) );
 		
-		player.setCurrentCharacter(CharacterType.parseFromString( selectedCharacterString ));
-		SaveManager.getInstance().savePlayer(player);
-		
-		if( currentHead != null )
-		{
-			currentHead.clear();
-			currentHead.remove();
-			currentHead.setVisible(false);
-		}
-
-		currentHead = new Image( currentHeadTexture );
-		
-		currentHead.setSize(150.0f, 150.0f); //one powinny byc po prostu w tym rozmiarze
-        currentHead.setPosition(425.0f, 50.0f);
-        currentHead.setUserObject("currentHeadImage");
-        
-        currentHead.setVisible(true);
-        
-        characterWidget.addActor(currentHead);
-        //addToScreen(currentHead);
-        
-        Logger.log(this, stage.getActors().size);
-	}
-	
 	@Override
 	public void handleInput() {
 		// TODO Auto-generated method stub
@@ -166,7 +248,7 @@ public class MultiplayerScreen extends BaseScreen
 	public void dispose() 
 	{
 		super.dispose();
-		currentHeadTexture.dispose();
+		
 	}
 
 	@Override

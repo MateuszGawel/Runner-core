@@ -77,7 +77,7 @@ public class ScreensManager {
 	{
 		if(screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI) screenToLoad = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
 		
-		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE) 
+		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE || screenToLoad == ScreenType.SCREEN_GAME_MULTI) 
 		{
 			Array<CharacterType> characterTypes = new Array<CharacterType>();
 			
@@ -92,9 +92,12 @@ public class ScreensManager {
 			}
 			
 			Logger.log( this, "ADJUSTUJE" );
-			ResourcesManager.getInstance().adjustCampaignResources(level.worldType, characterTypes);
+			if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE)
+				ResourcesManager.getInstance().adjustResources(level.worldType, characterTypes, true);
+			else if(screenToLoad == ScreenType.SCREEN_GAME_MULTI)
+				ResourcesManager.getInstance().adjustResources(level.worldType, characterTypes, false);
 		}
-		
+				
 		this.levelToLoad = level;
 		this.enemies = enemies;
 		createLoadingScreen(screenToLoad, levelToLoad);
