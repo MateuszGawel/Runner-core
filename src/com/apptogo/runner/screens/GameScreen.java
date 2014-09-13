@@ -128,7 +128,8 @@ public abstract class GameScreen extends BaseScreen{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		world.dispose();
+		Logger.log(this, "DISPOSE");
 	}
 
 	@Override

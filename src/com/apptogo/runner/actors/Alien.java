@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.MyAnimation;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -20,15 +21,18 @@ public class Alien extends Character{
 
 	private World world;
 	private Vector2 bodySize;
-	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
+	public CharacterAbilityType defaultAbility = CharacterAbilityType.LIFT;
+	public LiftField liftField;
 	
-	public Alien(World world){
+	public Alien(World world, GameWorld gameWorld){
 		super(world, "gfx/game/characters/alien.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton");
 		initAnimations();
 		this.world = world;
 		bodySize = new Vector2(25 / PPM, 65 / PPM);
 		createBody(bodySize);
         setOrigin(0, 0);
+        liftField = new LiftField(this, world);
+        gameWorld.backgroundStage.addActor(liftField);
 	}
 	
 	private void initAnimations(){
@@ -82,13 +86,13 @@ public class Alien extends Character{
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, AnimationManager.createFrames(10, "flyarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYLIFT, AnimationManager.createFrames(10, "flydzida"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, AnimationManager.createFrames(15, "runarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNLIFT, AnimationManager.createFrames(15, "rundzida"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)
@@ -132,12 +136,20 @@ public class Alien extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.BOMB ) ((Alien)character).levitate();
+		if( abilityType == CharacterAbilityType.LIFT ) ((Alien)character).lift();
 	}
 	
-	public void levitate()
+	public void lift()
 	{
-		
+		if(alive){
+			if(!touchGround){
+				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+			}
+			else{
+				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+			}
+			liftField.init();
+		}
 	}
 
 	@Override

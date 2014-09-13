@@ -42,4 +42,9 @@ public class WildWestWorld extends GameWorld{
 		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
 		background.addActor(sand);
 	}
+	
+	@Override
+	public void dispose(){
+		
+	}
 }

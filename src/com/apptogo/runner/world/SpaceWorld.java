@@ -2,15 +2,21 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.Random;
+
 import com.apptogo.runner.actors.Asteroid;
+import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Bomb;
-import com.apptogo.runner.actors.Bomb.BombAnimationState;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
@@ -25,6 +31,8 @@ public class SpaceWorld extends GameWorld{
 	public ConstantParallaxBackground planet1;
 	private Actor asteroidHandler;
 	
+	private Task asteroidsTask;
+	
 	private final Array<Asteroid> activeAsteroids = new Array<Asteroid>();
     private Pool<Asteroid> asteroidsPool = new Pool<Asteroid>() {
 	    @Override
@@ -36,12 +44,29 @@ public class SpaceWorld extends GameWorld{
     };
     
     
+    private void createTestBody(float x){
+    	BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		
+		CircleShape shape = new CircleShape();
+		FixtureDef fixtureDef;
+		
+		Body testBody = world.createBody(bodyDef);
+		testBody.setUserData("testBody");
+
+		shape.setRadius(14/PPM);
+		fixtureDef = Materials.barrelBody;
+		fixtureDef.shape = shape;
+		testBody.createFixture(fixtureDef).setUserData("testBody");
+		testBody.setTransform(x, 10f,  0);
+    }
+    
 	public SpaceWorld(String mapPath, Player player){
 		super(mapPath, player);
 		super.world.setGravity(GRAVITY);
 		createBackground();
 
-		Timer.schedule(new Task() {
+		asteroidsTask = new Task() {
 			@Override
 			public void run() {
 				Asteroid asteroid = asteroidsPool.obtain();
@@ -49,7 +74,13 @@ public class SpaceWorld extends GameWorld{
 				activeAsteroids.add(asteroid);
 				freePools();
 			}
-		}, 0.5f, 0.5f);
+		};
+		Timer.schedule(asteroidsTask, 0.5f, 0.5f);
+		
+		Random random = new Random();
+		
+		for(int i=0; i<=50; i++)
+			createTestBody(random.nextFloat()*1000);
 	}
 	
 	private void createBackground(){
@@ -81,6 +112,11 @@ public class SpaceWorld extends GameWorld{
                 asteroidsPool.free(item);
             }
         }
+	}
+	
+	@Override
+	public void dispose(){
+		asteroidsTask.cancel();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
 
+import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -78,7 +79,22 @@ public class MyContactListener implements ContactListener{
 				}
 			}
 		}
-
+		
+		//podnoszenie aliena
+		if("liftField".equals(fa.getUserData()) && ((Alien)world.character).liftField.isActive()){
+			if(!fb.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
+				((Alien)world.character).liftField.addBodyToLift(fb.getBody());
+				fb.getBody().applyLinearImpulse(0, ((Alien)world.character).liftField.initialBoost, 0, 0, true);
+				Logger.log(this, fb.getUserData().toString());
+			}
+		}
+		if("liftField".equals(fb.getUserData()) && ((Alien)world.character).liftField.isActive()){
+			if(!fa.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
+				((Alien)world.character).liftField.addBodyToLift(fa.getBody());
+				fa.getBody().applyLinearImpulse(0, ((Alien)world.character).liftField.initialBoost, 0, 0, true);
+				Logger.log(this, fa.getUserData().toString());
+			}
+		}
 	}
 
 	@Override
@@ -93,6 +109,15 @@ public class MyContactListener implements ContactListener{
 		if(("wallSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
 				|| ("wallSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
 			world.character.decrementWallSensor();
+		}
+		
+		if("liftField".equals(fa.getUserData())){
+			((Alien)world.character).liftField.removeBodyToLift(fb.getBody());
+			Logger.log(this, "jestem w A koniec");
+		}
+		if("liftField".equals(fb.getUserData())){
+			((Alien)world.character).liftField.removeBodyToLift(fa.getBody());
+			Logger.log(this, "jestem w B konec");
 		}
 		
 	}

@@ -60,12 +60,15 @@ public class Bomb extends Actor implements Poolable{
 			@Override
 			public void onAnimationFinished(){
 				alive = false;
+		    	animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
 			}
 		});
 		animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
+		currentFrame = animationManager.animate(0f);
 	}
 
     public void init() {
+
     	position.set(player.getX(), player.getY());
         bombBody.setTransform(position, 0);
         bombBody.setLinearVelocity(player.getSpeed()/2, 0);
@@ -77,9 +80,6 @@ public class Bomb extends Actor implements Poolable{
 			}
 		}, timeToExplode);
 		
-		currentFrame = animationManager.animate(0f); //nie wiem czy tak powinno byc wtedy nie ma nulla, tak czy siak jednak rzuca tylko jedna bombe tez nie wiem czy to ok
-		
-		setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
     }
     
 	@Override
@@ -96,7 +96,7 @@ public class Bomb extends Actor implements Poolable{
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(bombBody.getAngle() * MathUtils.radiansToDegrees);
-        
+        setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
 	}
 	
 	@Override

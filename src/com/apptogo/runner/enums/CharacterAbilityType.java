@@ -2,7 +2,7 @@ package com.apptogo.runner.enums;
 
 public enum CharacterAbilityType
 {
-	BOMB, ARROW;
+	BOMB, ARROW, LIFT;
 	
 	static public CharacterAbilityType parseFromString(String key)
 	{
@@ -13,6 +13,10 @@ public enum CharacterAbilityType
 		else if( key.equals( CharacterAbilityType.ARROW.toString() ) )
 		{
 			return CharacterAbilityType.ARROW;
+		}
+		else if( key.equals( CharacterAbilityType.LIFT.toString() ) )
+		{
+			return CharacterAbilityType.LIFT;
 		}
 		//else if() kolejne abilities
 		else return null;

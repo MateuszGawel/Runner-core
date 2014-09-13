@@ -61,7 +61,7 @@ public enum CharacterType
 		}
 		else if( characterType == ALIEN )
 		{
-			return new Alien(world);
+			return new Alien(world, gameWorld);
 		}
 		
 		return null;

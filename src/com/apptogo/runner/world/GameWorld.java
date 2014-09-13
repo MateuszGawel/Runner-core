@@ -33,7 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-public class GameWorld 
+public abstract class GameWorld 
 {
 
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
@@ -92,6 +92,8 @@ public class GameWorld
 		
 		fpsLogger = new FPSLogger();
 	}
+	
+	public abstract void dispose();
 	
 	private void createWorld(String mapPath, CharacterType characterType)
 	{
