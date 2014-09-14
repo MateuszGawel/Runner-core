@@ -3,6 +3,8 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static java.lang.Math.sqrt;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,6 +71,8 @@ public abstract class Character extends Actor{
 	
 	protected AnimationManager animationManager;
 		
+	protected ArrayList<BodyMember> bodyMembers;
+	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
 		this.world = world;
@@ -76,6 +80,7 @@ public abstract class Character extends Actor{
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 		
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
+		bodyMembers = new ArrayList<BodyMember>();
 		
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;
@@ -196,6 +201,8 @@ public abstract class Character extends Actor{
 	{
 		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
+		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+		body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 		return success;
 	}
 	/** NotificationManager.getInstance().notifyDieBottom() przy uzyciu i zwroceniu true */
@@ -203,10 +210,20 @@ public abstract class Character extends Actor{
 	{
 		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
+		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+		body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 		return success;
 	}
 
-	public abstract boolean dieDismemberment();
+	public boolean dieDismemberment()
+	{
+		dismemberment = true;
+		visible = false;
+		actDismemberment = true;   
+		boolean success = die();
+			
+		return success;
+	}
 	
 	private boolean die()
 	{
@@ -216,13 +233,13 @@ public abstract class Character extends Actor{
 			running = false;
 			sliding = false;
 			jumped = false;
-			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+
 			deathPosition = new Vector2(body.getPosition());
 			
 			Timer.schedule(new Task() {
 				@Override
 				public void run() {
+					dismemberment = false;
 					respawn();
 				}
 			}, 1);
@@ -339,6 +356,16 @@ public abstract class Character extends Actor{
 			body.applyForceToCenter(new Vector2(200, 0), true);
 		}
 	}
+	
+	private void handleDismemberment(){
+		if(actDismemberment){
+			actDismemberment = false;
+			for(BodyMember bodyMember : bodyMembers){
+				bodyMember.init();
+				Logger.log(this, "ustawiam " + bodyMember.toString());
+			}
+		}
+	}
 
 	@Override
 	public void act(float delta) 
@@ -347,6 +374,7 @@ public abstract class Character extends Actor{
 		handleStopping();
 		handleSensors();
 		handleRunning();
+		handleDismemberment();
 		//Logger.log(this, body.getPosition().x + " ");
 		currentFrame = animationManager.animate(delta);
 		

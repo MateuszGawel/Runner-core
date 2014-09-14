@@ -9,7 +9,10 @@ import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -20,12 +23,14 @@ import com.badlogic.gdx.utils.Timer.Task;
 public class Alien extends Character{
 
 	private World world;
+	private GameWorld gameWorld;
 	private Vector2 bodySize;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.LIFT;
 	public LiftField liftField;
 	
 	public Alien(World world, GameWorld gameWorld){
 		super(world, "gfx/game/characters/alien.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton");
+		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
 		bodySize = new Vector2(25 / PPM, 65 / PPM);
@@ -79,7 +84,7 @@ public class Alien extends Character{
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, AnimationManager.createFrames(30, "bored"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, AnimationManager.createFrames(57, "bored"), true, 1){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
@@ -108,29 +113,29 @@ public class Alien extends Character{
 		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
 	
-	public boolean dieDismemberment()
-	{
-		if(alive)
-		{
-			alive = false;
-			running = false;
-			sliding = false;
-			jumped = false;
-			dismemberment = true;
-			visible = false;
-			deathPosition = new Vector2(body.getPosition());
-	        
-			Timer.schedule(new Task() {
-				@Override
-				public void run() {
-					dismemberment = false;
-					respawn();
-				}
-			}, 1);
-			
-			return true;
+	public void createBodyMembers(){
+		CircleShape circleShape = new CircleShape();
+		circleShape.setRadius(20/PPM);
+		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/alienHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
+		
+		PolygonShape polygonShape = new PolygonShape();
+		polygonShape.setAsBox(15/PPM, 25/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienTorso.png", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
+		polygonShape.setAsBox(5/PPM, 10/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienLeg.png", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienLeg.png", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienFoot.png", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienFoot.png", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienArm.png", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienArm.png", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienHand.png", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienHand.png", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		polygonShape.setAsBox(9/PPM, 25/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienStaff.png", 65/PPM, -10/PPM, 200f * MathUtils.degreesToRadians));
+		
+		for(BodyMember bodyMember : bodyMembers){
+			gameWorld.worldStage.addActor(bodyMember);
 		}
-		else return false;
 	}
 	
 	@Override

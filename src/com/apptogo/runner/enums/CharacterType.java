@@ -34,7 +34,7 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return null;
+			return new String[]{"gfx/game/characters/banditHead.png", "gfx/game/characters/banditTorso.png", "gfx/game/characters/banditArm.png", "gfx/game/characters/banditHand.png", "gfx/game/characters/banditLeg.png", "gfx/game/characters/banditFoot.png", "gfx/game/characters/banditBag.png"};
 		}
 		else if( characterType == ARCHER )
 		{
@@ -53,7 +53,7 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return new Bandit(world);
+			return new Bandit(world, gameWorld);
 		}
 		else if( characterType == ARCHER )
 		{

@@ -30,8 +30,6 @@ public class Archer extends Character{
 	private GameWorld gameWorld;
 	private Vector2 bodySize;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
-	
-	private ArrayList<BodyMember> bodyMembers;
 
     private final Array<Arrow> activeArrows = new Array<Arrow>();
     private final Pool<Arrow> arrowsPool = new Pool<Arrow>() {
@@ -134,34 +132,7 @@ public class Archer extends Character{
 		if( abilityType == CharacterAbilityType.ARROW ) ((Archer)character).shootArrows();
 	}
 	
-	public boolean dieDismemberment()
-	{
-		if(alive)
-		{
-			alive = false;
-			running = false;
-			sliding = false;
-			jumped = false;
-			dismemberment = true;
-			visible = false;
-			deathPosition = new Vector2(body.getPosition());
-			actDismemberment = true;   
-			Timer.schedule(new Task() {
-				@Override
-				public void run() {
-					dismemberment = false;
-					respawn();
-				}
-			}, 1);
-			
-			return true;
-		}
-		else return false;
-	}
-	
 	public void createBodyMembers(){
-		bodyMembers = new ArrayList<BodyMember>();
-		
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(20/PPM);
 		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/archerHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
@@ -220,12 +191,7 @@ public class Archer extends Character{
 		super.act(delta);
 		freePools();
 		
-		if(actDismemberment){
-			actDismemberment = false;
-			for(BodyMember bodyMember : bodyMembers){
-				bodyMember.init();
-			}
-		}
+
 	}
 	
 	@Override

@@ -2,6 +2,8 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.ArrayList;
+
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
@@ -11,8 +13,12 @@ import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -27,8 +33,9 @@ public class Bandit extends Character{
 
 	private World world;
 	private Vector2 bodySize;
+	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
-	
+
     private final Array<Bomb> activeBombs = new Array<Bomb>();
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
@@ -39,12 +46,16 @@ public class Bandit extends Character{
 	    }
     };
 	
-	public Bandit(World world){
+	public Bandit(World world, GameWorld gameWorld){
 		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
+		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
 		bodySize = new Vector2(25 / PPM, 65 / PPM);
 		createBody(bodySize);
+		
+		createBodyMembers();
+		 
         setOrigin(0, 0);
 	}
 	
@@ -127,31 +138,6 @@ public class Bandit extends Character{
 		if( abilityType == CharacterAbilityType.BOMB ) ((Bandit)character).throwBombs();
 	}
 	
-	public boolean dieDismemberment()
-	{
-		if(alive)
-		{
-			alive = false;
-			running = false;
-			sliding = false;
-			jumped = false;
-			dismemberment = true;
-			visible = false;
-			deathPosition = new Vector2(body.getPosition());
-	        
-			Timer.schedule(new Task() {
-				@Override
-				public void run() {
-					dismemberment = false;
-					respawn();
-				}
-			}, 1);
-			
-			return true;
-		}
-		else return false;
-	}
-	
 	public void throwBombs()
 	{
 		if(started && alive){
@@ -164,6 +150,31 @@ public class Bandit extends Character{
 			Bomb bomb = bombsPool.obtain();
 			bomb.init();
 	        activeBombs.add(bomb);
+		}
+	}
+	
+	public void createBodyMembers(){
+		CircleShape circleShape = new CircleShape();
+		circleShape.setRadius(20/PPM);
+		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/banditHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
+		
+		PolygonShape polygonShape = new PolygonShape();
+		polygonShape.setAsBox(15/PPM, 25/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditTorso.png", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
+		polygonShape.setAsBox(5/PPM, 10/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditLeg.png", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditLeg.png", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditFoot.png", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditFoot.png", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditArm.png", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditArm.png", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditHand.png", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditHand.png", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		polygonShape.setAsBox(5/PPM, 15/PPM);
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditBag.png", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
+		
+		for(BodyMember bodyMember : bodyMembers){
+			gameWorld.worldStage.addActor(bodyMember);
 		}
 	}
 	
