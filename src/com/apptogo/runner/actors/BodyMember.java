@@ -44,7 +44,7 @@ public class BodyMember extends Actor{
 		body.createFixture(fixtureDef).setUserData("bodyMember");
 		
 		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), path));
-		
+		body.setTransform(-100, 0, 0);
 	}
 	
 	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle){

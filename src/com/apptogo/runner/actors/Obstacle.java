@@ -5,14 +5,12 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.AnimationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,8 +19,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -36,12 +34,13 @@ public class Obstacle extends Actor{
 	private MapObject object;
 	private BodyDef bodyDef;
 	private Vector2 framePosition = new Vector2();
+	protected boolean animate;
 	
 	private float offsetX = 0;
 	private float offsetY = 0;
 	
 	private TextureRegion currentFrame;
-	private AnimationManager animationManager;
+	protected AnimationManager animationManager;
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
@@ -63,6 +62,10 @@ public class Obstacle extends Actor{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
+	}
+	
+	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){
+		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, looping);
 	}
 
 	private Shape createShape(MapObject object)
@@ -137,6 +140,13 @@ public class Obstacle extends Actor{
 		setOrigin(0, 0);
 	}
 	
+	public Fixture createFixture(FixtureDef material, Shape shape, String userData){
+		material.shape = shape;
+		Fixture fixture = body.createFixture(material);
+		fixture.setUserData(userData);
+		return fixture;
+	}
+	
 	public void setOffset(float offsetX, float offsetY){
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
@@ -149,7 +159,7 @@ public class Obstacle extends Actor{
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         
-        if(animationManager != null)
+        if(animationManager != null && animate)
         	currentFrame = animationManager.animate(delta);
 	}
 	

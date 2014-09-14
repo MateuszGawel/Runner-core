@@ -19,7 +19,7 @@ public class ForestWorld extends GameWorld{
 	public static final Vector2 GRAVITY = new Vector2(0f, -60f);
 
 
-	public ParallaxBackground tree4;
+	public Image tree4;
 	public Actor tree3;
 	public Actor tree2;
 	public Actor tree1;
@@ -33,8 +33,8 @@ public class ForestWorld extends GameWorld{
 	
 	private void createBackground(){
 
-
-		tree4 = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree4.png"), mapSize, -0.05f, character, 0, 0);
+		tree4 = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree4.png"));
+		tree4.setPosition(0, 0);
 		background.addActor(tree4);
 		
 		tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -0.03f, mapSize, character, 0, 190/PPM);

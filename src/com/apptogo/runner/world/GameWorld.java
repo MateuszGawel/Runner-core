@@ -67,7 +67,7 @@ public abstract class GameWorld
 	public GameWorld(String mapPath, Player player)
 	{
 		world = new World(DEFAULT_GRAVITY, true);
-		contactListener = new MyContactListener(this);
+		contactListener = new MyContactListener(this, world);
 		world.setContactListener(contactListener);
 		
 		worldStage = new Stage();

@@ -9,6 +9,7 @@ import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
+import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -259,6 +260,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "mushroom") )
+			{
+				body = createMushroom(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -313,6 +320,12 @@ public class TiledMapLoader
 	{
 		Bonfire bonfire = new Bonfire(object, world, gameWorld);
 		return bonfire.getBody();
+	}
+	
+	private Body createMushroom(MapObject object)
+	{
+		Mushroom mushroom = new Mushroom(object, world, gameWorld);
+		return mushroom.getBody();
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)

@@ -15,6 +15,7 @@ public class Materials {
 	public static FixtureDef barrelBody;
 	public static FixtureDef arrowBody;
 	public static FixtureDef bodyMemberBody;
+	public static FixtureDef mushroomBody;
 	
 	static
 	{
@@ -30,6 +31,7 @@ public class Materials {
 		barrelBody = createFixtureDef(30f, 1f, 0f, Box2DVars.BIT_BARREL, (short)(Box2DVars.BIT_BARREL | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_PLAYER), false);
 		arrowBody = createFixtureDef(1f, 0.1f, 0.1f, Box2DVars.BIT_ARROW, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
 		bodyMemberBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_BODYMEMBER, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
+		mushroomBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution, short categoryBits, short maskBits, boolean sensor)
