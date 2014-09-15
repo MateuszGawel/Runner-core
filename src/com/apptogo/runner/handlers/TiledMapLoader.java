@@ -171,6 +171,7 @@ public class TiledMapLoader
 			bodyDef.position.x = Float.parseFloat( mapObject.getProperties().get("x").toString() ) / Box2DVars.PPM;
 			bodyDef.position.y = Float.parseFloat( mapObject.getProperties().get("y").toString() ) / Box2DVars.PPM;
 			
+			
 			groundFixture.shape = createShape(mapObject);
 			Body body = world.createBody(bodyDef);
 			body.createFixture(groundFixture).setUserData("nonkilling");
@@ -209,6 +210,9 @@ public class TiledMapLoader
 				
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
+				
+
+				
 				
 				objectFixture.shape = createShape(object);
 				body = world.createBody(bodyDef);
