@@ -2,8 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -33,10 +31,8 @@ public class Mushroom extends Obstacle{
 		
 		mushroomFixture = createFixture(Materials.mushroomBody, shape, "mushroom");
 		setOffset(-10/PPM, -35/PPM);
-		getBody().setAwake(false);
-		
-		
-		animationManager.createAnimation(new MyAnimation(0.05f, MushroomAnimationState.WORKING, AnimationManager.createFrames(8, "mushroom"), false){
+
+		animationManager.createAnimation(new MyAnimation(0.05f, MushroomAnimationState.WORKING, animationManager.createFrames(8, "mushroom"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(MushroomAnimationState.STATIC);
@@ -49,7 +45,6 @@ public class Mushroom extends Obstacle{
 	public void act(float delta){
 		super.act(delta);
 		if(mushroomFixture.getUserData().equals("mushroomWorking")){
-			Logger.log(this, "YES");
 			animate = true;
 			animationManager.setCurrentAnimationState(MushroomAnimationState.WORKING);
 			mushroomFixture.setUserData("mushroom");

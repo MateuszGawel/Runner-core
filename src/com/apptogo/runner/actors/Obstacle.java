@@ -39,7 +39,7 @@ public class Obstacle extends Actor{
 	private float offsetX = 0;
 	private float offsetY = 0;
 	
-	private TextureRegion currentFrame;
+	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
@@ -57,7 +57,6 @@ public class Obstacle extends Actor{
 	
 	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
 		this(object, world);
-		
 		animationManager = new AnimationManager(atlasPath);	
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);

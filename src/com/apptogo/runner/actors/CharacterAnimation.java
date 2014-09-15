@@ -38,7 +38,7 @@ public class CharacterAnimation extends Actor
 		
 		animationManager = new AnimationManager(atlasName);
 				
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, AnimationManager.createFrames(18, "run"), true)
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true)
 		{
 			@Override
 			public void additionalTaskDuringAnimation(){
@@ -46,7 +46,7 @@ public class CharacterAnimation extends Actor
 			}
 		});
 		
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, AnimationManager.createFrames(20, "idle"), true)
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(20, "idle"), true)
 		{
 			@Override
 			public void additionalTaskDuringAnimation(){

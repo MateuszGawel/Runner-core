@@ -41,7 +41,6 @@ public class UpgradeScreen extends BaseScreen{
         button.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - button.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - button.getHeight()/2.0f );
         button.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                 Logger.log(this, "LEVEL ONE CLICKED");
                  ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
              }
          });

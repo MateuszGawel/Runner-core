@@ -62,7 +62,6 @@ public abstract class GameScreen extends BaseScreen{
 				world.addEnemy( enemies.get(i) );
 			}
 		}
-		else Logger.log(this, "JEST CHUJOWO");
 		
 		worldRenderer = new GameWorldRenderer(world);
 	}
@@ -129,7 +128,6 @@ public abstract class GameScreen extends BaseScreen{
 	@Override
 	public void dispose() {
 		world.dispose();
-		Logger.log(this, "DISPOSE");
 	}
 
 	@Override

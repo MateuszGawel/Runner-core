@@ -22,9 +22,6 @@ public class GameWorldRenderer {
 
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
-    	Logger.log(this, "drukuje");
-    	Logger.log(this, gameWorld.toString());
-    	Logger.log(this, gameWorld.worldStage.toString());
         this.gameWorld = gameWorld;  
         this.debugRenderer = new Box2DDebugRenderer();  
         this.camera = (OrthographicCamera) gameWorld.worldStage.getCamera();  

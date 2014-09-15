@@ -9,6 +9,8 @@ import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
+import com.apptogo.runner.actors.Catapult;
+import com.apptogo.runner.actors.CatapultLeafs;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -125,7 +127,7 @@ public class TiledMapLoader
 			MapLayer layer = layersIt.next();
 			
 			if( isPropertyTrue(layer, "PhysicsEnabled") )
-			{Logger.log(this, "MAMY FIZYKE");
+			{
 				MapObjects objects = layer.getObjects();
 				Iterator<MapObject> objectIt = objects.iterator();
 				
@@ -266,6 +268,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "catapult") )
+			{
+				body = createCatapult(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -326,6 +334,12 @@ public class TiledMapLoader
 	{
 		Mushroom mushroom = new Mushroom(object, world, gameWorld);
 		return mushroom.getBody();
+	}
+	
+	private Body createCatapult(MapObject object)
+	{
+		Catapult catapult = new Catapult(object, world, gameWorld);
+		return catapult.getBody();
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)
@@ -475,7 +489,6 @@ public class TiledMapLoader
 
 		for (int i = 0; i < vertices.length; ++i) 
 		{
-			Logger.log(this, "VERTICE: " + String.valueOf(vertices[i]) );
 		    worldVertices[i] = vertices[i] / PPM;
 		}
 

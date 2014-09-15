@@ -64,7 +64,6 @@ public abstract class BaseScreen implements Screen{
 	protected void loadPlayer()
 	{
 		this.player = SaveManager.getInstance().loadPlayer();
-		Logger.log(this, "ZALADOWANY PLAYER " + player.getCurrentCharacter().toString() );
 	}
 	
 	@Override

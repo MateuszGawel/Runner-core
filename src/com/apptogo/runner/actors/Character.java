@@ -5,14 +5,10 @@ import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
@@ -136,7 +132,6 @@ public abstract class Character extends Actor{
 			started = true;
 			//if(touchGround)
 			//{
-			Logger.log(this, "JAZDA");
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			//}
 			
@@ -324,7 +319,6 @@ public abstract class Character extends Actor{
 		if(alive && speed < 0.001f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			stopped = true;
-			Logger.log(this,  "STOPPED");
 		}
 		else if(alive && speed > 0.001f && stopped){
 			if(touchGround)
@@ -332,7 +326,6 @@ public abstract class Character extends Actor{
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			stopped = false;
-			Logger.log(this,  " KONIEC STOPPED");
 		}
 	}
 
@@ -362,7 +355,6 @@ public abstract class Character extends Actor{
 			actDismemberment = false;
 			for(BodyMember bodyMember : bodyMembers){
 				bodyMember.init();
-				Logger.log(this, "ustawiam " + bodyMember.toString());
 			}
 		}
 	}

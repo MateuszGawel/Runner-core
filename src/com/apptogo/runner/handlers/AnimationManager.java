@@ -3,7 +3,6 @@ package com.apptogo.runner.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,7 +20,7 @@ public class AnimationManager {
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasName);
 	}
 	
-	public static AtlasRegion[] createFrames(int framesCount, String name){
+	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);

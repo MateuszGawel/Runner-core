@@ -91,7 +91,6 @@ public class ScreensManager {
 				}
 			}
 			
-			Logger.log( this, "ADJUSTUJE" );
 			if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE)
 				ResourcesManager.getInstance().adjustResources(level.worldType, characterTypes, true);
 			else if(screenToLoad == ScreenType.SCREEN_GAME_MULTI)
@@ -152,7 +151,6 @@ public class ScreensManager {
 		
 		runner.setScreen(screen);
 		
-		if( previousScreenType != null ) Logger.log(this, "PREVIOUS: " + previousScreenType.toString());
 		
 		if( previousScreenType != null )
 			ResourcesManager.getInstance().unloadAllResources( previousScreenType );

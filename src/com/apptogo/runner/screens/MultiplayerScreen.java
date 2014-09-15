@@ -156,7 +156,7 @@ public class MultiplayerScreen extends BaseScreen
         textField.addListener( new InputListener() 
         {
         	public boolean keyUp(InputEvent event, int keycode)
-        	{Logger.log(this, "POZMIENIALO SIE");
+        	{
         		player.setName( textField.getText() );
         		SaveManager.getInstance().savePlayer(player);
         		

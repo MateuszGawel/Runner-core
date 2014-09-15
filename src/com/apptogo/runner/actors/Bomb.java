@@ -56,7 +56,7 @@ public class Bomb extends Actor implements Poolable{
 		
 		animationManager = new AnimationManager("gfx/game/characters/bomb.pack");	
 		animationManager.createAnimation(5, 0.1f, "bomb", BombAnimationState.NORMAL, true);
-		animationManager.createAnimation(new MyAnimation(0.05f, BombAnimationState.EXPLODING, AnimationManager.createFrames(6, "bombExplosion"), false){
+		animationManager.createAnimation(new MyAnimation(0.05f, BombAnimationState.EXPLODING, animationManager.createFrames(6, "bombExplosion"), false){
 			@Override
 			public void onAnimationFinished(){
 				alive = false;

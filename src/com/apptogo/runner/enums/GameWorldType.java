@@ -61,7 +61,7 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{ "gfx/game/levels/mushroom.pack"};
+			return new String[]{ "gfx/game/levels/mushroom.pack", "gfx/game/levels/catapult.pack", "gfx/game/levels/leaf.pack"};
 		}
 		else if( gameWorldType == SPACE )
 		{

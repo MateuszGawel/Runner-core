@@ -26,7 +26,7 @@ public class Materials {
 		enemyBody = createFixtureDef(30f, 10f, 0f, Box2DVars.BIT_ENEMY, Box2DVars.BIT_NONKILLING, false);
 		groundBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
 		objectBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
-		obstacleBody = createFixtureDef(30f, 0f, 0f, Box2DVars.BIT_KILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER), true);
+		obstacleBody = createFixtureDef(30f, 0f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_FOOTSENSOR), true);
 		bombBody = createFixtureDef(10f, 0.1f, 0.5f, Box2DVars.BIT_BOMB, Box2DVars.BIT_NONKILLING, false);
 		barrelBody = createFixtureDef(30f, 1f, 0f, Box2DVars.BIT_BARREL, (short)(Box2DVars.BIT_BARREL | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_PLAYER), false);
 		arrowBody = createFixtureDef(1f, 0.1f, 0.1f, Box2DVars.BIT_ARROW, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);

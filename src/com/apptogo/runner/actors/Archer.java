@@ -55,13 +55,13 @@ public class Archer extends Character{
 	
 	private void initAnimations(){
 
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, AnimationManager.createFrames(6, "jump"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "jump"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, AnimationManager.createFrames(10, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f)
@@ -70,13 +70,13 @@ public class Archer extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, AnimationManager.createFrames(6, "beginslide"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.SLIDING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, AnimationManager.createFrames(6, "standup"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "standup"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f)
@@ -85,32 +85,32 @@ public class Archer extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});		
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, AnimationManager.createFrames(18, "run"), true){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
 				this.setFrameDuration(1/getSpeed() * 0.24f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, AnimationManager.createFrames(21, "idle"), true, 10){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 10){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, AnimationManager.createFrames(30, "bored"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(30, "bored"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYARROW, AnimationManager.createFrames(10, "flyarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYARROW, animationManager.createFrames(10, "flyarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNARROW, AnimationManager.createFrames(15, "runarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNARROW, animationManager.createFrames(15, "runarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)

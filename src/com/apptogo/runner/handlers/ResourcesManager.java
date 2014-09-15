@@ -71,7 +71,7 @@ public class ResourcesManager {
 		public void addTextures(String[] textures) { if( textures != null) for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
 		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
 		public void addTextureAtlases(String[] textureAtlases) { if( textureAtlases != null) for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
-		public void addTextureAtlas(String textureAtlas) { Logger.log(this, textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
+		public void addTextureAtlas(String textureAtlas) { this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
 		public void addMusics(String[] musics) { for(String m: musics) this.musics.add(musicsDirectory+m+musicsExtension); }
 		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
 		public void addSounds(String[] sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
@@ -219,13 +219,10 @@ public class ResourcesManager {
 	
 	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
 	{
-		Logger.log(this, "FITUJEMY");
 		
 		ScreenType desiredScreenType = ScreenType.SCREEN_GAME_SINGLE;
 		
 		if( !isCampaign ) desiredScreenType = ScreenType.SCREEN_GAME_MULTI;
-		
-		for(int i=0; i<characterTypes.size; i++) Logger.log(this, "CH #" + String.valueOf(i) + " "  + characterTypes.get(i).toString());
 		
 		for(int i = 0; i < screenMetaArray.size; i++)
 		{		
@@ -294,7 +291,6 @@ public class ResourcesManager {
 		
 		for(String textureAtlas: (ArrayList<String>)screenMetaArray.get(index).textureAtlases) 
 		{
-			Logger.log(this, "do zaladowania: " + textureAtlas);
 			manager.load(textureAtlas, TextureAtlas.class); 
 		}
 	}
@@ -343,11 +339,9 @@ public class ResourcesManager {
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
-		Logger.log(this, "UNLOADUJE! screen = " + screenType.toString() + " | " + manager.getDiagnostics() );
 		
 		manager.clear();
 		
-		Logger.log(this, "AFTER CLEAR | " + manager.getDiagnostics() );
 		//manager.dispose();
 	}
 	

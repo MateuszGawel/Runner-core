@@ -213,10 +213,6 @@ public class CampaignScreen extends BaseScreen
         	
         	if( ++currentColumnCounter >= maxInRow ) 
     		{
-    			if( ++currentRowCounter > maxInColumn )
-    			{
-    				Logger.log(this, "Max liczba level do wyswietlenia to: " + String.valueOf(maxInColumn * maxInRow));
-    			}
     			currentColumnCounter = 0;
     		}
         	        

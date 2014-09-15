@@ -154,7 +154,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener
 				}
 				
 				if( !presentAlready )			
-				{Logger.log(this, "BUM NOTYFIKACJA I TO INICJALIZACYJNA");
+				{
 					CharacterType enemyCharacter = CharacterType.parseFromString( (String)data.getString("PLAYER_CHARACTER") );
 					Logger.log(this, "OTO CO DOSTALEM: " + (String)data.getString("PLAYER_CHARACTER"));
 					Player enemy = new Player();

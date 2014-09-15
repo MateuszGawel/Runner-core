@@ -41,7 +41,6 @@ public class MyContactListener implements ContactListener{
 				NotificationManager.getInstance().notifyDieBottom();
 			}
 			
-			Logger.log(this, "Dotyka killing: " + fa.getUserData() + " oraz " + fb.getUserData() + " player jest niesmierelny: " + gameWorld.character.isImmortal());
 		}
 		
 		//skok i sciany
@@ -62,7 +61,6 @@ public class MyContactListener implements ContactListener{
 		}
 		if(("barrel".equals(fa.getUserData()) && "barrel".equals(fb.getUserData())) 
 				|| ("barrel".equals(fb.getUserData()) && "barrel".equals(fa.getUserData()))){
-			Logger.log(this,  "dwie beczki!!!!!!!!!");
 			barrelsToSetActive.add(fb.getBody());
 			barrelsToSetActive.add(fa.getBody());
 		}
@@ -89,33 +87,49 @@ public class MyContactListener implements ContactListener{
 		if("liftField".equals(fa.getUserData()) && ((Alien)gameWorld.character).liftField.isActive()){
 			if(!fb.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
 				((Alien)gameWorld.character).liftField.addBodyToLift(fb.getBody());
-				fb.getBody().applyLinearImpulse(0, ((Alien)gameWorld.character).liftField.initialBoost, 0, 0, true);
-				Logger.log(this, fb.getUserData().toString());
+				fb.getBody().applyLinearImpulse(0, ((Alien)gameWorld.character).liftField.initialBoost, 0, 0, true);;
 			}
 		}
 		if("liftField".equals(fb.getUserData()) && ((Alien)gameWorld.character).liftField.isActive()){
 			if(!fa.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
 				((Alien)gameWorld.character).liftField.addBodyToLift(fa.getBody());
 				fa.getBody().applyLinearImpulse(0, ((Alien)gameWorld.character).liftField.initialBoost, 0, 0, true);
-				Logger.log(this, fa.getUserData().toString());
 			}
 		}
 		
 		//trampolina
 		if("mushroom".equals(fa.getUserData()) && "footSensor".equals(fb.getUserData())){
-			if(gameWorld.character.isAlive()){		
+			if(gameWorld.character.isAlive()){	
+				gameWorld.character.jump();
 				fa.setUserData("mushroomWorking");
-				Logger.log(this, "weszlem");
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
 				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
 		if("mushroom".equals(fb.getUserData()) && "footSensor".equals(fa.getUserData())){
-			if(gameWorld.character.isAlive()){		
+			if(gameWorld.character.isAlive()){	
+				gameWorld.character.jump();
 				fb.setUserData("mushroomWorking");
-				Logger.log(this, "weszlem");
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
 				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
+			}
+		}
+		
+		//katapulta
+		if("catapult".equals(fa.getUserData()) && "footSensor".equals(fb.getUserData())){
+			if(gameWorld.character.isAlive()){		
+				gameWorld.character.jump();
+				fa.getBody().setUserData("catapultWorking");
+				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
+				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
+			}
+		}
+		if("catapult".equals(fb.getUserData()) && "footSensor".equals(fa.getUserData())){
+			if(gameWorld.character.isAlive()){
+				gameWorld.character.jump();
+				fb.getBody().setUserData("catapultWorking");
+				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
+				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
 			}
 		}
 	}
@@ -136,11 +150,9 @@ public class MyContactListener implements ContactListener{
 		
 		if("liftField".equals(fa.getUserData())){
 			((Alien)gameWorld.character).liftField.removeBodyToLift(fb.getBody());
-			Logger.log(this, "jestem w A koniec");
 		}
 		if("liftField".equals(fb.getUserData())){
 			((Alien)gameWorld.character).liftField.removeBodyToLift(fa.getBody());
-			Logger.log(this, "jestem w B konec");
 		}
 		
 	}
