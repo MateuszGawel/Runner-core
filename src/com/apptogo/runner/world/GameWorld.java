@@ -6,30 +6,23 @@ import java.util.HashMap;
 
 import box2dLight.RayHandler;
 
-import com.apptogo.runner.actors.Archer;
-import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.MyContactListener;
 import com.apptogo.runner.handlers.NotificationManager;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -112,12 +105,22 @@ public abstract class GameWorld
 	
 	public void destroyWorld()
 	{
+		world.clearForces();
+		
 		Array<Body> bodies = new Array<Body>();
 		world.getBodies(bodies);
 		
 		for(Body body: bodies)
 		{
 			world.destroyBody(body);
+		}
+		
+		Array<Joint> joints = new Array<Joint>();
+		world.getJoints(joints);
+		
+		for(Joint joint: joints)
+		{
+			world.destroyJoint(joint);
 		}
 	}
 	

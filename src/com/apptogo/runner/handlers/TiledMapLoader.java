@@ -457,6 +457,9 @@ public class TiledMapLoader
 				world.createJoint(jointDef).setUserData(jointId);
 			}
 		}
+		
+		jointHandles.clear();
+		jointObjects.clear();
 	}
 			
 	public Shape createShape(MapObject object)
