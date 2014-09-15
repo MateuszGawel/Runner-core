@@ -2,13 +2,13 @@ package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.InputHandler;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
-import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.handlers.SettingsManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.player.SaveManager;

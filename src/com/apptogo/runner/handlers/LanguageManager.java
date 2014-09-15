@@ -11,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,7 +28,7 @@ public class LanguageManager {
 	}
 	
 	
-	private final String STR_FILE_PATH = "ui/lang/str.xml";
+	private final String STR_FILE_PATH = "xml/lng/lng.xml";
 	private XmlReader.Element document;
 	private XmlReader.Element currentLanguage;
 	private Array<XmlReader.Element> languages;

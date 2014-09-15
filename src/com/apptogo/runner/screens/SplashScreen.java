@@ -1,9 +1,9 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.handlers.NotificationManager;
+import com.apptogo.runner.appwarp.NotificationManager;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;

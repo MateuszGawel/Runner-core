@@ -2,11 +2,11 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
@@ -84,7 +84,7 @@ public class LoadingScreen extends BaseScreen{
 			slider.setSize(475.0f, 50.0f);
 			slider.setPosition( -712.0f, -275.0f);
 			
-			sliderMask = new Image( new Texture( Gdx.files.internal( "ui/menuBackgrounds/sliderMask.png" ) ) );
+			sliderMask = new Image( new Texture( Gdx.files.internal( "gfx/menu/sliderMask.png" ) ) );
 			sliderMask.setPosition( -640.0f, -275.0f);
 			
 			addToScreen(slider);
@@ -93,7 +93,7 @@ public class LoadingScreen extends BaseScreen{
 		}
 		else
 		{
-			setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+			setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 			
 			label = new Label( getLangString("loadingLabel"), skin, "default");
 			label.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (label.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (label.getHeight() / 2.0f) );

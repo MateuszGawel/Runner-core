@@ -1,23 +1,20 @@
  package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CampaignScreen;
-import com.apptogo.runner.screens.CreateRoomScreen;
-import com.apptogo.runner.screens.FindRoomScreen;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.screens.GameScreenMulti;
 import com.apptogo.runner.screens.GameScreenSingle;
-//import com.apptogo.runner.screens.LoadingMenuScreen;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.SplashScreen;
-import com.apptogo.runner.screens.UpgradeScreen;
-import com.apptogo.runner.screens.WaitingRoom;
+import com.apptogo.runner.screens.WaitingRoomScreen;
 import com.badlogic.gdx.utils.Array;
 
 public class ScreensManager {
@@ -31,21 +28,6 @@ public class ScreensManager {
 		getInstance().runner = runner; 
 	}
 
-	public enum ScreenType
-	{
-		SCREEN_SPLASH,
-		SCREEN_LOADING, 
-		SCREEN_MAIN_MENU,
-		SCREEN_UPGRADE,
-		SCREEN_CAMPAIGN,
-		SCREEN_MULTIPLAYER,
-		SCREEN_CREATE_ROOM,
-		SCREEN_FIND_ROOM,
-		SCREEN_GAME_SINGLE,
-		SCREEN_GAME_MULTI,
-		SCREEN_WAITING_ROOM
-	}
-		
 	private BaseScreen currentScreen;
 	private ScreenType currentScreenType;
 	
@@ -110,22 +92,16 @@ public class ScreensManager {
 			screen = new SplashScreen(runner);
 		else if(screenType == ScreenType.SCREEN_MAIN_MENU)
 			screen = new MainMenuScreen(runner);
-		else if(screenType == ScreenType.SCREEN_UPGRADE)
-			screen = new UpgradeScreen(runner);
 		else if(screenType == ScreenType.SCREEN_CAMPAIGN)
 			screen = new CampaignScreen(runner);
 		else if(screenType == ScreenType.SCREEN_MULTIPLAYER)
 			screen = new MultiplayerScreen(runner);
-		else if(screenType == ScreenType.SCREEN_CREATE_ROOM)
-			screen = new CreateRoomScreen(runner);
-		else if(screenType == ScreenType.SCREEN_FIND_ROOM)
-			screen = new FindRoomScreen(runner);
 		else if(screenType == ScreenType.SCREEN_GAME_SINGLE)
 			screen = new GameScreenSingle(runner);
 		else if(screenType == ScreenType.SCREEN_GAME_MULTI)
 			screen = new GameScreenMulti(runner);
 		else if(screenType == ScreenType.SCREEN_WAITING_ROOM)
-			screen = new WaitingRoom(runner);
+			screen = new WaitingRoomScreen(runner);
 		else
 			screen = null;
 		

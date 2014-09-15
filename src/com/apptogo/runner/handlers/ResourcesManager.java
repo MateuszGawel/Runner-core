@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.badlogic.gdx.Gdx;
@@ -30,7 +30,7 @@ public class ResourcesManager {
     }
 	
 	//do zaimplementowania bedzie ladowanie tekstur do atlasów	
-	
+		
 	//---
 	private class ScreenMeta
 	{
@@ -101,10 +101,43 @@ public class ResourcesManager {
 		public void setSoundsExtension(String soundsExtension) {
 			this.soundsExtension = soundsExtension;
 		}	
+		
+		public void loadTextures()
+		{
+			for(String texture: this.textures)
+			{
+				this.manager.load(texture, Texture.class);
+			}
+		}
+		public void loadTextureAtlases()
+		{
+			for(String textureAtlas: this.textureAtlases)
+			{
+				this.manager.load(textureAtlas, TextureAtlas.class);
+			}
+		}
+		public void loadMusics()
+		{
+			for(String music: this.musics) //tu chyba nie powinien byc string? wyglada mi na niedorobke moja ale bd sie tym martwic jak dojdziemy do dzwiekow
+			{
+				this.manager.load(music, Music.class);
+			}
+		}
+		public void loadSounds()
+		{
+			for(String sound: this.sounds) //i tu jak wyzej
+			{
+				this.manager.load(sound, Sound.class);
+			}
+		}
 	}
 	//---
 
 	private Array<ScreenMeta> screenMetaArray;
+	ScreenMeta menuSpecialMeta;
+	ScreenMeta gameSpecialMeta;
+	ScreenMeta stillSpecialMeta;
+	
 	private Skin uiskin;
 	private Skin guiskin;
 		
@@ -124,8 +157,7 @@ public class ResourcesManager {
 		//|2. MAIN MENU SCREEN
 		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
 		
-		mainMenuMeta.addTexture("ui/menuBackgrounds/chainsDecoration.png");
-		mainMenuMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		mainMenuMeta.addTexture("gfx/menu/menuBackgrounds/chainsDecoration.png");
 		
 		screenMetaArray.add( mainMenuMeta );
 		
@@ -145,76 +177,59 @@ public class ResourcesManager {
 		multiplayerGameMeta.addSound("mfx/game/gameClick.ogg");
 		
 		screenMetaArray.add( multiplayerGameMeta );
-		
-		//|5. UPGRADE SCREEN
-		ScreenMeta upgradeMeta = new ScreenMeta(ScreenType.SCREEN_UPGRADE);
-		
-		upgradeMeta.addTexture("ui/menuBackgrounds/upgradeScreenBackground.png");
-		
-		screenMetaArray.add( upgradeMeta );
-		
-		//|6. LOADING SCREEN
+				
+		//|5. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
 		
-		loadingMeta.addTexture("ui/menuBackgrounds/sliderMask.png");
+		loadingMeta.addTexture("gfx/menu/menuBackgrounds/sliderMask.png");
 		
-		loadingMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
-		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackgroundWildWest.png");
-		loadingMeta.addTexture("ui/menuBackgrounds/loadingScreenBackgroundForest.png");//za duzo - to trzeba zoptymalizowac
+		loadingMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
+		loadingMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForest.png");//za duzo - to trzeba zoptymalizowac
 		
 		screenMetaArray.add( loadingMeta );
 		
-		//|7. CAMPAIGN SCREEN
+		//|6. CAMPAIGN SCREEN
 		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
-		
-		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
-		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundForrest.png");
-		campaignMeta.addTexture("ui/menuBackgrounds/campaignScreenBackgroundSpace.png");
-		
-		campaignMeta.addTexture("ui/menuBackgrounds/starSmallEmpty.png");
-		campaignMeta.addTexture("ui/menuBackgrounds/starSmallFull.png");
+				
+		campaignMeta.addTexture("gfx/menu/starSmallEmpty.png");
+		campaignMeta.addTexture("gfx/menu/starSmallFull.png");
 		
 		screenMetaArray.add( campaignMeta );
 		
-		//|8. MULTIPLAYER SCREEN
+		//|7. MULTIPLAYER SCREEN
 		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
-		
-		multiplayerMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
-		
-		multiplayerMeta.addTexture("ui/menuBackgrounds/alienHead.png");
-		multiplayerMeta.addTexture("ui/menuBackgrounds/archerHead.png");
-		multiplayerMeta.addTexture("ui/menuBackgrounds/banditHead.png");
-		
-		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
-		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
-		multiplayerMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
-		
+				
 		screenMetaArray.add( multiplayerMeta );
-
-		//|9. CREATE ROOM SCREEN
-		ScreenMeta createRoomMeta = new ScreenMeta(ScreenType.SCREEN_CREATE_ROOM);
 		
-		createRoomMeta.addTexture("ui/menuBackgrounds/createRoomScreenBackground.png");
-		
-		screenMetaArray.add( createRoomMeta );
-		
-		//|10. FIND ROOM SCREEN
-		ScreenMeta findRoomMeta = new ScreenMeta(ScreenType.SCREEN_FIND_ROOM);
-		
-		findRoomMeta.addTexture("ui/menuBackgrounds/findRoomScreenBackground.png");
-		
-		screenMetaArray.add( findRoomMeta );
-		
-		//|11. WAITING ROOM SCREEN
+		//|8. WAITING ROOM SCREEN
 		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
-		
-		findRoomMeta.addTexture("ui/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		screenMetaArray.add( waitingRoomMeta );
 		
+		//ADDING SPECIALS:
+		//-----------------------------------------------------------------------------
+		//|0. MENU RESOURCES
+		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
+		
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		
+		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
+		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
+		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
+		
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
+		
+		//|1. GAME RESOURCES
+		gameSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
+		
+		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
+		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
+		
 		//|... INITIALIZING SKINS
-		this.uiskin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-	    this.guiskin = new Skin(Gdx.files.internal("gui/guiskin.json"));
+		this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"));
+	    this.guiskin = new Skin(Gdx.files.internal("ui/gui/guiskin.json"));
 	}
 	
 	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
@@ -250,6 +265,30 @@ public class ResourcesManager {
 	}
 	
 	//--------- LOADING RESOURCES
+	private void loadMenuResources()
+	{
+		loadSpecialResources(menuSpecialMeta);
+	}
+	
+	private void loadGameResources()
+	{
+		loadSpecialResources(gameSpecialMeta);
+	}
+	
+	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
+	private void loadStillResources()
+	{
+		loadSpecialResources(stillSpecialMeta);
+	}
+	
+	private void loadSpecialResources(ScreenMeta specialMeta)
+	{
+		specialMeta.loadTextures();
+		specialMeta.loadTextureAtlases();
+		specialMeta.loadMusics();
+		specialMeta.loadSounds();
+	}
+	
 	public void loadResources(BaseScreen screen)
 	{
 		ScreenType screenType = screen.getSceneType();
@@ -257,6 +296,11 @@ public class ResourcesManager {
 	}	
 	public void loadResources(ScreenType screenType)
 	{	
+		if( screenType == ScreenType.SCREEN_MAIN_MENU )
+		{
+			loadMenuResources();
+		}
+
 		this.loadTextureAtlases(screenType);
 		this.loadTextures(screenType);
 		this.loadMusics(screenType);
@@ -271,12 +315,7 @@ public class ResourcesManager {
 	public void loadTextures(ScreenType screenType)
 	{
 		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-		
-		for(String texture: (ArrayList<String>)screenMetaArray.get(index).textures) 
-		{
-			manager.load(texture, Texture.class); 
-		}
+		screenMetaArray.get(index).loadTextures();
 	}
 	
 	public void loadTextureAtlases(BaseScreen screen)
@@ -287,12 +326,7 @@ public class ResourcesManager {
 	public void loadTextureAtlases(ScreenType screenType)
 	{
 		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-		
-		for(String textureAtlas: (ArrayList<String>)screenMetaArray.get(index).textureAtlases) 
-		{
-			manager.load(textureAtlas, TextureAtlas.class); 
-		}
+		screenMetaArray.get(index).loadTextureAtlases();
 	}
 	
 	public void loadMusics(BaseScreen screen)
@@ -303,12 +337,7 @@ public class ResourcesManager {
 	public void loadMusics(ScreenType screenType)
 	{	
 		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-		
-		for(String music: (ArrayList<String>)screenMetaArray.get(index).musics) 
-		{
-			manager.load(music, Music.class); 
-		}
+		screenMetaArray.get(index).loadMusics();
 	}
 	
 	public void loadSounds(BaseScreen screen)
@@ -319,16 +348,26 @@ public class ResourcesManager {
 	public void loadSounds(ScreenType screenType)
 	{
 		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-		
-		for(String sound: (ArrayList<String>)screenMetaArray.get(index).sounds) 
-		{
-			manager.load(sound, Sound.class); 
-		}
+		screenMetaArray.get(index).loadSounds();
 	}
 	//---------
 	
 	//--------- UNLOADING RESOURCES
+	public void unloadMenuResources()
+	{
+		menuSpecialMeta.manager.clear();
+	}
+	
+	public void unloadGameResources()
+	{
+		gameSpecialMeta.manager.clear();
+	}
+	
+	public void unloadStillResources()
+	{
+		stillSpecialMeta.manager.clear();
+	}
+	
 	public void unloadAllResources(BaseScreen screen)
 	{
 		ScreenType screenType = screen.getSceneType();
@@ -339,9 +378,7 @@ public class ResourcesManager {
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
-		
 		manager.clear();
-		
 		//manager.dispose();
 	}
 	
@@ -367,19 +404,45 @@ public class ResourcesManager {
 	}
 	public <T> T getResource(ScreenType screenType, String filename)
 	{
-		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-		
-		return manager.get(filename);
+		try
+		{
+			int index = getScreenIndex(screenType);
+			AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+			
+			return manager.get(filename);
+		}
+		catch(Exception e)
+		{
+			try
+			{
+				return menuSpecialMeta.manager.get(filename);
+			}
+			catch(Exception f)
+			{
+				try
+				{
+					return gameSpecialMeta.manager.get(filename);
+				}
+				catch(Exception g)
+				{
+					return stillSpecialMeta.manager.get(filename);
+				}
+			}
+		}
 	}
 	
 	public AssetManager getAssetManager(BaseScreen screen)
-	{
+	{		
 		ScreenType screenType = screen.getSceneType();
 		return getAssetManager(screenType);
 	}
 	public AssetManager getAssetManager(ScreenType screenType)
 	{
+		if( screenType == ScreenType.SCREEN_MAIN_MENU )
+		{
+			return menuSpecialMeta.manager;
+		}
+		
 		int index = getScreenIndex(screenType);
 		return (AssetManager)screenMetaArray.get(index).manager;
 	}

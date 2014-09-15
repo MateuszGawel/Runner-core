@@ -3,15 +3,15 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.NotificationManager;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.vars.Box2DVars;
@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
-public class WaitingRoom extends BaseScreen implements WarpListener
+public class WaitingRoomScreen extends BaseScreen implements WarpListener
 {			
 	private Label label;
 	
@@ -35,7 +35,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener
 	
 	private float lastLabelY = 250f;
 	
-	public WaitingRoom(Runner runner)
+	public WaitingRoomScreen(Runner runner)
 	{
 		super(runner);	
 		
@@ -48,7 +48,7 @@ public class WaitingRoom extends BaseScreen implements WarpListener
 	
 	public void prepare() 
 	{		
-		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );

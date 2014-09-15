@@ -7,12 +7,12 @@ import java.util.HashMap;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.handlers.Logger;
-import com.apptogo.runner.handlers.MyContactListener;
-import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.listeners.MyContactListener;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.graphics.FPSLogger;

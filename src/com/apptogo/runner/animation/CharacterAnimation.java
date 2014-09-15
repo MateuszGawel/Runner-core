@@ -1,10 +1,8 @@
-package com.apptogo.runner.actors;
+package com.apptogo.runner.animation;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

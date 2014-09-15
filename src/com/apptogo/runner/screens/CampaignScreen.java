@@ -1,13 +1,13 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.levels.LevelWorld;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.graphics.Texture;
@@ -58,8 +58,8 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
-		starEmptyTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/starSmallEmpty.png");
-		starFullTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "ui/menuBackgrounds/starSmallFull.png");
+		starEmptyTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallEmpty.png");
+		starFullTexture = ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallFull.png");
 		starFullTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		starEmptyTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		

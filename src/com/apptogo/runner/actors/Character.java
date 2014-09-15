@@ -5,11 +5,11 @@ import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
 
+import com.apptogo.runner.animation.AnimationManager;
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.handlers.AnimationManager;
-import com.apptogo.runner.handlers.NotificationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;

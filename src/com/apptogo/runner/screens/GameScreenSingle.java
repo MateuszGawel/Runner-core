@@ -3,13 +3,13 @@ package com.apptogo.runner.screens;
 import java.lang.reflect.Type;
 
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.NotificationManager;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.world.ForestWorld;

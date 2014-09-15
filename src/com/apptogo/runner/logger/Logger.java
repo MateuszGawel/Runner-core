@@ -1,4 +1,4 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.logger;
 
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.CampaignScreen;

@@ -1,7 +1,7 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.vars.Box2DVars;
@@ -63,7 +63,7 @@ public class MainMenuScreen extends BaseScreen{
 	@Override
 	public void prepare() 
 	{
-		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 					
 		settingsButton = new Button(skin, "settings");
 		settingsButton.setPosition(-570f, 240f);
@@ -96,7 +96,7 @@ public class MainMenuScreen extends BaseScreen{
 		createListeners();
 		setListeners();
         
-		chainsDecorationTexture = new Texture( Gdx.files.internal("ui/menuBackgrounds/chainsDecoration.png") );
+		chainsDecorationTexture = new Texture( Gdx.files.internal("gfx/menu/chainsDecoration.png") );
 		chainsDecoration = new Image( chainsDecorationTexture );
 		chainsDecoration.setPosition(100.0f, -240.0f);
 		

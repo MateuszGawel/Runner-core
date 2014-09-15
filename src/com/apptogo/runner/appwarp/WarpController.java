@@ -3,7 +3,7 @@ package com.apptogo.runner.appwarp;
 
 import java.util.HashMap;
 
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.logger.Logger;
 import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 import com.shephertz.app42.gaming.multiplayer.client.command.WarpResponseResultCode;
 import com.shephertz.app42.gaming.multiplayer.client.events.LobbyData;

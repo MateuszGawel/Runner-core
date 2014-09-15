@@ -1,4 +1,4 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.animation;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;

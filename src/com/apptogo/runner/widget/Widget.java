@@ -1,8 +1,10 @@
 package com.apptogo.runner.widget;
 
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.SaveManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
@@ -191,6 +193,16 @@ public class Widget
 	public Group actor()
 	{
 		groupWithBlackOutButton.addActor(group);
+
+		groupWithBlackOutButton.addListener( new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				groupWithBlackOutButton.toFront();
+            }
+			
+		} );
+		
 		return groupWithBlackOutButton;
 	}
 	

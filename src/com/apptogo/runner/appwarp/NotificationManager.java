@@ -1,11 +1,11 @@
-package com.apptogo.runner.handlers;
+package com.apptogo.runner.appwarp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.logger.Logger;
 
 public class NotificationManager 
 {

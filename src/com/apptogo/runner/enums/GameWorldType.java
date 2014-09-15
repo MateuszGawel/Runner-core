@@ -1,7 +1,6 @@
 package com.apptogo.runner.enums;
 
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
@@ -129,17 +128,17 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "ui/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 			return new Image( texture );
 		}
 		else if( gameWorldType == FOREST )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "ui/menuBackgrounds/campaignScreenBackgroundForrest.png");
+			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
 			return new Image( texture );
 		}
 		else if( gameWorldType == SPACE )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "ui/menuBackgrounds/campaignScreenBackgroundSpace.png");
+			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
 			return new Image( texture );
 		}
 		

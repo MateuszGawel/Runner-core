@@ -1,10 +1,10 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.CharacterAnimation;
+import com.apptogo.runner.animation.CharacterAnimation;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ScreensManager.ScreenType;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.widget.Widget;
@@ -52,7 +52,7 @@ public class MultiplayerScreen extends BaseScreen
 	@Override
 	public void prepare()
 	{			
-		setBackground("ui/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 				
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -72,6 +72,44 @@ public class MultiplayerScreen extends BaseScreen
 		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
 		currentCharacterAnimation.setVisible(true);
 		
+		createManageWidget();
+		
+		manageProfileButton = new TextButton( "your profile", skin, "default");
+		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
+		manageProfileButton.addListener( manageWidget.getToggleListener() );
+		
+		addToScreen(createRoomButton);
+		addToScreen(joinRandomButton);
+		addToScreen(manageProfileButton);
+		addToScreen(backButton);
+		
+		addToScreen(currentCharacterAnimation);
+		addToScreen(manageWidget.actor());
+	}
+	
+	public void step()
+	{
+		if ( Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE) )
+		{
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}
+	}
+	
+	private void changeCurrentCharacterAnimation()
+	{
+		currentCharacterAnimation.setVisible(false);
+		currentCharacterAnimation.clear();
+		currentCharacterAnimation.remove();
+		
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
+		
+		currentCharacterAnimation.setVisible(true);
+		
+		addToScreen(currentCharacterAnimation);
+	}
+	
+	private void createManageWidget()
+	{
 		manageWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		manageWidget.setEasing( Interpolation.elasticOut );
 
@@ -79,25 +117,9 @@ public class MultiplayerScreen extends BaseScreen
 		manageArcherAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -400.0f, 1075.0f, false);
 		manageAlienAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -250.0f, 1075.0f, false);
 		
-		changeCurrentCharacterAnimationListener = new ClickListener()
-		{
-			public void clicked(InputEvent event, float x, float y) 
-			{
-				currentCharacterAnimation.setVisible(false);
-				currentCharacterAnimation.clear();
-				currentCharacterAnimation.remove();
-				
-				currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
-				
-				currentCharacterAnimation.setVisible(true);
-				addToScreen(currentCharacterAnimation);
-			}
-		};
-		
 		manageBanditAnimationButton = new Button(skin, "blackOut");
 		manageBanditAnimationButton.setSize(130, 175);
 		manageBanditAnimationButton.setPosition(-525, 1075);
-		manageBanditAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageBanditAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -108,13 +130,14 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.BANDIT);
 				SaveManager.getInstance().savePlayer(player);
+				
+				changeCurrentCharacterAnimation();
             }
 		});
 		
 		manageArcherAnimationButton = new Button(skin, "blackOut");
 		manageArcherAnimationButton.setSize(130, 175);
 		manageArcherAnimationButton.setPosition(-360, 1075);
-		manageArcherAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageArcherAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -125,13 +148,14 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.ARCHER);
 				SaveManager.getInstance().savePlayer(player);
+				
+				changeCurrentCharacterAnimation();
             }
 		});
 		
 		manageAlienAnimationButton = new Button(skin, "blackOut");
 		manageAlienAnimationButton.setSize(130, 175);
 		manageAlienAnimationButton.setPosition(-210, 1075);
-		manageAlienAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageAlienAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -142,6 +166,8 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.ALIEN);
 				SaveManager.getInstance().savePlayer(player);
+				
+				changeCurrentCharacterAnimation();
             }
 		});
 		
@@ -174,26 +200,6 @@ public class MultiplayerScreen extends BaseScreen
 		
 		manageWidget.addActor(nameLabel);
 		manageWidget.addActor(textField);
-		
-		manageProfileButton = new TextButton( "your profile", skin, "default");
-		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
-		manageProfileButton.addListener( manageWidget.getToggleListener() );
-		
-		addToScreen(createRoomButton);
-		addToScreen(joinRandomButton);
-		addToScreen(manageProfileButton);
-		addToScreen(backButton);
-		
-		addToScreen(currentCharacterAnimation);
-		addToScreen(manageWidget.actor());
-	}
-	
-	public void step()
-	{
-		if ( Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE) )
-		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
-		}
 	}
 		
 	@Override

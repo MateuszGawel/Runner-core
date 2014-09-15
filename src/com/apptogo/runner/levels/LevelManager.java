@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -26,7 +26,7 @@ public class LevelManager {
 	}
 	
 	
-	private final String LVL_FILE_PATH = "lvl/lvl.xml";
+	private final String LVL_FILE_PATH = "xml/lvl/lvl.xml";
 	private XmlReader.Element document;
 
 	private Array<XmlReader.Element> worldsList;

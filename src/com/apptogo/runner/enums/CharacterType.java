@@ -4,8 +4,8 @@ import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.CharacterAnimation;
-import com.apptogo.runner.handlers.Logger;
+import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -93,15 +93,15 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return "ui/menuBackgrounds/loadingScreenBackgroundWildWest.png";
+			return "gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png";
 		}
 		else if( characterType == ARCHER )
 		{
-			return "ui/menuBackgrounds/loadingScreenBackgroundForrest.png";
+			return "gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png";
 		}
 		else if( characterType == ALIEN )
 		{
-			return "ui/menuBackgrounds/loadingScreenBackgroundSpace.png";
+			return "gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png";
 		}
 		
 		return null;
