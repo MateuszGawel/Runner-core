@@ -32,9 +32,8 @@ public class MultiplayerScreen extends BaseScreen
 	
     private Button backButton;
     
-    private CharacterAnimation banditAnimation;
-    private CharacterAnimation archerAnimation;
-    private CharacterAnimation alienAnimation;
+    private CharacterAnimation currentCharacterAnimation;
+    private ClickListener changeCurrentCharacterAnimationListener;
 	
     private CharacterAnimation manageBanditAnimation;
     private CharacterAnimation manageArcherAnimation;
@@ -70,24 +69,35 @@ public class MultiplayerScreen extends BaseScreen
         joinRandomButton = new TextButton( "random room", skin, "default");
 		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -100.0f );
 		
-		banditAnimation = new CharacterAnimation("gfx/game/characters/bandit.pack", 275.0f, -300.0f);
-		archerAnimation = new CharacterAnimation("gfx/game/characters/archer.pack", 275.0f, -300.0f);
-		alienAnimation = new CharacterAnimation("gfx/game/characters/alien.pack", 275.0f, -300.0f);
-		
-		banditAnimation.setVisible(false);
-		archerAnimation.setVisible(false);
-		alienAnimation.setVisible(false);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
+		currentCharacterAnimation.setVisible(true);
 		
 		manageWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		manageWidget.setEasing( Interpolation.elasticOut );
+
+		manageBanditAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -550.0f, 1075.0f, false);
+		manageArcherAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -400.0f, 1075.0f, false);
+		manageAlienAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -250.0f, 1075.0f, false);
 		
-		manageBanditAnimation = new CharacterAnimation("gfx/game/characters/bandit.pack", -550.0f, 1075.0f, false);
-		manageArcherAnimation = new CharacterAnimation("gfx/game/characters/archer.pack", -400.0f, 1075.0f, false);
-		manageAlienAnimation = new CharacterAnimation("gfx/game/characters/alien.pack", -250.0f, 1075.0f, false);
+		changeCurrentCharacterAnimationListener = new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+			{
+				currentCharacterAnimation.setVisible(false);
+				currentCharacterAnimation.clear();
+				currentCharacterAnimation.remove();
+				
+				currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
+				
+				currentCharacterAnimation.setVisible(true);
+				addToScreen(currentCharacterAnimation);
+			}
+		};
 		
 		manageBanditAnimationButton = new Button(skin, "blackOut");
 		manageBanditAnimationButton.setSize(130, 175);
 		manageBanditAnimationButton.setPosition(-525, 1075);
+		manageBanditAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageBanditAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -98,16 +108,13 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.BANDIT);
 				SaveManager.getInstance().savePlayer(player);
-				
-				banditAnimation.setVisible(true);
-				archerAnimation.setVisible(false);
-				alienAnimation.setVisible(false);
             }
 		});
 		
 		manageArcherAnimationButton = new Button(skin, "blackOut");
 		manageArcherAnimationButton.setSize(130, 175);
 		manageArcherAnimationButton.setPosition(-360, 1075);
+		manageArcherAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageArcherAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -118,16 +125,13 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.ARCHER);
 				SaveManager.getInstance().savePlayer(player);
-				
-				banditAnimation.setVisible(false);
-				archerAnimation.setVisible(true);
-				alienAnimation.setVisible(false);
             }
 		});
 		
 		manageAlienAnimationButton = new Button(skin, "blackOut");
 		manageAlienAnimationButton.setSize(130, 175);
 		manageAlienAnimationButton.setPosition(-210, 1075);
+		manageAlienAnimationButton.addListener(changeCurrentCharacterAnimationListener);
 		manageAlienAnimationButton.addListener( new ClickListener()
 		{
 			public void clicked(InputEvent event, float x, float y) 
@@ -138,10 +142,6 @@ public class MultiplayerScreen extends BaseScreen
 				
 				player.setCurrentCharacter(CharacterType.ALIEN);
 				SaveManager.getInstance().savePlayer(player);
-				
-				banditAnimation.setVisible(false);
-				archerAnimation.setVisible(false);
-				alienAnimation.setVisible(true);
             }
 		});
 		
@@ -184,27 +184,8 @@ public class MultiplayerScreen extends BaseScreen
 		addToScreen(manageProfileButton);
 		addToScreen(backButton);
 		
-		addToScreen(banditAnimation);
-		addToScreen(archerAnimation);
-		addToScreen(alienAnimation);
-		
+		addToScreen(currentCharacterAnimation);
 		addToScreen(manageWidget.actor());
-		
-		if( player.getCurrentCharacter() == CharacterType.BANDIT )
-		{
-			banditAnimation.setVisible(true);
-			manageBanditAnimation.start();
-		}
-		else if( player.getCurrentCharacter() == CharacterType.ARCHER )
-		{
-			archerAnimation.setVisible(true);
-			manageArcherAnimation.start();
-		}
-		else if( player.getCurrentCharacter() == CharacterType.ALIEN )
-		{
-			alienAnimation.setVisible(true);
-			manageAlienAnimation.start();
-		}
 	}
 	
 	public void step()

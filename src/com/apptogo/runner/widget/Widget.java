@@ -359,4 +359,9 @@ public class Widget
 		//this.paperTexture.dispose();
 		//this.skin.dispose();
 	}
+		
+	public boolean isShowed()
+	{
+		return this.isShowed;
+	}
 }

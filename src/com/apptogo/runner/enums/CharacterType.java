@@ -4,6 +4,8 @@ import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.CharacterAnimation;
+import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -105,21 +107,21 @@ public enum CharacterType
 		return null;
 	}
 	
-	static public String convertToCharacterHead(String selectedCharacterString)
+	static public CharacterAnimation convertToCharacterAnimation(CharacterType characterType, float x, float y, boolean running)
 	{
-		if( selectedCharacterString.equals( CharacterType.BANDIT.toString() ) )
+		if( characterType == BANDIT )
 		{
-			return "ui/menuBackgrounds/banditHead.png";
+			return new CharacterAnimation("gfx/game/characters/bandit.pack", x, y, running);
 		}
-		else if( selectedCharacterString.equals( CharacterType.ARCHER.toString() ) )
+		else if( characterType == ARCHER )
 		{
-			return "ui/menuBackgrounds/archerHead.png";
+			return new CharacterAnimation("gfx/game/characters/archer.pack", x, y, running);
 		}
-		else if( selectedCharacterString.equals( CharacterType.ALIEN.toString() ) )
+		else if( characterType == ALIEN )
 		{
-			return "ui/menuBackgrounds/alienHead.png";
+			return new CharacterAnimation("gfx/game/characters/alien.pack", x, y, running);
 		}
-		else return null;
+
+		return null;
 	}
-	
 }
