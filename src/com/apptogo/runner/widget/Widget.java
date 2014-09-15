@@ -2,24 +2,18 @@ package com.apptogo.runner.widget;
 
 import com.apptogo.runner.handlers.Logger;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -57,7 +51,8 @@ public class Widget
 	private Button closeWidgetButton;
 	
 	private Window win;
-	
+	private Texture paperTexture;
+	private Image paper;
 	private Skin skin;
 	
 	private WidgetType widgetType;
@@ -236,6 +231,11 @@ public class Widget
             }
          });
 		
+		//paperTexture = new Texture( Gdx.files.internal("ui/paper.png") );
+		//paper = new Image( paperTexture );
+		//paper.setPosition(0f, 0f);
+		
+		//this.win.addActor(paper);
 		this.win.addActor(closeWidgetButton);
 	}
 	
@@ -356,6 +356,7 @@ public class Widget
 		this.win.clear();
 		this.group.clear();
 		this.groupWithBlackOutButton.clear();
+		//this.paperTexture.dispose();
 		//this.skin.dispose();
 	}
 }

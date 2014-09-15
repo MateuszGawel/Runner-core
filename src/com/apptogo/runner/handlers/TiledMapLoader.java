@@ -481,7 +481,10 @@ public class TiledMapLoader
 		Rectangle rectangle = obj.getRectangle();
 		PolygonShape polygon = new PolygonShape();
 
-		polygon.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
+		//bez tego srodek rectangle'a jest tam gdzie jego lewy dolny rog
+		Vector2 rectangleCenter = new Vector2(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
+		
+		polygon.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM, rectangleCenter, 0f);
 		return polygon;
 	}
 	private Shape getShape(PolygonMapObject obj)
