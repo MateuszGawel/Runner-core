@@ -51,12 +51,14 @@ public class CampaignScreen extends BaseScreen
 	private Texture starEmptyTexture;
 	private Texture starFullTexture;
 	
-
 	public CampaignScreen(Runner runner)
 	{
 		super(runner);	
 		loadPlayer();
+		
 		levelManager = LevelManager.getInstance();
+	
+		fadeInOnStart();
 	}
 	
 	public void prepare() 
@@ -99,7 +101,7 @@ public class CampaignScreen extends BaseScreen
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+            	loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
             }
          });
 		
@@ -288,7 +290,7 @@ public class CampaignScreen extends BaseScreen
 	{
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}
 	}
 	

@@ -10,49 +10,45 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class LoadingScreen extends BaseScreen{	
     
 	private ScreenType screenToLoad;
 	private ResourcesManager resourcesManager;
-
-	//private ProgressBar slider;
 	
 	private TextButton slider;
 	private Image sliderMask;
 	
-	private Label label;
+	private Label loadingLabel;
 	private Label smallLabel;
 	
 	private Level levelToLoad;
 	
+	private long timeStart;
+	private boolean loadingLabelIsAdded = false;
+	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad)
-	{
+	{		
 		super(runner);	
 		resourcesManager = ResourcesManager.getInstance();
+		
+		timeStart = TimeUtils.millis();
 		
         this.screenToLoad = screenToLoad;
         this.levelToLoad = null;
         
         resourcesManager.loadResources(screenToLoad);
-        
-        Logger.log(this, "SCREEN TO LOAD TO " + screenToLoad.toString());
+
         if( screenToLoad == ScreenType.SCREEN_MAIN_MENU )
         {
         	resourcesManager.loadMenuResources();
-        }
+        }   
 	}
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad, Level levelToLoad)
@@ -62,8 +58,9 @@ public class LoadingScreen extends BaseScreen{
 		
         this.screenToLoad = screenToLoad;
         this.levelToLoad = levelToLoad;
-        
+        Logger.log(this, "screenToLoad = " + screenToLoad.toString() );
         resourcesManager.loadResources(screenToLoad);
+        resourcesManager.loadGameResources();
 	}
 	
 	public void prepare() 
@@ -99,22 +96,38 @@ public class LoadingScreen extends BaseScreen{
 		}
 		else
 		{
-			setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+			//setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 			
-			label = new Label( getLangString("loadingLabel"), skin, "default");
-			label.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (label.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (label.getHeight() / 2.0f) );
+			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
+			loadingLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getHeight() / 2.0f) );
 			
-			addToScreen(label);
+			//addToScreen(label);
 		}
 	}
 	
 	public void step()
 	{	
+		if( screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI )
+		{
+			if( !loadingLabelIsAdded && ( (TimeUtils.millis() - timeStart) > 750 ) )
+			{
+				addToScreen(loadingLabel);
+				loadingLabelIsAdded = true;
+			}
+		}
+		
 		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
 		{
 			if( screenToLoad == ScreenType.SCREEN_MAIN_MENU )
 			{
 				if( ResourcesManager.getInstance().getMenuAssetManager().update() )
+				{
+					ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
+				}
+			}
+			else if( screenToLoad == ScreenType.SCREEN_GAME_SINGLE || screenToLoad == ScreenType.SCREEN_GAME_MULTI )
+			{
+				if( ResourcesManager.getInstance().getGameAssetManager().update() )
 				{
 					ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
 				}
@@ -127,7 +140,8 @@ public class LoadingScreen extends BaseScreen{
 		
 		if( slider != null)
 		{			
-			float progress = resourcesManager.getAssetManager(screenToLoad).getProgress();
+			AssetManager assetManager = resourcesManager.getGameAssetManager();
+			float progress = assetManager.getProgress();
 			
 			slider.setPosition(-712.0f + (progress * 475.0f), slider.getY());	
 		}
@@ -171,7 +185,8 @@ public class LoadingScreen extends BaseScreen{
 	}
 
 	@Override
-	public ScreenType getSceneType() {
+	public ScreenType getSceneType() 
+	{
 		return ScreenType.SCREEN_LOADING;
 	}
 

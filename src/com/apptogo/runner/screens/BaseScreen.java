@@ -2,11 +2,11 @@ package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.SettingsManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
@@ -20,13 +20,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public abstract class BaseScreen implements Screen{
-	
+public abstract class BaseScreen implements Screen
+{	
 	protected Runner runner;
 	protected LanguageManager languageManager;
 	protected SettingsManager settingsManager;
@@ -45,6 +47,15 @@ public abstract class BaseScreen implements Screen{
 	protected float delta;
 	
 	protected Player player; //to jest wazne - musi byc dostep do playera juz na poziomie menu - chcemy miec o nim info w menu
+	
+	protected Button fadeButton;
+	public boolean fadeOutScreen;
+	public boolean fadeInScreen;
+	public boolean isFadedOut;
+	protected float currentFadeOutLevel;
+	protected float currentFadeInLevel;
+	
+	protected ScreenType screenToLoadAfterFadeOut;
 	
 	public abstract void handleInput();
 	public abstract ScreenType getSceneType();
@@ -76,6 +87,8 @@ public abstract class BaseScreen implements Screen{
 			stage.setViewport(viewport);
 			skin = ResourcesManager.getInstance().getUiSkin();
 			
+			initializeFadeOutButton();
+			
 			this.prepare();
 			
 			Gdx.input.setInputProcessor(stage);
@@ -87,7 +100,6 @@ public abstract class BaseScreen implements Screen{
 			guiCamera.setToOrtho(false, Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM);
 			guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM, guiCamera);
 			guiStage.setViewport(guiStretchViewport);
-			
 			
 			this.prepare();
 			
@@ -110,6 +122,9 @@ public abstract class BaseScreen implements Screen{
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			
 			this.step();
+			
+			handleFadingOutScreen();
+			handleFadingInScreen();
 			
 			stage.act();
 			stage.draw();
@@ -135,6 +150,87 @@ public abstract class BaseScreen implements Screen{
 	protected void addToScreen(Actor actor)
 	{
 		this.stage.addActor(actor);
+	}
+	
+	protected void initializeFadeOutButton()
+	{
+		fadeButton = new Button(skin, "fadeOut");
+		fadeButton.setSize(1280.0f, 800.0f);
+		fadeButton.setPosition(-640.0f, -400.0f);
+		fadeButton.setVisible(false);
+		fadeButton.toBack();
+		
+		currentFadeOutLevel = 0.0f;
+		currentFadeInLevel = 1.0f;
+		
+		isFadedOut = false;
+		
+		stage.addActor(fadeButton);
+	}
+		
+	public void handleFadingOutScreen()
+	{
+		if(fadeOutScreen)
+		{
+			if( currentFadeOutLevel < 1.0f )
+			{
+				isFadedOut = false;
+				currentFadeOutLevel += 0.1f;
+				
+				AlphaAction fadeOutAction = new AlphaAction();
+				fadeOutAction.setAlpha(currentFadeOutLevel);
+				
+				fadeButton.setVisible(true);
+				fadeButton.toFront();
+				fadeButton.addAction(fadeOutAction);
+			}
+			else
+			{
+				isFadedOut = true;
+				currentFadeOutLevel = 0.0f;
+				fadeOutScreen = false;
+				
+				if( screenToLoadAfterFadeOut != null )
+				{
+					ScreensManager.getInstance().createLoadingScreen( screenToLoadAfterFadeOut );
+				}
+			}
+		}
+	}
+	
+	protected void handleFadingInScreen()
+	{
+		if(fadeInScreen)
+		{
+			if( currentFadeInLevel > 0.0f )
+			{
+				currentFadeInLevel -= 0.1f;
+				
+				AlphaAction fadeInAction = new AlphaAction();
+				fadeInAction.setAlpha(currentFadeInLevel);
+				
+				fadeButton.setVisible(true);
+				fadeButton.toFront();
+				fadeButton.addAction(fadeInAction);
+			}
+			else
+			{
+				fadeButton.setVisible(false);
+				currentFadeInLevel = 1.0f;
+				fadeInScreen = false;
+			}
+		}
+	}
+	
+	protected void loadScreenAfterFadeOut( ScreenType screenType )
+	{
+		screenToLoadAfterFadeOut = screenType;
+		fadeOutScreen = true;
+	}
+	
+	protected void fadeInOnStart()
+	{
+		fadeInScreen = true;
 	}
 	
 	@Override

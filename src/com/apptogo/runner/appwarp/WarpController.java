@@ -27,7 +27,8 @@ public class WarpController
 	private String localUser;
 	private String roomId;
 	
-	private boolean isConnected = false;
+	public boolean isOnline = false;
+	public boolean isConnected = false;
 	boolean isUDPEnabled = false;
 	
 	private WarpListener warpListener ;
@@ -170,6 +171,14 @@ public class WarpController
 		warpClient.removeRoomRequestListener(new RoomListener(this));
 		warpClient.removeNotificationListener(new NotificationListener(this));
 		warpClient.disconnect();
+		
+		isOnline = false;
+	}
+	
+	public void joinRandomRoom()
+	{
+		//bo tylko takie pokoje bedziemy tworzyc i tylko takie nas interesuja
+		warpClient.joinRoomInRange(4, 4, false);
 	}
 	
 	//---CHAT LISTENER
@@ -189,7 +198,8 @@ public class WarpController
 			warpClient.initUDP();
 			warpClient.joinLobby();
 			warpClient.subscribeLobby();
-			warpClient.joinRoomInRange(1, 3, false);
+			warpClient.joinRoomInRange(0, 4, false);
+			isOnline = true;
 		}
 		else
 		{
@@ -213,6 +223,9 @@ public class WarpController
 		Logger.log(this, "onUserJoinedRoom: roomId = " + roomId + ", userName = " + userName);
 		
 		warpClient.getLiveRoomInfo(roomId);
+		
+		NotificationManager.getInstance().screamMyName();
+		
 		/*
 		 * if room id is same and username is different then start the game
 		 */

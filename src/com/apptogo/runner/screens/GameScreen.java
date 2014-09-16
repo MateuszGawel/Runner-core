@@ -94,10 +94,11 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	@Override
-	public void handleInput() {
+	public void handleInput() 
+	{
 		world.handleInput();
 		
-		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		}

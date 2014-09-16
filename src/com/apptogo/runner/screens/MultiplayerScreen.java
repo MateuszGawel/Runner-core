@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -47,6 +48,14 @@ public class MultiplayerScreen extends BaseScreen
 	{
 		super(runner);	
 		loadPlayer();
+		
+		fadeInOnStart();
+		
+		if( !(WarpController.getInstance().isOnline) )
+		{
+			Logger.log(this, "Jeszcze nie byl online");
+			WarpController.getInstance().startApp( player.getName() );
+		}
 	}
 	
 	@Override
@@ -59,7 +68,7 @@ public class MultiplayerScreen extends BaseScreen
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+            	loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
             }
          });
         
@@ -71,7 +80,7 @@ public class MultiplayerScreen extends BaseScreen
 		joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
+				loadScreenAfterFadeOut( ScreenType.SCREEN_WAITING_ROOM );
             }
 		});
 		
@@ -210,7 +219,7 @@ public class MultiplayerScreen extends BaseScreen
 	{
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}
 	}
 	

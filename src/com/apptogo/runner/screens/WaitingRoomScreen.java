@@ -55,7 +55,13 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		loadPlayer();
 		NotificationManager.prepareManager( player.getName(), player.getCurrentCharacter() );
 		
-		WarpController.getInstance().startApp( player.getName() );
+		fadeInOnStart();
+		
+		if( !(WarpController.getInstance().isOnline) )
+		{
+			Logger.log(this, "Jeszcze nie byl online //waiting");
+			WarpController.getInstance().startApp( player.getName() );
+		}
 		WarpController.getInstance().setListener(this);
 	}
 	
@@ -68,7 +74,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+            	loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
             }
         });
         
@@ -89,8 +95,6 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
         addToScreen(backButton);
         
         addPlayer( player );
-        
-        //NotificationManager.getInstance().screamMyName();
 	}
 	
 	public void step()
@@ -104,7 +108,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
 			WarpController.getInstance().stopApp();
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}
 		
 		if( Gdx.input.isKeyPressed(Keys.A) )
@@ -201,15 +205,15 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 				{
 					presentAlready = true;
 				}
-				
-				/*for(int i = 0; i < enemies.size; i++)
+								
+				for(int i = 0; i < players.size; i++)
 				{
-					if( enemies.get(i).getName().equals(enemyName) ) 
+					if( players.get(i).getName().equals(enemyName) ) 
 					{
 						presentAlready = true;
 						break;
 					}
-				}*/
+				}
 				
 				if( !presentAlready )			
 				{
@@ -220,10 +224,9 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					enemy.setCurrentCharacter(enemyCharacter);
 					
 					Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
-									
-					//addLabel(enemyName);
-					
-					//enemies.add(enemy);
+														
+					players.add(enemy);
+					addPlayer(enemy);
 					
 					NotificationManager.getInstance().screamMyName();
 				}

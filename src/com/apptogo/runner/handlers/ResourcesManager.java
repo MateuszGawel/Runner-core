@@ -164,54 +164,31 @@ public class ResourcesManager {
 		screenMetaArray.add( splashMeta ); 
 		
 		//|2. MAIN MENU SCREEN
-		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
-		
-		mainMenuMeta.addTexture("gfx/menu/chainsDecoration.png");
-		
+		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);		
 		screenMetaArray.add( mainMenuMeta );
 		
 		//|3. GAME SCREEN SINGLE
-		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);
-		
-		singleGameMeta.addMusic("mfx/game/gameMusic.ogg");
-		singleGameMeta.addSound("mfx/game/gameClick.ogg");
-		
+		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);		
 		screenMetaArray.add( singleGameMeta );
 		
 		//|4. GAME SCREEN MULTI
 		ScreenMeta multiplayerGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_MULTI);
-		
-		multiplayerGameMeta.addMusic("mfx/game/gameMusic.ogg");
-		multiplayerGameMeta.addSound("mfx/game/gameClick.ogg");
-		
 		screenMetaArray.add( multiplayerGameMeta );
 				
 		//|5. LOADING SCREEN
 		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
-		
-		loadingMeta.addTexture("gfx/menu/menuBackgrounds/sliderMask.png");
-		
-		loadingMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
-		loadingMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForest.png");//za duzo - to trzeba zoptymalizowac
-		
 		screenMetaArray.add( loadingMeta );
 		
 		//|6. CAMPAIGN SCREEN
-		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);
-				
-		campaignMeta.addTexture("gfx/menu/starSmallEmpty.png");
-		campaignMeta.addTexture("gfx/menu/starSmallFull.png");
-		
+		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);		
 		screenMetaArray.add( campaignMeta );
 		
 		//|7. MULTIPLAYER SCREEN
-		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);
-				
+		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);		
 		screenMetaArray.add( multiplayerMeta );
 		
 		//|8. WAITING ROOM SCREEN
 		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
-		
 		screenMetaArray.add( waitingRoomMeta );
 		
 		//ADDING SPECIALS:
@@ -220,13 +197,36 @@ public class ResourcesManager {
 		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
 		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		
+		menuSpecialMeta.addTexture("gfx/menu/chainsDecoration.png");
 				
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
 		
+		menuSpecialMeta.addTexture("gfx/menu/sliderMask.png");
+		
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
+		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");
+
+		menuSpecialMeta.addTexture("gfx/menu/starSmallEmpty.png");
+		menuSpecialMeta.addTexture("gfx/menu/starSmallFull.png");
+		
 		//|1. GAME RESOURCES
 		gameSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
+		
+		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
+		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
+		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
+		
+		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.WILDWEST ) );
+		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
+		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
+
+		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
+		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
+		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ALIEN ) );
 		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
@@ -242,7 +242,7 @@ public class ResourcesManager {
 	
 	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
 	{
-		
+		/*
 		ScreenType desiredScreenType = ScreenType.SCREEN_GAME_SINGLE;
 		
 		if( !isCampaign ) desiredScreenType = ScreenType.SCREEN_GAME_MULTI;
@@ -269,7 +269,7 @@ public class ResourcesManager {
 				break;
 			}
 			else continue;
-		}
+		}*/
 	}
 	
 	//--------- LOADING RESOURCES
@@ -285,13 +285,24 @@ public class ResourcesManager {
 	
 	public void loadGameResources()
 	{
-		loadSpecialResources(gameSpecialMeta);
+		Logger.log(this, "LOAD GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( gameSpecialMeta.manager.getLoadedAssets() == 0 )
+		{
+			loadSpecialResources(gameSpecialMeta);
+			Logger.log(this, "LOADED GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
+		}
 	}
 	
 	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
 	public void loadStillResources()
 	{
-		loadSpecialResources(stillSpecialMeta);
+		Logger.log(this, "LOAD STILL_R: " + String.valueOf(stillSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( stillSpecialMeta.manager.getLoadedAssets() == 0 )
+		{
+			loadSpecialResources(stillSpecialMeta);
+		}
 	}
 	
 	private void loadSpecialResources(ScreenMeta specialMeta)
@@ -373,12 +384,22 @@ public class ResourcesManager {
 	
 	public void unloadGameResources()
 	{
-		gameSpecialMeta.manager.clear();
+		Logger.log(this, "UNLOAD GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( gameSpecialMeta.manager.getLoadedAssets() > 0 )
+		{
+			gameSpecialMeta.manager.clear();
+		}
 	}
 	
 	public void unloadStillResources()
 	{
-		stillSpecialMeta.manager.clear();
+		Logger.log(this, "UNLOAD STILL_R: " + String.valueOf(stillSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( stillSpecialMeta.manager.getLoadedAssets() > 0 )
+		{
+			stillSpecialMeta.manager.clear();
+		}
 	}
 	
 	public void unloadAllResources(BaseScreen screen)
@@ -474,6 +495,11 @@ public class ResourcesManager {
 	public AssetManager getMenuAssetManager()
 	{
 		return menuSpecialMeta.manager;
+	}
+	
+	public AssetManager getGameAssetManager()
+	{
+		return gameSpecialMeta.manager;
 	}
 	
 	public AssetManager getStillAssetManager()

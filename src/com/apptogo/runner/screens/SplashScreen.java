@@ -52,7 +52,7 @@ public class SplashScreen extends BaseScreen
 			{
 				if( stillAssetManager.update() )
 				{
-					ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+					loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 				}
 			}
 		}

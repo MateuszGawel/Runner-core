@@ -127,11 +127,11 @@ public class NotificationManager
 	}
 	
 	public void screamMyName()
-	{Logger.log(this, "wywolane");
+	{
 		JSONObject data = new JSONObject();
 		
 		try 
-	    {Logger.log(this, "wywolane2");
+	    {
 			data.put("INITIAL_NOTIFICATION", true); 
 			data.put("PLAYER_NAME", playerName); 
 			data.put("PLAYER_CHARACTER", playerCharacterType); 

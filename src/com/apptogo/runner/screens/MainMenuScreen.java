@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
@@ -59,6 +60,10 @@ public class MainMenuScreen extends BaseScreen{
 	{
 		super(runner);	
 		loadPlayer();
+		
+		ResourcesManager.getInstance().unloadGameResources();
+		
+		fadeInOnStart();
 	}
 	
 	@Override
@@ -195,21 +200,21 @@ public class MainMenuScreen extends BaseScreen{
 		campaignButtonListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_CAMPAIGN);
+				loadScreenAfterFadeOut(ScreenType.SCREEN_CAMPAIGN);
             }
 		};
 		
 		multiplayerButtonListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MULTIPLAYER);
+				loadScreenAfterFadeOut(ScreenType.SCREEN_MULTIPLAYER);
             }
 		};
 		
 		joinRandomRoomButtonListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
+				loadScreenAfterFadeOut(ScreenType.SCREEN_WAITING_ROOM);
             }
 		};
 		
