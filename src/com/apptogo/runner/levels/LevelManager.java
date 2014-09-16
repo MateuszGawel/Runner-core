@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -19,7 +20,15 @@ import com.badlogic.gdx.utils.XmlReader;
 
 public class LevelManager {
 
-	private static final LevelManager INSTANCE = new LevelManager();
+	private static LevelManager INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new LevelManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static LevelManager getInstance()
 	{
 		return INSTANCE;

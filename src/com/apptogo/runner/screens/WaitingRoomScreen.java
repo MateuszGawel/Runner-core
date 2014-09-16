@@ -3,6 +3,7 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.animation.CharacterAnimation;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
@@ -14,9 +15,9 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,7 +32,19 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	private TextButton playButton;
 	private Button backButton;
 	
-	private Array<Player> enemies;
+	private Array<Player> players;
+	
+	private Array<CharacterAnimation> playersAnimation;
+	private final Array<Vector2> playerAnimationPosition = new Array<Vector2>( new Vector2[]{ new Vector2(-400, 150), 
+																			   				  new Vector2(-100, 150), 
+																			   				  new Vector2(-400, -150), 
+																			   				  new Vector2(-100, -150) } );
+	
+	private int currentPlayersCount;
+	
+	//do wywalenia
+	boolean a=true, s=true, d=true;
+	//--
 	
 	private float lastLabelY = 250f;
 	
@@ -57,23 +70,25 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
             {
             	ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
             }
-         });
+        });
         
-		enemies = new Array<Player>();
-		
-		playButton = new TextButton("PLAY", skin, "default");
+        playButton = new TextButton("PLAY", skin, "default");
 		playButton.setPosition( -( playButton.getWidth() / 2.0f ), -300f);
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), player, enemies );
+            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), players );
             }
-         });
+        });
+        
+		players = new Array<Player>();
+		playersAnimation = new Array<CharacterAnimation>();
+		currentPlayersCount = 0;
 		
-        addToScreen(playButton);
+        //addToScreen(playButton);
         addToScreen(backButton);
         
-        addLabel(player.getName());
+        addPlayer( player );
         
         //NotificationManager.getInstance().screamMyName();
 	}
@@ -86,11 +101,53 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	@Override
 	public void handleInput() 
 	{
-		if( Gdx.input.isKeyPressed(Keys.ESCAPE) )
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
 			WarpController.getInstance().stopApp();
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
-		}		
+		}
+		
+		if( Gdx.input.isKeyPressed(Keys.A) )
+		{
+			if(a)
+			{
+				Player playerA = new Player();
+				playerA.setName("MACIEK");
+				playerA.setCurrentCharacter(CharacterType.ALIEN);
+			
+				addPlayer( playerA );
+			
+				a = false;
+			}
+		}
+		
+		if( Gdx.input.isKeyPressed(Keys.S) )
+		{
+			if(s)
+			{
+				Player playerA = new Player();
+				playerA.setName("MARIAN");
+				playerA.setCurrentCharacter(CharacterType.BANDIT);
+				
+				addPlayer( playerA );
+				
+				s = false;
+			}
+		}
+		
+		if( Gdx.input.isKeyPressed(Keys.D) )
+		{
+			if(d)
+			{
+				Player playerA = new Player();
+				playerA.setName("WILHELM");
+				playerA.setCurrentCharacter(CharacterType.ARCHER);
+				
+				addPlayer( playerA );
+				
+				d = false;
+			}
+		}
 	}
 	
 	@Override
@@ -121,7 +178,8 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	}
 
 	@Override
-	public ScreenType getSceneType() {
+	public ScreenType getSceneType() 
+	{
 		return ScreenType.SCREEN_WAITING_ROOM;
 	}
 
@@ -144,14 +202,14 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					presentAlready = true;
 				}
 				
-				for(int i = 0; i < enemies.size; i++)
+				/*for(int i = 0; i < enemies.size; i++)
 				{
 					if( enemies.get(i).getName().equals(enemyName) ) 
 					{
 						presentAlready = true;
 						break;
 					}
-				}
+				}*/
 				
 				if( !presentAlready )			
 				{
@@ -163,9 +221,9 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					
 					Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
 									
-					addLabel(enemyName);
+					//addLabel(enemyName);
 					
-					enemies.add(enemy);
+					//enemies.add(enemy);
 					
 					NotificationManager.getInstance().screamMyName();
 				}
@@ -174,14 +232,20 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		catch (JSONException e) { e.printStackTrace(); }
 	}
 	
-	private void addLabel(String enemyName)
+	private void addPlayer(Player player)
 	{
-		Label nameLabel = new Label(enemyName, skin, "default");
-		nameLabel.setSize(300f, 60f);
-		nameLabel.setPosition(-300f, lastLabelY - 20f);
-		lastLabelY -= 80f;
-		
-		stage.addActor(nameLabel);
+		if( currentPlayersCount < 4 )
+		{
+			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
+			
+			Label playerNameLabel = new Label(player.getName(), skin);
+			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
+			
+			addToScreen(playerAnimation);
+			addToScreen(playerNameLabel);
+			
+			currentPlayersCount++;
+		}
 	}
 
 	@Override

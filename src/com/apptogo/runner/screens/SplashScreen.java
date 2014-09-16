@@ -1,30 +1,22 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.appwarp.NotificationManager;
+import com.apptogo.runner.animation.LogoAnimation;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SplashScreen extends BaseScreen
-{	
-	private Texture splashImageTexture;
-	private Image splashImage;
-	private float splashImageOpacity;
-	private AlphaAction action;
+{			
+	private LogoAnimation logoAnimation;
+	private AssetManager menuAssetManager;
+	private AssetManager stillAssetManager;
 	
-	private final float FADE_IN_TIME = 0.5f; //finalnie powinno byc ~80
+	private Actor splashImage;
 	
 	public SplashScreen(Runner runner)
 	{
@@ -34,29 +26,41 @@ public class SplashScreen extends BaseScreen
 	@Override
 	public void prepare()
 	{	
+		/* uwaga caly myk z animacja jest na razie na pale - to trzeba zrobic tak jak character Animation no ale wtedy kiedy bd juz miec animacje logo :) */
+		
 		ResourcesManager.getInstance().loadResources(this);
 		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
 
-		splashImageTexture = (Texture)ResourcesManager.getInstance().getResource(this, "gfx/splash/splash.png");
+		ResourcesManager.getInstance().loadMenuResources();
+		menuAssetManager = ResourcesManager.getInstance().getMenuAssetManager();
 		
-		splashImage = new Image( splashImageTexture );
-		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
-		splashImageOpacity = 0.0f;
+		ResourcesManager.getInstance().loadStillResources();
+		stillAssetManager = ResourcesManager.getInstance().getStillAssetManager();
 		
-		action = new AlphaAction();
+		logoAnimation = new LogoAnimation();
+		
+		splashImage = logoAnimation.splashImage;
 		
 		addToScreen(splashImage);
 	}
 	
 	public void step()
 	{
-		if( splashImageOpacity >= 2.0f ) ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
-		
-		splashImageOpacity += 2.0f / FADE_IN_TIME;
-		
-		action.reset();
-		action.setAlpha( ((splashImageOpacity>1.0f)?1.0f:splashImageOpacity) * (float)Math.sin(((splashImageOpacity>1.0f)?1.0f:splashImageOpacity)) );
-		splashImage.addAction( action );
+		if( logoAnimation.isFinished() ) 
+		{
+			if( menuAssetManager.update() )
+			{
+				if( stillAssetManager.update() )
+				{
+					ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+				}
+			}
+		}
+		else
+		{
+			AlphaAction action = logoAnimation.animate(splashImage);
+			splashImage.addAction(action);
+		}
 	}
 	
 	@Override
@@ -92,7 +96,7 @@ public class SplashScreen extends BaseScreen
 	public void dispose() 
 	{
 		super.dispose();	
-		splashImageTexture.dispose();
+		logoAnimation.dispose();
 	}
 
 	@Override

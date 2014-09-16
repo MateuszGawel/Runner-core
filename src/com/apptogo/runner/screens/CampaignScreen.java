@@ -9,7 +9,10 @@ import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.vars.Box2DVars;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -163,7 +166,7 @@ public class CampaignScreen extends BaseScreen
 	
 	public void step()
 	{
-		
+		handleInput();
 	}
 	
 	private void drawButtons(LevelWorld levelWorld, float indent)
@@ -196,7 +199,7 @@ public class CampaignScreen extends BaseScreen
     	            {
     	            	player.setCurrentCharacter( GameWorldType.convertToCharacterType( level.worldType ) );
     	            	
-    	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, player, null );
+    	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
     	            }
     	         });
         	}
@@ -281,9 +284,12 @@ public class CampaignScreen extends BaseScreen
 	}
 	
 	@Override
-	public void handleInput() {
-		// TODO Auto-generated method stub
-		
+	public void handleInput() 
+	{
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
+		{
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}
 	}
 	
 	@Override

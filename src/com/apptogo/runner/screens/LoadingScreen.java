@@ -47,6 +47,12 @@ public class LoadingScreen extends BaseScreen{
         this.levelToLoad = null;
         
         resourcesManager.loadResources(screenToLoad);
+        
+        Logger.log(this, "SCREEN TO LOAD TO " + screenToLoad.toString());
+        if( screenToLoad == ScreenType.SCREEN_MAIN_MENU )
+        {
+        	resourcesManager.loadMenuResources();
+        }
 	}
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad, Level levelToLoad)
@@ -104,10 +110,19 @@ public class LoadingScreen extends BaseScreen{
 	
 	public void step()
 	{	
-
 		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
 		{
-			ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
+			if( screenToLoad == ScreenType.SCREEN_MAIN_MENU )
+			{
+				if( ResourcesManager.getInstance().getMenuAssetManager().update() )
+				{
+					ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
+				}
+			}
+			else
+			{
+				ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
+			}
 		}
 		
 		if( slider != null)

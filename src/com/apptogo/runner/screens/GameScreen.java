@@ -39,6 +39,8 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		super(runner);		
 		loadPlayer();
+		
+		ResourcesManager.getInstance().unloadMenuResources(); //czy to na pewno dobre miejsce na ta funkcje? tu sie fajnie wpasowuje ale tak naprawde to powinno byc zrobione na etapie loadingu
 	}
 		
 	public void setLevel(Level level)

@@ -5,11 +5,20 @@ import org.json.JSONObject;
 
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 
 public class NotificationManager 
 {
-	private static final NotificationManager INSTANCE = new NotificationManager();
+	private static NotificationManager INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new NotificationManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static NotificationManager getInstance()
 	{
 		return INSTANCE;

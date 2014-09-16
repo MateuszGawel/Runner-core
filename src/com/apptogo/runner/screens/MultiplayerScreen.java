@@ -68,6 +68,12 @@ public class MultiplayerScreen extends BaseScreen
 		
         joinRandomButton = new TextButton( "random room", skin, "default");
 		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -100.0f );
+		joinRandomButton.addListener( new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_WAITING_ROOM );
+            }
+		});
 		
 		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
 		currentCharacterAnimation.setVisible(true);
@@ -89,10 +95,7 @@ public class MultiplayerScreen extends BaseScreen
 	
 	public void step()
 	{
-		if ( Gdx.input.isKeyPressed(Keys.BACK) || Gdx.input.isKeyPressed(Keys.ESCAPE) )
-		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
-		}
+		handleInput();
 	}
 	
 	private void changeCurrentCharacterAnimation()
@@ -203,9 +206,12 @@ public class MultiplayerScreen extends BaseScreen
 	}
 		
 	@Override
-	public void handleInput() {
-		// TODO Auto-generated method stub
-		
+	public void handleInput() 
+	{
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
+		{
+			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}
 	}
 	
 	@Override

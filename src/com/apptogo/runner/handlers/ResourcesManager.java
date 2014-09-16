@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.badlogic.gdx.Gdx;
@@ -18,9 +19,17 @@ import com.badlogic.gdx.utils.Array;
 
 public class ResourcesManager {
 
-	private static final ResourcesManager INSTANCE = new ResourcesManager();
+	private static ResourcesManager INSTANCE;
 	Runner runner;
 	
+	public static void create()
+	{
+		INSTANCE = new ResourcesManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static ResourcesManager getInstance()
 	{
 		return INSTANCE;
@@ -157,12 +166,11 @@ public class ResourcesManager {
 		//|2. MAIN MENU SCREEN
 		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);
 		
-		mainMenuMeta.addTexture("gfx/menu/menuBackgrounds/chainsDecoration.png");
+		mainMenuMeta.addTexture("gfx/menu/chainsDecoration.png");
 		
 		screenMetaArray.add( mainMenuMeta );
 		
 		//|3. GAME SCREEN SINGLE
-		//generalnie to i tak nie do konca potrzebne bo potem polowe z tego wywali funkcja adjust...() ale zeby cos bylo na poczatku to przypisujemy
 		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);
 		
 		singleGameMeta.addMusic("mfx/game/gameMusic.ogg");
@@ -212,11 +220,7 @@ public class ResourcesManager {
 		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
 		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
-		
-		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
-		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
-		menuSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
-		
+				
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
@@ -226,6 +230,10 @@ public class ResourcesManager {
 		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
+		
+		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
+		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
+		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
 		
 		//|... INITIALIZING SKINS
 		this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"));
@@ -253,7 +261,7 @@ public class ResourcesManager {
 				{
 					for(int j = 0; j < characterTypes.size; j++)
 					{			
-						screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
+						//screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
 						screenMetaArray.get(i).addTextures( CharacterType.convertToTexturesList( characterTypes.get(j) ) );
 					}
 				}
@@ -265,18 +273,23 @@ public class ResourcesManager {
 	}
 	
 	//--------- LOADING RESOURCES
-	private void loadMenuResources()
+	public void loadMenuResources()
 	{
-		loadSpecialResources(menuSpecialMeta);
+		Logger.log(this, "LOAD MENU_R: " + String.valueOf(menuSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( menuSpecialMeta.manager.getLoadedAssets() == 0 )
+		{
+			loadSpecialResources(menuSpecialMeta);
+		}
 	}
 	
-	private void loadGameResources()
+	public void loadGameResources()
 	{
 		loadSpecialResources(gameSpecialMeta);
 	}
 	
 	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
-	private void loadStillResources()
+	public void loadStillResources()
 	{
 		loadSpecialResources(stillSpecialMeta);
 	}
@@ -296,11 +309,6 @@ public class ResourcesManager {
 	}	
 	public void loadResources(ScreenType screenType)
 	{	
-		if( screenType == ScreenType.SCREEN_MAIN_MENU )
-		{
-			loadMenuResources();
-		}
-
 		this.loadTextureAtlases(screenType);
 		this.loadTextures(screenType);
 		this.loadMusics(screenType);
@@ -355,7 +363,12 @@ public class ResourcesManager {
 	//--------- UNLOADING RESOURCES
 	public void unloadMenuResources()
 	{
-		menuSpecialMeta.manager.clear();
+		Logger.log(this, "UNLOAD MENU_R: " + String.valueOf(menuSpecialMeta.manager.getLoadedAssets()) );
+		
+		if( menuSpecialMeta.manager.getLoadedAssets() > 0 )
+		{
+			menuSpecialMeta.manager.clear();
+		}
 	}
 	
 	public void unloadGameResources()
@@ -394,6 +407,33 @@ public class ResourcesManager {
 		
 		manager.unload(filename);
 	}
+	
+	public void unloadAllApplicationResources()
+	{
+		//po dispose() cos jest nie tak na tel - jak wyl i wlaczam jeszcze raz to mi leci blad 
+		//     09-16 11:41:33.829: E/AndroidRuntime(6746): FATAL EXCEPTION: GLThread 17
+		//     09-16 11:41:33.829: E/AndroidRuntime(6746): com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException: Cannot run tasks on an executor that has been shutdown (disposed)
+		//do sprawdzenia w wolnej chwili
+		
+		Logger.log(this, "UNLOADING ALL APPLICATION RESOURCES AND DISPOSING ASSET MANAGERS");
+		
+		for(ScreenMeta screenMeta: screenMetaArray)
+		{
+			screenMeta.manager.clear();
+			//screenMeta.manager.dispose();
+		}
+		
+		menuSpecialMeta.manager.clear();
+		//menuSpecialMeta.manager.dispose();
+		
+		gameSpecialMeta.manager.clear();
+		//gameSpecialMeta.manager.dispose();
+		
+		stillSpecialMeta.manager.clear();
+		//stillSpecialMeta.manager.dispose();
+		
+		screenMetaArray.clear();
+	}
 	//---------
 	
 	//--------- ACCESSING RESOURCES
@@ -431,18 +471,23 @@ public class ResourcesManager {
 		}
 	}
 	
+	public AssetManager getMenuAssetManager()
+	{
+		return menuSpecialMeta.manager;
+	}
+	
+	public AssetManager getStillAssetManager()
+	{
+		return stillSpecialMeta.manager;
+	}
+	
 	public AssetManager getAssetManager(BaseScreen screen)
 	{		
 		ScreenType screenType = screen.getSceneType();
 		return getAssetManager(screenType);
 	}
 	public AssetManager getAssetManager(ScreenType screenType)
-	{
-		if( screenType == ScreenType.SCREEN_MAIN_MENU )
-		{
-			return menuSpecialMeta.manager;
-		}
-		
+	{		
 		int index = getScreenIndex(screenType);
 		return (AssetManager)screenMetaArray.get(index).manager;
 	}

@@ -62,7 +62,16 @@ public class TiledMapLoader
 	private HashMap<String, jointBody> jointHandles = new HashMap<String, jointBody>();
 	private HashMap<String, jointBody> jointObjects = new HashMap<String, jointBody>();
 	
-	private static final TiledMapLoader INSTANCE = new TiledMapLoader();
+	private static TiledMapLoader INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new TiledMapLoader();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
+	
 	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	
 	private OrthogonalTiledMapRenderer tiledMapRenderer;

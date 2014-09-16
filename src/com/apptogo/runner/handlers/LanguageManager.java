@@ -21,7 +21,16 @@ import com.badlogic.gdx.utils.XmlReader;
 
 public class LanguageManager {
 
-	private static final LanguageManager INSTANCE = new LanguageManager();
+	private static LanguageManager INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new LanguageManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
+	
 	public static LanguageManager getInstance()
 	{
 		return INSTANCE;

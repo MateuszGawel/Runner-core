@@ -1,10 +1,13 @@
  package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.screens.CampaignScreen;
 import com.apptogo.runner.screens.GameScreen;
@@ -19,9 +22,17 @@ import com.badlogic.gdx.utils.Array;
 
 public class ScreensManager {
 	
-	private static final ScreensManager INSTANCE = new ScreensManager();
+	private static ScreensManager INSTANCE;
 	private Runner runner;
 	
+	public static void create()
+	{
+		INSTANCE = new ScreensManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static ScreensManager getInstance(){ return INSTANCE; }
 	public static void prepareManager(Runner runner)
 	{ 
@@ -55,7 +66,7 @@ public class ScreensManager {
 	/** @param screenToLoad albo SCREEN_GAME_SINGLE albo ..._MULTI inaczej nie zadziala 
 	 * 	@param level obiekt typu Level z informacjami o levelu do zaladowania
 	 * 	@param characterTypes tablica WSZYSTKICH typow playerow wystepujacych na planszy - jesli null to ResourceManager zaladuje atlasy wszystkich dostepnych*/
-	public void createLoadingScreen(ScreenType screenToLoad, Level level, Player player, Array<Player> enemies) //przeladowanie dla gameScreen!
+	public void createLoadingScreen(ScreenType screenToLoad, Level level, Array<Player> players) //przeladowanie dla gameScreen!
 	{
 		if(screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI) screenToLoad = ScreenType.SCREEN_GAME_SINGLE; //mimo wszystko zabezpieczenie
 		
@@ -63,14 +74,16 @@ public class ScreensManager {
 		{
 			Array<CharacterType> characterTypes = new Array<CharacterType>();
 			
-			characterTypes.add( player.getCurrentCharacter() );
-			
 			if( enemies != null)
 			{
 				for(int i = 0; i < enemies.size; i++) 
 				{
 					characterTypes.add( enemies.get(i).getCurrentCharacter() );
 				}
+			}
+			else //to oznacza ze jestesmy w singlu wiec musimy dopasowac characterType do planszy
+			{
+				characterTypes.add( GameWorldType.convertToCharacterType( level.worldType ) );
 			}
 			
 			if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE)

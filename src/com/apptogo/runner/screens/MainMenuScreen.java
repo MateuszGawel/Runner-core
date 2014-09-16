@@ -11,6 +11,7 @@ import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -147,6 +148,8 @@ public class MainMenuScreen extends BaseScreen{
 	
 	public void step()
 	{
+		handleInput();
+		
 		if( languageChanged ) 
 		{
 			languageChanged = false;
@@ -231,9 +234,12 @@ public class MainMenuScreen extends BaseScreen{
 	}
 	
 	@Override
-	public void handleInput() {
-		// TODO Auto-generated method stub
-		
+	public void handleInput() 
+	{
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
+		{
+			Gdx.app.exit();
+		}
 	}
 	
 	@Override

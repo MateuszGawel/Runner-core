@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Array;
@@ -13,7 +14,15 @@ import com.badlogic.gdx.utils.Array;
 /** klasa do zapisywania Playera NA DYSKU z opcja synchronizacji z appWarpem */
 public class SaveManager 
 {
-	private static final SaveManager INSTANCE = new SaveManager();
+	private static SaveManager INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new SaveManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static SaveManager getInstance()
 	{
 		return INSTANCE;

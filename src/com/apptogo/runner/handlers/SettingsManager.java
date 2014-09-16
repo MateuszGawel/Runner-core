@@ -10,7 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class SettingsManager 
 {
-	private static final SettingsManager INSTANCE = new SettingsManager();
+	private static SettingsManager INSTANCE;
+	public static void create()
+	{
+		INSTANCE = new SettingsManager();
+	}
+	public static void destroy()
+	{
+		INSTANCE = null;
+	}
 	public static SettingsManager getInstance()
 	{
 		return INSTANCE;
