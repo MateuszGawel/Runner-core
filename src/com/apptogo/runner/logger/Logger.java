@@ -5,39 +5,82 @@ import com.apptogo.runner.screens.CampaignScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.badlogic.gdx.utils.Array;
 
-public class Logger {
-
-	private static final boolean debugAll = true;
-	private static final boolean debugCustom = true;
+public class Logger 
+{
+	public enum LogLevel
+	{
+		HIGH,
+		MEDIUM,
+		LOW;
 		
-	private static final Array<Class> classes = new Array<Class>( new Class[]{ 
-																				MainMenuScreen.class,
-																				CampaignScreen.class,
-																				Player.class
-																			 } );
+		public int toInt()
+		{
+			if( this == HIGH )
+				return 0;
+			else if ( this == MEDIUM )
+				return 1;
+			else if ( this == LOW )
+				return 2;
+			else
+				return 0;
+		}
+	}
+	
+	private static final LogLevel LOG_LEVEL = LogLevel.HIGH;
+	
+	private static final boolean USE_WHITE_LIST = false;
+	private static final boolean USE_BLACK_LIST = false;
+	
+	private static final Array<String> whiteList = new Array<String>( new String[]{ "class com.apptogo.runner.handlers.ResourcesManager",
+																					"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
+																				  } ); 
+	
+	private static final Array<String> blackList = new Array<String>( new String[]{ "class com.apptogo.runner.handlers.ResourcesManager",
+																					"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
+																			  	  } ); 
 		
+	//OVERLOADS
+	public static void log( Object object, Object message)
+	{
+		log(object, String.valueOf(message), LogLevel.HIGH);
+	}
+	public static void log( Object object, Object message, LogLevel logLevel)
+	{
+		log(object, String.valueOf(message), logLevel);
+	}
 	public static void log( Object object, String message)
 	{
-		if(debugAll)
+		log(object, message, LogLevel.HIGH);
+	}	
+	
+	public static void log( Object object, String message, LogLevel logLevel)
+	{
+		if( logLevel.toInt() <= LOG_LEVEL.toInt() )
 		{
-			System.out.println(object.getClass() + " MESSAGE: " + message);
-		}
-		else if(debugCustom)
-		{
-			if( classes.contains( object.getClass(), true) )
+			boolean printMessage = true;
+			
+			//Allow to log only classes from whiteList
+			if( USE_WHITE_LIST )
 			{
-				System.out.println(object.getClass() + " MESSAGE: " + message);
+				if( !(whiteList.contains(object.getClass().toString(), false)) )
+				{
+					printMessage = false;
+				}
 			}
-		}	
-	}
-	
-	public static void log( Object object, int message)
-	{
-		log(object, String.valueOf(message));
-	}
-	
-	public static void log( Object object, float message)
-	{
-		log(object, String.valueOf(message));
+				
+			//Deny from logging classes from blackList
+			else if( USE_BLACK_LIST )
+			{
+				if( blackList.contains(object.getClass().toString(), false) )
+				{
+					printMessage = false;
+				}
+			}
+			
+			if(printMessage)
+			{
+				System.out.println("LOG [" + logLevel.toString() + "] | " + object.getClass().toString() + " | MESSAGE: " + message);
+			}
+		}
 	}
 }

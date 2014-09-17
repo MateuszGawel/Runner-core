@@ -6,6 +6,7 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.logger.Logger.LogLevel;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.badlogic.gdx.Gdx;
@@ -17,24 +18,29 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
-public class ResourcesManager {
-
+public class ResourcesManager 
+{
 	private static ResourcesManager INSTANCE;
 	Runner runner;
 	
 	public static void create()
-	{
+	{		
 		INSTANCE = new ResourcesManager();
+		
+		Logger.log(INSTANCE, "Manager has been created", LogLevel.LOW);
 	}
 	public static void destroy()
 	{
+		Logger.log(INSTANCE, "Manager has been destroyed", LogLevel.LOW);
+		
 		INSTANCE = null;
 	}
 	public static ResourcesManager getInstance()
 	{
 		return INSTANCE;
 	}
-	public static void prepareManager(Runner runner){
+	public static void prepareManager(Runner runner)
+	{
     	getInstance().runner = runner;
     }
 	
@@ -113,6 +119,8 @@ public class ResourcesManager {
 		
 		public void loadTextures()
 		{
+			Logger.log(this, "Loading " + this.textures.size() + " textures for " + ( (screenType == null)?"SPECIAL_SCREENMETA":screenType.toString() ), LogLevel.MEDIUM );
+			
 			for(String texture: this.textures)
 			{
 				this.manager.load(texture, Texture.class);
@@ -120,6 +128,8 @@ public class ResourcesManager {
 		}
 		public void loadTextureAtlases()
 		{
+			Logger.log(this, "Loading " + this.textureAtlases.size() + " textureAtlases for " + ( (screenType == null)?"SPECIAL_SCREENMETA":screenType.toString() ), LogLevel.MEDIUM );
+			
 			for(String textureAtlas: this.textureAtlases)
 			{
 				this.manager.load(textureAtlas, TextureAtlas.class);
@@ -127,6 +137,8 @@ public class ResourcesManager {
 		}
 		public void loadMusics()
 		{
+			Logger.log(this, "Loading " + this.musics.size() + " musics for " + ( (screenType == null)?"SPECIAL_SCREENMETA":screenType.toString() ), LogLevel.MEDIUM );
+			
 			for(String music: this.musics) //tu chyba nie powinien byc string? wyglada mi na niedorobke moja ale bd sie tym martwic jak dojdziemy do dzwiekow
 			{
 				this.manager.load(music, Music.class);
@@ -134,6 +146,8 @@ public class ResourcesManager {
 		}
 		public void loadSounds()
 		{
+			Logger.log(this, "Loading " + this.sounds.size() + " sounds for " + ( (screenType == null)?"SPECIAL_SCREENMETA":screenType.toString() ), LogLevel.MEDIUM );
+			
 			for(String sound: this.sounds) //i tu jak wyzej
 			{
 				this.manager.load(sound, Sound.class);
@@ -242,6 +256,8 @@ public class ResourcesManager {
 	
 	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
 	{
+		Logger.log(this, "Adjusting resources for " + worldType.toString() + ( isCampaign?"[CAMPAIGN]":"" ) + ", with character types like: " + characterTypes, LogLevel.MEDIUM );
+		
 		/*
 		ScreenType desiredScreenType = ScreenType.SCREEN_GAME_SINGLE;
 		
@@ -275,32 +291,31 @@ public class ResourcesManager {
 	//--------- LOADING RESOURCES
 	public void loadMenuResources()
 	{
-		Logger.log(this, "LOAD MENU_R: " + String.valueOf(menuSpecialMeta.manager.getLoadedAssets()) );
-		
 		if( menuSpecialMeta.manager.getLoadedAssets() == 0 )
 		{
+			Logger.log(this, "Loading menu resources", LogLevel.LOW);
+			
 			loadSpecialResources(menuSpecialMeta);
 		}
 	}
 	
 	public void loadGameResources()
-	{
-		Logger.log(this, "LOAD GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
-		
+	{		
 		if( gameSpecialMeta.manager.getLoadedAssets() == 0 )
 		{
+			Logger.log(this, "Loading game resources", LogLevel.LOW);
+			
 			loadSpecialResources(gameSpecialMeta);
-			Logger.log(this, "LOADED GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
 		}
 	}
 	
 	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
 	public void loadStillResources()
-	{
-		Logger.log(this, "LOAD STILL_R: " + String.valueOf(stillSpecialMeta.manager.getLoadedAssets()) );
-		
+	{		
 		if( stillSpecialMeta.manager.getLoadedAssets() == 0 )
 		{
+			Logger.log(this, "Loading still resources", LogLevel.LOW);
+			
 			loadSpecialResources(stillSpecialMeta);
 		}
 	}
@@ -320,6 +335,8 @@ public class ResourcesManager {
 	}	
 	public void loadResources(ScreenType screenType)
 	{	
+		Logger.log(this, "Loading resources for " + screenType.toString(), LogLevel.LOW);
+		
 		this.loadTextureAtlases(screenType);
 		this.loadTextures(screenType);
 		this.loadMusics(screenType);
@@ -373,31 +390,31 @@ public class ResourcesManager {
 	
 	//--------- UNLOADING RESOURCES
 	public void unloadMenuResources()
-	{
-		Logger.log(this, "UNLOAD MENU_R: " + String.valueOf(menuSpecialMeta.manager.getLoadedAssets()) );
-		
+	{		
 		if( menuSpecialMeta.manager.getLoadedAssets() > 0 )
 		{
+			Logger.log(this, "Unloading menu resources", LogLevel.LOW);
+			
 			menuSpecialMeta.manager.clear();
 		}
 	}
 	
 	public void unloadGameResources()
-	{
-		Logger.log(this, "UNLOAD GAME_R: " + String.valueOf(gameSpecialMeta.manager.getLoadedAssets()) );
-		
+	{		
 		if( gameSpecialMeta.manager.getLoadedAssets() > 0 )
 		{
+			Logger.log(this, "Unloading game resources", LogLevel.LOW);
+			
 			gameSpecialMeta.manager.clear();
 		}
 	}
 	
 	public void unloadStillResources()
-	{
-		Logger.log(this, "UNLOAD STILL_R: " + String.valueOf(stillSpecialMeta.manager.getLoadedAssets()) );
-		
+	{		
 		if( stillSpecialMeta.manager.getLoadedAssets() > 0 )
 		{
+			Logger.log(this, "Unloading still resources", LogLevel.LOW);
+			
 			stillSpecialMeta.manager.clear();
 		}
 	}
@@ -409,6 +426,8 @@ public class ResourcesManager {
 	}
 	public void unloadAllResources(ScreenType screenType)
 	{		
+		Logger.log(this, "Unloading all resources for " + screenType.toString(), LogLevel.LOW);
+		
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
@@ -423,6 +442,8 @@ public class ResourcesManager {
 	}
 	public void unloadResource(ScreenType screenType, String filename)
 	{
+		Logger.log(this, "Unloading resource " + filename + ", for " + screenType.toString(), LogLevel.LOW);
+		
 		int index = getScreenIndex(screenType);
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		
@@ -436,13 +457,21 @@ public class ResourcesManager {
 		//     09-16 11:41:33.829: E/AndroidRuntime(6746): com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException: Cannot run tasks on an executor that has been shutdown (disposed)
 		//do sprawdzenia w wolnej chwili
 		
-		Logger.log(this, "UNLOADING ALL APPLICATION RESOURCES AND DISPOSING ASSET MANAGERS");
+		int unloadedAssets = 0;
+		
+		Logger.log(this, "Unloading all application resources", LogLevel.MEDIUM);
 		
 		for(ScreenMeta screenMeta: screenMetaArray)
 		{
+			unloadedAssets += screenMeta.manager.getLoadedAssets();
+			
 			screenMeta.manager.clear();
 			//screenMeta.manager.dispose();
 		}
+		
+		unloadedAssets += menuSpecialMeta.manager.getLoadedAssets();
+		unloadedAssets += gameSpecialMeta.manager.getLoadedAssets();
+		unloadedAssets += stillSpecialMeta.manager.getLoadedAssets();
 		
 		menuSpecialMeta.manager.clear();
 		//menuSpecialMeta.manager.dispose();
@@ -454,6 +483,8 @@ public class ResourcesManager {
 		//stillSpecialMeta.manager.dispose();
 		
 		screenMetaArray.clear();
+		
+		Logger.log(this, String.valueOf(unloadedAssets) + " resources has been unloaded.", LogLevel.MEDIUM);
 	}
 	//---------
 	
@@ -465,10 +496,14 @@ public class ResourcesManager {
 	}
 	public <T> T getResource(ScreenType screenType, String filename)
 	{
+		Logger.log(this, "Accessing resource " + filename + ", for " + screenType.toString(), LogLevel.LOW);
+		
 		try
 		{
 			int index = getScreenIndex(screenType);
 			AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+			
+			Logger.log(this, "    - searching in " + screenType.toString() + " manager.", LogLevel.LOW);
 			
 			return manager.get(filename);
 		}
@@ -476,17 +511,32 @@ public class ResourcesManager {
 		{
 			try
 			{
+				Logger.log(this, "    - searching in menu special manager.", LogLevel.LOW);
+				
 				return menuSpecialMeta.manager.get(filename);
 			}
 			catch(Exception f)
 			{
 				try
 				{
+					Logger.log(this, "    - searching in game special manager.", LogLevel.LOW);
+					
 					return gameSpecialMeta.manager.get(filename);
 				}
 				catch(Exception g)
 				{
-					return stillSpecialMeta.manager.get(filename);
+					try
+					{
+						Logger.log(this, "    - searching in still special manager.", LogLevel.LOW);
+						
+						return stillSpecialMeta.manager.get(filename);
+					}
+					catch(Exception h)
+					{
+						Logger.log(this, "Haven't found " + filename + " resource enywhere!", LogLevel.HIGH);
+						
+						return null;
+					}
 				}
 			}
 		}
