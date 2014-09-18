@@ -151,12 +151,14 @@ public class WarpController
 	{
 		if(isConnected)
 		{
+			
 			warpClient.unsubscribeRoom(roomId);
 			warpClient.leaveRoom(roomId);
 			
 			if( STATE != STARTED )
 			{
 				warpClient.deleteRoom(roomId);
+				Logger.log(this, "USUWAM POKOJ" + roomId);
 			}
 			
 			warpClient.disconnect();
@@ -198,7 +200,7 @@ public class WarpController
 			warpClient.initUDP();
 			warpClient.joinLobby();
 			warpClient.subscribeLobby();
-			warpClient.joinRoomInRange(0, 4, false);
+			//warpClient.joinRoomInRange(0, 2, false);
 			isOnline = true;
 		}
 		else
@@ -283,12 +285,14 @@ public class WarpController
 		{// success case
 			this.roomId = event.getData().getId();
 			warpClient.subscribeRoom(roomId);
+			Logger.log(this, "jest");
 		}
 		else if( event.getResult() == WarpResponseResultCode.RESOURCE_NOT_FOUND )
 		{// no such room found
+			Logger.log(this, "nie ma");
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			data.put("result", "");
-			warpClient.createRoom("superjumper", "shephertz", 3, data);
+			warpClient.createRoom("superjumper", "shephertz", 4, data);
 		}
 		else
 		{

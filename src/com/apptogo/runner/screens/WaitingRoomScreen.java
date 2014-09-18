@@ -53,16 +53,16 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		super(runner);	
 		
 		loadPlayer();
-		NotificationManager.prepareManager( player.getName(), player.getCurrentCharacter() );
+		//NotificationManager.prepareManager( player.getName(), player.getCurrentCharacter() );
 		
 		fadeInOnStart();
 		
-		if( !(WarpController.getInstance().isOnline) )
-		{
-			Logger.log(this, "Jeszcze nie byl online //waiting");
-			WarpController.getInstance().startApp( player.getName() );
-		}
-		WarpController.getInstance().setListener(this);
+		//if( !(WarpController.getInstance().isOnline) )
+		//{
+		//	Logger.log(this, "Jeszcze nie byl online //waiting");
+			//WarpController.getInstance().startApp( player.getName() );
+		//}
+		//WarpController.getInstance().setListener(this);
 	}
 	
 	public void prepare() 
@@ -190,6 +190,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
+		Logger.log(this, "przyszed³ update");
 		try 
 		{
 			JSONObject data = new JSONObject(message);

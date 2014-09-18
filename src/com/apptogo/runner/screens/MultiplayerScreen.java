@@ -2,9 +2,9 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.CharacterAnimation;
 import com.apptogo.runner.appwarp.WarpController;
+import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
@@ -22,8 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 
-public class MultiplayerScreen extends BaseScreen
+public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
 	private TextButton createRoomButton;
 	private TextButton joinRandomButton;
@@ -56,6 +57,7 @@ public class MultiplayerScreen extends BaseScreen
 			Logger.log(this, "Jeszcze nie byl online");
 			WarpController.getInstance().startApp( player.getName() );
 		}
+		WarpController.getInstance().setListener(this);
 	}
 	
 	@Override
@@ -80,6 +82,12 @@ public class MultiplayerScreen extends BaseScreen
 		joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
+				try {
+					WarpClient.getInstance().joinRoomInRange(0, 4, false);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				loadScreenAfterFadeOut( ScreenType.SCREEN_WAITING_ROOM );
             }
 		});
@@ -257,6 +265,36 @@ public class MultiplayerScreen extends BaseScreen
 	public ScreenType getSceneType() 
 	{
 		return ScreenType.SCREEN_MULTIPLAYER;
+	}
+
+	@Override
+	public void onWaitingStarted(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameStarted(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameFinished(int code, boolean isRemote) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGameUpdateReceived(String message) {
+		Logger.log(this, "przyszed³ update ale zly listener");
+		
 	}
 
 

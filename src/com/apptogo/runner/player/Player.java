@@ -1,6 +1,7 @@
 package com.apptogo.runner.player;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.levels.Level;
@@ -53,7 +54,7 @@ public class Player
 	}
 	public void setName(String name) 
 	{
-		this.name = name;
+		this.name = "siusiak";
 	}
 
 	public String getPassword() {
