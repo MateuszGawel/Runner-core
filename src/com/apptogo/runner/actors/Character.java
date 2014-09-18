@@ -46,6 +46,8 @@ public abstract class Character extends Actor{
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	
+	protected boolean gameIsEnded = false;
+	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
 	protected float speed = 0;
@@ -126,7 +128,7 @@ public abstract class Character extends Actor{
 	
 	public boolean start()
 	{
-		if(!running && alive && touchGround)
+		if(!running && alive && touchGround && !gameIsEnded)
 		{			
 			running = true;
 			started = true;
@@ -377,11 +379,28 @@ public abstract class Character extends Actor{
 	}
 	
 	public boolean isAlive(){ return this.alive; }
-	public boolean setRunning(boolean running){ this.running = running; return true; } //zwracanie true jest oczywiscie bez sensu ale juz sie chce trzymac jakiejs konwencji x)
+	public boolean setRunning(boolean running)
+	{ 
+		if( !gameIsEnded )
+		{
+			this.running = running; 
+			return true;
+		}
+		else
+		{
+			this.running = false;
+			return false;
+		}
+	} 
 	public Body getBody(){ return this.body; }
 	public boolean isImmortal(){ return this.immortal; }
 	public float getSpeed(){ return this.speed; }
 	public boolean isStarted(){ return this.started; }
+	
+	public void endGame()
+	{
+		gameIsEnded = true;
+	}
 	
 	public abstract CharacterType getCharacterType();	
 

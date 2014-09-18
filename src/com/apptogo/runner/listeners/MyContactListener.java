@@ -133,6 +133,13 @@ public class MyContactListener implements ContactListener{
 				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
 			}
 		}
+		
+		//meta - koniec gry
+		if( ( "finishingLine".equals(fa.getUserData()) && "player".equals(fb.getUserData()) ) || ( "finishingLine".equals(fb.getUserData()) && "player".equals(fa.getUserData()) ) )
+		{
+			gameWorld.character.endGame();
+			gameWorld.character.setRunning(false);
+		}
 	}
 
 	@Override
@@ -193,5 +200,4 @@ public class MyContactListener implements ContactListener{
 		}
 		barrelsToSetActive.clear();
 	}
-
 }

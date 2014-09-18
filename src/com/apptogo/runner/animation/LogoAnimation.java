@@ -1,58 +1,83 @@
 package com.apptogo.runner.animation;
 
-import com.apptogo.runner.enums.ScreenType;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars;
+import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.TimeUtils;
 
-public class LogoAnimation 
-{
-	/* na razie przenosze tu kod z alpha actiona na splash image ale docelowo bedzie tu cala animacja z tym opadajacym logiem etc. dodatkowo klasa powinna miec mozliwosc zwracania animacji samego loga, tak zeby mozna bylo jej uzyc np w loading screenach albo czyms w tym styly ale generalnie nie tylko splash screen */
-	private Texture splashImageTexture;
-	public Image splashImage;
-	private float splashImageOpacity;
-	private AlphaAction action;
-	private final float FADE_IN_TIME = 80; //finalnie powinno byc ~80
+public class LogoAnimation extends Actor
+{	
+	protected AnimationManager animationManager;
+	protected TextureRegion currentFrame;
 	
-	public LogoAnimation()
-	{
-		splashImageTexture = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_SPLASH, "gfx/splash/splash.png");
+	protected boolean isFinished = false;
 		
-		splashImage = new Image( splashImageTexture );
-		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, (Runner.SCREEN_HEIGHT/Box2DVars.PPM)/2.0f - splashImage.getHeight()/2.0f );
-		splashImageOpacity = 0.0f;
+	public LogoAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart)
+	{				
+		this.setPosition(x, y);
 		
-		action = new AlphaAction();
+		this.animationManager = new AnimationManager( atlasName );
+
+		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), false)
+		{
+			@Override
+			public void additionalTaskDuringAnimation()
+			{
+				this.setFrameDuration(0.01f);
+			}
+			
+			@Override
+			public void onAnimationFinished()
+			{
+				isFinished = true;
+			}
+		});
+		
+		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.IDLE, animationManager.createFrames(1, frameName), false)
+		{
+			@Override
+			public void additionalTaskDuringAnimation(){
+				this.setFrameDuration(0.01f);
+			}
+		});
+		
+		if( doStart )
+		{
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);		
+		}
+		else
+		{
+			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);	
+		}
 	}
 	
-	public void play(){}
+	public void start()
+	{
+		animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+	}
 	
 	public boolean isFinished()
 	{
-		if( splashImageOpacity < 1.0f )
-		{
-			return false;
-		}
-		return true;
+		return isFinished;
 	}
 	
-	public void dispose()
+	@Override
+	public void act(float delta) 
 	{
-		splashImageTexture.dispose();
+		super.act(delta);
+		currentFrame = animationManager.animate(delta);
 	}
 	
-	public AlphaAction animate(Actor actor)
+	@Override
+	public void draw(Batch batch, float parentAlpha) 
 	{
-		splashImageOpacity += 2.0f / FADE_IN_TIME;
-		
-		action.reset();
-		action.setAlpha( ((splashImageOpacity>1.0f)?1.0f:splashImageOpacity) * (float)Math.sin(((splashImageOpacity>1.0f)?1.0f:splashImageOpacity)) );
-		return action;
+		batch.draw(currentFrame, this.getX(), this.getY());	
 	}
 }

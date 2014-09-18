@@ -174,6 +174,10 @@ public class ResourcesManager
 		ScreenMeta splashMeta = new ScreenMeta(ScreenType.SCREEN_SPLASH);
 		
 		splashMeta.addTexture("gfx/splash/splash.png");
+		splashMeta.addTexture("gfx/menu/menuBackgrounds/splashScreenBackground.png");
+		
+		splashMeta.addTextureAtlas("gfx/splash/logo.pack");
+		splashMeta.addTextureAtlas("gfx/splash/dust.pack");
 		
 		screenMetaArray.add( splashMeta ); 
 		
