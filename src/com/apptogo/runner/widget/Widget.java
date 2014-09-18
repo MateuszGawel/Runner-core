@@ -229,13 +229,13 @@ public class Widget
 			this.height = 700f;
 		}		
 		
-		this.win = new Window("", this.skin, styleName);
+		this.win = new Window("", this.skin, "default");
 		this.win.setSize(this.width, this.height);
 		
 		this.win.clearListeners();
 		
 		closeWidgetButton = new Button(skin, "closeWidget");
-		closeWidgetButton.setPosition(this.win.getWidth() - 60.0f, this.win.getHeight() - 60.0f);
+		closeWidgetButton.setPosition(this.win.getWidth() - 100.0f, this.win.getHeight() - 100.0f);
 		closeWidgetButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
@@ -243,11 +243,11 @@ public class Widget
             }
          });
 		
-		//paperTexture = new Texture( Gdx.files.internal("ui/paper.png") );
-		//paper = new Image( paperTexture );
-		//paper.setPosition(0f, 0f);
+		paperTexture = new Texture( Gdx.files.internal("gfx/menu/paper.png") );
+		paper = new Image( paperTexture );
+		paper.setPosition(0f, 0f);
 		
-		//this.win.addActor(paper);
+		this.win.addActor(paper);
 		this.win.addActor(closeWidgetButton);
 	}
 	
@@ -368,7 +368,7 @@ public class Widget
 		this.win.clear();
 		this.group.clear();
 		this.groupWithBlackOutButton.clear();
-		//this.paperTexture.dispose();
+		this.paperTexture.dispose();
 		//this.skin.dispose();
 	}
 		

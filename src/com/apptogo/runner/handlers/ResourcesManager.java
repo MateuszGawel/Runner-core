@@ -224,6 +224,8 @@ public class ResourcesManager
 		
 		menuSpecialMeta.addTexture("gfx/menu/sliderMask.png");
 		
+		menuSpecialMeta.addTexture("gfx/menu/paper.png");
+		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");
