@@ -9,7 +9,6 @@ import com.apptogo.runner.levels.LevelWorld;
 
 public class Player 
 {
-
 	private String name;
 	private String password;
 	
@@ -22,8 +21,14 @@ public class Player
 	public Player()
 	{
 		levels = new HashMap<String, Integer>();
+		statistics = new Statistics();
 	}
 		
+	public Statistics getStatistics()
+	{
+		return this.statistics;
+	}
+	
 	public boolean isAnonymous()
 	{
 		if( name == "" )
