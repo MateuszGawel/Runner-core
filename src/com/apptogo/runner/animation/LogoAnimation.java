@@ -25,14 +25,8 @@ public class LogoAnimation extends Actor
 		
 		this.animationManager = new AnimationManager( atlasName );
 
-		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), false)
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), false)
 		{
-			@Override
-			public void additionalTaskDuringAnimation()
-			{
-				this.setFrameDuration(0.01f);
-			}
-			
 			@Override
 			public void onAnimationFinished()
 			{
@@ -40,13 +34,7 @@ public class LogoAnimation extends Actor
 			}
 		});
 		
-		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.IDLE, animationManager.createFrames(1, frameName), false)
-		{
-			@Override
-			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(0.01f);
-			}
-		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.IDLE, animationManager.createFrames(1, frameName), false));
 		
 		if( doStart )
 		{

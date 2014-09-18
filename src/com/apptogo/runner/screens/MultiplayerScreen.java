@@ -57,7 +57,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			Logger.log(this, "Jeszcze nie byl online");
 			WarpController.getInstance().startApp( player.getName() );
 		}
-		WarpController.getInstance().setListener(this);
+		WarpController.getInstance().setMultiplayerScreenListener(this);
 	}
 	
 	@Override
@@ -82,12 +82,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				try {
-					WarpClient.getInstance().joinRoomInRange(0, 4, false);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				loadScreenAfterFadeOut( ScreenType.SCREEN_WAITING_ROOM );
             }
 		});

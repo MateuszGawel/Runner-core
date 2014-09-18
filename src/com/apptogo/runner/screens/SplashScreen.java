@@ -84,12 +84,12 @@ public class SplashScreen extends BaseScreen
 		splashImageOutAction = new MoveToAction();
 		splashImageOutAction.setDuration(0.4f);
 		splashImageOutAction.setPosition(splashImage.getX(), -800.0f);
-		splashImageOutAction.setInterpolation(Interpolation.exp10Out);
+		splashImageOutAction.setInterpolation(Interpolation.sineOut);
 		
 		logoInAction = new MoveToAction();
 		logoInAction.setDuration(0.8f);
 		logoInAction.setPosition(logoAnimation.getX(), -122.0f);
-		logoInAction.setInterpolation(Interpolation.bounceOut);
+		logoInAction.setInterpolation(Interpolation.exp10In);
 				
 		logoWaitingAction = new AlphaAction();
 		logoWaitingAction.setDuration(0.1f);

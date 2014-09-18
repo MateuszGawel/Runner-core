@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 
 public class WaitingRoomScreen extends BaseScreen implements WarpListener
 {			
@@ -62,7 +63,14 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		//	Logger.log(this, "Jeszcze nie byl online //waiting");
 			//WarpController.getInstance().startApp( player.getName() );
 		//}
-		//WarpController.getInstance().setListener(this);
+		Logger.log(this,  "ustawiam waiting room listener");
+		WarpController.getInstance().setWaitingRoomListener(this);
+		try {
+			WarpClient.getInstance().joinRoomInRange(0, 4, false);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void prepare() 

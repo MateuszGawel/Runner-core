@@ -35,7 +35,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		super(runner);	
 		
 		NotificationManager.getInstance().enableAppWarpNotifications(); //uwaga - to powoduje ze tak czy siak jest wywolywana funkcja z notifManagera w Character (i na starcie w gameWorld) - moze spowalniac program :<
-		WarpController.getInstance().setListener(this);
+		//WarpController.getInstance().setListener(this);
 	}
 		
 	public void prepare() 
