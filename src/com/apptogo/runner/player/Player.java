@@ -59,7 +59,7 @@ public class Player
 	}
 	public void setName(String name) 
 	{
-		this.name = "siusiak";
+		this.name = "cycki";
 	}
 
 	public String getPassword() {

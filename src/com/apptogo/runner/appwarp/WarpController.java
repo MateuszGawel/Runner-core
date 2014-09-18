@@ -31,7 +31,8 @@ public class WarpController
 	public boolean isConnected = false;
 	boolean isUDPEnabled = false;
 	
-	private WarpListener warpListener ;
+	private WarpListener multiplayerScreenListener ;
+	private WarpListener waitingRoomListener ;
 	
 	private int STATE;
 	
@@ -58,9 +59,14 @@ public class WarpController
 		//warpClient.addLobbyRequestListener(new LobbyListener(this));
 	}
 	
-	public void setListener(WarpListener listener)
+	public void setMultiplayerScreenListener(WarpListener listener)
 	{
-		this.warpListener = listener;
+		this.multiplayerScreenListener = listener;
+	}
+	
+	public void setWaitingRoomListener(WarpListener listener)
+	{
+		this.waitingRoomListener = listener;
 	}
 	
 	private void initAppwarp()
@@ -88,8 +94,8 @@ public class WarpController
 		{
 			warpClient.unsubscribeRoom(roomId);
 			warpClient.leaveRoom(roomId);
-			warpClient.unsubscribeLobby();
-			warpClient.leaveLobby();
+			//warpClient.unsubscribeLobby();
+			//warpClient.leaveLobby();
 		}
 		
 		warpClient.disconnect();
@@ -98,7 +104,7 @@ public class WarpController
 	private void startGame()
 	{
 		STATE = STARTED;
-		warpListener.onGameStarted("Start the Game");
+		waitingRoomListener.onGameStarted("Start the Game");
 	}
 	
 	public void sendGameUpdate(String msg)
@@ -135,7 +141,7 @@ public class WarpController
 	private void waitForOtherUser()
 	{
 		STATE = WAITING;
-		warpListener.onWaitingStarted("Waiting for other user");
+		//waitingRoomListener.onWaitingStarted("Waiting for other user");
 	}
 	
 	private void handleError()
@@ -198,8 +204,8 @@ public class WarpController
 		if(status)
 		{
 			warpClient.initUDP();
-			warpClient.joinLobby();
-			warpClient.subscribeLobby();
+			//warpClient.joinLobby();
+			//warpClient.subscribeLobby();
 			//warpClient.joinRoomInRange(0, 2, false);
 			isOnline = true;
 		}
@@ -224,7 +230,7 @@ public class WarpController
 	{
 		Logger.log(this, "onUserJoinedRoom: roomId = " + roomId + ", userName = " + userName);
 		
-		warpClient.getLiveRoomInfo(roomId);
+		//warpClient.getLiveRoomInfo(roomId);
 		
 		NotificationManager.getInstance().screamMyName();
 		
@@ -241,7 +247,7 @@ public class WarpController
 		Logger.log(this, "onUserLeftRoom: roomId = " + roomId + ", userName = " + userName);
 		if(STATE==STARTED && !localUser.equals(userName))
 		{// Game Started and other user left the room
-			warpListener.onGameFinished(ENEMY_LEFT, true);
+			multiplayerScreenListener.onGameFinished(ENEMY_LEFT, true);
 		}
 	}
 	public void onUpdatePeersReceived(String message)
@@ -253,7 +259,7 @@ public class WarpController
 		
 		if( !localUser.equals(userName) )
 		{
-			warpListener.onGameUpdateReceived(data);
+			waitingRoomListener.onGameUpdateReceived(data);
 		}
 	}
 	public void onUserChangeRoomProperty(String userName, int code)
@@ -263,11 +269,11 @@ public class WarpController
 		if( localUser.equals(userName) == false )
 		{
 			STATE = FINISHED;
-			warpListener.onGameFinished(code, true);
+			multiplayerScreenListener.onGameFinished(code, true);
 		}
 		else
 		{
-			warpListener.onGameFinished(code, false);
+			multiplayerScreenListener.onGameFinished(code, false);
 		}
 	}
 	public void onUserJoinedLobby(LobbyData data, String userName)
@@ -284,6 +290,7 @@ public class WarpController
 		if( event.getResult() == WarpResponseResultCode.SUCCESS )
 		{// success case
 			this.roomId = event.getData().getId();
+			//warpClient.joinRoom(roomId);
 			warpClient.subscribeRoom(roomId);
 			Logger.log(this, "jest");
 		}
@@ -345,6 +352,7 @@ public class WarpController
 		if( roomId != null )
 		{
 			warpClient.joinRoom(roomId);
+			warpClient.subscribeRoom(roomId);
 		}
 		else
 		{
