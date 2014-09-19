@@ -76,7 +76,7 @@ public enum FontType
 		defaultFontColor = new Color(1, 1, 1, 1);
 		
 		woodFont = getFont("gfx/fonts/ComicSerif.ttf", 48);
-		woodFontColor = new Color(0.64f, 0.5f, 0.30f, 1);
+		woodFontColor = new Color(151f/255f, 127f/255f, 91f/255f, 1);
 		
 		leafFont = getFont("gfx/fonts/ComicSerif.ttf", 48);
 		leafFontColor = new Color(0.05f, 0.35f, 0.04f, 1);

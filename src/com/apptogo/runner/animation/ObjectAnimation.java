@@ -12,14 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class LogoAnimation extends Actor
+public class ObjectAnimation extends Actor
 {	
 	protected AnimationManager animationManager;
 	protected TextureRegion currentFrame;
 	
 	protected boolean isFinished = false;
+	
+	protected boolean scaleFrames;
+	protected float scale;
 		
-	public LogoAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart, boolean loop)
+	public ObjectAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart, boolean loop)
 	{				
 		this.setPosition(x, y);
 		
@@ -56,6 +59,12 @@ public class LogoAnimation extends Actor
 		return isFinished;
 	}
 	
+	public void scaleFrames(float scale)
+	{
+		scaleFrames = true;
+		this.scale = scale;
+	}
+	
 	@Override
 	public void act(float delta) 
 	{
@@ -66,6 +75,13 @@ public class LogoAnimation extends Actor
 	@Override
 	public void draw(Batch batch, float parentAlpha) 
 	{
-		batch.draw(currentFrame, this.getX(), this.getY());	
+		if(scaleFrames)
+		{		
+			batch.draw(currentFrame, this.getX(), this.getY(), 0, 0, currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), scale, scale, 0);
+		}
+		else
+		{
+			batch.draw(currentFrame, this.getX(), this.getY());	
+		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.LogoAnimation;
+import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -30,7 +30,7 @@ public class LoadingScreen extends BaseScreen{
 	private Label loadingLabel;
 	private Label smallLabel;
 	
-	private LogoAnimation loadingAnimation;
+	private ObjectAnimation loadingAnimation;
 	
 	private Level levelToLoad;
 	
@@ -107,7 +107,7 @@ public class LoadingScreen extends BaseScreen{
 			setLabelFont(loadingLabel, FontType.DEFAULT);
 			loadingLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getHeight() / 2.0f) );
 			
-			loadingAnimation = new LogoAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(loadingAnimation);

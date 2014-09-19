@@ -1,6 +1,6 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.LogoAnimation;
+import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
@@ -31,9 +31,9 @@ public class SplashScreen extends BaseScreen
 	private AssetManager menuAssetManager;
 	private AssetManager stillAssetManager;
 	
-	private LogoAnimation logoAnimation;
-	private LogoAnimation dustAnimation;
-	private LogoAnimation loadingAnimation;
+	private ObjectAnimation logoAnimation;
+	private ObjectAnimation dustAnimation;
+	private ObjectAnimation loadingAnimation;
 		
 	private Texture splashImageTexture;
 	private Image splashImage;
@@ -118,12 +118,13 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
 		{
-			logoAnimation = new LogoAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false, false);
+			logoAnimation = new ObjectAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false, false);
 			
-			dustAnimation = new LogoAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false, false);
+			dustAnimation = new ObjectAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false, false);
+			dustAnimation.scaleFrames(2.0f);
 			dustAnimation.setVisible(false);
 			
-			loadingAnimation = new LogoAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logoAnimation);
