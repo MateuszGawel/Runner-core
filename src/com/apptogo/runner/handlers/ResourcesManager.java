@@ -214,6 +214,7 @@ public class ResourcesManager
 		
 		logoSpecialMeta.addTextureAtlas("gfx/splash/logo.pack");
 		logoSpecialMeta.addTextureAtlas("gfx/splash/dust.pack");
+		logoSpecialMeta.addTextureAtlas("gfx/splash/loading.pack");
 		
 		//|0. MENU RESOURCES
 		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
@@ -258,6 +259,8 @@ public class ResourcesManager
 		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
 		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
 		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
+		
+		stillSpecialMeta.addTextureAtlas("gfx/splash/loading.pack");
 		
 		//|... INITIALIZING SKINS
 		this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"));

@@ -33,6 +33,7 @@ public class SplashScreen extends BaseScreen
 	
 	private LogoAnimation logoAnimation;
 	private LogoAnimation dustAnimation;
+	private LogoAnimation loadingAnimation;
 		
 	private Texture splashImageTexture;
 	private Image splashImage;
@@ -117,12 +118,17 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
 		{
-			logoAnimation = new LogoAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false);
-			dustAnimation = new LogoAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false);
+			logoAnimation = new LogoAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false, false);
+			
+			dustAnimation = new LogoAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false, false);
 			dustAnimation.setVisible(false);
+			
+			loadingAnimation = new LogoAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
+			loadingAnimation.setVisible(false);
 			
 			addToScreen(logoAnimation);
 			addToScreen(dustAnimation);
+			addToScreen(loadingAnimation);
 			
 			splashImage.addAction(splashImageOutAction);
 			logoAnimation.addAction(logoInAction);
@@ -155,6 +161,9 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.BACKGROUND_WAITING && background.getActions().size <= 0)
 		{
+			loadingAnimation.setVisible(true);
+			loadingAnimation.start();
+			
 			ResourcesManager.getInstance().loadMenuResources();
 			ResourcesManager.getInstance().loadStillResources();
 			

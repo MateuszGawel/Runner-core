@@ -19,13 +19,13 @@ public class LogoAnimation extends Actor
 	
 	protected boolean isFinished = false;
 		
-	public LogoAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart)
+	public LogoAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart, boolean loop)
 	{				
 		this.setPosition(x, y);
 		
 		this.animationManager = new AnimationManager( atlasName );
 
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), false)
+		animationManager.createAnimation(new MyAnimation(0.02f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), loop)
 		{
 			@Override
 			public void onAnimationFinished()

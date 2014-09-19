@@ -4,25 +4,21 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.player.SaveManager;
-import com.apptogo.runner.vars.Box2DVars;
-import com.apptogo.runner.widget.DialogWidget;
-import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.apptogo.runner.widget.Widget.WidgetType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.OnscreenKeyboard;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -69,7 +65,7 @@ public class MainMenuScreen extends BaseScreen{
 	
 	@Override
 	public void prepare() 
-	{
+	{		
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 					
 		settingsButton = new Button(skin, "settings");
@@ -87,9 +83,10 @@ public class MainMenuScreen extends BaseScreen{
 		
 		facebookButton = new Button(skin, "facebook");
 		facebookButton.setPosition(-570f, -165f);
-		
+			
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
-		campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), 0.0f );
+        
+        campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), 0.0f );
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
 		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -200.0f );

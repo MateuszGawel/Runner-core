@@ -2,11 +2,13 @@ package com.apptogo.runner.enums;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.vars.Fonts;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public enum GameWorldType
@@ -180,4 +182,23 @@ public enum GameWorldType
 		
 		return null;
 	}
+
+	public static FontType convertToButtonFontType( GameWorldType gameWorldType)
+	{
+		if( gameWorldType == WILDWEST )
+		{
+			return FontType.WOODFONT;
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return FontType.LEAFFONT;
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return FontType.ROCKFONT;
+		}
+		
+		return null;
+	}
+
 }
