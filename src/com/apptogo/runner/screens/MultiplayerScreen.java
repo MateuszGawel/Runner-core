@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
@@ -54,10 +55,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		if( !(WarpController.getInstance().isOnline) )
 		{
-			Logger.log(this, "Jeszcze nie byl online");
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);
+		NotificationManager.getInstance().prepareManager(player.getName(), player.getCurrentCharacter());
 	}
 	
 	@Override
