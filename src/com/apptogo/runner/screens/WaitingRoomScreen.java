@@ -198,7 +198,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
-		Logger.log(this, "przyszed≥ update");
+		Logger.log(this, "Ja jestem: " + player.getName() + " przyszed≥ update: " + message);
 		try 
 		{
 			JSONObject data = new JSONObject(message);
@@ -207,38 +207,42 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			if( data.has("INITIAL_NOTIFICATION") )
 			{
 				String enemyName = (String)data.getString("PLAYER_NAME");
-				
+				Logger.log(this, "jest to wiadomosc initial");
 				boolean presentAlready = false;
 
 				if( player.getName().equals(enemyName) )
 				{
+					Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
 					presentAlready = true;
 				}
-								
-				for(int i = 0; i < players.size; i++)
-				{
-					if( players.get(i).getName().equals(enemyName) ) 
-					{
+					
+				for(Player player : players){
+					
+					Logger.log(this, "porownuje: " + player.getName() + " oraz " + enemyName);
+					
+					if(player.getName().equals(enemyName)){
+						Logger.log(this, "juz taki gracz sie raz przedstawial i jest na liscie");
 						presentAlready = true;
 						break;
 					}
+					else
+						Logger.log(this, "nie mam takiego gracza na liscie jeszcze");
 				}
-				
+
 				if( !presentAlready )			
 				{
 					CharacterType enemyCharacter = CharacterType.parseFromString( (String)data.getString("PLAYER_CHARACTER") );
-					Logger.log(this, "OTO CO DOSTALEM: " + (String)data.getString("PLAYER_CHARACTER"));
-					Player enemy = new Player();
-					enemy.setName(enemyName);
-					enemy.setCurrentCharacter(enemyCharacter);
-					
-					Logger.log(this, "ktos dolaczyl :) jego imie to: "+enemyName);
-														
+					Player enemy = new Player(enemyName, enemyCharacter);
+
 					players.add(enemy);
 					addPlayer(enemy);
 					
 					NotificationManager.getInstance().screamMyName();
 				}
+			}
+			Logger.log(this, "ostatecznie takich mam graczy na swojej liscie: ");
+			for(Player player : players){
+				Logger.log(this, "gracz: " + player.getName());
 			}
 		} 
 		catch (JSONException e) { e.printStackTrace(); }

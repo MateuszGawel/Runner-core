@@ -135,7 +135,6 @@ public class NotificationManager
 			data.put("INITIAL_NOTIFICATION", true); 
 			data.put("PLAYER_NAME", playerName); 
 			data.put("PLAYER_CHARACTER", playerCharacterType); 
-			//tu musza byc jeszcze inne info nt statsow itp
 	    } 
 	    catch (JSONException e) { e.printStackTrace(); }
 		

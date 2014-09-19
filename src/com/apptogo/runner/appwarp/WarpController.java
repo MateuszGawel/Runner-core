@@ -1,6 +1,9 @@
 package com.apptogo.runner.appwarp;
 
 
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 
 import com.apptogo.runner.logger.Logger;
@@ -113,11 +116,12 @@ public class WarpController
 		{
 			if(isUDPEnabled)
 			{
-				warpClient.sendUDPUpdatePeers((localUser+"#@"+msg).getBytes());
+				warpClient.sendUDPUpdatePeers((localUser+"#@"+msg).getBytes(Charset.forName("utf-8")));
+				Logger.log(this, "wiadomosc poszla");
 			}
 			else
 			{
-				warpClient.sendUpdatePeers((localUser+"#@"+msg).getBytes());
+				warpClient.sendUpdatePeers((localUser+"#@"+msg).getBytes(Charset.forName("utf-8")));
 			}
 		}
 	}
@@ -232,7 +236,7 @@ public class WarpController
 		
 		//warpClient.getLiveRoomInfo(roomId);
 		
-		NotificationManager.getInstance().screamMyName();
+		
 		
 		/*
 		 * if room id is same and username is different then start the game
@@ -252,7 +256,6 @@ public class WarpController
 	}
 	public void onUpdatePeersReceived(String message)
 	{
-		Logger.log(this, "onUpdatePeersReceived: " + message);
 		
 		String userName = message.substring(0, message.indexOf("#@"));
 		String data = message.substring(message.indexOf("#@")+2, message.length());
@@ -292,11 +295,9 @@ public class WarpController
 			this.roomId = event.getData().getId();
 			//warpClient.joinRoom(roomId);
 			warpClient.subscribeRoom(roomId);
-			Logger.log(this, "jest");
 		}
 		else if( event.getResult() == WarpResponseResultCode.RESOURCE_NOT_FOUND )
 		{// no such room found
-			Logger.log(this, "nie ma");
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			data.put("result", "");
 			warpClient.createRoom("superjumper", "shephertz", 4, data);
@@ -325,6 +326,7 @@ public class WarpController
 	public void onGetLiveRoomInfoDone(String[] liveUsers)
 	{
 		Logger.log(this, "onGetLiveRoomInfo: liveUsersCount = " + liveUsers.length);
+		NotificationManager.getInstance().screamMyName();
 		if(liveUsers!=null)
 		{
 			if( liveUsers.length == 3 )

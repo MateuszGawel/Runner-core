@@ -24,6 +24,13 @@ public class Player
 		levels = new HashMap<String, Integer>();
 		statistics = new Statistics();
 	}
+	
+	public Player(String name, CharacterType currentCharacter)
+	{
+		this();
+		this.name = name;
+		this.currentCharacter = currentCharacter;
+	}
 		
 	public Statistics getStatistics()
 	{
@@ -59,7 +66,7 @@ public class Player
 	}
 	public void setName(String name) 
 	{
-		this.name = "cycki";
+		this.name = "jaJuzNie";
 	}
 
 	public String getPassword() {
