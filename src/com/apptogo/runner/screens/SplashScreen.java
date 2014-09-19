@@ -20,33 +20,28 @@ public class SplashScreen extends BaseScreen
 		SPLASH_IMAGE_IN,
 		SPLASH_IMAGE_WAITING,
 		LOGO_IN,
+		LOGO_ANIMATING,
 		LOGO_WAITING,
-		DUST_IN,
-		DUST_WAITING,
+		BACKGROUND_WAITING,
 		FINISHED
 	}
 	
-	private LogoAnimation logoAnimation;
-	private LogoAnimation dustAnimation;
+	private SplashPhase currentPhase;
 	
 	private AssetManager menuAssetManager;
 	private AssetManager stillAssetManager;
+	
+	private LogoAnimation logoAnimation;
+	private LogoAnimation dustAnimation;
 		
 	private Texture splashImageTexture;
-	public Image splashImage;
+	private Image splashImage;
 	
 	private MoveToAction splashImageInAction;
-	private AlphaAction splashImageWaitingAction;
 	private MoveToAction splashImageOutAction;
-	
 	private MoveToAction logoInAction;
+	private AlphaAction backgroundInAction;
 	private AlphaAction logoWaitingAction;
-	
-	private AlphaAction dustWaitingAction;
-	
-	private SplashPhase currentPhase;
-	
-	private boolean startLoadingResources = false;
 	
 	public SplashScreen(Runner runner)
 	{
@@ -56,71 +51,54 @@ public class SplashScreen extends BaseScreen
 	@Override
 	public void prepare()
 	{	
-		setBackground("gfx/menu/menuBackgrounds/splashScreenBackground.png");
-		
 		ResourcesManager.getInstance().loadResources(this);
 		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
 		
-		currentPhase = SplashPhase.SPLASH_IMAGE_IN;
+		setBackground("gfx/menu/menuBackgrounds/splashScreenBackground.png");
+		background.setColor(background.getColor().r, background.getColor().g, background.getColor().b, 0.0f);
 		
-		logoAnimation = new LogoAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false);
-		dustAnimation = new LogoAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -320.0f, false);
-		dustAnimation.setVisible(false);
+		initializeActions();
 		
 		splashImageTexture = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_SPLASH, "gfx/splash/splash.png");
 		
 		splashImage = new Image( splashImageTexture );
-		splashImage.setPosition( (Runner.SCREEN_WIDTH/Box2DVars.PPM)/2.0f - splashImage.getWidth()/2.0f, -800.0f );
-
-		splashImageInAction = new MoveToAction();
-		splashImageInAction.setDuration(0.8f);
-		splashImageInAction.setPosition(splashImage.getX(), -200.0f);
-		splashImageInAction.setInterpolation(Interpolation.elasticOut);
+		splashImage.setPosition( -106.0f, -800.0f );
+		splashImage.addAction( splashImageInAction );
+	
+		addToScreen(splashImage);
 		
-		splashImageWaitingAction = new AlphaAction();
-		splashImageWaitingAction.setDuration(0.5f);
-		splashImageWaitingAction.setAlpha(1.0f);
+		currentPhase = SplashPhase.SPLASH_IMAGE_IN;
+	}
+	
+	private void initializeActions()
+	{
+		splashImageInAction = new MoveToAction();
+		splashImageInAction.setDuration(1.5f);
+		splashImageInAction.setPosition(-106.0f, -200.0f);
+		splashImageInAction.setInterpolation(Interpolation.pow5Out);
 		
 		splashImageOutAction = new MoveToAction();
 		splashImageOutAction.setDuration(0.4f);
-		splashImageOutAction.setPosition(splashImage.getX(), -800.0f);
+		splashImageOutAction.setPosition(-106.0f, -800.0f);
 		splashImageOutAction.setInterpolation(Interpolation.sineOut);
 		
 		logoInAction = new MoveToAction();
 		logoInAction.setDuration(0.8f);
-		logoInAction.setPosition(logoAnimation.getX(), -122.0f);
+		logoInAction.setPosition(-421.0f, -200.0f);
 		logoInAction.setInterpolation(Interpolation.exp10In);
 				
+		backgroundInAction = new AlphaAction();
+		backgroundInAction.setDuration(1.0f);
+		backgroundInAction.setAlpha(1.0f);
+		
 		logoWaitingAction = new AlphaAction();
 		logoWaitingAction.setDuration(0.1f);
 		logoWaitingAction.setAlpha(1.0f);
-		
-		dustWaitingAction = new AlphaAction();
-		dustWaitingAction.setDuration(0.5f);
-		dustWaitingAction.setAlpha(1.0f);
-		
-		splashImage.addAction( splashImageInAction );
-	
-		addToScreen(splashImage);
-		addToScreen(logoAnimation);
-		addToScreen(dustAnimation);
 	}
 	
 	public void step()
-	{
-		
-		if( currentPhase == SplashPhase.FINISHED && !startLoadingResources ) 
-		{
-			startLoadingResources = true;
-			
-			ResourcesManager.getInstance().loadMenuResources();
-			menuAssetManager = ResourcesManager.getInstance().getMenuAssetManager();
-			
-			ResourcesManager.getInstance().loadStillResources();
-			stillAssetManager = ResourcesManager.getInstance().getStillAssetManager();
-		}
-		
-		if( currentPhase == SplashPhase.FINISHED && startLoadingResources ) 
+	{		
+		if( currentPhase == SplashPhase.FINISHED ) 
 		{
 			if( menuAssetManager.update() )
 			{
@@ -135,35 +113,54 @@ public class SplashScreen extends BaseScreen
 		if( currentPhase == SplashPhase.SPLASH_IMAGE_IN && splashImage.getActions().size <= 0)
 		{
 			currentPhase = SplashPhase.SPLASH_IMAGE_WAITING;
-			splashImage.addAction(splashImageWaitingAction);
+			ResourcesManager.getInstance().loadLogoResources();
 		}
-		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && splashImage.getActions().size <= 0)
+		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
 		{
-			currentPhase = SplashPhase.LOGO_IN;
-			logoAnimation.addAction(logoInAction);
+			logoAnimation = new LogoAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false);
+			dustAnimation = new LogoAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false);
+			dustAnimation.setVisible(false);
+			
+			addToScreen(logoAnimation);
+			addToScreen(dustAnimation);
+			
 			splashImage.addAction(splashImageOutAction);
+			logoAnimation.addAction(logoInAction);
+		
+			currentPhase = SplashPhase.LOGO_IN;
 		}
 		else if( currentPhase == SplashPhase.LOGO_IN && logoAnimation.getActions().size <= 0)
 		{
-			currentPhase = SplashPhase.LOGO_WAITING;
-			logoAnimation.addAction(logoWaitingAction);
-			
 			dustAnimation.setVisible(true);
 			dustAnimation.start();
-		}
-		else if( currentPhase == SplashPhase.LOGO_WAITING && logoAnimation.getActions().size <= 0)
-		{
-			currentPhase = SplashPhase.DUST_IN;
+			
 			logoAnimation.start();
+			
+			background.addAction(backgroundInAction);
+			logoAnimation.addAction(logoWaitingAction);
+			
+			currentPhase = SplashPhase.LOGO_ANIMATING;
 		}
-		else if( currentPhase == SplashPhase.DUST_IN && dustAnimation.isFinished())
+		else if( currentPhase == SplashPhase.LOGO_ANIMATING && logoAnimation.isFinished()  && dustAnimation.isFinished())
 		{
 			dustAnimation.setVisible(false);
-			dustAnimation.addAction(dustWaitingAction);
-			currentPhase = SplashPhase.DUST_WAITING;
+			
+			logoAnimation.addAction(logoWaitingAction);
+			
+			currentPhase = SplashPhase.LOGO_WAITING;
 		}
-		else if( currentPhase == SplashPhase.DUST_WAITING && dustAnimation.getActions().size <= 0)
+		else if( currentPhase == SplashPhase.LOGO_WAITING && logoAnimation.getActions().size <= 0 )
 		{
+			currentPhase = SplashPhase.BACKGROUND_WAITING;
+		}
+		else if( currentPhase == SplashPhase.BACKGROUND_WAITING && background.getActions().size <= 0)
+		{
+			ResourcesManager.getInstance().loadMenuResources();
+			ResourcesManager.getInstance().loadStillResources();
+			
+			menuAssetManager = ResourcesManager.getInstance().getMenuAssetManager();
+			stillAssetManager = ResourcesManager.getInstance().getStillAssetManager();
+			
 			currentPhase = SplashPhase.FINISHED;
 		}
 	}

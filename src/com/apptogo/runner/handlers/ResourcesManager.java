@@ -157,6 +157,7 @@ public class ResourcesManager
 	//---
 
 	private Array<ScreenMeta> screenMetaArray;
+	ScreenMeta logoSpecialMeta;
 	ScreenMeta menuSpecialMeta;
 	ScreenMeta gameSpecialMeta;
 	ScreenMeta stillSpecialMeta;
@@ -175,9 +176,6 @@ public class ResourcesManager
 		
 		splashMeta.addTexture("gfx/splash/splash.png");
 		splashMeta.addTexture("gfx/menu/menuBackgrounds/splashScreenBackground.png");
-		
-		splashMeta.addTextureAtlas("gfx/splash/logo.pack");
-		splashMeta.addTextureAtlas("gfx/splash/dust.pack");
 		
 		screenMetaArray.add( splashMeta ); 
 		
@@ -211,6 +209,12 @@ public class ResourcesManager
 		
 		//ADDING SPECIALS:
 		//-----------------------------------------------------------------------------
+		//-1. LOGO RESOURCES
+		logoSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
+		
+		logoSpecialMeta.addTextureAtlas("gfx/splash/logo.pack");
+		logoSpecialMeta.addTextureAtlas("gfx/splash/dust.pack");
+		
 		//|0. MENU RESOURCES
 		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
 		
@@ -295,6 +299,16 @@ public class ResourcesManager
 	}
 	
 	//--------- LOADING RESOURCES
+	public void loadLogoResources()
+	{
+		if( logoSpecialMeta.manager.getLoadedAssets() == 0 )
+		{
+			Logger.log(this, "Loading logo resources in SPLASH screen", LogLevel.LOW);
+			
+			loadSpecialResources(logoSpecialMeta);
+		}
+	}
+	
 	public void loadMenuResources()
 	{
 		if( menuSpecialMeta.manager.getLoadedAssets() == 0 )
@@ -395,6 +409,15 @@ public class ResourcesManager
 	//---------
 	
 	//--------- UNLOADING RESOURCES
+	public void unloadLogoResources()
+	{		
+		if( logoSpecialMeta.manager.getLoadedAssets() > 0 )
+		{
+			Logger.log(this, "Unloading logo resources", LogLevel.LOW);
+			
+			logoSpecialMeta.manager.clear();
+		}
+	}
 	public void unloadMenuResources()
 	{		
 		if( menuSpecialMeta.manager.getLoadedAssets() > 0 )
@@ -475,9 +498,13 @@ public class ResourcesManager
 			//screenMeta.manager.dispose();
 		}
 		
+		unloadedAssets += logoSpecialMeta.manager.getLoadedAssets();
 		unloadedAssets += menuSpecialMeta.manager.getLoadedAssets();
 		unloadedAssets += gameSpecialMeta.manager.getLoadedAssets();
 		unloadedAssets += stillSpecialMeta.manager.getLoadedAssets();
+		
+		logoSpecialMeta.manager.clear();
+		//logoSpecialMeta.manager.dispose();
 		
 		menuSpecialMeta.manager.clear();
 		//menuSpecialMeta.manager.dispose();
@@ -539,13 +566,27 @@ public class ResourcesManager
 					}
 					catch(Exception h)
 					{
-						Logger.log(this, "Haven't found " + filename + " resource enywhere!", LogLevel.HIGH);
-						
-						return null;
+						try
+						{
+							Logger.log(this, "    - searching in logo special manager.", LogLevel.LOW);
+							
+							return logoSpecialMeta.manager.get(filename);
+						}
+						catch(Exception i)
+						{
+							Logger.log(this, "Haven't found " + filename + " resource enywhere!", LogLevel.HIGH);
+							
+							return null;
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	public AssetManager getLogoAssetManager()
+	{
+		return logoSpecialMeta.manager;
 	}
 	
 	public AssetManager getMenuAssetManager()

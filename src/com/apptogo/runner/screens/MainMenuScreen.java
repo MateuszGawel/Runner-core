@@ -61,6 +61,7 @@ public class MainMenuScreen extends BaseScreen{
 		super(runner);	
 		loadPlayer();
 		
+		ResourcesManager.getInstance().unloadLogoResources();
 		ResourcesManager.getInstance().unloadGameResources();
 		
 		fadeInOnStart();
