@@ -43,6 +43,16 @@ public class MyContactListener implements ContactListener{
 			}
 			
 		}
+		//smierc od krzaczka
+		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("bush".equals(fa.getUserData()) && "player".equals(fb.getUserData())
+				|| ("bush".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+			
+			if( gameWorld.character.dieTop())
+			{
+				NotificationManager.getInstance().notifyDieBottom();
+			}
+			
+		}
 		
 		//skok i sciany
 		if(("footSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 

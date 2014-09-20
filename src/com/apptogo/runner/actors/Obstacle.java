@@ -92,6 +92,7 @@ public class Obstacle extends Actor{
 		ellipseShape.setRadius(radius/PPM);
 		ellipseShape.setPosition(new Vector2(radius/PPM, radius/PPM));
 		bodyDef.position.set(new Vector2(ellipse.x/PPM, ellipse.y/PPM));
+
 		return ellipseShape;
 	}
 	
@@ -136,7 +137,7 @@ public class Obstacle extends Actor{
 		body = world.createBody(bodyDef);
 		body.createFixture(material).setUserData(userData);
 		body.setUserData(userData);
-		setOrigin(0, 0);
+		
 	}
 	
 	public Fixture createFixture(FixtureDef material, Shape shape, String userData){
@@ -160,6 +161,8 @@ public class Obstacle extends Actor{
         
         if(animationManager != null && animate)
         	currentFrame = animationManager.animate(delta);
+        
+		setOrigin(-offsetX, -offsetY);
 	}
 	
 	@Override

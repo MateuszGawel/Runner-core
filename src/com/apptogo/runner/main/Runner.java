@@ -1,7 +1,6 @@
 package com.apptogo.runner.main;
 
 import com.apptogo.runner.appwarp.NotificationManager;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -11,7 +10,6 @@ import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.SaveManager;
-import com.apptogo.runner.vars.Fonts;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
@@ -75,6 +73,6 @@ public class Runner extends Game
 		LevelManager.destroy();
 		SaveManager.destroy();
 		
-		FontType.dispose();
+		//FontType.dispose();
 	}
 }

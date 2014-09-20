@@ -1,6 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -11,7 +10,6 @@ import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
-import com.apptogo.runner.vars.Fonts;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -128,7 +125,7 @@ public class CampaignScreen extends BaseScreen
         
         label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
         label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
-        setLabelFont(label, FontType.DEFAULT);
+        //setLabelFont(label, FontType.DEFAULT);
         
         star = new Image( starFullTexture );
         star.setPosition(label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - star.getHeight()) / 2.0f ));
@@ -198,7 +195,7 @@ public class CampaignScreen extends BaseScreen
         	if( player.isLevelUnlocked(level) )
         	{
         		button = new TextButton( level.buttonLabel, skin, buttonStyleName);
-        		setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
+        		//setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
         		button.addListener(new ClickListener() 
         		{
     	            public void clicked(InputEvent event, float x, float y) 

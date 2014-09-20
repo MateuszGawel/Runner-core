@@ -36,10 +36,10 @@ public class WildWestWorld extends GameWorld{
 		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.05f, character, 0, 350/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 400/PPM);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, character, 0, 330/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.5f, -0.15f, mapSize, character, 0, 80/PPM);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.4f, -0.15f, mapSize, character, 0, 0/PPM);
 		background.addActor(sand);
 	}
 	

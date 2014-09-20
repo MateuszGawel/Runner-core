@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
-public enum FontType 
+public enum FontType2 
 {
+	/*
 	DEFAULT,
 	WOODFONT,
 	LEAFFONT,
@@ -105,5 +106,5 @@ public enum FontType
 		woodFont.dispose();
 		leafFont.dispose();
 		rockFont.dispose();
-	}
+	}*/
 }

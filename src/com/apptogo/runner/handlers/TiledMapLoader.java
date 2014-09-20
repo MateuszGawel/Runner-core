@@ -9,8 +9,8 @@ import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
+import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
-import com.apptogo.runner.actors.CatapultLeafs;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -293,6 +293,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "bush") )
+			{
+				body = createBush(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -359,6 +365,12 @@ public class TiledMapLoader
 	{
 		Catapult catapult = new Catapult(object, world, gameWorld);
 		return catapult.getBody();
+	}
+	
+	private Body createBush(MapObject object)
+	{
+		Bush bush = new Bush(object, world, gameWorld);
+		return bush.getBody();
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)

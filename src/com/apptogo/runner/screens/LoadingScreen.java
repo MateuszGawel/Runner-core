@@ -2,7 +2,6 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -85,7 +84,7 @@ public class LoadingScreen extends BaseScreen{
 			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setLabelFont(smallLabel, FontType.DEFAULT);
+			//setLabelFont(smallLabel, FontType.DEFAULT);
 			smallLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (smallLabel.getWidth() / 2.0f), -250.0f);
 			
 			slider = new TextButton("", skin, "loader");
@@ -104,7 +103,7 @@ public class LoadingScreen extends BaseScreen{
 			//setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 			
 			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setLabelFont(loadingLabel, FontType.DEFAULT);
+			//setLabelFont(loadingLabel, FontType.DEFAULT);
 			loadingLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getHeight() / 2.0f) );
 			
 			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);

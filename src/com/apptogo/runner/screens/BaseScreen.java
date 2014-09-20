@@ -3,7 +3,6 @@ package com.apptogo.runner.screens;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.controller.InputHandler;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -15,21 +14,15 @@ import com.apptogo.runner.player.SaveManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -239,6 +232,7 @@ public abstract class BaseScreen implements Screen
 		fadeInScreen = true;
 	}
 	
+	/*
 	protected void setLabelFont(Label label, FontType fontType)
 	{
 		LabelStyle labelStyle = new LabelStyle(label.getStyle());
@@ -258,6 +252,7 @@ public abstract class BaseScreen implements Screen
         
 		textButton.setStyle(textButtonStyle);
 	}
+	*/
 	
 	@Override
 	public void dispose() 

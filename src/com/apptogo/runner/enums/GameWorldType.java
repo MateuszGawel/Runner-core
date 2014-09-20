@@ -39,7 +39,7 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/mountains.png","gfx/game/levels/rocks.png","gfx/game/levels/skyBlue.png","gfx/game/levels/sand.png", "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png" };
+			return new String[]{ "gfx/game/levels/mountains.png","gfx/game/levels/rocks.png","gfx/game/levels/skyBlue.png","gfx/game/levels/sand.png", "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png" };
 		}
 		else if( gameWorldType == FOREST )
 		{
@@ -183,6 +183,7 @@ public enum GameWorldType
 		return null;
 	}
 
+	/*
 	public static FontType convertToButtonFontType( GameWorldType gameWorldType)
 	{
 		if( gameWorldType == WILDWEST )
@@ -200,5 +201,6 @@ public enum GameWorldType
 		
 		return null;
 	}
+	*/
 
 }
