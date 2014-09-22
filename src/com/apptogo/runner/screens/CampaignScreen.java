@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -125,7 +126,7 @@ public class CampaignScreen extends BaseScreen
         
         label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
         label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
-        //setLabelFont(label, FontType.DEFAULT);
+        setLabelFont(label, FontType.DEFAULT);
         
         star = new Image( starFullTexture );
         star.setPosition(label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - star.getHeight()) / 2.0f ));
@@ -195,7 +196,7 @@ public class CampaignScreen extends BaseScreen
         	if( player.isLevelUnlocked(level) )
         	{
         		button = new TextButton( level.buttonLabel, skin, buttonStyleName);
-        		//setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
+        		setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
         		button.addListener(new ClickListener() 
         		{
     	            public void clicked(InputEvent event, float x, float y) 

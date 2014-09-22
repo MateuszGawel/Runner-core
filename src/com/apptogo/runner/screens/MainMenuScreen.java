@@ -48,6 +48,9 @@ public class MainMenuScreen extends BaseScreen{
 	private Texture chainsDecorationTexture;
 	private Image chainsDecoration;	
 	
+	private Texture logoTexture;
+	private Image logoImage;	
+	
 	private boolean languageChanged = false;
 	private ClickListener languageChangedListener = null;
 	private String languageToChange;
@@ -86,13 +89,13 @@ public class MainMenuScreen extends BaseScreen{
 			
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
         
-        campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), 0.0f );
+        campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), -50.0f );
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
-		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -200.0f );
+		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -250.0f );
 		
 		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
-		joinRandomRoomButton.setPosition( 85.0f, -325.0f );
+		joinRandomRoomButton.setPosition( 85.0f, -375.0f );
 		
 		settingsWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		settingsWidget.setEasing( Interpolation.elasticOut );
@@ -102,7 +105,11 @@ public class MainMenuScreen extends BaseScreen{
         
 		chainsDecorationTexture = new Texture( Gdx.files.internal("gfx/menu/chainsDecoration.png") );
 		chainsDecoration = new Image( chainsDecorationTexture );
-		chainsDecoration.setPosition(100.0f, -240.0f);
+		chainsDecoration.setPosition(100.0f, -290.0f);
+		
+		logoTexture = new Texture( Gdx.files.internal("gfx/menu/logoMenu.png") );
+		logoImage = new Image( logoTexture );
+		logoImage.setPosition(-314.0f, 180);
 		
         //Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
         //enflag.setPosition(-50f, 600f);
@@ -145,6 +152,7 @@ public class MainMenuScreen extends BaseScreen{
         addToScreen(joinRandomRoomButton);
         addToScreen(multiplayerButton);
         addToScreen(chainsDecoration);
+        addToScreen(logoImage);
         
         addToScreen(settingsWidget.actor());
 	}
@@ -272,6 +280,9 @@ public class MainMenuScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();
+		
+		chainsDecorationTexture.dispose();
+		logoTexture.dispose();
 		
 		settingsWidget.dispose();
 	}

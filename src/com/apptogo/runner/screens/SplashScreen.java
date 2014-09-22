@@ -3,12 +3,11 @@ package com.apptogo.runner.screens;
 import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -31,12 +30,16 @@ public class SplashScreen extends BaseScreen
 	private AssetManager menuAssetManager;
 	private AssetManager stillAssetManager;
 	
-	private ObjectAnimation logoAnimation;
+	private Group logo;
+	
+	private ObjectAnimation letterDAnimation;
 	private ObjectAnimation dustAnimation;
 	private ObjectAnimation loadingAnimation;
 		
 	private Texture splashImageTexture;
 	private Image splashImage;
+	private Texture logoTexture;
+	private Image logoImage;
 	
 	private MoveToAction splashImageInAction;
 	private MoveToAction splashImageOutAction;
@@ -57,6 +60,9 @@ public class SplashScreen extends BaseScreen
 		
 		setBackground("gfx/menu/menuBackgrounds/splashScreenBackground.png");
 		background.setColor(background.getColor().r, background.getColor().g, background.getColor().b, 0.0f);
+		
+		logo = new Group();
+		logo.setPosition(0, 0);
 		
 		initializeActions();
 		
@@ -85,7 +91,7 @@ public class SplashScreen extends BaseScreen
 		
 		logoInAction = new MoveToAction();
 		logoInAction.setDuration(0.8f);
-		logoInAction.setPosition(-421.0f, -200.0f);
+		logoInAction.setPosition(0, -600.0f);
 		logoInAction.setInterpolation(Interpolation.exp10In);
 				
 		backgroundInAction = new AlphaAction();
@@ -118,7 +124,15 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
 		{
-			logoAnimation = new ObjectAnimation("gfx/splash/logo.pack", "logo", 17, -421.0f, 400.0f, false, false);
+			//tworze animacje itd tutaj bo musimy czekac na zaladowanie sie animacji do pamieci
+			logoTexture = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_SPLASH, "gfx/splash/logoSplash.png");
+			logoImage = new Image( logoTexture );
+			logoImage.setPosition( -421.0f, 400.0f );
+			
+			letterDAnimation = new ObjectAnimation("gfx/splash/logoSplashLetterD.pack", "d", 16, -422.0f, 270.0f, false, false);
+			
+			logo.addActor(logoImage);
+			logo.addActor(letterDAnimation);
 			
 			dustAnimation = new ObjectAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false, false);
 			dustAnimation.scaleFrames(2.0f);
@@ -127,36 +141,35 @@ public class SplashScreen extends BaseScreen
 			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
-			addToScreen(logoAnimation);
+			addToScreen(logo);
 			addToScreen(dustAnimation);
 			addToScreen(loadingAnimation);
 			
 			splashImage.addAction(splashImageOutAction);
-			logoAnimation.addAction(logoInAction);
+			logo.addAction(logoInAction);
 		
 			currentPhase = SplashPhase.LOGO_IN;
 		}
-		else if( currentPhase == SplashPhase.LOGO_IN && logoAnimation.getActions().size <= 0)
+		else if( currentPhase == SplashPhase.LOGO_IN && logo.getActions().size <= 0)
 		{
 			dustAnimation.setVisible(true);
 			dustAnimation.start();
 			
-			logoAnimation.start();
+			letterDAnimation.start();
 			
 			background.addAction(backgroundInAction);
-			logoAnimation.addAction(logoWaitingAction);
 			
 			currentPhase = SplashPhase.LOGO_ANIMATING;
 		}
-		else if( currentPhase == SplashPhase.LOGO_ANIMATING && logoAnimation.isFinished()  && dustAnimation.isFinished())
+		else if( currentPhase == SplashPhase.LOGO_ANIMATING && letterDAnimation.isFinished()  && dustAnimation.isFinished())
 		{
 			dustAnimation.setVisible(false);
 			
-			logoAnimation.addAction(logoWaitingAction);
+			logo.addAction(logoWaitingAction);
 			
 			currentPhase = SplashPhase.LOGO_WAITING;
 		}
-		else if( currentPhase == SplashPhase.LOGO_WAITING && logoAnimation.getActions().size <= 0 )
+		else if( currentPhase == SplashPhase.LOGO_WAITING && logo.getActions().size <= 0 )
 		{
 			currentPhase = SplashPhase.BACKGROUND_WAITING;
 		}
@@ -209,6 +222,7 @@ public class SplashScreen extends BaseScreen
 	{
 		super.dispose();	
 		splashImageTexture.dispose();
+		logoTexture.dispose();
 	}
 
 	@Override

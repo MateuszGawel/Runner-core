@@ -212,7 +212,9 @@ public class ResourcesManager
 		//-1. LOGO RESOURCES
 		logoSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
 		
-		logoSpecialMeta.addTextureAtlas("gfx/splash/logo.pack");
+		logoSpecialMeta.addTexture("gfx/splash/logoSplash.png");
+		
+		logoSpecialMeta.addTextureAtlas("gfx/splash/logoSplashLetterD.pack");
 		logoSpecialMeta.addTextureAtlas("gfx/splash/dust.pack");
 		logoSpecialMeta.addTextureAtlas("gfx/splash/loading.pack");
 		

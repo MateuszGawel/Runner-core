@@ -2,7 +2,6 @@ package com.apptogo.runner.enums;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.vars.Fonts;
 import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.SpaceWorld;
@@ -183,7 +182,6 @@ public enum GameWorldType
 		return null;
 	}
 
-	/*
 	public static FontType convertToButtonFontType( GameWorldType gameWorldType)
 	{
 		if( gameWorldType == WILDWEST )
@@ -201,6 +199,4 @@ public enum GameWorldType
 		
 		return null;
 	}
-	*/
-
 }
