@@ -69,16 +69,12 @@ public abstract class BaseScreen implements Screen
 	public abstract void prepare();
 	public String getLangString(String key){ return languageManager.getString(key);	}
 	
-	private Array<BitmapFont> fonts;
-	
 	protected BaseScreen(Runner runner) 
 	{
 		this.runner = runner;
 		this.settingsManager = SettingsManager.getInstance();
 		this.languageManager = LanguageManager.getInstance();
 		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
-		
-		fonts = new Array<BitmapFont>();
 	}
 	
 	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
@@ -272,7 +268,5 @@ public abstract class BaseScreen implements Screen
 		if(backgroundTexture != null) backgroundTexture.dispose();
 		stage.clear();
 		stage.dispose();
-		
-		for(BitmapFont font: fonts) font.dispose();
 	}
 }

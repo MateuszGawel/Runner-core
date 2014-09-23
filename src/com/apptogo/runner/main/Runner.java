@@ -2,6 +2,7 @@ package com.apptogo.runner.main;
 
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -60,6 +61,7 @@ public class Runner extends Game
 		NotificationManager.create();
 		LevelManager.create();
 		SaveManager.create();
+		FontManager.create();
 	}
 	
 	private void destroyManagers()
@@ -72,7 +74,6 @@ public class Runner extends Game
 		NotificationManager.destroy();
 		LevelManager.destroy();
 		SaveManager.destroy();
-		
-		//FontType.dispose();
+		FontManager.destroy();
 	}
 }

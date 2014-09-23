@@ -1,5 +1,6 @@
 package com.apptogo.runner.enums;
 
+import com.apptogo.runner.handlers.FontManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -18,19 +19,19 @@ public enum FontType
 	{
 		if( fontType == FontType.DEFAULT )
 		{
-			return getFont("gfx/fonts/ComicSerif.ttf", 60);
+			return FontManager.getInstance().defaultFont;
 		}
 		else if( fontType == FontType.WOODFONT )
 		{
-			return getFont("gfx/fonts/ComicSerif.ttf", 48);
+			return FontManager.getInstance().woodFont;
 		}
 		else if( fontType == FontType.LEAFFONT )
 		{
-			return getFont("gfx/fonts/ComicSerif.ttf", 48);
+			return FontManager.getInstance().leafFont;
 		}
 		else if( fontType == FontType.ROCKFONT )
 		{
-			return getFont("gfx/fonts/ComicSerif.ttf", 48);
+			return FontManager.getInstance().rockFont;
 		}
 		else 
 			return null;

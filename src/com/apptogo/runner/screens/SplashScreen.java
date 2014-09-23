@@ -1,7 +1,9 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
@@ -120,6 +122,7 @@ public class SplashScreen extends BaseScreen
 		if( currentPhase == SplashPhase.SPLASH_IMAGE_IN && splashImage.getActions().size <= 0)
 		{
 			currentPhase = SplashPhase.SPLASH_IMAGE_WAITING;
+			FontManager.getInstance().initializeFonts();
 			ResourcesManager.getInstance().loadLogoResources();
 		}
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
