@@ -28,7 +28,7 @@ public class ObjectAnimation extends Actor
 		
 		this.animationManager = new AnimationManager( atlasName );
 
-		animationManager.createAnimation(new MyAnimation(0.02f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), loop)
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(runningFramesCount, frameName), loop)
 		{
 			@Override
 			public void onAnimationFinished()
@@ -51,7 +51,10 @@ public class ObjectAnimation extends Actor
 	
 	public void start()
 	{
+		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+		isFinished = false;
+		Logger.log(this, "ANIMACJA START");
 	}
 	
 	public boolean isFinished()

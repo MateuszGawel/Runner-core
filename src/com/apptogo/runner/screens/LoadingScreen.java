@@ -106,7 +106,7 @@ public class LoadingScreen extends BaseScreen{
 			//setLabelFont(loadingLabel, FontType.DEFAULT);
 			loadingLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getWidth() / 2.0f), ((runner.SCREEN_HEIGHT / Box2DVars.PPM) / 2.0f ) - (loadingLabel.getHeight() / 2.0f) );
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 56, -75.0f, 280.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(loadingAnimation);

@@ -19,19 +19,19 @@ public enum FontType
 	{
 		if( fontType == FontType.DEFAULT )
 		{
-			return FontManager.getInstance().defaultFont;
+			return FontManager.getInstance().titleFont;
 		}
 		else if( fontType == FontType.WOODFONT )
 		{
-			return FontManager.getInstance().woodFont;
+			return FontManager.getInstance().labelFont;
 		}
 		else if( fontType == FontType.LEAFFONT )
 		{
-			return FontManager.getInstance().leafFont;
+			return FontManager.getInstance().labelFont;
 		}
 		else if( fontType == FontType.ROCKFONT )
 		{
-			return FontManager.getInstance().rockFont;
+			return FontManager.getInstance().labelFont;
 		}
 		else 
 			return null;
@@ -57,19 +57,5 @@ public enum FontType
 		}
 		else 
 			return null;
-	}
-			
-	private static BitmapFont getFont(String fontPath, int fontSize)
-	{
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator( Gdx.files.internal( fontPath ) );
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		
-		parameter.size = fontSize;
-
-		BitmapFont font = generator.generateFont(parameter);
-
-		generator.dispose();
-		
-		return font;	
 	}
 }

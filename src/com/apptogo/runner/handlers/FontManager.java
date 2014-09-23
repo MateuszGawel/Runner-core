@@ -48,10 +48,8 @@ public class FontManager
 		
 	}
 	
-	public BitmapFont defaultFont;
-	public BitmapFont woodFont;
-	public BitmapFont leafFont;
-	public BitmapFont rockFont;
+	public BitmapFont titleFont;
+	public BitmapFont labelFont;
 	
 	private PixmapPacker packer;
 	
@@ -71,10 +69,8 @@ public class FontManager
 	    {
 	        try 
 	        {
-	        	defaultFont = new BitmapFont( Gdx.files.local("default.fnt") );
-	        	woodFont = new BitmapFont( Gdx.files.local("wood.fnt") );
-	        	leafFont = new BitmapFont( Gdx.files.local("leaf.fnt") );
-	        	rockFont = new BitmapFont( Gdx.files.local("stone.fnt") );
+	        	titleFont = new BitmapFont( Gdx.files.local("title.fnt") );
+	        	labelFont = new BitmapFont( Gdx.files.local("label.fnt") );
 
 	            fontsLoaded = true;
 	        } 
@@ -99,20 +95,14 @@ public class FontManager
 			parameter.minFilter = TextureFilter.Linear;
 			parameter.magFilter = TextureFilter.Linear;
 
-			defaultFont = generator.generateFont(parameter);
-			saveFontToFile(defaultFont, 28, "default");
+			titleFont = generator.generateFont(parameter);
+			saveFontToFile(titleFont, 28, "title");
 			
 			parameter.size = 45;
 			
-			woodFont = generator.generateFont(parameter);
-			saveFontToFile(defaultFont, 28, "wood");
-			
-			leafFont = generator.generateFont(parameter);
-			saveFontToFile(defaultFont, 28, "leaf");
-			
-			rockFont = generator.generateFont(parameter);
-			saveFontToFile(defaultFont, 28, "rock");
-			
+			labelFont = generator.generateFont(parameter);
+			saveFontToFile(titleFont, 28, "label");
+						
 			generator.dispose();
 			packer.dispose();
 	    }
@@ -120,8 +110,8 @@ public class FontManager
 		 
 	private void saveFontToFile(BitmapFont font, int fontSize, String fontName) 
 	{
-		FileHandle fontFile = Gdx.files.local("generated-fonts/" + fontName + ".fnt");
-		FileHandle pixmapDir = Gdx.files.local("generated-fonts/" + fontName);
+		FileHandle fontFile = Gdx.files.local("generatedFonts/" + fontName + ".fnt");
+		FileHandle pixmapDir = Gdx.files.local("generatedFonts/" + fontName);
 		
 		BitmapFontWriter.setOutputFormat(OutputFormat.Text);
 	 

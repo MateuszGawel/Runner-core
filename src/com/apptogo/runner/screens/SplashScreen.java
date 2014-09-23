@@ -1,10 +1,10 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -141,7 +141,7 @@ public class SplashScreen extends BaseScreen
 			dustAnimation.scaleFrames(2.0f);
 			dustAnimation.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 27, -80.0f, -320.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 56, -75.0f, 280.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logo);
