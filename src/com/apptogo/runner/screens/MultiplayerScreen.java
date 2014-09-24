@@ -5,6 +5,7 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
@@ -76,9 +77,11 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
          });
         
         createRoomButton = new TextButton( "create room", skin, "default");
+        setTextButtonFont(createRoomButton, FontType.WOODFONT);
         createRoomButton.setPosition( -(createRoomButton.getWidth() / 2.0f), 100.0f );
 		
         joinRandomButton = new TextButton( "random room", skin, "default");
+        setTextButtonFont(joinRandomButton, FontType.WOODFONT);
 		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -100.0f );
 		joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
@@ -93,6 +96,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		createManageWidget();
 		
 		manageProfileButton = new TextButton( "your profile", skin, "default");
+		setTextButtonFont(manageProfileButton, FontType.WOODFONT);
 		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
 		manageProfileButton.addListener( manageWidget.getToggleListener() );
 		
@@ -187,6 +191,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		});
 		
 		Label nameLabel = new Label("name:", skin, "default");
+		setLabelFont(nameLabel, FontType.BIG);
 		nameLabel.setPosition(-25, 1175);
 		
 		final TextField textField = new TextField(player.getName(), skin);

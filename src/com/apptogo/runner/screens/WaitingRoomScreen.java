@@ -8,6 +8,7 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -255,6 +256,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
 			
 			Label playerNameLabel = new Label(player.getName(), skin);
+			setLabelFont(playerNameLabel, FontType.BIG);
 			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
 			
 			addToScreen(playerAnimation);

@@ -10,28 +10,48 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 public enum FontType
 {
 	
-	DEFAULT,
+	BIG,
+	MEDIUM,
+	SMALL,
+	LOADINGBIG,
+	LOADINGSMALL,
 	WOODFONT,
 	LEAFFONT,
 	ROCKFONT;
 	
 	public static BitmapFont convertToFont(FontType fontType)
 	{
-		if( fontType == FontType.DEFAULT )
+		if( fontType == FontType.BIG )
 		{
-			return FontManager.getInstance().titleFont;
+			return FontManager.getInstance().bigFont;
+		}
+		else if( fontType == FontType.MEDIUM )
+		{
+			return FontManager.getInstance().mediumFont;
+		}
+		else if( fontType == FontType.SMALL )
+		{
+			return FontManager.getInstance().smallFont;
+		}
+		else if( fontType == FontType.LOADINGBIG )
+		{
+			return FontManager.getInstance().mediumFont;
+		}
+		else if( fontType == FontType.LOADINGSMALL )
+		{
+			return FontManager.getInstance().smallFont;
 		}
 		else if( fontType == FontType.WOODFONT )
 		{
-			return FontManager.getInstance().labelFont;
+			return FontManager.getInstance().mediumFont;
 		}
 		else if( fontType == FontType.LEAFFONT )
 		{
-			return FontManager.getInstance().labelFont;
+			return FontManager.getInstance().mediumFont;
 		}
 		else if( fontType == FontType.ROCKFONT )
 		{
-			return FontManager.getInstance().labelFont;
+			return FontManager.getInstance().mediumFont;
 		}
 		else 
 			return null;
@@ -39,9 +59,25 @@ public enum FontType
 	
 	public static Color convertToColor(FontType fontType)
 	{
-		if( fontType == FontType.DEFAULT )
+		if( fontType == FontType.BIG )
 		{
 			return new Color(1, 1, 1, 1);
+		}
+		else if( fontType == FontType.MEDIUM )
+		{
+			return new Color(1, 1, 1, 1);
+		}
+		else if( fontType == FontType.SMALL )
+		{
+			return new Color(1, 1, 1, 1);
+		}
+		else if( fontType == FontType.LOADINGBIG )
+		{
+			return new Color(1, 1, 1, 1);
+		}
+		else if( fontType == FontType.LOADINGSMALL )
+		{
+			return new Color(0.9f, 0.9f, 0.9f, 1);
 		}
 		else if( fontType == FontType.WOODFONT )
 		{

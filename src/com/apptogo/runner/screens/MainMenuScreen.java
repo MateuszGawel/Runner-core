@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -88,10 +89,11 @@ public class MainMenuScreen extends BaseScreen{
 		facebookButton.setPosition(-570f, -165f);
 			
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
-        
+        setTextButtonFont(campaignButton, FontType.WOODFONT);
         campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), -50.0f );
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
+		setTextButtonFont(multiplayerButton, FontType.WOODFONT);
 		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -250.0f );
 		
 		joinRandomRoomButton = new Button(skin, "joinRandomRoom");

@@ -1,10 +1,10 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class SplashScreen extends BaseScreen
 {			
@@ -48,6 +49,8 @@ public class SplashScreen extends BaseScreen
 	private MoveToAction logoInAction;
 	private AlphaAction backgroundInAction;
 	private AlphaAction logoWaitingAction;
+	
+	private Label loadingLabel;
 	
 	public SplashScreen(Runner runner)
 	{
@@ -141,11 +144,17 @@ public class SplashScreen extends BaseScreen
 			dustAnimation.scaleFrames(2.0f);
 			dustAnimation.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 56, -75.0f, 280.0f, false, true);
+			loadingLabel = new Label(getLangString("loadingLabel"), skin);
+			setLabelFont(loadingLabel, FontType.LOADINGSMALL);
+			loadingLabel.setPosition( -60.0f, 260.0f );
+			loadingLabel.setVisible(false);
+			
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 10, -110.0f, 250.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logo);
 			addToScreen(dustAnimation);
+			addToScreen(loadingLabel);
 			addToScreen(loadingAnimation);
 			
 			splashImage.addAction(splashImageOutAction);
@@ -178,6 +187,7 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.BACKGROUND_WAITING && background.getActions().size <= 0)
 		{
+			loadingLabel.setVisible(true);
 			loadingAnimation.setVisible(true);
 			loadingAnimation.start();
 			

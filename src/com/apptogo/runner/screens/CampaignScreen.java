@@ -125,8 +125,8 @@ public class CampaignScreen extends BaseScreen
         int achievedStarsCount = player.getWorldScore(levelWorld) / POINTS_PER_STAR;
         
         label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
+        setLabelFont(label, FontType.BIG);
         label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
-        setLabelFont(label, FontType.DEFAULT);
         
         star = new Image( starFullTexture );
         star.setPosition(label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - star.getHeight()) / 2.0f ));

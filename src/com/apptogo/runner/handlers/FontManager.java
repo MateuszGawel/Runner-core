@@ -48,8 +48,9 @@ public class FontManager
 		
 	}
 	
-	public BitmapFont titleFont;
-	public BitmapFont labelFont;
+	public BitmapFont bigFont;
+	public BitmapFont mediumFont;
+	public BitmapFont smallFont;
 	
 	private PixmapPacker packer;
 	
@@ -69,8 +70,9 @@ public class FontManager
 	    {
 	        try 
 	        {
-	        	titleFont = new BitmapFont( Gdx.files.local("title.fnt") );
-	        	labelFont = new BitmapFont( Gdx.files.local("label.fnt") );
+	        	bigFont = new BitmapFont( Gdx.files.local("title.fnt") );
+	        	mediumFont = new BitmapFont( Gdx.files.local("medium.fnt") );
+	        	smallFont = new BitmapFont( Gdx.files.local("small.fnt") );
 
 	            fontsLoaded = true;
 	        } 
@@ -95,13 +97,18 @@ public class FontManager
 			parameter.minFilter = TextureFilter.Linear;
 			parameter.magFilter = TextureFilter.Linear;
 
-			titleFont = generator.generateFont(parameter);
-			saveFontToFile(titleFont, 28, "title");
+			bigFont = generator.generateFont(parameter);
+			saveFontToFile(bigFont, 28, "title");
 			
 			parameter.size = 45;
 			
-			labelFont = generator.generateFont(parameter);
-			saveFontToFile(titleFont, 28, "label");
+			mediumFont = generator.generateFont(parameter);
+			saveFontToFile(mediumFont, 28, "medium");
+			
+			parameter.size = 30;
+			
+			smallFont = generator.generateFont(parameter);
+			saveFontToFile(smallFont, 28, "small");
 						
 			generator.dispose();
 			packer.dispose();
