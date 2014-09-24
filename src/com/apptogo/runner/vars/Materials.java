@@ -17,15 +17,16 @@ public class Materials {
 	public static FixtureDef bodyMemberBody;
 	public static FixtureDef mushroomBody;
 	public static FixtureDef bushBody;
+	public static FixtureDef hedgehogBody;
 	
 	static
 	{
-		playerBody = createFixtureDef(12f, 0.2f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_BUSH | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING | Box2DVars.BIT_BARREL), false);
+		playerBody = createFixtureDef(12f, 0.2f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_HEDGEHOG | Box2DVars.BIT_BUSH | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING | Box2DVars.BIT_BARREL), false);
 		playerSlidingBody = createFixtureDef(5f, 0.15f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
 		wallSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_WALLSENSOR, Box2DVars.BIT_NONKILLING, true);
 		footSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_FOOTSENSOR, Box2DVars.BIT_NONKILLING, true);
 		enemyBody = createFixtureDef(30f, 10f, 0f, Box2DVars.BIT_ENEMY, Box2DVars.BIT_NONKILLING, false);
-		groundBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BUSH | Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
+		groundBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_HEDGEHOG | Box2DVars.BIT_BUSH | Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
 		objectBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
 		obstacleBody = createFixtureDef(30f, 0f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_FOOTSENSOR), true);
 		bombBody = createFixtureDef(10f, 0.1f, 0.5f, Box2DVars.BIT_BOMB, Box2DVars.BIT_NONKILLING, false);
@@ -34,6 +35,7 @@ public class Materials {
 		bodyMemberBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_BODYMEMBER, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
 		mushroomBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
 		bushBody = createFixtureDef(0.1f, 1f, 0.8f, Box2DVars.BIT_BUSH, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER), false);
+		hedgehogBody = createFixtureDef(1000f, 0.1f, 0.1f, Box2DVars.BIT_HEDGEHOG, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER), false);
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution, short categoryBits, short maskBits, boolean sensor)

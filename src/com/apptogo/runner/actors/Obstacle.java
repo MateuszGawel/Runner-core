@@ -97,16 +97,13 @@ public class Obstacle extends Actor{
 	}
 	
 	private Shape getShape(RectangleMapObject obj){
-		//do zrobienia
 		Rectangle rectangle = obj.getRectangle();
-		PolygonShape polygon = new PolygonShape();
+		PolygonShape polygonShape = new PolygonShape();
 		Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
 		                           (rectangle.y + rectangle.height * 0.5f ) / PPM);
-		polygon.setAsBox(rectangle.width * 0.5f / PPM,
-		                 rectangle.height * 0.5f / PPM,
-		                 size,
-		                 0.0f);
-		return polygon;
+		polygonShape.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
+		bodyDef.position.set(size);
+		return polygonShape;
 	}
 	
 	private Shape getShape(PolygonMapObject obj)

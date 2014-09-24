@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.appwarp.NotificationManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -91,6 +92,19 @@ public class MyContactListener implements ContactListener{
 				{
 					NotificationManager.getInstance().notifyDieBottom();
 				}
+			}
+		}
+		//smierc od je¿a
+		if("hedgehog".equals(fa.getUserData()) && "player".equals(fb.getUserData())){
+			if((!gameWorld.character.isImmortal() && gameWorld.character.isAlive())){		
+				gameWorld.character.dieBottom();
+				NotificationManager.getInstance().notifyDieBottom();
+			}
+		}
+		if("hedgehog".equals(fb.getUserData()) && "player".equals(fa.getUserData())){
+			if((!gameWorld.character.isImmortal() && gameWorld.character.isAlive())){		
+				gameWorld.character.dieBottom();
+				NotificationManager.getInstance().notifyDieBottom();
 			}
 		}
 		
