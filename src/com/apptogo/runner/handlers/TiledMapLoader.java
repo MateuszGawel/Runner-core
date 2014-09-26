@@ -11,6 +11,7 @@ import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
+import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -299,6 +300,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "hedgehog") )
+			{
+				body = createHedgehog(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -371,6 +378,12 @@ public class TiledMapLoader
 	{
 		Bush bush = new Bush(object, world, gameWorld);
 		return bush.getBody();
+	}
+	
+	private Body createHedgehog(MapObject object)
+	{
+		Hedgehog hedgehog = new Hedgehog(object, world, gameWorld);
+		return hedgehog.getBody();
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)
