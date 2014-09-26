@@ -1,10 +1,9 @@
 package com.apptogo.runner.widget;
 
-import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.player.SaveManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
@@ -19,16 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class Widget
 {	
-	public enum WidgetType
-	{
-		SMALL,
-		MEDIUM,
-		BIG
-	}
-	
 	public enum WidgetFadingType
 	{
 		NONE,
@@ -39,24 +32,26 @@ public class Widget
 		BOTTOM_TO_TOP
 	}
 	
-	private float FADE_IN_DURATION = 0.75f;
+	private final float FADE_IN_DURATION = 0.75f;
+	private final int WIDGET_TAB_COUNT = 5;
 	
-	protected float x;
-	protected float y;
-	private float hiddenPartWidth;
-	protected float width;
-	protected float height;
-	private Group group;
+	private Skin skin;
 	
-	private Group groupWithBlackOutButton;
+	protected Widget widget = this;
+	
+	private Group window;
+	
+	private Texture widgetBackgroundTexture;
+	private Image widgetBackground;
+	
 	private Button blackOutButton;
 	private Button closeWidgetButton;
 	
-	private Window win;
-	private Texture paperTexture;
-	private Image paper;
-	private Skin skin;
+	public ClickListener hideWidgetListener;
+	public ClickListener toggleWidgetListener;
 	
+	protected float hiddenPartWidth;
+
 	private WidgetType widgetType;
 	private WidgetFadingType fadeInType;
 	
@@ -65,7 +60,8 @@ public class Widget
 	private boolean isShowed = false;
 	private boolean setBlackOut = false;
 	
-	protected Widget widget = this;
+	protected Array< Array<Actor> > widgetTab;
+	protected int currentTab = 0;
 	
 	/** @param hiddenPartWidth Jesli fading nie porusza widgetem to powinien byc ustawiony na 0 
 	 *  @param x Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie
@@ -74,41 +70,146 @@ public class Widget
 	{	
 		this.skin = ResourcesManager.getInstance().getUiSkin();
 		
-		groupWithBlackOutButton = new Group();
-		
-		initializeBlackOutButton();
-		this.setBlackOut = blackOut;
-		
+		this.hiddenPartWidth = hiddenPartWidth;
 		this.widgetType = widgetType;
 		this.fadeInType = fadeInType;
+		this.setBlackOut = blackOut;
 		
-		createWindow();	
+		initializeListeners();
+		
+		initializeBlackOutButton();
+					
+		initializeWindow();
+		
+		initializeWidgetTabs();
+				
+		float width = WidgetType.getWidth( this.widgetType );
+		float height = WidgetType.getHeight(this.widgetType);
+		x = ( x == (float)Align.center )?( -width/2.0f ):x;
+		y = ( y == (float)Align.center )?( -height/2.0f ):y;
+		
+		window.addActor( createWindow(x, y, width, height) );
+	}
+	
+	//---Initializing widget
+	private void initializeListeners()
+	{
+		hideWidgetListener = new ClickListener() 
+		{
+            public void clicked(InputEvent event, float x, float y) 
+            {
+                 widget.hideWidget();
+            }
+        };
+        
+        toggleWidgetListener = new ClickListener() 
+		{
+            public void clicked(InputEvent event, float x, float y) 
+            {
+                 widget.toggleWidget();
+            }
+        };
+	}
+	
+	private void initializeBlackOutButton()
+	{
+		blackOutButton = new Button(skin, "blackOut");
+		blackOutButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		blackOutButton.setPosition( -(Runner.SCREEN_WIDTH / 2f), -(Runner.SCREEN_HEIGHT / 2f));
+		
+		blackOutButton.addListener( hideWidgetListener );
+		
+		blackOutButton.setVisible(false);
+	}
 
-		if( x == (float)Align.center ) this.x = ((Runner.SCREEN_WIDTH - this.width) / 2.0f) - (Runner.SCREEN_WIDTH / 2.0f);
-		else this.x = x;
-		
-		if( y == (float)Align.center ) this.y = ((Runner.SCREEN_HEIGHT - this.height) / 2.0f) - (Runner.SCREEN_HEIGHT / 2.0f);
-		else this.y = y;
-		
-		this.win.setPosition(this.x, this.y);
-		
-		this.hiddenPartWidth = hiddenPartWidth;
-		
-		group = new Group();
+	private void initializeWindow()
+	{
+		this.window = new Group();
 		
 		if( this.fadeInType == WidgetFadingType.ALPHA_ANIMATION || this.fadeInType == WidgetFadingType.NONE)
 		{
-			group.setVisible(false);
+			window.setVisible(false);
 		}	
+	}
+
+	private void initializeWidgetTabs()
+	{
+		this.widgetTab = new Array< Array<Actor> >();
 		
-		group.addActor(win);
+		for(int i = 0; i < WIDGET_TAB_COUNT; i++) 
+		{
+			widgetTab.add( new Array<Actor>() );
+		}
+	}
+	
+	private Window createWindow(float x, float y, float width, float height)
+	{			
+		Window win = new Window("", this.skin, "default");
+		win.setSize(width, height);
+		win.setPosition(x, y);
+		win.clearListeners();
+				
+		widgetBackgroundTexture = new Texture( Gdx.files.internal( WidgetType.getWidgetBackgroundPath( this.widgetType ) ) );
+		widgetBackground = new Image( widgetBackgroundTexture );
+		widgetBackground.setPosition(0f, 0f);
+		
+		closeWidgetButton = new Button(skin, "closeWidget");
+		closeWidgetButton.setPosition(win.getWidth() - 100.0f, win.getHeight() - 100.0f);
+		closeWidgetButton.addListener( hideWidgetListener );
+		
+		if( !(WidgetType.showCloseWidgetButton( this.widgetType )) )
+		{
+			closeWidgetButton.setVisible(false);
+		}
+		
+		win.addActor(widgetBackground);
+		win.addActor(closeWidgetButton);
+		
+		return win;
+	}
+
+	public void setEasing(Interpolation interpolation)
+	{
+		this.interpolation = interpolation;
+	}
+	//---
+	
+	//---Getting and adding actors
+	public Group actor()
+	{
+		final Group widgetGroup = new Group();
+		
+		widgetGroup.addActor(blackOutButton);
+		
+		widgetGroup.addActor(window);
+
+		widgetGroup.addListener( new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				widgetGroup.toFront();
+            }
+			
+		} );
+		
+		return widgetGroup;
 	}
 	
 	public void addActor(Actor actor)
 	{
-		group.addActor(actor);
+		window.addActor(actor);
 	}
 	
+	public void addActorToTab(Actor actor, int tabIndex)
+	{
+		widgetTab.get(tabIndex).add(actor);
+		
+		actor.setVisible(false);
+		window.addActor(actor);
+	}
+	//---
+	
+	//---Toggling widget
 	public void toggleWidget()
 	{
 		if( this.isShowed ) this.hideWidget();
@@ -126,6 +227,8 @@ public class Widget
 			
 			playFading(false);
 			this.isShowed = true;
+			
+			setCurrentTabVisibile(true);
 		}
 	}
 	
@@ -137,31 +240,33 @@ public class Widget
 			
 			playFading(true);
 			this.isShowed = false;
+			
+			setCurrentTabVisibile(false);
 		}
 	}
-	
-	private void playFading(boolean hide) //or show[false]
+
+	private void playFading(boolean hide)
 	{
 		TemporalAction action = null;
+				
+		this.window.setPosition(0f, 0f);
 		
-		resetPosition();
-		
-		if( this.fadeInType == WidgetFadingType.NONE ) //ten przypadek wymaga specjalnego potraktowania (bo tu nie ma zadnej akcji)
+		if( this.fadeInType == WidgetFadingType.NONE )
 		{
 			if( hide ) 
 			{
-				this.group.setVisible(false);
+				this.window.setVisible(false);
 			}
 			else 
 			{
-				this.group.setVisible(true);
+				this.window.setVisible(true);
 			}
 			
 			return; 
 		}
 		else if( this.fadeInType == WidgetFadingType.ALPHA_ANIMATION )
 		{
-			this.group.setColor( this.group.getColor().r, this.group.getColor().g, this.group.getColor().b, 0f);
+			this.window.setColor( this.window.getColor().r, this.window.getColor().g, this.window.getColor().b, 0f);
 			action = Actions.alpha( 1f, FADE_IN_DURATION, Interpolation.sine ); 		
 		}
 		else if( this.fadeInType == WidgetFadingType.TOP_TO_BOTTOM )
@@ -186,194 +291,69 @@ public class Widget
 		
 		action.setInterpolation(interpolation);
 		
-		this.group.setVisible(true);
-		this.group.addAction(action);
+		this.window.addAction(action);
 	}
-		
-	public Group actor()
+	//---
+	
+	//---Operating on widget tabs
+	public void setCurrentTab(int widgetTabIndex)
 	{
-		groupWithBlackOutButton.addActor(group);
-
-		groupWithBlackOutButton.addListener( new ClickListener(){
-			
-			public void clicked(InputEvent event, float x, float y) 
-            {
-				groupWithBlackOutButton.toFront();
-            }
-			
-		} );
-		
-		return groupWithBlackOutButton;
+		currentTab = widgetTabIndex;
 	}
 	
-	private void createWindow()
-	{		
-		String styleName = "";
-		
-		if( this.widgetType == WidgetType.SMALL )
+	public void setCurrentTabVisibile(boolean visibility)
+	{
+		for(Actor actor: widgetTab.get(currentTab))
 		{
-			styleName = "small";
-			this.width = 800f;
-			this.height = 320f;
+			actor.setVisible(visibility);
 		}
-		else if( this.widgetType == WidgetType.MEDIUM )
-		{
-			styleName = "medium";
-			this.width = 960f;
-			this.height = 480f;
-		}
-		else //if( this.widgetType == WidgetType.BIG )
-		{
-			styleName = "big";
-			this.width = 1180f;
-			this.height = 700f;
-		}		
-		
-		this.win = new Window("", this.skin, "default");
-		this.win.setSize(this.width, this.height);
-		
-		this.win.clearListeners();
-		
-		closeWidgetButton = new Button(skin, "closeWidget");
-		closeWidgetButton.setPosition(this.win.getWidth() - 100.0f, this.win.getHeight() - 100.0f);
-		closeWidgetButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-                 widget.hideWidget();
-            }
-         });
-		
-		paperTexture = new Texture( Gdx.files.internal("gfx/menu/paper.png") );
-		paper = new Image( paperTexture );
-		paper.setPosition(0f, 0f);
-		
-		this.win.addActor(paper);
-		this.win.addActor(closeWidgetButton);
 	}
 	
-	private void resetPosition()
+	public void changeWidgetTab(int widgetTabIndex)
 	{
-		this.group.setPosition(0f, 0f);
+		setCurrentTabVisibile(false);
+		
+		if(widgetTabIndex >= 0 && widgetTabIndex < WIDGET_TAB_COUNT)
+		{
+			currentTab = widgetTabIndex;
+		}
+		else if(widgetTabIndex < 0 )
+		{
+			currentTab = 0;
+		}
+		else
+		{
+			currentTab = WIDGET_TAB_COUNT - 1;
+		}
+		
+		setCurrentTabVisibile(true);
 	}
 
-	public void setToggleButton(boolean setToggleButton)
+	public ClickListener getChangeWidgetTabListener(final int widgetTabIndex)
 	{
-		this.setToggleButton(setToggleButton, 0f, 0f);
-	}
-	
-	/** @param marginVertical przesuniecie przycisku w pionie [Align.center aby wysrodkowac]
-	 *  @param marginHorizontal przesuniecie przycisku w poziomie [Align.center aby wysrodkowac] */
-	public void setToggleButton(boolean setToggleButton, float marginHorizontal, float marginVertical) 
-	{
-		if( setToggleButton )
+		return new ClickListener() 
 		{
-			Button button = new Button();
-			
-			//---ustawienie typu button i jego wymiarow
-			if( this.fadeInType == WidgetFadingType.LEFT_TO_RIGHT || this.fadeInType == WidgetFadingType.RIGHT_TO_LEFT )
-			{
-				button = new Button(this.skin, "toggleWidgetVertical");
-				button.setSize(50f, 150f);
-			}
-			else if( this.fadeInType == WidgetFadingType.TOP_TO_BOTTOM || this.fadeInType == WidgetFadingType.BOTTOM_TO_TOP )
-			{
-				button = new Button(this.skin, "toggleWidgetHorizontal");
-				button.setSize(150f, 50f);
-			}
-			else
-			{
-				Logger.log(this, "toggleButton dozwolony tylko dla fadingu zmieniajacego polozenie widgetu!");
-				return;
-			}
-			//-----------------------------------------
-			
-			//---ustawienie pozycji buttona
-			if( this.fadeInType == WidgetFadingType.LEFT_TO_RIGHT)
-			{
-				button.setPosition( this.x + this.width, this.y + this.height - button.getHeight() );
-			}
-			else if( this.fadeInType == WidgetFadingType.RIGHT_TO_LEFT)
-			{
-				button.setPosition( this.x - button.getWidth(), this.y + this.height - button.getHeight() );
-			}
-			else if( this.fadeInType == WidgetFadingType.TOP_TO_BOTTOM)
-			{
-				button.setPosition( this.x + this.width - button.getWidth(), this.y - button.getHeight() );
-			}
-			else //if( this.fadeInType == WidgetFadingType.BOTTOM_TO_TOP)
-			{
-				button.setPosition( this.x + this.width - button.getWidth(), this.y + this.height );
-			}
-			
-			button.setPosition( button.getX() + marginHorizontal, button.getY() + marginVertical);
-			if( marginHorizontal == (float)Align.center )
-			{
-				button.setX( this.x + ((this.width - button.getWidth()) / 2f) );
-			}
-			if( marginVertical == (float)Align.center )
-			{
-				button.setY( this.y + ((this.height - button.getHeight()) / 2f) );
-			}
-			//------------------------
-			
-			button.addListener(new ClickListener() {
-	            public void clicked(InputEvent event, float x, float y) 
-	            {
-	                 widget.toggleWidget();
-	            }
-	         });
-			
-			this.group.addActor(button);
-		}
-		else {}
-	}
-	
-	private void initializeBlackOutButton()
-	{
-		blackOutButton = new Button(skin, "blackOut");
-		blackOutButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		blackOutButton.setPosition( -(Runner.SCREEN_WIDTH / 2f), -(Runner.SCREEN_HEIGHT / 2f));
-		
-		blackOutButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-                 widget.hideWidget();
-            }
-         });
-		
-		blackOutButton.setVisible(false);
-		
-		groupWithBlackOutButton.addActor(blackOutButton);
-	}
-	
-	public ClickListener getToggleListener()
-	{
-		return new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	widget.toggleWidget();
+            	widget.changeWidgetTab(widgetTabIndex);
             }
 		};
 	}
-	
-	public void setEasing(Interpolation interpolation)
+	//---
+		
+	public boolean isShowed()
 	{
-		this.interpolation = interpolation;
+		return this.isShowed;
+	}
+		
+	public WidgetType getWidgetType()
+	{
+		return this.widgetType;
 	}
 	
 	public void dispose()
 	{
 		this.widget = null;
-		this.blackOutButton.clear();
-		this.win.clear();
-		this.group.clear();
-		this.groupWithBlackOutButton.clear();
-		this.paperTexture.dispose();
-		//this.skin.dispose();
-	}
-		
-	public boolean isShowed()
-	{
-		return this.isShowed;
+		this.widgetBackgroundTexture.dispose();
 	}
 }

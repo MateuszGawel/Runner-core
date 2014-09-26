@@ -7,12 +7,12 @@ import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
-import com.apptogo.runner.widget.Widget.WidgetType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
@@ -46,6 +46,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     private Button manageBanditAnimationButton;
     private Button manageArcherAnimationButton;
     private Button manageAlienAnimationButton;
+    
+    private Label tab1;
+    private Label tab2;
+    private Label tab3;
     
 	public MultiplayerScreen(Runner runner)
 	{
@@ -98,7 +102,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		manageProfileButton = new TextButton( "your profile", skin, "default");
 		setTextButtonFont(manageProfileButton, FontType.WOODFONT);
 		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
-		manageProfileButton.addListener( manageWidget.getToggleListener() );
+		manageProfileButton.addListener( manageWidget.toggleWidgetListener );
 		
 		addToScreen(createRoomButton);
 		addToScreen(joinRandomButton);
@@ -195,6 +199,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		nameLabel.setPosition(-25, 1175);
 		
 		final TextField textField = new TextField(player.getName(), skin);
+		setTextFieldFont(textField, FontType.SMALL);
         textField.setSize(450f, 50f);
         textField.setPosition(0f, 1115f);
         textField.setOnscreenKeyboard( textField.getOnscreenKeyboard() );
@@ -209,6 +214,27 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         		return true;
         	}
 		});
+        
+        //creating tabs
+        tab1 = new Label("TO JEST TAB 1", skin);
+        tab1.setPosition(0, 800);
+        
+        tab2 = new Label("TO JEST TAB 2", skin);
+        tab2.setPosition(0, 800);
+        
+        tab3 = new Label("TO JEST TAB 3", skin);
+        tab3.setPosition(0, 800);
+        
+        manageWidget.addActorToTab(tab1, 1);
+        manageWidget.addActorToTab(tab2, 2);
+        manageWidget.addActorToTab(tab3, 3);
+        
+        manageWidget.setCurrentTab(1);
+        
+        manageBanditAnimationButton.addListener( manageWidget.getChangeWidgetTabListener(1) );
+        manageArcherAnimationButton.addListener( manageWidget.getChangeWidgetTabListener(2) );
+        manageAlienAnimationButton.addListener( manageWidget.getChangeWidgetTabListener(3) );
+        //tabs created
 		
 		manageWidget.addActor(manageBanditAnimation);
 		manageWidget.addActor(manageArcherAnimation);

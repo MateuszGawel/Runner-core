@@ -1,5 +1,6 @@
 package com.apptogo.runner.widget;
 
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,27 +24,15 @@ public class DialogWidget extends Widget
 	{
 		super(Align.center, Align.center, 0f, WidgetType.SMALL, WidgetFadingType.NONE, true);
 		
-		if(noListener == null) noListener = this.getToggleListener();
-		if(yesListener == null) yesListener = this.getToggleListener();
+		if(noListener == null) noListener = this.toggleWidgetListener;
+		if(yesListener == null) yesListener = this.toggleWidgetListener;
 		
 		skin = ResourcesManager.getInstance().getUiSkin();
 		
 		label = new Label(message, skin, "dialogLabel");
 		label.setPosition(-300f, 50f);
-
-		noButton = new Button(skin, "no");
-        noButton.setSize(150f, 75f);
-        noButton.setPosition(this.x + this.width - 20f - noButton.getWidth() - 20f - noButton.getWidth(), this.y + 20f);
-        noButton.addListener( noListener );
-		
-		yesButton = new Button(skin, "yes");
-		yesButton.setSize(150f, 75f);
-		yesButton.setPosition(this.x + this.width - 20f - yesButton.getWidth(), this.y + 20f);
-		yesButton.addListener( yesListener );
                 
         this.addActor(label);
-        this.addActor(yesButton);
-        this.addActor(noButton);
 	}
 	
 }

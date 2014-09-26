@@ -18,7 +18,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -29,9 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.glass.ui.Cursor;
 
 public abstract class BaseScreen implements Screen
 {	
@@ -258,6 +259,15 @@ public abstract class BaseScreen implements Screen
 		textButtonStyle.fontColor = FontType.convertToColor(fontType) ;
         
 		textButton.setStyle(textButtonStyle);
+	}
+	
+	protected void setTextFieldFont(TextField textField, FontType fontType)
+	{
+		TextFieldStyle textFieldStyle = new TextFieldStyle(textField.getStyle());
+        
+		textFieldStyle.font = FontType.convertToFont(fontType);
+		textFieldStyle.fontColor = FontType.convertToColor(fontType) ;
+		textField.setStyle(textFieldStyle);
 	}
 	
 	

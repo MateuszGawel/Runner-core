@@ -2,12 +2,13 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
-import com.apptogo.runner.widget.Widget.WidgetType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -173,7 +174,7 @@ public class MainMenuScreen extends BaseScreen{
 	
 	private void createListeners()
 	{		
-		settingsButtonListener = settingsWidget.getToggleListener();
+		settingsButtonListener = settingsWidget.toggleWidgetListener;
 		
 		soundButtonOnListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 

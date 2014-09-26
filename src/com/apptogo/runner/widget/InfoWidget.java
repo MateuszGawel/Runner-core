@@ -1,5 +1,6 @@
 package com.apptogo.runner.widget;
 
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,14 +24,8 @@ public class InfoWidget extends Widget
 		
 		label = new Label(message, skin, "dialogLabel");
 		label.setPosition(-300f, 50f);
-
-		okButton = new Button(skin, "ok");
-		okButton.setSize(150f, 75f);
-		okButton.setPosition(this.x + ((this.width - okButton.getWidth()) / 2f), this.y + 20f);
-		okButton.addListener( this.getToggleListener() );
                 
         this.addActor(label);
-        this.addActor(okButton);
 	}
 	
 }
