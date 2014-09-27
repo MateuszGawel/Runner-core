@@ -13,9 +13,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
-public class GameWorldRenderer {
-
-	
+public class GameWorldRenderer 
+{	
     GameWorld gameWorld;  
     OrthographicCamera camera;  
     Box2DDebugRenderer debugRenderer;

@@ -13,6 +13,8 @@ import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
+import com.apptogo.runner.actors.Powerup;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -306,6 +308,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "powerup") )
+			{
+				body = createPowerup(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -384,6 +392,12 @@ public class TiledMapLoader
 	{
 		Hedgehog hedgehog = new Hedgehog(object, world, gameWorld);
 		return hedgehog.getBody();
+	}
+	
+	private Body createPowerup(MapObject object)
+	{
+		Powerup powerup = new Powerup(object, world, gameWorld);
+		return powerup.getBody();
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)

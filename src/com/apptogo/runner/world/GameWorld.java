@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -35,6 +36,8 @@ public abstract class GameWorld
 	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0f, -60f);
 	
 	public World world;
+	
+	Array<Body> bodiesToDestroy;
 	
 	public Stage worldStage;
 	public StretchViewport viewport;
@@ -62,6 +65,8 @@ public abstract class GameWorld
 		world = new World(DEFAULT_GRAVITY, true);
 		contactListener = new MyContactListener(this, world);
 		world.setContactListener(contactListener);
+		
+		bodiesToDestroy = new Array<Body>();
 		
 		worldStage = new Stage();
 		camera = (OrthographicCamera)worldStage.getCamera();
@@ -132,14 +137,37 @@ public abstract class GameWorld
 		}
 	}
 	
-    public void update(float delta) {  
+    public void update(float delta) 
+    {  
         world.step(delta, 3, 3);
+        
+        handleBodyToDestroy();
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
         contactListener.postStep();
        // fpsLogger.log();
     }  
+    
+    public void addBodyToDestroy(Body bodyToDestroy)
+    {
+    	bodiesToDestroy.add(bodyToDestroy);
+    }
+    
+    private void handleBodyToDestroy()
+    {
+    	for(Body body: bodiesToDestroy)
+    	{
+    		for(Fixture fixture: body.getFixtureList())
+    		{
+    			body.destroyFixture(fixture);
+    		}
+    		
+    		world.destroyBody(body);
+    	}
+    	
+    	bodiesToDestroy.clear();
+    }
     
     public Stage getWorldStage(){ return this.worldStage; }
     

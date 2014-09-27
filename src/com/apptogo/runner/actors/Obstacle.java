@@ -124,17 +124,23 @@ public class Obstacle extends Actor{
 		return polygon;
 	}
 	
-	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData){
+	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData)
+	{
+		createBody(bodyType, fixtureDef, userData, false);
+	}
+	
+	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData, boolean isSensor)
+	{
 		bodyDef = new BodyDef();
 		bodyDef.type = bodyType;
 				
 		FixtureDef material = fixtureDef;
 		material.shape = createShape(object);
+		material.isSensor = isSensor;
 		
 		body = world.createBody(bodyDef);
 		body.createFixture(material).setUserData(userData);
 		body.setUserData(userData);
-		
 	}
 	
 	public Fixture createFixture(FixtureDef material, Shape shape, String userData){

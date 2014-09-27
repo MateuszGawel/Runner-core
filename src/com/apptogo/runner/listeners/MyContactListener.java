@@ -158,6 +158,16 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
+		//powerup
+		if( ( ((String)fa.getUserData()).contains("powerup") && "player".equals(fb.getUserData()) ) || ( ((String)fb.getUserData()).contains("powerup") && "player".equals(fa.getUserData()) ) )
+		{
+			Fixture fixture = ("powerup".equals(fa.getUserData()))?fa:fb;
+			
+			Logger.log(this, "MAM POWERUP! JEST TO: " + (((String)fixture.getUserData()).split("\\|"))[1] );
+			
+			gameWorld.addBodyToDestroy( fixture.getBody() );
+		}
+		
 		//meta - koniec gry
 		if( ( "finishingLine".equals(fa.getUserData()) && "player".equals(fb.getUserData()) ) || ( "finishingLine".equals(fb.getUserData()) && "player".equals(fa.getUserData()) ) )
 		{
