@@ -6,6 +6,7 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -150,6 +151,7 @@ public class Widget
 		win.clearListeners();
 				
 		widgetBackgroundTexture = new Texture( Gdx.files.internal( WidgetType.getWidgetBackgroundPath( this.widgetType ) ) );
+		widgetBackgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		widgetBackground = new Image( widgetBackgroundTexture );
 		widgetBackground.setPosition(0f, 0f);
 		

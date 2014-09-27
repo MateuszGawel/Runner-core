@@ -74,20 +74,20 @@ public class MainMenuScreen extends BaseScreen{
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 					
 		settingsButton = new Button(skin, "settings");
-		settingsButton.setPosition(-570f, 240f);
+		settingsButton.setPosition(-550f, 140f);
 		
 		soundButtonOn = new Button(skin, "soundOn");
-		soundButtonOn.setPosition(-570f, 105f);
+		soundButtonOn.setPosition(-550f,-5f);
 		
 		soundButtonOff = new Button(skin, "soundOff");
-		soundButtonOff.setPosition(-570f, 105f);
+		soundButtonOff.setPosition(-550f, -5f);
 		soundButtonOff.setVisible(false);
 		
 		googlePlusButton = new Button(skin, "googlePlus");
-		googlePlusButton.setPosition(-570f, -30f);
+		googlePlusButton.setPosition(-550f, -150f);
 		
 		facebookButton = new Button(skin, "facebook");
-		facebookButton.setPosition(-570f, -165f);
+		facebookButton.setPosition(-550f, -295f);
 			
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
         setTextButtonFont(campaignButton, FontType.WOODFONT);
@@ -112,7 +112,7 @@ public class MainMenuScreen extends BaseScreen{
 		
 		logoTexture = new Texture( Gdx.files.internal("gfx/menu/logoMenu.png") );
 		logoImage = new Image( logoTexture );
-		logoImage.setPosition(-314.0f, 180);
+		logoImage.setPosition(-387.0f, 150);
 		
         //Image enflag = new Image( new Texture(languageManager.getIcoFile("en")) );
         //enflag.setPosition(-50f, 600f);

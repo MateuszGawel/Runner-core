@@ -16,6 +16,7 @@ import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -24,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
@@ -51,6 +52,9 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     private Label tab2;
     private Label tab3;
     
+    private boolean isTextFieldClicked = false;
+    private boolean isTextFieldLastActorClicked = false;
+    
 	public MultiplayerScreen(Runner runner)
 	{
 		super(runner);	
@@ -68,7 +72,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	@Override
 	public void prepare()
-	{			
+	{	
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 				
 		backButton = new Button( skin, "back");
@@ -199,21 +203,48 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		nameLabel.setPosition(-25, 1175);
 		
 		final TextField textField = new TextField(player.getName(), skin);
-		setTextFieldFont(textField, FontType.SMALL);
+		//setTextFieldFont(textField, FontType.SMALL); - niestety nie da sie tak prosto, textField musi miec podana odpowiednia czcionke juz w momencie tworzenia bo w ten sposob okresla wielkosc jednej pozycji kursora :(
         textField.setSize(450f, 50f);
         textField.setPosition(0f, 1115f);
-        textField.setOnscreenKeyboard( textField.getOnscreenKeyboard() );
+        textField.setOnlyFontChars(true);
         
-        textField.addListener( new InputListener() 
-        {
-        	public boolean keyUp(InputEvent event, int keycode)
+        //--Ten kod obsluguje utracenie focusa na textField, moga pojawic sie problemy przy nastepnych textFieldach + to na pewno nie jest najlepsze wyjscie moze da sie to zrobic inaczej?
+        textField.addListener( new ClickListener()
+		{
+        	@Override
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) 
         	{
-        		player.setName( textField.getText() );
-        		SaveManager.getInstance().savePlayer(player);
+        		isTextFieldClicked = true;
+        		return true;
+        	};
+        	
+        	@Override
+        	public void touchUp(InputEvent event, float x, float y, int pointer, int button) 
+        	{
+        		isTextFieldClicked = false;
+        		isTextFieldLastActorClicked = true;
+        	};
+		});
+        
+        stage.addListener( new ClickListener()
+		{
+        	@Override
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) 
+        	{
+        		if( !isTextFieldClicked && isTextFieldLastActorClicked ) 
+    			{
+        			isTextFieldLastActorClicked = false;
+        			
+        			Logger.log(this, "teraz odkliknieto");
+        			stage.setKeyboardFocus(null);
+        			player.setName( textField.getText() );
+            		SaveManager.getInstance().savePlayer(player);
+    			}
         		
         		return true;
-        	}
+        	};
 		});
+        //---
         
         //creating tabs
         tab1 = new Label("TO JEST TAB 1", skin);
