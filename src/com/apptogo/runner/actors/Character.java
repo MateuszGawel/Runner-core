@@ -460,42 +460,4 @@ public abstract class Character extends Actor{
 		
 		return slideButton;
 	}
-	public Button getSlowButton()
-	{
-		Button slowButton = new Button(guiSkin, this.slowButtonStyleName);
-		
-		slowButton.setPosition(20/PPM, 20/PPM);
-		slowButton.setSize(slowButton.getWidth()/PPM, slowButton.getHeight()/PPM);
-		slowButton.setBounds(slowButton.getX(), slowButton.getY(), slowButton.getWidth(), slowButton.getHeight());
-		
-		slowButton.addListener(new InputListener() 
-		{
-			@Override
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-			{
-				if(character.isAlive() && character.isStarted())
-				{
-					if( character.setRunning(false))
-					{
-						NotificationManager.getInstance().notifySlow();
-					}
-				}
-				
-				return true;
-		    }
-			@Override
-		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
-			{
-				if(character.isAlive() && character.isStarted())
-				{
-					if( character.setRunning(true) )
-					{
-						NotificationManager.getInstance().notifyAbortSlow();
-					}
-				}
-		    }
-		});
-		
-		return slowButton;
-	}
 }

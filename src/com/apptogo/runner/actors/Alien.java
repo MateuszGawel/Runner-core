@@ -172,7 +172,7 @@ public class Alien extends Character{
 	{
 		Button bombButton = new Button(guiSkin, "alienLiftAbilityButton");
 		
-		bombButton.setPosition(20/PPM, bombButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		bombButton.setPosition(20/PPM, 20/PPM);
 		bombButton.setSize(bombButton.getWidth()/PPM, bombButton.getHeight()/PPM);
 		bombButton.setBounds(bombButton.getX(), bombButton.getY(), bombButton.getWidth(), bombButton.getHeight());
 		

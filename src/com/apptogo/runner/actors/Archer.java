@@ -204,7 +204,7 @@ public class Archer extends Character{
 	{
 		Button abilityButton = new Button(guiSkin, "archerArrowAbilityButton");
 		
-		abilityButton.setPosition(20/PPM, abilityButton.getHeight()/PPM + 20/PPM + 40/PPM);
+		abilityButton.setPosition(20/PPM, 20/PPM);
 		abilityButton.setSize(abilityButton.getWidth()/PPM, abilityButton.getHeight()/PPM);
 		abilityButton.setBounds(abilityButton.getX(), abilityButton.getY(), abilityButton.getWidth(), abilityButton.getHeight());
 		

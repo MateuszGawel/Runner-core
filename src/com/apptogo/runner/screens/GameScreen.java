@@ -69,20 +69,14 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	protected void createGui()
-	{
-		Skin guiskin = ResourcesManager.getInstance().getGuiSkin();
-		Type type;
-		
+	{		
 		jumpButton = world.character.getJumpButton();
-		slowButton = world.character.getSlowButton();
 		slideButton = world.character.getSlideButton();
 		abilityButton = world.character.getAbilityButton();
 		
 		guiStage.addActor(abilityButton);
 		guiStage.addActor(slideButton);
-		guiStage.addActor(jumpButton);
-		guiStage.addActor(slowButton);
-		
+		guiStage.addActor(jumpButton);		
 	}
 	
 	public void step() 
