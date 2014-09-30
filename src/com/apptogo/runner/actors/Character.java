@@ -100,27 +100,27 @@ public abstract class Character extends Actor{
 		
 		//main fixture
 		shape.setAsBox(bodySize.x, bodySize.y);
-		fixtureDef = Materials.playerBody;
+		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData("player");
 		
 		//sliding fixture
 		shape.setAsBox(bodySize.y - 15/PPM, bodySize.x, new Vector2(-bodySize.x, -40/PPM), 0);
-		fixtureDef = Materials.playerSlidingBody;
+		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData("player");
 		body.getFixtureList().get(1).setSensor(true);
 		
 		//wall sensor
 		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
-		fixtureDef = Materials.wallSensorBody;
+		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData("wallSensor");
 		
 		
 		//foot sensor
 		shape.setAsBox(25 / PPM, 20 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
-		fixtureDef = Materials.footSensorBody;
+		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData("footSensor");
 	}

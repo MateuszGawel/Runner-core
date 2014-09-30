@@ -1,43 +1,43 @@
 package com.apptogo.runner.vars;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import static com.apptogo.runner.vars.Box2DVars.*;
 public class Materials {
 	
-	public static FixtureDef playerBody;
-	public static FixtureDef playerSlidingBody;
-	public static FixtureDef wallSensorBody;
-	public static FixtureDef enemyBody;
-	public static FixtureDef groundBody;
-	public static FixtureDef objectBody;
-	public static FixtureDef obstacleBody;
-	public static FixtureDef powerUpBody;
-	public static FixtureDef footSensorBody;
-	public static FixtureDef bombBody;
-	public static FixtureDef barrelBody;
-	public static FixtureDef arrowBody;
+	public static FixtureDef characterBody;
+	public static FixtureDef characterSensor;
 	public static FixtureDef bodyMemberBody;
-	public static FixtureDef mushroomBody;
-	public static FixtureDef bushBody;
-	public static FixtureDef hedgehogBody;
+	
+	public static FixtureDef terrainBody;
+	public static FixtureDef worldObjectBody;
+	
+	public static FixtureDef obstacleGhostBody;
+	public static FixtureDef obstacleBody;
+	public static FixtureDef obstacleSensor;
+	
+	public static FixtureDef bombBody;
+	public static FixtureDef arrowBody;
+	public static FixtureDef fieldBody;
 	
 	static
 	{
-		playerBody = createFixtureDef(12f, 0.2f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_HEDGEHOG | Box2DVars.BIT_BUSH | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING | Box2DVars.BIT_BARREL), false);
-		playerSlidingBody = createFixtureDef(5f, 0.15f, 0f, Box2DVars.BIT_PLAYER, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
-		wallSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_WALLSENSOR, Box2DVars.BIT_NONKILLING, true);
-		footSensorBody = createFixtureDef(0f, 0f, 0f, Box2DVars.BIT_FOOTSENSOR, Box2DVars.BIT_NONKILLING, true);
-		enemyBody = createFixtureDef(30f, 10f, 0f, Box2DVars.BIT_ENEMY, Box2DVars.BIT_NONKILLING, false);
-		groundBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_HEDGEHOG | Box2DVars.BIT_BUSH | Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
-		objectBody = createFixtureDef(30f, 0.5f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
-		obstacleBody = createFixtureDef(30f, 0f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_FOOTSENSOR), true);
-		powerUpBody = createFixtureDef(30f, 0f, 0f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_PLAYER), true);
-		bombBody = createFixtureDef(10f, 0.1f, 0.5f, Box2DVars.BIT_BOMB, Box2DVars.BIT_NONKILLING, false);
-		barrelBody = createFixtureDef(30f, 1f, 0f, Box2DVars.BIT_BARREL, (short)(Box2DVars.BIT_BARREL | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_PLAYER), false);
-		arrowBody = createFixtureDef(1f, 0.1f, 0.1f, Box2DVars.BIT_ARROW, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
-		bodyMemberBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_BODYMEMBER, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_NONKILLING | Box2DVars.BIT_KILLING), false);
-		mushroomBody = createFixtureDef(10f, 0.5f, 0.1f, Box2DVars.BIT_NONKILLING, (short)(Box2DVars.BIT_BODYMEMBER | Box2DVars.BIT_BARREL | Box2DVars.BIT_ARROW |Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALLSENSOR | Box2DVars.BIT_FOOTSENSOR | Box2DVars.BIT_BOMB), false);
-		bushBody = createFixtureDef(0.1f, 1f, 0.8f, Box2DVars.BIT_BUSH, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER), false);
-		hedgehogBody = createFixtureDef(1000f, 0.1f, 0.1f, Box2DVars.BIT_HEDGEHOG, (short)(Box2DVars.BIT_NONKILLING | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER), false);
+		//player
+		characterBody = createFixtureDef(12f, 0.2f, 0f, BIT_CHARACTER, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_ABILITY), false); //postaæ
+		characterSensor = createFixtureDef(0f, 0f, 0f, BIT_CHARACTER_SENSOR, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), true); //obydwa sensory
+		bodyMemberBody = createFixtureDef(10f, 0.5f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), false); //czesci cia³a
+		
+		//world (podzial dla busha)
+		terrainBody = createFixtureDef(30f, 0.5f, 0f, BIT_TERRAIN, (short)(BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_ABILITY), false); //statyczny ground
+		worldObjectBody = createFixtureDef(30f, 0.5f, 0f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT | BIT_CHARACTER_SENSOR | BIT_ABILITY), false); //statyczne obiekty
+		
+		//obstacle
+		obstacleGhostBody = createFixtureDef(1000f, 0.1f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false); //bez kolizji z playerem, trzeba sensor jesli ma byc wykrywane
+		obstacleBody = createFixtureDef(30f, 1f, 0.8f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_CHARACTER), false); //z kolizja z playerem, nie trzeba sensora
+		obstacleSensor = createFixtureDef(0.1f, 1f, 0.8f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_CHARACTER_SENSOR), true); //wystarczy jesli przeszkoda jest statyczna
+		
+		bombBody = createFixtureDef(10f, 0.1f, 0.5f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);
+		arrowBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);
+		fieldBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT), true);
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution, short categoryBits, short maskBits, boolean sensor)

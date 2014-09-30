@@ -21,7 +21,7 @@ public class Catapult extends Obstacle{
 		super(object, world, "gfx/game/levels/catapult.pack", "catapult", 1, 0.05f, CatapultAnimationState.STATIC);
 
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.StaticBody, Materials.obstacleBody, "catapult");
+		createBody(BodyType.StaticBody, Materials.obstacleSensor, "catapult");
 		setVisible(false);
 		setOffset(-20/PPM, -40/PPM);
 

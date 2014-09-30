@@ -49,7 +49,7 @@ public class LiftField extends Actor{
 		fieldBody.setUserData("liftField");
 
 		shape.setRadius(200/PPM);
-		fixtureDef = Materials.objectBody;
+		fixtureDef = Materials.worldObjectBody;
 		fixtureDef.shape = shape;
 		fixtureDef.isSensor = true;
 		fieldBody.createFixture(fixtureDef).setUserData("liftField");

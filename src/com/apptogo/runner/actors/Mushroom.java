@@ -24,12 +24,12 @@ public class Mushroom extends Obstacle{
 		super(object, world, "gfx/game/levels/mushroom.pack", "mushroom", 1, 0.05f, MushroomAnimationState.STATIC);
 		super.animate = false;
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.StaticBody, Materials.groundBody, "nonKilling");
+		createBody(BodyType.StaticBody, Materials.worldObjectBody, "nonKilling");
 		
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(50/PPM, 5/PPM, new Vector2(70/PPM, -5/PPM), 0);
 		
-		mushroomFixture = createFixture(Materials.mushroomBody, shape, "mushroom");
+		mushroomFixture = createFixture(Materials.obstacleSensor, shape, "mushroom");
 		setOffset(-10/PPM, -35/PPM);
 
 		animationManager.createAnimation(new MyAnimation(0.05f, MushroomAnimationState.WORKING, animationManager.createFrames(8, "mushroom"), false){

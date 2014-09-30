@@ -19,7 +19,7 @@ public class Bonfire extends Obstacle{
 		super(object, world, "gfx/game/levels/bonfire.pack", "bonfire", 33, 0.05f, BonfireAnimationState.NORMAL);
 		super.animate = true;
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.StaticBody, Materials.obstacleBody, "killing");
+		createBody(BodyType.StaticBody, Materials.obstacleSensor, "bonfire");
 		setOffset(-15f/PPM, -15f/PPM);
 	}
 }
