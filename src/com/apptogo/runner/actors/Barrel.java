@@ -17,6 +17,6 @@ public class Barrel extends Obstacle{
 	public Barrel(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/barrelSmall.png");
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.StaticBody, Materials.barrelBody, "barrel");
+		createBody(BodyType.StaticBody, Materials.obstacleBody, "barrel");
 	}
 }

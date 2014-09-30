@@ -126,21 +126,18 @@ public class Obstacle extends Actor{
 	
 	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData)
 	{
-		createBody(bodyType, fixtureDef, userData, false);
-	}
-	
-	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData, boolean isSensor)
-	{
 		bodyDef = new BodyDef();
 		bodyDef.type = bodyType;
-				
-		FixtureDef material = fixtureDef;
-		material.shape = createShape(object);
-		material.isSensor = isSensor;
+
+		fixtureDef.shape = createShape(object);
 		
 		body = world.createBody(bodyDef);
-		body.createFixture(material).setUserData(userData);
+		body.createFixture(fixtureDef).setUserData(userData);
 		body.setUserData(userData);
+	}
+	public void createFixture(FixtureDef fixtureDef, String userData){
+		fixtureDef.shape = createShape(object);
+		body.createFixture(fixtureDef).setUserData(userData);
 	}
 	
 	public Fixture createFixture(FixtureDef material, Shape shape, String userData){

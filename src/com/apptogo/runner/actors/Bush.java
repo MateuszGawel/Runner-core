@@ -15,7 +15,7 @@ public class Bush extends Obstacle{
 	public Bush(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/bush.png");
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.DynamicBody, Materials.bushBody, "bush");
+		createBody(BodyType.DynamicBody, Materials.worldObjectBody, "bush");
 		initialX = getBody().getPosition().x;
 		initialY = getBody().getPosition().y;
 		setOffset(-12/PPM, -12/PPM);

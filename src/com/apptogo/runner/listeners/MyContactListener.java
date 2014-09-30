@@ -32,11 +32,32 @@ public class MyContactListener implements ContactListener{
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		//Logger.log(this, "WYKRYTO: " + fa.getUserData() + ", " + fb.getUserData());
+		//kontakt z przeszkoda ktora tylko zabija mozna zamienic w taki sposob zeby ich userdata od razu okreslalo typ smierci
 		
 		//smierc od zabijajacych
-		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("killing".equals(fa.getUserData()) && "player".equals(fb.getUserData())
-				|| ("killing".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("killingTop".equals(fa.getUserData()) && "player".equals(fb.getUserData())
+				|| ("killingTop".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+			
+			if( gameWorld.character.dieTop())
+			{
+				NotificationManager.getInstance().notifyDieTop();
+			}
+			
+		}
+		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("killingBottom".equals(fa.getUserData()) && "player".equals(fb.getUserData())
+				|| ("killingBottom".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+			
+			if( gameWorld.character.dieBottom())
+			{
+				NotificationManager.getInstance().notifyDieBottom();
+			}
+			
+		}
+		
+		
+		//smierc od ogniska
+		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("bonfire".equals(fa.getUserData()) && "player".equals(fb.getUserData())
+				|| ("bonfire".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
 			
 			if( gameWorld.character.dieDismemberment())
 			{
@@ -44,6 +65,7 @@ public class MyContactListener implements ContactListener{
 			}
 			
 		}
+		
 		//smierc od krzaczka
 		if(!gameWorld.character.isImmortal() && gameWorld.character.isAlive() && ("bush".equals(fa.getUserData()) && "player".equals(fb.getUserData())
 				|| ("bush".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
@@ -163,9 +185,10 @@ public class MyContactListener implements ContactListener{
 		{
 			Fixture fixture = ("powerup".equals(fa.getUserData()))?fa:fb;
 			
-			Logger.log(this, "MAM POWERUP! JEST TO: " + (((String)fixture.getUserData()).split("\\|"))[1] );
+			//Logger.log(this, "MAM POWERUP! JEST TO: " + (((String)fixture.getUserData()).split("\\|"))[1] );
 			
-			gameWorld.addBodyToDestroy( fixture.getBody() );
+			//gameWorld.addBodyToDestroy( fixture.getBody() );
+			fixture.getBody().setUserData("inactive");
 		}
 		
 		//meta - koniec gry

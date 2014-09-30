@@ -24,7 +24,8 @@ public class Hedgehog extends Obstacle{
 		super(object, world, "gfx/game/levels/hedgehog.pack", "hedgehog", 12, 0.05f, HedgehogAnimationState.WALKING);
 		super.animate = true;
 		gameWorld.getWorldStage().addActor(this);
-		createBody(BodyType.DynamicBody, Materials.hedgehogBody, "hedgehog");
+		createBody(BodyType.DynamicBody, Materials.obstacleGhostBody, "hedgehog");
+		createFixture(Materials.obstacleSensor, "hedgehog");
 		setOffset(-10f/PPM, -15f/PPM);
 	}
 	

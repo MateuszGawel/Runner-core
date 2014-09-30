@@ -84,6 +84,7 @@ public class TiledMapLoader
 	private FixtureDef groundFixture;
 	private FixtureDef objectFixture;
 	private FixtureDef obstacleFixture;
+	private FixtureDef obstacleSensorFixture;
 	
 	private GameWorld gameWorld;
 	
@@ -93,9 +94,10 @@ public class TiledMapLoader
 	
 	public void loadMap(String mapPath)
 	{
-		groundFixture = Materials.groundBody;
-		objectFixture = Materials.objectBody;
+		groundFixture = Materials.terrainBody;
+		objectFixture = Materials.worldObjectBody;
 		obstacleFixture = Materials.obstacleBody;
+		obstacleSensorFixture = Materials.obstacleSensor;
 		
 		tiledMap = new TmxMapLoader().load( mapPath );
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
@@ -317,6 +319,8 @@ public class TiledMapLoader
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
+				
+				
 				BodyDef bodyDef = new BodyDef();
 				
 				bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -328,20 +332,19 @@ public class TiledMapLoader
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
-				obstacleFixture.shape = createShape(object);
-				
+				Fixture fixture;
 				body = world.createBody(bodyDef);
-				body.createFixture(obstacleFixture).setUserData("killing");
-				body.setUserData("killing");
-				
-				if( isPropertyTrue(object, "isGhost"))
-				{
-					for(Fixture f: body.getFixtureList()) 
-					{ 
-						f.setUserData("nonkilling");
-						f.setSensor(true); 
-					}
+				if(isPropertyTrue(object, "isGhost")){
+					obstacleSensorFixture.shape = createShape(object);
+					fixture = body.createFixture(obstacleSensorFixture);
 				}
+				else{
+					obstacleFixture.shape = createShape(object);
+					fixture = body.createFixture(obstacleFixture);
+				}
+				
+				fixture.setUserData(object.getProperties().get("type"));
+				body.setUserData(object.getProperties().get("type"));
 				
 				if( checkObjectType(object, "jointHandle") )
 				{

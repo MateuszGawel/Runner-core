@@ -55,7 +55,7 @@ public class SpaceWorld extends GameWorld{
 		testBody.setUserData("testBody");
 
 		shape.setRadius(14/PPM);
-		fixtureDef = Materials.barrelBody;
+		fixtureDef = Materials.obstacleBody;
 		fixtureDef.shape = shape;
 		testBody.createFixture(fixtureDef).setUserData("testBody");
 		testBody.setTransform(x, 10f,  0);

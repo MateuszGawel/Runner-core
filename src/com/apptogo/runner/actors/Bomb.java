@@ -69,9 +69,9 @@ public class Bomb extends Actor implements Poolable{
 
     public void init() {
 
-    	position.set(player.getX(), player.getY());
+    	position.set(player.getX()-20/PPM, player.getY());
         bombBody.setTransform(position, 0);
-        bombBody.setLinearVelocity(player.getSpeed()/2, 0);
+        bombBody.setLinearVelocity(player.getSpeed()/3, 0);
         alive = true;
 		Timer.schedule(new Task() {
 			@Override
