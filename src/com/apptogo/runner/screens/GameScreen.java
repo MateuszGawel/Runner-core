@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -33,7 +34,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected Button jumpButton;
 	protected Button slideButton;
 	protected Button slowButton;
-	protected Button abilityButton;
+	protected Array<Button> powerupButtons;
 	
 	public GameScreen(Runner runner)
 	{
@@ -54,7 +55,9 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	public void prepare()
-	{		
+	{
+		powerupButtons = new Array<Button>();
+		
 		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
 		
 		if(enemies != null)
@@ -72,11 +75,18 @@ public abstract class GameScreen extends BaseScreen{
 	{		
 		jumpButton = world.character.getJumpButton();
 		slideButton = world.character.getSlideButton();
-		abilityButton = world.character.getAbilityButton();
+
+		powerupButtons = world.character.initializePowerupButtons();
 		
-		guiStage.addActor(abilityButton);
 		guiStage.addActor(slideButton);
 		guiStage.addActor(jumpButton);		
+		
+		for(Button powerupButton: powerupButtons)
+		{
+			guiStage.addActor(powerupButton);
+		}
+		
+		world.character.setPowerup(PowerupType.NONE);
 	}
 	
 	public void step() 

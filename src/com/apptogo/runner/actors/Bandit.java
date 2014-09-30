@@ -194,6 +194,8 @@ public class Bandit extends Character{
 			
 	public Button getAbilityButton()
 	{
+		return null;
+		/* do zaimplementowania potem przy umiejetnosciach klasowych
 		Button bombButton = new Button(guiSkin, "banditBombAbilityButton");
 		
 		bombButton.setPosition(20/PPM, 20/PPM);
@@ -208,7 +210,7 @@ public class Bandit extends Character{
 		    }
 		});
 		
-		return bombButton;
+		return bombButton;*/
 	}
 	
 	@Override

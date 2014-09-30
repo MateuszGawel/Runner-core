@@ -2,7 +2,8 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -31,13 +32,12 @@ public class Powerup extends Obstacle{
 		
 		//losowanie powerupa - na razie na abilities to robie [zeby bylo byle co] ale trzeba bedzie dodac nowy enum
 		//info o powerupie dodaje w userdata bo musze jakos w contactListenerze miec do tego dostep
-		//CharacterAbilityType ability = CharacterAbilityType.values()[(int)(Math.random() * 3.9)];
-		//dostawalem tutaj array out of bound wiec wykomentowalem
-		//userData += "|" + ability.toString();
+		PowerupType powerup = PowerupType.getRandom();
+		userData += "|" + powerup.toString();
 		
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.KinematicBody, Materials.obstacleGhostBody, "active");
-		createFixture(Materials.obstacleSensor, "powerup");
+		createFixture(Materials.obstacleSensor, userData);
 		setOffset(-40f/PPM, -35f/PPM);
 	}
 	

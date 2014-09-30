@@ -10,6 +10,7 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
@@ -26,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -71,6 +73,8 @@ public abstract class Character extends Actor{
 		
 	protected ArrayList<BodyMember> bodyMembers;
 	
+	protected Array<Button> powerupButtons;
+	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
 		this.world = world;
@@ -83,6 +87,8 @@ public abstract class Character extends Actor{
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;
 		this.slowButtonStyleName = slowButtonStyleName;
+		
+		powerupButtons = new Array<Button>();
 	}
 	
 	protected void createBody(Vector2 bodySize){
@@ -352,6 +358,16 @@ public abstract class Character extends Actor{
 		}
 	}
 	
+	public void superJump()
+	{
+		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 3) );
+		body.setLinearVelocity( body.getLinearVelocity().x, v0 );
+	}
+	private void superRun()
+	{
+		body.applyForceToCenter(new Vector2(60000, 0), true);
+	}
+	
 	private void handleDismemberment(){
 		if(actDismemberment){
 			actDismemberment = false;
@@ -404,7 +420,9 @@ public abstract class Character extends Actor{
 	
 	public abstract CharacterType getCharacterType();	
 
+	/* do zaimplementowania potem przy umiejetnosciach klasowych
 	public abstract Button getAbilityButton();
+	*/
 	
 	public Button getJumpButton()
 	{
@@ -459,5 +477,56 @@ public abstract class Character extends Actor{
 		});
 		
 		return slideButton;
+	}
+
+	public Array<Button> initializePowerupButtons()
+	{
+		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) )
+		{
+			Button button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
+			button.setUserObject(powerupType);
+			
+			button.addListener(new InputListener() 
+			{
+				@Override
+			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
+				{
+					character.usePowerup( powerupType );
+			        return true;
+			    }
+			});
+			
+			this.powerupButtons.add(button);
+		}
+		
+		return this.powerupButtons;
+	}
+	
+	protected void usePowerup(PowerupType powerupType) 
+	{
+		if( powerupType == PowerupType.NONE )
+		{
+			//pass
+		}
+		else if( powerupType == PowerupType.SUPERJUMP )
+		{
+			character.superJump();
+		}
+		else if( powerupType == PowerupType.SUPERSPEED )
+		{
+			character.superRun();
+		}
+		character.setPowerup(PowerupType.NONE);
+	}
+
+	public void setPowerup(PowerupType powerupType) 
+	{
+		for(Button button: powerupButtons)
+		{
+			if( ( (PowerupType)button.getUserObject() ) == powerupType )
+			{
+				button.toFront();
+			}
+		}
 	}
 }

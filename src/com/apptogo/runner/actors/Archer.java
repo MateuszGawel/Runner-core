@@ -202,6 +202,8 @@ public class Archer extends Character{
 		
 	public Button getAbilityButton()
 	{
+		return null;
+		/* do zaimplementowania potem przy umiejetnosciach klasowych
 		Button abilityButton = new Button(guiSkin, "archerArrowAbilityButton");
 		
 		abilityButton.setPosition(20/PPM, 20/PPM);
@@ -216,7 +218,7 @@ public class Archer extends Character{
 		    }
 		});
 		
-		return abilityButton;
+		return abilityButton;*/
 	}
 	
 	@Override

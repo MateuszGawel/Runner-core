@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.appwarp.NotificationManager;
+import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -183,10 +184,11 @@ public class MyContactListener implements ContactListener{
 		//powerup
 		if( ( ((String)fa.getUserData()).contains("powerup") && "player".equals(fb.getUserData()) ) || ( ((String)fb.getUserData()).contains("powerup") && "player".equals(fa.getUserData()) ) )
 		{
-			Fixture fixture = ("powerup".equals(fa.getUserData()))?fa:fb;
+			Fixture fixture = ( ((String)fa.getUserData()).contains("powerup") )?fa:fb;
 			
-			//Logger.log(this, "MAM POWERUP! JEST TO: " + (((String)fixture.getUserData()).split("\\|"))[1] );
-			
+			String powerupKey = (((String)fixture.getUserData()).split("\\|"))[1];
+			gameWorld.character.setPowerup( PowerupType.parseFromString(powerupKey) );
+						Logger.log(this, powerupKey);
 			//gameWorld.addBodyToDestroy( fixture.getBody() );
 			fixture.getBody().setUserData("inactive");
 		}

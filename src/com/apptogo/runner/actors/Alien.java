@@ -7,6 +7,7 @@ import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -170,6 +172,8 @@ public class Alien extends Character{
 		
 	public Button getAbilityButton()
 	{
+		return null;
+		/* do zaimplementowania potem przy umiejetnosciach klasowych
 		Button bombButton = new Button(guiSkin, "alienLiftAbilityButton");
 		
 		bombButton.setPosition(20/PPM, 20/PPM);
@@ -184,12 +188,12 @@ public class Alien extends Character{
 		    }
 		});
 		
-		return bombButton;
+		return bombButton;*/
 	}
 	
 	@Override
 	public CharacterType getCharacterType()
 	{
-		return CharacterType.ARCHER;
+		return CharacterType.ALIEN;
 	}
 }
