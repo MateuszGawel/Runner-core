@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -27,13 +28,9 @@ public class Powerup extends Obstacle{
 	{
 		super(object, world, "gfx/game/levels/powerup.pack", "powerup", 36, 0.03f, PowerupAnimationState.NORMAL);
 		super.animate = true;
-		
-		String userData = "powerup";
-		
-		//losowanie powerupa - na razie na abilities to robie [zeby bylo byle co] ale trzeba bedzie dodac nowy enum
-		//info o powerupie dodaje w userdata bo musze jakos w contactListenerze miec do tego dostep
+				
 		PowerupType powerup = PowerupType.getRandom();
-		userData += "|" + powerup.toString();
+		UserData userData = new UserData("powerup", powerup.toString());
 		
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.KinematicBody, Materials.obstacleGhostBody, "active");
@@ -55,7 +52,8 @@ public class Powerup extends Obstacle{
 		}
 		getBody().setLinearVelocity(velocity);
 		
-		if(getBody().getUserData().equals("inactive")){
+		if( UserData.key( getBody().getUserData() ).equals("inactive") )
+		{
 			//tutaj mozna odpalic animacjê zbierania )np jakies gwiazdki albo zmniejszenie sie skrzynki do 0 albo cokolwiek innego.
 			tutajNalezyZaimplementowacToCoSieDziejeKiedyGraczPodniesieSkrzynkeZwanaPrzezNasTakzePowerupem();
 			

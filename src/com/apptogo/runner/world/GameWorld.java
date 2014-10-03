@@ -10,6 +10,8 @@ import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.exception.PlayerDoesntExistException;
+import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.logger.Logger;
@@ -53,7 +55,7 @@ public abstract class GameWorld
 	public OrthographicCamera backgroundCamera;
 	
 	public Player player;
-	public HashMap<String, Character> enemies;
+	public Array<Player> enemies;
 	public Group background;
 	protected Vector2 mapSize;
 	private MyContactListener contactListener;
@@ -76,7 +78,7 @@ public abstract class GameWorld
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
 		
-		this.enemies = new HashMap<String, Character>();
+		this.enemies = new Array<Player>();
 		this.player = player;
 		
 		background = new Group();
@@ -87,17 +89,17 @@ public abstract class GameWorld
 		backgroundStage.setViewport(backgroundStretchViewport);
 		backgroundStage.addActor(background);
 		
-		createWorld(mapPath, player);
+		createWorld(mapPath);
 		
 		fpsLogger = new FPSLogger();
 	}
 	
 	public abstract void dispose();
 	
-	private void createWorld(String mapPath, Player player)
+	private void createWorld(String mapPath)
 	{
-		player.character = createCharacter( player.getCharacterType() );
-		worldStage.addActor( player.character );
+		this.player.character = createCharacter( this.player.getCharacterType() );
+		worldStage.addActor( this.player.character );
 		
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
@@ -134,7 +136,7 @@ public abstract class GameWorld
 	{
 		if( Input.isPressed() ) 
 		{
-			if( player.character.start() ) NotificationManager.getInstance().notifyStartRunning();
+			if( this.player.character.start() ) NotificationManager.getInstance().notifyStartRunning();
 		}
 	}
 	
@@ -173,29 +175,35 @@ public abstract class GameWorld
     public Stage getWorldStage(){ return this.worldStage; }
     
     
-    /** ta i metode getEnemy() nalezy obstawic wyjatkami */
-    public void addEnemy(Player enemy) //na razie przesylanie Playera jest mocno nadmiarowe ale bd konieczne gdy zaczniemy dodawac umiejetnosci itp
+    /** ta i metode getEnemy() nalezy obstawic wyjatkami 
+     * @throws PlayerExistsException */
+    public void addEnemy(Player enemy) throws PlayerExistsException //na razie przesylanie Playera jest mocno nadmiarowe ale bd konieczne gdy zaczniemy dodawac umiejetnosci itp
     {
-    	if( enemies.containsKey( enemy.getName() ) )
-		{
-    		Logger.log(this, "tu powinien byc wyjatek, ale generalnie gosc juz jest dodany ;)");
-		}
-    	else //dodajemy wroga
+    	for(Player enemyPlayer: enemies)
     	{
-    		Character enemyCharacter = createCharacter( enemy.getCharacterType() );
-    		enemies.put(enemy.getName(), enemyCharacter);
-    		
-    		worldStage.addActor(enemyCharacter);
+    		if( enemyPlayer.equals( enemy.getName() ) )
+    		{
+    			throw new PlayerExistsException();
+    		}
     	}
+    	
+		enemy.character = createCharacter( enemy.getCharacterType() );
+		enemies.add( enemy );
+		
+		worldStage.addActor( enemy.character );
     }
     
-    public Character getEnemy(String enemyName)
+    public Player getEnemy(String enemyName) throws PlayerDoesntExistException //tak naprawde tu tez ladniej by bylo przesylac calego playera ale to chyba troche kosztuje wiec zdecydowalem ze samo imie
     {
-    	Character characterTemp;
+    	for(Player enemyPlayer: enemies)
+    	{
+    		if( enemyPlayer.equals( enemyName ) )
+    		{
+    			return enemyPlayer;
+    		}
+    	}
     	
-    	characterTemp = enemies.get(enemyName); //zwroci nulla jesli nie ma!
-    	
-    	return characterTemp;
+    	throw new PlayerDoesntExistException();
     }
     
     private Character createCharacter(CharacterType characterType)

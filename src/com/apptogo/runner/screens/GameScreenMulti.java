@@ -14,6 +14,7 @@ import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
@@ -84,48 +85,56 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			JSONObject data = new JSONObject(message);
 							
 			//rozparsowuje do zmiennych
+			Player enemy = null;
 			String enemyName = (String)data.getString("PLAYER_NAME");
 			
-			Character enemy = world.getEnemy(enemyName);
+			try
+			{
+				enemy = world.getEnemy(enemyName);
+			}
+			catch(PlayerDoesntExistException e)
+			{
+				Logger.log(this, "Player " + enemyName + " is not created and cannot be used");
+			}
 			
 			if( data.has("START_RUNNING") && (boolean)data.getBoolean("START_RUNNING") ) 
 			{
-				enemy.start();
+				enemy.character.start();
 			}
 			else if( data.has("DIE_TOP") && (boolean)data.getBoolean("DIE_TOP") )
 			{
-				enemy.dieTop();
+				enemy.character.dieTop();
 			}
 			else if( data.has("DIE_BOTTOM") && (boolean)data.getBoolean("DIE_BOTTOM") )
 			{
-				enemy.dieBottom();
+				enemy.character.dieBottom();
 			}
 			else if( data.has("JUMP") && (boolean)data.getBoolean("JUMP") )
 			{
-				enemy.jump();
+				enemy.character.jump();
 			}
 			else if( data.has("SLIDE") && (boolean)data.getBoolean("SLIDE") )
 			{
-				enemy.slide();
+				enemy.character.slide();
 			}
 			else if( data.has("STAND_UP") && (boolean)data.getBoolean("STAND_UP") )
 			{
-				enemy.standUp();
+				enemy.character.standUp();
 			}
 			else if( data.has("SLOW") && (boolean)data.getBoolean("SLOW") )
 			{
-				enemy.setRunning(false);
+				enemy.character.setRunning(false);
 			}
 			else if( data.has("ABORT_SLOW") && (boolean)data.getBoolean("ABORT_SLOW") )
 			{
-				enemy.setRunning(true);
+				enemy.character.setRunning(true);
 			}
 			else if( data.has("ABILITY") && (boolean)data.getBoolean("ABILITY") )
 			{
 				if( !(data.getString("ABILITY_TYPE").equals("")) )
 				{
 					CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-					enemy.useAbility(abilityType);
+					enemy.character.useAbility(abilityType);
 				}
 			}
 			//mala uwaga

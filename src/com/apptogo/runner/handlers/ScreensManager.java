@@ -73,13 +73,14 @@ public class ScreensManager {
 		
 		if(screenToLoad == ScreenType.SCREEN_GAME_SINGLE || screenToLoad == ScreenType.SCREEN_GAME_MULTI) 
 		{
+			this.enemies = players;
 			Array<CharacterType> characterTypes = new Array<CharacterType>();
 			
-			if( enemies != null)
+			if( this.enemies != null)
 			{
-				for(int i = 0; i < enemies.size; i++) 
+				for(int i = 0; i < this.enemies.size; i++) 
 				{
-					characterTypes.add( enemies.get(i).getCharacterType() );
+					characterTypes.add( this.enemies.get(i).getCharacterType() );
 				}
 			}
 			else //to oznacza ze jestesmy w singlu wiec musimy dopasowac characterType do planszy
@@ -94,7 +95,6 @@ public class ScreensManager {
 		}
 				
 		this.levelToLoad = level;
-		this.enemies = enemies;
 		createLoadingScreen(screenToLoad, levelToLoad);
 	}
 	
@@ -136,7 +136,7 @@ public class ScreensManager {
 		if( currentScreenType == ScreenType.SCREEN_GAME_SINGLE || currentScreenType == ScreenType.SCREEN_GAME_MULTI )
 		{
 			((GameScreen)screen).setLevel( levelToLoad );
-			((GameScreen)screen).setEnemies( enemies );
+			((GameScreen)screen).setEnemies( this.enemies );
 		}
 		
 		runner.setScreen(screen);

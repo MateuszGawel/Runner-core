@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -42,12 +43,15 @@ public class Mushroom extends Obstacle{
 	}
 	
 	@Override
-	public void act(float delta){
+	public void act(float delta)
+	{
 		super.act(delta);
-		if(mushroomFixture.getUserData().equals("mushroomWorking")){
+		
+		if( UserData.key( mushroomFixture.getUserData() ).equals("mushroomWorking") )
+		{
 			animate = true;
 			animationManager.setCurrentAnimationState(MushroomAnimationState.WORKING);
-			mushroomFixture.setUserData("mushroom");
+			mushroomFixture.setUserData( new UserData("mushroom") );
 		}
 	}
 }

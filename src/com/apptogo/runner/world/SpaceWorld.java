@@ -10,6 +10,7 @@ import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -52,12 +53,12 @@ public class SpaceWorld extends GameWorld{
 		FixtureDef fixtureDef;
 		
 		Body testBody = world.createBody(bodyDef);
-		testBody.setUserData("testBody");
+		testBody.setUserData( new UserData("testBody") );
 
 		shape.setRadius(14/PPM);
 		fixtureDef = Materials.obstacleBody;
 		fixtureDef.shape = shape;
-		testBody.createFixture(fixtureDef).setUserData("testBody");
+		testBody.createFixture(fixtureDef).setUserData( new UserData("testBody") );
 		testBody.setTransform(x, 10f,  0);
     }
     

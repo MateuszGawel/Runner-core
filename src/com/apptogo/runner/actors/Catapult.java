@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -38,13 +39,16 @@ public class Catapult extends Obstacle{
 	}
 	
 	@Override
-	public void act(float delta){
+	public void act(float delta)
+	{
 		super.act(delta);
-		if(getBody().getUserData().equals("catapultWorking")){
+	
+		if( UserData.key( getBody().getUserData() ).equals("catapultWorking"))
+		{
 			setVisible(true);
 			animate = true;
 			animationManager.setCurrentAnimationState(CatapultAnimationState.WORKING); //(*)
-			getBody().setUserData("catapult");
+			getBody().setUserData( new UserData("catapult") );
 			leafs.init();
 		}
 	}

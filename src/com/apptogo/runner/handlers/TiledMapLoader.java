@@ -16,6 +16,7 @@ import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -189,8 +190,8 @@ public class TiledMapLoader
 			
 			groundFixture.shape = createShape(mapObject);
 			Body body = world.createBody(bodyDef);
-			body.createFixture(groundFixture).setUserData("nonkilling");
-			body.setUserData("nonkilling");
+			body.createFixture(groundFixture).setUserData( new UserData("nonkilling") );
+			body.setUserData( new UserData("nonkilling") );
 			
 			bodies.add(body);
 		}
@@ -232,13 +233,13 @@ public class TiledMapLoader
 				
 				if( checkObjectType(object, "finishingLine") )
 				{
-					body.createFixture(objectFixture).setUserData("finishingLine");
-					body.setUserData("finishingLine");
+					body.createFixture(objectFixture).setUserData( new UserData("finishingLine") );
+					body.setUserData( new UserData("finishingLine") );
 				}
 				else
 				{
-					body.createFixture(objectFixture).setUserData("nonkilling");
-					body.setUserData("nonkilling");
+					body.createFixture(objectFixture).setUserData( new UserData("nonkilling") );
+					body.setUserData( new UserData("nonkilling") );
 				}
 				
 				if( isPropertyTrue(object, "isGhost"))
@@ -354,8 +355,8 @@ public class TiledMapLoader
 					fixture = body.createFixture(obstacleFixture);
 				}
 				
-				fixture.setUserData(object.getProperties().get("type"));
-				body.setUserData(object.getProperties().get("type"));
+				fixture.setUserData( new UserData( object.getProperties().get("type") ) );
+				body.setUserData( new UserData( object.getProperties().get("type") ) );
 				
 				if( checkObjectType(object, "jointHandle") )
 				{
@@ -561,7 +562,7 @@ public class TiledMapLoader
 				
 				jointDef.length = ( new Vector2( (bodyB.getPosition().x + anchorBX) - (bodyA.getPosition().x + anchorAX), (bodyB.getPosition().y + anchorBY) - (bodyA.getPosition().y + anchorAY) ) ).len();
 				
-				world.createJoint(jointDef).setUserData(jointId);
+				world.createJoint(jointDef).setUserData( new UserData(jointId) );
 			}
 		}
 		

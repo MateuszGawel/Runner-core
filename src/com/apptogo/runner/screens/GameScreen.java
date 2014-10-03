@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
@@ -64,7 +65,14 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			for(int i = 0; i < enemies.size; i++)
 			{
-				world.addEnemy( enemies.get(i) );
+				try
+				{
+					world.addEnemy( enemies.get(i) );
+				}
+				catch(PlayerExistsException e)
+				{
+					Logger.log(this, "Player " + enemies.get(i).getName() + " is created already!");
+				}
 			}
 		}
 		

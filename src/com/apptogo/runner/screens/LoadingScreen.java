@@ -62,7 +62,7 @@ public class LoadingScreen extends BaseScreen{
 		
         this.screenToLoad = screenToLoad;
         this.levelToLoad = levelToLoad;
-        Logger.log(this, "screenToLoad = " + screenToLoad.toString() );
+
         resourcesManager.loadResources(screenToLoad);
         resourcesManager.loadGameResources();
 	}
@@ -80,8 +80,7 @@ public class LoadingScreen extends BaseScreen{
 			}
 			else if( screenToLoad == ScreenType.SCREEN_GAME_MULTI )
 			{
-				loadPlayer();
-				setBackground( CharacterType.convertToLoadingScreenBackground( player.getCharacterType() ) );
+				setBackground( CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) ) );
 			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
@@ -101,8 +100,6 @@ public class LoadingScreen extends BaseScreen{
 		}
 		else
 		{
-			//setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
-			
 			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
 			setLabelFont(loadingLabel, FontType.LOADINGSMALL);
 			loadingLabel.setPosition( -60.0f, 10.0f );

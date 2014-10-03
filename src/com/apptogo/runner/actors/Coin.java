@@ -1,5 +1,6 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -37,9 +38,8 @@ public class Coin extends Obstacle
 	{
 		super.act(delta);
 		
-		if(getBody().getUserData().equals("inactive"))
+		if( UserData.key( getBody().getUserData() ).equals("inactive") )
 		{
-			
 			gainCoinResult();
 			
 			//przenosze body poza mape(moge takze cos innego ale to dziala OK) i usuwam aktora z jego parenta.

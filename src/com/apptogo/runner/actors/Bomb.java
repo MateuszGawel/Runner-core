@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,12 +48,12 @@ public class Bomb extends Actor implements Poolable{
 		FixtureDef fixtureDef;
 		
 		bombBody = world.createBody(bodyDef);
-		bombBody.setUserData("bomb");
+		bombBody.setUserData( new UserData("bomb") );
 
 		shape.setRadius(14/PPM);
 		fixtureDef = Materials.bombBody;
 		fixtureDef.shape = shape;
-		bombBody.createFixture(fixtureDef).setUserData("player");
+		bombBody.createFixture(fixtureDef).setUserData( new UserData("character") );
 		
 		animationManager = new AnimationManager("gfx/game/characters/bomb.pack");	
 		animationManager.createAnimation(5, 0.1f, "bomb", BombAnimationState.NORMAL, true);

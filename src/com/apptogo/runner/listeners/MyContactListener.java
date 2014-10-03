@@ -8,6 +8,7 @@ import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -39,8 +40,8 @@ public class MyContactListener implements ContactListener{
 		//kontakt z przeszkoda ktora tylko zabija mozna zamienic w taki sposob zeby ich userdata od razu okreslalo typ smierci
 		
 		//smierc od zabijajacych
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingTop".equals(fa.getUserData()) && "player".equals(fb.getUserData())
-				|| ("killingTop".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingTop".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
+				|| ("killingTop".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
 			
 			if( gameWorld.player.character.dieTop())
 			{
@@ -48,8 +49,8 @@ public class MyContactListener implements ContactListener{
 			}
 			
 		}
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingBottom".equals(fa.getUserData()) && "player".equals(fb.getUserData())
-				|| ("killingBottom".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingBottom".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
+				|| ("killingBottom".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
 			
 			if( gameWorld.player.character.dieBottom())
 			{
@@ -60,8 +61,8 @@ public class MyContactListener implements ContactListener{
 		
 		
 		//smierc od ogniska
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bonfire".equals(fa.getUserData()) && "player".equals(fb.getUserData())
-				|| ("bonfire".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bonfire".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
+				|| ("bonfire".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
 			
 			if( gameWorld.player.character.dieDismemberment())
 			{
@@ -71,8 +72,8 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		//smierc od krzaczka
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bush".equals(fa.getUserData()) && "player".equals(fb.getUserData())
-				|| ("bush".equals(fb.getUserData()) && "player".equals(fa.getUserData())))){
+		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bush".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
+				|| ("bush".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
 			
 			if( gameWorld.player.character.dieTop())
 			{
@@ -82,29 +83,29 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		//skok i sciany
-		if(("footSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
-				|| ("footSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
+		if(("footSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ) )) 
+				|| ("footSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
 			gameWorld.player.character.incrementFootSensor();
 			gameWorld.player.character.land();
 		}
-		if(("wallSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
-				|| ("wallSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
+		if(("wallSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
+				|| ("wallSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals(UserData.key( fa.getUserData() )))){
 			gameWorld.player.character.incrementWallSensor();
 		}
 		
 		//zmienianie typu beczek
-		if(("barrel".equals(fa.getUserData()) && "player".equals(fb.getUserData()) 
-				|| ("barrel".equals(fb.getUserData()) && ("player".equals(fa.getUserData()))))){
+		if(("barrel".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) ) 
+				|| ("barrel".equals( UserData.key( fb.getUserData() ) ) && ("player".equals( UserData.key( fa.getUserData() )))))){
 			barrelsToSetActive.add(fb.getBody());
 		}
-		if(("barrel".equals(fa.getUserData()) && "barrel".equals(fb.getUserData())) 
-				|| ("barrel".equals(fb.getUserData()) && "barrel".equals(fa.getUserData()))){
+		if(("barrel".equals( UserData.key( fa.getUserData() ) ) && "barrel".equals( UserData.key( fb.getUserData() ))) 
+				|| ("barrel".equals( UserData.key( fb.getUserData() ) ) && "barrel".equals( UserData.key( fa.getUserData() )))){
 			barrelsToSetActive.add(fb.getBody());
 			barrelsToSetActive.add(fa.getBody());
 		}
 		
 		//smierc od beczek
-		if("barrel".equals(fa.getUserData()) && "player".equals(fb.getUserData())){
+		if("barrel".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ))){
 			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
 				if((Math.abs(fa.getBody().getLinearVelocity().x) > 5f || fa.getBody().getLinearVelocity().x > 5f) && gameWorld.player.character.dieBottom() )
 				{
@@ -112,7 +113,7 @@ public class MyContactListener implements ContactListener{
 				}
 			}
 		}
-		if("barrel".equals(fb.getUserData()) && "player".equals(fa.getUserData())){
+		if("barrel".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))){
 			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
 				if((Math.abs(fb.getBody().getLinearVelocity().x) > 5f || fb.getBody().getLinearVelocity().x > 5f) && gameWorld.player.character.dieBottom() )
 				{
@@ -121,13 +122,13 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		//smierc od je¿a
-		if("hedgehog".equals(fa.getUserData()) && "player".equals(fb.getUserData())){
+		if("hedgehog".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ))){
 			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
 				gameWorld.player.character.dieBottom();
 				NotificationManager.getInstance().notifyDieBottom();
 			}
 		}
-		if("hedgehog".equals(fb.getUserData()) && "player".equals(fa.getUserData())){
+		if("hedgehog".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))){
 			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
 				gameWorld.player.character.dieBottom();
 				NotificationManager.getInstance().notifyDieBottom();
@@ -135,87 +136,87 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		//podnoszenie aliena
-		if("liftField".equals(fa.getUserData()) && ((Alien)gameWorld.player.character).liftField.isActive()){
-			if(!fb.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
+		if("liftField".equals( UserData.key( fa.getUserData() ) ) && ((Alien)gameWorld.player.character).liftField.isActive()){
+			if(!UserData.key( fb.getUserData() ).equals("player") && !UserData.key( fa.getUserData() ).equals("wallSensor") && !UserData.key( fa.getUserData() ).equals("footSensor")){
 				((Alien)gameWorld.player.character).liftField.addBodyToLift(fb.getBody());
 				fb.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);;
 			}
 		}
-		if("liftField".equals(fb.getUserData()) && ((Alien)gameWorld.player.character).liftField.isActive()){
-			if(!fa.getUserData().equals("player") && !fa.getUserData().equals("wallSensor") && !fa.getUserData().equals("footSensor")){
+		if("liftField".equals( UserData.key( fb.getUserData() ) ) && ((Alien)gameWorld.player.character).liftField.isActive()){
+			if(!UserData.key( fa.getUserData() ).equals("player") && !UserData.key( fa.getUserData() ).equals("wallSensor") && !UserData.key( fa.getUserData() ).equals("footSensor")){
 				((Alien)gameWorld.player.character).liftField.addBodyToLift(fa.getBody());
 				fa.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
 			}
 		}
 		
 		//trampolina
-		if("mushroom".equals(fa.getUserData()) && "footSensor".equals(fb.getUserData())){
+		if("mushroom".equals( UserData.key( fa.getUserData() ) ) && "footSensor".equals( UserData.key( fb.getUserData() ))){
 			if(gameWorld.player.character.isAlive()){	
 				gameWorld.player.character.jump();
-				fa.setUserData("mushroomWorking");
+				fa.setUserData( new UserData("mushroomWorking") );
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
 				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
-		if("mushroom".equals(fb.getUserData()) && "footSensor".equals(fa.getUserData())){
+		if("mushroom".equals( UserData.key( fb.getUserData() ) ) && "footSensor".equals( UserData.key( fa.getUserData() ))){
 			if(gameWorld.player.character.isAlive()){	
 				gameWorld.player.character.jump();
-				fb.setUserData("mushroomWorking");
+				fb.setUserData( new UserData("mushroomWorking") );
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
 				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
 		
 		//katapulta
-		if("catapult".equals(fa.getUserData()) && "footSensor".equals(fb.getUserData())){
+		if("catapult".equals( UserData.key( fa.getUserData() ) ) && "footSensor".equals( UserData.key( fb.getUserData() ))){
 			if(gameWorld.player.character.isAlive()){		
 				gameWorld.player.character.jump();
-				fa.getBody().setUserData("catapultWorking");
+				fa.getBody().setUserData( new UserData("catapultWorking") );
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
 				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
 			}
 		}
-		if("catapult".equals(fb.getUserData()) && "footSensor".equals(fa.getUserData())){
+		if("catapult".equals( UserData.key( fb.getUserData() ) ) && "footSensor".equals( UserData.key( fa.getUserData() ))){
 			if(gameWorld.player.character.isAlive()){
 				gameWorld.player.character.jump();
-				fb.getBody().setUserData("catapultWorking");
+				fb.getBody().setUserData( new UserData("catapultWorking") );
 				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
 				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
 			}
 		}
 		
 		//coin
-		if("coin".equals(fa.getUserData()) && "wallSensor".equals(fb.getUserData()) || "coin".equals(fb.getUserData()) && "wallSensor".equals(fa.getUserData()))
+		if("coin".equals( UserData.key( fa.getUserData() ) ) && "wallSensor".equals( UserData.key( fb.getUserData() ) ) || "coin".equals( UserData.key( fb.getUserData() ) ) && "wallSensor".equals( UserData.key( fa.getUserData() )))
 		{
-			Fixture fixture = ( ((String)fa.getUserData()).equals("coin") )?fa:fb;
+			Fixture fixture = ( ( UserData.key( fa.getUserData() ) ).equals("coin") )?fa:fb;
 			
 			coinV++;
-			fixture.getBody().setUserData("inactive");
+			fixture.getBody().setUserData( new UserData("inactive") );
 			//fixture.getBody().setType(BodyType.DynamicBody);
-			//fixture.setUserData("gainedCoin");
-			//fixture.getBody().setUserData("gainedCoin");
+			//fixture.setUserData( new UserData("gainedCoin") );
+			//fixture.getBody().setUserData( new UserData("gainedCoin") );
 
 			//gameWorld.addBodyToDestroy( fixture.getBody() );
-			//fixture.getBody().setUserData("inactive");
+			//fixture.getBody().setUserData( new UserData("inactive") );
 		}
 		
 		//powerup
-		if( ( ((String)fa.getUserData()).contains("powerup") && "player".equals(fb.getUserData()) ) || ( ((String)fb.getUserData()).contains("powerup") && "player".equals(fa.getUserData()) ) )
+		if( ( ( UserData.key( fa.getUserData() ) ).contains("powerup") && "player".equals( UserData.key( fb.getUserData() ) ) ) || ( ( UserData.key( fb.getUserData() ) ).contains("powerup") && "player".equals( UserData.key( fa.getUserData() ) ) ) )
 		{
 			if( !gameWorld.player.character.isPowerupSet() )
 			{
-				Fixture fixture = ( ((String)fa.getUserData()).contains("powerup") )?fa:fb;
+				Fixture fixture = ( ( UserData.key( fa.getUserData() ) ).contains("powerup") )?fa:fb;
 				
-				String powerupKey = (((String)fixture.getUserData()).split("\\|"))[1];
+				String powerupKey = ((UserData)fixture.getUserData()).arg1;
 				gameWorld.player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
 							Logger.log(this, powerupKey);
 
-				fixture.getBody().setUserData("inactive");
+				fixture.getBody().setUserData( new UserData("inactive") );
 			}
 		}
 		
 		//meta - koniec gry
-		if( ( "finishingLine".equals(fa.getUserData()) && "player".equals(fb.getUserData()) ) || ( "finishingLine".equals(fb.getUserData()) && "player".equals(fa.getUserData()) ) )
+		if( ( "finishingLine".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) ) ) || ( "finishingLine".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ) ) ) )
 		{
 			gameWorld.player.character.endGame();
 			gameWorld.player.character.setRunning(false);
@@ -226,20 +227,20 @@ public class MyContactListener implements ContactListener{
 	public void endContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		
-		if(("footSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
-				|| ("footSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
+
+		if(("footSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
+				|| ("footSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
 			gameWorld.player.character.decrementFootSensor();
 		}
-		if(("wallSensor".equals(fa.getUserData()) && "nonkilling".equals(fb.getUserData())) 
-				|| ("wallSensor".equals(fb.getUserData()) && "nonkilling".equals(fa.getUserData()))){
+		if(("wallSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
+				|| ("wallSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
 			gameWorld.player.character.decrementWallSensor();
 		}
 		
-		if("liftField".equals(fa.getUserData())){
+		if("liftField".equals( UserData.key( fa.getUserData() ))){
 			((Alien)gameWorld.player.character).liftField.removeBodyToLift(fb.getBody());
 		}
-		if("liftField".equals(fb.getUserData())){
+		if("liftField".equals( UserData.key( fb.getUserData() ))){
 			((Alien)gameWorld.player.character).liftField.removeBodyToLift(fa.getBody());
 		}		
 	}
@@ -255,13 +256,13 @@ public class MyContactListener implements ContactListener{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 
-		if((("arrow".equals(fa.getUserData()) && ("nonkilling".equals(fb.getUserData()) || "killing".equals(fb.getUserData()))))
-				|| (("arrow".equals(fb.getUserData()) && ("nonkilling".equals(fa.getUserData()) || "killing".equals(fa.getUserData()))))){
+		if((("arrow".equals( UserData.key( fa.getUserData() ) ) && ("nonkilling".equals( UserData.key( fb.getUserData() ) ) || "killing".equals( UserData.key( fb.getUserData() )))))
+				|| (("arrow".equals( UserData.key( fb.getUserData() ) ) && ("nonkilling".equals( UserData.key( fa.getUserData() ) ) || "killing".equals( UserData.key( fa.getUserData() )))))){
 			float[] impulses = impulse.getNormalImpulses();
 			if(impulses[0] > 0.2f){
-				if("arrow".equals(fa.getUserData()))
+				if("arrow".equals( UserData.key( fa.getUserData() )))
 					arrowsToSetInactive.add(fa.getBody());
-				else if("arrow".equals(fb.getUserData()))
+				else if("arrow".equals( UserData.key( fb.getUserData() )))
 					arrowsToSetInactive.add(fb.getBody());
 			}
 				

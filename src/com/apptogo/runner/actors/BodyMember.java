@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -36,12 +37,12 @@ public class BodyMember extends Actor{
 		FixtureDef fixtureDef;
 		
 		body = world.createBody(bodyDef);
-		body.setUserData("bodyMember");
+		body.setUserData( new UserData("bodyMember") );
 
 
 		fixtureDef = Materials.bodyMemberBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData("bodyMember");
+		body.createFixture(fixtureDef).setUserData( new UserData("bodyMember") );
 		
 		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), path));
 		body.setTransform(-100, 0, 0);

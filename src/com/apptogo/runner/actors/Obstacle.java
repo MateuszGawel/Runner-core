@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -133,18 +134,25 @@ public class Obstacle extends Actor{
 		fixtureDef.shape = createShape(object);
 		
 		body = world.createBody(bodyDef);
-		body.createFixture(fixtureDef).setUserData(userData);
-		body.setUserData(userData);
+		body.createFixture(fixtureDef).setUserData( new UserData(userData) );
+		body.setUserData( new UserData(userData) );
 	}
-	public void createFixture(FixtureDef fixtureDef, String userData){
+	public void createFixture(FixtureDef fixtureDef, String userData)
+	{
 		fixtureDef.shape = createShape(object);
-		body.createFixture(fixtureDef).setUserData(userData);
+		body.createFixture(fixtureDef).setUserData( new UserData(userData) );
+	}
+	
+	public void createFixture(FixtureDef fixtureDef, UserData userData)
+	{
+		fixtureDef.shape = createShape(object);
+		body.createFixture(fixtureDef).setUserData( userData );
 	}
 	
 	public Fixture createFixture(FixtureDef material, Shape shape, String userData){
 		material.shape = shape;
 		Fixture fixture = body.createFixture(material);
-		fixture.setUserData(userData);
+		fixture.setUserData( new UserData(userData) );
 		return fixture;
 	}
 	

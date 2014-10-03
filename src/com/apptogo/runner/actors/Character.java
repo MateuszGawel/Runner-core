@@ -12,7 +12,9 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -104,33 +106,33 @@ public abstract class Character extends Actor{
 		FixtureDef fixtureDef;
 		
 		body = world.createBody(bodyDef);
-		body.setUserData("player");
+		body.setUserData( new UserData("player") );
 		
 		//main fixture
 		shape.setAsBox(bodySize.x, bodySize.y);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData("player");
+		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 		
 		//sliding fixture
 		shape.setAsBox(bodySize.y - 15/PPM, bodySize.x, new Vector2(-bodySize.x, -40/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData("player");
+		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 		body.getFixtureList().get(1).setSensor(true);
 		
 		//wall sensor
 		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData("wallSensor");
+		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
 		
 		//foot sensor
 		shape.setAsBox(25 / PPM, 20 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData("footSensor");
+		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
 	}
 	
 	

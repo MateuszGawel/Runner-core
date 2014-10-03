@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -46,13 +47,13 @@ public class LiftField extends Actor{
 		FixtureDef fixtureDef;
 		
 		fieldBody = world.createBody(bodyDef);
-		fieldBody.setUserData("liftField");
+		fieldBody.setUserData( new UserData("liftField") );
 
 		shape.setRadius(200/PPM);
 		fixtureDef = Materials.worldObjectBody;
 		fixtureDef.shape = shape;
 		fixtureDef.isSensor = true;
-		fieldBody.createFixture(fixtureDef).setUserData("liftField");
+		fieldBody.createFixture(fixtureDef).setUserData( new UserData("liftField") );
 		fieldBody.setTransform(-100f, 0, 0);
 	}
 
@@ -88,7 +89,7 @@ public class LiftField extends Actor{
 	
 	public void addBodyToLift(Body bodyToLift){
 		bodiesToLift.add(bodyToLift);
-		//Logger.log(this, "dodalem body: " + bodyToLift.getUserData());
+		//Logger.log(this, "dodalem body: " + UserData.key( bodyToLift.getUserData() ) );
 	}
 	public void removeBodyToLift(Body bodyToLift){
 		bodiesToLift.remove(bodyToLift);
@@ -112,8 +113,9 @@ public class LiftField extends Actor{
         //setWidth(arrowTexture.getWidth() / PPM);
         //setHeight(arrowTexture.getHeight() / PPM);
         //setRotation(fieldBody.getAngle() * MathUtils.radiansToDegrees);
-        for(Body bodyToLift : bodiesToLift){
-        	if(bodyToLift.getUserData() == "enemy")
+        for(Body bodyToLift : bodiesToLift)
+        {
+        	if( UserData.key( bodyToLift.getUserData() ).equals("enemy") )
         		bodyToLift.applyForceToCenter(enemyForceStrength, true);
         	else
         		bodyToLift.applyForceToCenter(obstacleForceStrength, true);

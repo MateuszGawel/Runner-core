@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -62,18 +63,18 @@ public class Arrow extends Actor implements Poolable{
 		FixtureDef fixtureDef;
 		
 		arrowBody = world.createBody(bodyDef);
-		arrowBody.setUserData("arrow");
+		arrowBody.setUserData( new UserData("arrow") );
 		
 		shape.setAsBox(bodySize.x, bodySize.y);
 		fixtureDef = Materials.arrowBody;
 		fixtureDef.shape = shape;
-		arrowBody.createFixture(fixtureDef).setUserData("arrow");
+		arrowBody.createFixture(fixtureDef).setUserData( new UserData("arrow") );
 		arrowRegion = new TextureRegion(arrowTexture);
 		
 		//shape.setAsBox(3/PPM, 3/PPM, new Vector2(12/PPM, 0), 0);
 		//fixtureDef = Materials.arrowheadBody;
 		//fixtureDef.shape = shape;
-		//arrowBody.createFixture(fixtureDef).setUserData("player");
+		//arrowBody.createFixture(fixtureDef).setUserData( new UserData("player") );
 		
 		
 
