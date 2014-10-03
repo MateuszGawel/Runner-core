@@ -74,6 +74,8 @@ public abstract class Character extends Actor{
 	protected ArrayList<BodyMember> bodyMembers;
 	
 	protected Array<Button> powerupButtons;
+
+	private boolean isPowerupSet = false;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
@@ -516,7 +518,9 @@ public abstract class Character extends Actor{
 		{
 			character.superRun();
 		}
+		
 		character.setPowerup(PowerupType.NONE);
+		this.isPowerupSet  = false;
 	}
 
 	public void setPowerup(PowerupType powerupType) 
@@ -528,5 +532,15 @@ public abstract class Character extends Actor{
 				button.toFront();
 			}
 		}
+		
+		if( powerupType != PowerupType.NONE )
+		{
+			this.isPowerupSet  = true;
+		}
+	}
+
+	public boolean isPowerupSet() 
+	{
+		return this.isPowerupSet;
 	}
 }

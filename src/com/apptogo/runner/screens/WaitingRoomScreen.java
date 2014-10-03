@@ -126,7 +126,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			{
 				Player playerA = new Player();
 				playerA.setName("MACIEK");
-				playerA.setCurrentCharacter(CharacterType.ALIEN);
+				playerA.setCharacterType(CharacterType.ALIEN);
 			
 				addPlayer( playerA );
 			
@@ -140,7 +140,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			{
 				Player playerA = new Player();
 				playerA.setName("MARIAN");
-				playerA.setCurrentCharacter(CharacterType.BANDIT);
+				playerA.setCharacterType(CharacterType.BANDIT);
 				
 				addPlayer( playerA );
 				
@@ -154,7 +154,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			{
 				Player playerA = new Player();
 				playerA.setName("WILHELM");
-				playerA.setCurrentCharacter(CharacterType.ARCHER);
+				playerA.setCharacterType(CharacterType.ARCHER);
 				
 				addPlayer( playerA );
 				
@@ -253,7 +253,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	{
 		if( currentPlayersCount < 4 )
 		{
-			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
+			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
 			
 			Label playerNameLabel = new Label(player.getName(), skin);
 			setLabelFont(playerNameLabel, FontType.BIG);

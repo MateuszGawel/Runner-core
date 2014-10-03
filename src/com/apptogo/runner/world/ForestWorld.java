@@ -25,7 +25,8 @@ public class ForestWorld extends GameWorld{
 	public Actor tree1;
 	
 	
-	public ForestWorld(String mapPath, Player player){
+	public ForestWorld(String mapPath, Player player)
+	{
 		super(mapPath, player);
 		super.world.setGravity(GRAVITY);
 		createBackground();
@@ -37,13 +38,13 @@ public class ForestWorld extends GameWorld{
 		tree4.setPosition(0, 0);
 		background.addActor(tree4);
 		
-		tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -0.03f, mapSize, character, 0, 190/PPM);
+		tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -0.03f, mapSize, player.character, 0, 190/PPM);
 		background.addActor(tree3);
 		
-		tree2 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree2.png"), -0.5f, -0.07f, mapSize, character, 0, 120/PPM);
+		tree2 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree2.png"), -0.5f, -0.07f, mapSize, player.character, 0, 120/PPM);
 		background.addActor(tree2);
 		
-		tree1 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree1.png"), -0.8f, -0.15f, mapSize, character, 0, 80/PPM);
+		tree1 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree1.png"), -0.8f, -0.15f, mapSize, player.character, 0, 80/PPM);
 		background.addActor(tree1);
 	}
 	

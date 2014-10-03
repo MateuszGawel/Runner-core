@@ -81,7 +81,7 @@ public class LoadingScreen extends BaseScreen{
 			else if( screenToLoad == ScreenType.SCREEN_GAME_MULTI )
 			{
 				loadPlayer();
-				setBackground( CharacterType.convertToLoadingScreenBackground( player.getCurrentCharacter() ) );
+				setBackground( CharacterType.convertToLoadingScreenBackground( player.getCharacterType() ) );
 			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");

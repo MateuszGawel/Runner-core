@@ -21,7 +21,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +31,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public abstract class GameWorld 
 {
-
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
@@ -51,8 +52,7 @@ public abstract class GameWorld
 	public StretchViewport backgroundStretchViewport;
 	public OrthographicCamera backgroundCamera;
 	
-	private Player player;
-	public Character character;
+	public Player player;
 	public HashMap<String, Character> enemies;
 	public Group background;
 	protected Vector2 mapSize;
@@ -86,17 +86,18 @@ public abstract class GameWorld
 		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);
 		backgroundStage.addActor(background);
-		createWorld(mapPath, player.getCurrentCharacter());
+		
+		createWorld(mapPath, player);
 		
 		fpsLogger = new FPSLogger();
 	}
 	
 	public abstract void dispose();
 	
-	private void createWorld(String mapPath, CharacterType characterType)
+	private void createWorld(String mapPath, Player player)
 	{
-		character = createCharacter(characterType);
-		worldStage.addActor(character);
+		player.character = createCharacter( player.getCharacterType() );
+		worldStage.addActor( player.character );
 		
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
@@ -133,7 +134,7 @@ public abstract class GameWorld
 	{
 		if( Input.isPressed() ) 
 		{
-			if( character.start() ) NotificationManager.getInstance().notifyStartRunning();
+			if( player.character.start() ) NotificationManager.getInstance().notifyStartRunning();
 		}
 	}
 	
@@ -157,13 +158,13 @@ public abstract class GameWorld
     private void handleBodyToDestroy()
     {
     	for(Body body: bodiesToDestroy)
-    	{
-    		for(Fixture fixture: body.getFixtureList())
-    		{
-    			body.destroyFixture(fixture);
-    		}
-    		
-    		world.destroyBody(body);
+    	{Logger.log(this, "BANG");
+    		//for(Fixture fixture: body.getFixtureList())
+    		//{
+    			//body.destroyFixture(fixture);
+    		//}
+
+    		//world.destroyBody(body);
     	}
     	
     	bodiesToDestroy.clear();
@@ -181,7 +182,7 @@ public abstract class GameWorld
 		}
     	else //dodajemy wroga
     	{
-    		Character enemyCharacter = createCharacter( enemy.getCurrentCharacter() );
+    		Character enemyCharacter = createCharacter( enemy.getCharacterType() );
     		enemies.put(enemy.getName(), enemyCharacter);
     		
     		worldStage.addActor(enemyCharacter);

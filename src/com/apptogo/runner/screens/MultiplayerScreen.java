@@ -67,7 +67,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);
-		NotificationManager.getInstance().prepareManager(player.getName(), player.getCurrentCharacter());
+		NotificationManager.getInstance().prepareManager(player.getName(), player.getCharacterType());
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
             }
 		});
 		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), 275.0f, -300.0f, true);
 		currentCharacterAnimation.setVisible(true);
 		
 		createManageWidget();
@@ -128,7 +128,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		currentCharacterAnimation.clear();
 		currentCharacterAnimation.remove();
 		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCurrentCharacter(), 275.0f, -300.0f, true);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), 275.0f, -300.0f, true);
 		
 		currentCharacterAnimation.setVisible(true);
 		
@@ -155,7 +155,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageArcherAnimation.stop();
 				manageAlienAnimation.stop();
 				
-				player.setCurrentCharacter(CharacterType.BANDIT);
+				player.setCharacterType(CharacterType.BANDIT);
 				SaveManager.getInstance().savePlayer(player);
 				
 				changeCurrentCharacterAnimation();
@@ -173,7 +173,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageArcherAnimation.start();
 				manageAlienAnimation.stop();
 				
-				player.setCurrentCharacter(CharacterType.ARCHER);
+				player.setCharacterType(CharacterType.ARCHER);
 				SaveManager.getInstance().savePlayer(player);
 				
 				changeCurrentCharacterAnimation();
@@ -191,7 +191,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageArcherAnimation.stop();
 				manageAlienAnimation.start();
 				
-				player.setCurrentCharacter(CharacterType.ALIEN);
+				player.setCharacterType(CharacterType.ALIEN);
 				SaveManager.getInstance().savePlayer(player);
 				
 				changeCurrentCharacterAnimation();

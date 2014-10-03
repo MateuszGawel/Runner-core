@@ -201,7 +201,7 @@ public class CampaignScreen extends BaseScreen
         		{
     	            public void clicked(InputEvent event, float x, float y) 
     	            {
-    	            	player.setCurrentCharacter( GameWorldType.convertToCharacterType( level.worldType ) );
+    	            	player.setCharacterType( GameWorldType.convertToCharacterType( level.worldType ) );
     	            	
     	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
     	            }

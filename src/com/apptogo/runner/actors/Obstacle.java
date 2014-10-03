@@ -29,8 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Obstacle extends Actor{
 
-	private Body body;
-	private World world; 
+	protected Body body;
+	protected World world; 
 	private MapObject object;
 	private BodyDef bodyDef;
 	private Vector2 framePosition = new Vector2();
@@ -84,7 +84,8 @@ public class Obstacle extends Actor{
 		return shape;
 	}
 	
-	private Shape getShape(EllipseMapObject object){
+	private Shape getShape(EllipseMapObject object)
+	{
 		Ellipse ellipse = object.getEllipse();
 		CircleShape ellipseShape = new CircleShape();
 

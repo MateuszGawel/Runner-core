@@ -252,6 +252,7 @@ public class ResourcesManager
 		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
 		
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
+		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/coin.pack" );
 
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );

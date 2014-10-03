@@ -79,7 +79,7 @@ public class ScreensManager {
 			{
 				for(int i = 0; i < enemies.size; i++) 
 				{
-					characterTypes.add( enemies.get(i).getCurrentCharacter() );
+					characterTypes.add( enemies.get(i).getCharacterType() );
 				}
 			}
 			else //to oznacza ze jestesmy w singlu wiec musimy dopasowac characterType do planszy

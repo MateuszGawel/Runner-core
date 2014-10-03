@@ -3,6 +3,7 @@ package com.apptogo.runner.player;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
@@ -13,7 +14,8 @@ public class Player
 	private String name;
 	private String password;
 	
-	private CharacterType currentCharacter;
+	private CharacterType characterType;
+	public Character character;
 	
 	private HashMap<String, Integer> levels;
 	
@@ -25,11 +27,12 @@ public class Player
 		statistics = new Statistics();
 	}
 	
-	public Player(String name, CharacterType currentCharacter)
+	public Player(String name, CharacterType characterType)
 	{
 		this();
 		this.name = name;
-		this.currentCharacter = currentCharacter;
+		this.characterType = characterType;
+		this.character = null;
 	}
 		
 	public Statistics getStatistics()
@@ -76,11 +79,13 @@ public class Player
 		this.password = password;
 	}
 
-	public CharacterType getCurrentCharacter() {
-		return currentCharacter;
+	public CharacterType getCharacterType() 
+	{
+		return characterType;
 	}
-	public void setCurrentCharacter(CharacterType currentCharacter) {
-		this.currentCharacter = currentCharacter;
+	public void setCharacterType(CharacterType currentCharacter) 
+	{
+		this.characterType = currentCharacter;
 	}
 
 	/*ta funkcja ma sens wtedy kiedy przenosimy logike obliczania gwiazdek do campaignScreena ale czy to ma sens? takie rozwiazanie np praktycznie wymusza liniowa zaleznosc pkt od gwiazdek*/

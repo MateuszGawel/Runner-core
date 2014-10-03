@@ -7,8 +7,8 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 
-public class GameScreenSingle extends GameScreen{
-		
+public class GameScreenSingle extends GameScreen
+{		
 	public GameScreenSingle(Runner runner)
 	{
 		super(runner);
@@ -17,7 +17,7 @@ public class GameScreenSingle extends GameScreen{
 		
 	public void prepare() 
 	{
-		player.setCurrentCharacter( GameWorldType.convertToCharacterType( level.worldType ) );
+		player.setCharacterType( GameWorldType.convertToCharacterType( level.worldType ) );
 		
 		super.prepare();	
 		

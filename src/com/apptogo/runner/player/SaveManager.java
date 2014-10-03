@@ -57,7 +57,7 @@ public class SaveManager
 		player.setName(playerName);
 		player.setPassword(playerPassword);
 		player.setUnlockedLevels(unserializeHashMap( unlockedLevels ) );
-		player.setCurrentCharacter(currentCharacter);
+		player.setCharacterType(currentCharacter);
 		
 		if( save.contains("STATISTICS") )
 		{
@@ -72,7 +72,7 @@ public class SaveManager
 		save.putString("PLAYER_NAME", player.getName());
 		save.putString("PLAYER_PASSWORD", player.getPassword());
 		save.putString("UNLOCKED_LEVELS", serializeHashMap( player.getUnlockedLevels() ) );
-		save.putString("CURRENT_CHARACTER", player.getCurrentCharacter().toString());
+		save.putString("CURRENT_CHARACTER", player.getCharacterType().toString());
 		save.putString("STATISTICS", player.getStatistics().serialize());
 		save.flush();
 		

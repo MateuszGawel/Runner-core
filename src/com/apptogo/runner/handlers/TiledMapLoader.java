@@ -11,6 +11,7 @@ import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
+import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
@@ -200,6 +201,7 @@ public class TiledMapLoader
 		while(objectIt.hasNext()) 
 		{
 			MapObject object = objectIt.next();
+						
 			if (object instanceof TextureMapObject)
 			{
 				continue;
@@ -316,6 +318,15 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "coins") )
+			{
+				Array<Body> coinBodies = createCoins(object);
+				
+				for(Body coinBody: coinBodies)
+				{
+					bodies.add( coinBody );
+				}
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -401,6 +412,45 @@ public class TiledMapLoader
 	{
 		Powerup powerup = new Powerup(object, world, gameWorld);
 		return powerup.getBody();
+	}
+	
+	private Array<Body> createCoins(MapObject object)
+	{
+		Array<Body> coinBodies = new Array<Body>();
+		
+		((EllipseMapObject)object).getEllipse().setSize(22.0f, 22.0f);
+		
+		int coinsInRow = 1;
+		int coinsInColumn = 1;
+		
+		if( object.getProperties().containsKey("coinsInRow") )
+		{
+			coinsInRow = new Integer( (String)object.getProperties().get("coinsInRow") );
+		}
+		
+		if( object.getProperties().containsKey("coinsInColumn") )
+		{
+			coinsInColumn = new Integer( (String)object.getProperties().get("coinsInColumn") );
+		}
+		
+		float startY = ((EllipseMapObject)object).getEllipse().y;
+		
+		for(int i = 0; i < coinsInRow; i++)
+		{
+			((EllipseMapObject)object).getEllipse().x += 32.0f;
+			((EllipseMapObject)object).getEllipse().y = startY;
+			
+			for(int k = 0; k < coinsInColumn; k++)
+			{
+				((EllipseMapObject)object).getEllipse().y += 32.0f;
+				
+				Coin coin = new Coin(object, world, gameWorld);
+				
+				coinBodies.add( coin.getBody() );
+			}
+		}
+		
+		return coinBodies;
 	}
 	
 	private void addObjectToJointHandles(MapObject object, Body body)

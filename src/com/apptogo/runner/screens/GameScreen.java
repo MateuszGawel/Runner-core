@@ -73,10 +73,10 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createGui()
 	{		
-		jumpButton = world.character.getJumpButton();
-		slideButton = world.character.getSlideButton();
+		jumpButton = world.player.character.getJumpButton();
+		slideButton = world.player.character.getSlideButton();
 
-		powerupButtons = world.character.initializePowerupButtons();
+		powerupButtons = world.player.character.initializePowerupButtons();
 		
 		guiStage.addActor(slideButton);
 		guiStage.addActor(jumpButton);		
@@ -86,7 +86,7 @@ public abstract class GameScreen extends BaseScreen{
 			guiStage.addActor(powerupButton);
 		}
 		
-		world.character.setPowerup(PowerupType.NONE);
+		world.player.character.setPowerup(PowerupType.NONE);
 	}
 	
 	public void step() 
