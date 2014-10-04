@@ -52,7 +52,7 @@ public class Obstacle extends Actor{
 	
 	public Obstacle(MapObject object, World world, String texturePath){	
 		this(object, world);
-		
+		this.animate = false;
 		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), texturePath));
 	}
 	
