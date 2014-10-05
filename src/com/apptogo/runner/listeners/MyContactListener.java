@@ -22,175 +22,175 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class MyContactListener implements ContactListener{
+public class MyContactListener implements ContactListener
+{
 	private GameWorld gameWorld;
 	private World world;
+	
 	private ArrayList<Body> arrowsToSetInactive = new ArrayList<Body>();
 	private ArrayList<Body> barrelsToSetActive = new ArrayList<Body>();
-	int coinV = 0;
-	public MyContactListener(GameWorld gameWorld, World world){
+	
+	public MyContactListener(GameWorld gameWorld, World world)
+	{
 		this.world = world;
 		this.gameWorld = gameWorld;
 	}
 	
 	@Override
-	public void beginContact(Contact contact) {
+	public void beginContact(Contact contact)
+	{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		//kontakt z przeszkoda ktora tylko zabija mozna zamienic w taki sposob zeby ich userdata od razu okreslalo typ smierci
 		
 		//smierc od zabijajacych
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingTop".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
-				|| ("killingTop".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
-			
-			if( gameWorld.player.character.dieTop())
+		if( checkFixturesTypes(fa, fb, "killingTop", "player") )
+		{	
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
-				NotificationManager.getInstance().notifyDieTop();
+				if( gameWorld.player.character.dieTop())
+				{
+					NotificationManager.getInstance().notifyDieTop();
+				}
 			}
-			
 		}
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("killingBottom".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
-				|| ("killingBottom".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
-			
-			if( gameWorld.player.character.dieBottom())
+		
+		if( checkFixturesTypes(fa, fb, "killingBottom", "player") )
+		{
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
-				NotificationManager.getInstance().notifyDieBottom();
+				if( gameWorld.player.character.dieBottom())
+				{
+					NotificationManager.getInstance().notifyDieBottom();
+				}
 			}
-			
 		}
 		
 		
 		//smierc od ogniska
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bonfire".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
-				|| ("bonfire".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
-			
-			if( gameWorld.player.character.dieDismemberment())
+		if( checkFixturesTypes(fa, fb, "bonfire", "player") )
+		{
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
-				NotificationManager.getInstance().notifyDieBottom();
+				if( gameWorld.player.character.dieDismemberment())
+				{
+					NotificationManager.getInstance().notifyDieBottom();
+				}
 			}
-			
 		}
 		
 		//smierc od krzaczka
-		if(!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() && ("bush".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) )
-				|| ("bush".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))))){
-			
-			if( gameWorld.player.character.dieTop())
+		if( checkFixturesTypes(fa, fb, "bush", "player") )
+		{
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
-				NotificationManager.getInstance().notifyDieBottom();
+				if( gameWorld.player.character.dieTop())
+				{
+					NotificationManager.getInstance().notifyDieBottom();
+				} 
 			}
-			
 		}
 		
 		//skok i sciany
-		if(("footSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ) )) 
-				|| ("footSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
+		if( checkFixturesTypes(fa, fb, "footSensor", "nonkilling") )
+		{
 			gameWorld.player.character.incrementFootSensor();
 			gameWorld.player.character.land();
 		}
-		if(("wallSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
-				|| ("wallSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals(UserData.key( fa.getUserData() )))){
+		
+		if( checkFixturesTypes(fa, fb, "wallSensor", "nonkilling") )
+		{
 			gameWorld.player.character.incrementWallSensor();
 		}
 		
 		//zmienianie typu beczek
-		if(("barrel".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) ) 
-				|| ("barrel".equals( UserData.key( fb.getUserData() ) ) && ("player".equals( UserData.key( fa.getUserData() )))))){
-			barrelsToSetActive.add(fb.getBody());
-		}
-		if(("barrel".equals( UserData.key( fa.getUserData() ) ) && "barrel".equals( UserData.key( fb.getUserData() ))) 
-				|| ("barrel".equals( UserData.key( fb.getUserData() ) ) && "barrel".equals( UserData.key( fa.getUserData() )))){
-			barrelsToSetActive.add(fb.getBody());
-			barrelsToSetActive.add(fa.getBody());
+		if( checkFixturesTypes(fa, fb, "barrel", "player") )
+		{
+			Fixture fixture = getFixtureByType(fa, fb, "barrel");
+			
+			barrelsToSetActive.add( fixture.getBody() );
 		}
 		
 		//smierc od beczek
-		if("barrel".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ))){
-			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
-				if((Math.abs(fa.getBody().getLinearVelocity().x) > 5f || fa.getBody().getLinearVelocity().x > 5f) && gameWorld.player.character.dieBottom() )
+		if( checkFixturesTypes(fa, fb, "barrel", "player") )
+		{
+			if( !gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() )
+			{
+				Fixture fixture = getFixtureByType(fa, fb, "barrel");
+				
+				if( (Math.abs(fixture.getBody().getLinearVelocity().x) > 5f || fixture.getBody().getLinearVelocity().x > 5f) && gameWorld.player.character.dieBottom() )
 				{
 					NotificationManager.getInstance().notifyDieBottom();
 				}
 			}
 		}
-		if("barrel".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))){
-			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
-				if((Math.abs(fb.getBody().getLinearVelocity().x) > 5f || fb.getBody().getLinearVelocity().x > 5f) && gameWorld.player.character.dieBottom() )
-				{
-					NotificationManager.getInstance().notifyDieBottom();
-				}
-			}
-		}
+		
 		//smierc od je¿a
-		if("hedgehog".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ))){
-			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
-				gameWorld.player.character.dieBottom();
-				NotificationManager.getInstance().notifyDieBottom();
-			}
-		}
-		if("hedgehog".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ))){
-			if((!gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive())){		
-				gameWorld.player.character.dieBottom();
-				NotificationManager.getInstance().notifyDieBottom();
+		if( checkFixturesTypes(fa, fb, "hedgehog", "player") )
+		{
+			if( !gameWorld.player.character.isImmortal() && gameWorld.player.character.isAlive() )
+			{		
+				if( gameWorld.player.character.dieBottom() )
+				{
+					NotificationManager.getInstance().notifyDieBottom();
+				}
 			}
 		}
 		
 		//podnoszenie aliena
-		if("liftField".equals( UserData.key( fa.getUserData() ) ) && ((Alien)gameWorld.player.character).liftField.isActive()){
-			if(!UserData.key( fb.getUserData() ).equals("player") && !UserData.key( fa.getUserData() ).equals("wallSensor") && !UserData.key( fa.getUserData() ).equals("footSensor")){
-				((Alien)gameWorld.player.character).liftField.addBodyToLift(fb.getBody());
-				fb.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);;
+		if( checkIsOneOfType(fa, fb, "liftField") && ((Alien)gameWorld.player.character).liftField.isActive() )
+		{
+			Fixture fixture = getFixtureByType(fa, fb, "liftField");
+			fixture = ( fixture == fb )?fa:fb; //bo chcemy fixture tego drugiego a nie liftField
+			
+			String fixtureType = UserData.key( fb.getUserData() );
+			
+			if( !( fixtureType.equals("player") || fixtureType.equals("wallSensor") || fixtureType.equals("footSensor") ) )
+			{
+				((Alien)gameWorld.player.character).liftField.addBodyToLift( fixture.getBody() );
+				
+				fixture.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
 			}
 		}
-		if("liftField".equals( UserData.key( fb.getUserData() ) ) && ((Alien)gameWorld.player.character).liftField.isActive()){
-			if(!UserData.key( fa.getUserData() ).equals("player") && !UserData.key( fa.getUserData() ).equals("wallSensor") && !UserData.key( fa.getUserData() ).equals("footSensor")){
-				((Alien)gameWorld.player.character).liftField.addBodyToLift(fa.getBody());
-				fa.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
-			}
-		}
-		
+				
 		//trampolina
-		if("mushroom".equals( UserData.key( fa.getUserData() ) ) && "footSensor".equals( UserData.key( fb.getUserData() ))){
-			if(gameWorld.player.character.isAlive()){	
+		if( checkFixturesTypes(fa, fb, "mushroom", "footSensor") )
+		{
+			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");
+			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");
+			
+			if( gameWorld.player.character.isAlive() )
+			{	
 				gameWorld.player.character.jump();
-				fa.setUserData( new UserData("mushroomWorking") );
-				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
-				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
-			}
-		}
-		if("mushroom".equals( UserData.key( fb.getUserData() ) ) && "footSensor".equals( UserData.key( fa.getUserData() ))){
-			if(gameWorld.player.character.isAlive()){	
-				gameWorld.player.character.jump();
-				fb.setUserData( new UserData("mushroomWorking") );
-				float v0 = (float) sqrt(-world.getGravity().y*2 * 8 );
-				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 10, v0);
+				mushroomFixture.setUserData( new UserData("mushroomWorking") );
+				
+				float v0 = (float) sqrt( -world.getGravity().y * 16 );
+				
+				footSensorFixture.getBody().setLinearVelocity( footSensorFixture.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
 		
 		//katapulta
-		if("catapult".equals( UserData.key( fa.getUserData() ) ) && "footSensor".equals( UserData.key( fb.getUserData() ))){
-			if(gameWorld.player.character.isAlive()){		
+		if( checkFixturesTypes(fa, fb, "catapult", "footSensor") )
+		{
+			Fixture catapultFixture = getFixtureByType(fa, fb, "catapult");
+			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");
+			
+			if(gameWorld.player.character.isAlive())
+			{		
 				gameWorld.player.character.jump();
-				fa.getBody().setUserData( new UserData("catapultWorking") );
-				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
-				fb.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
-			}
-		}
-		if("catapult".equals( UserData.key( fb.getUserData() ) ) && "footSensor".equals( UserData.key( fa.getUserData() ))){
-			if(gameWorld.player.character.isAlive()){
-				gameWorld.player.character.jump();
-				fb.getBody().setUserData( new UserData("catapultWorking") );
-				float v0 = (float) sqrt(-world.getGravity().y*2 * 6 );
-				fa.getBody().setLinearVelocity(fb.getBody().getLinearVelocity().x + 20, v0);
+				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
+				
+				float v0 = (float) sqrt( -world.getGravity().y * 12 );
+				
+				footSensorFixture.getBody().setLinearVelocity( catapultFixture.getBody().getLinearVelocity().x + 20, v0);
 			}
 		}
 		
 		//coin
-		if("coin".equals( UserData.key( fa.getUserData() ) ) && "wallSensor".equals( UserData.key( fb.getUserData() ) ) || "coin".equals( UserData.key( fb.getUserData() ) ) && "wallSensor".equals( UserData.key( fa.getUserData() )))
+		if( checkFixturesTypes(fa, fb, "coin", "wallSensor") )
 		{
-			Fixture fixture = ( ( UserData.key( fa.getUserData() ) ).equals("coin") )?fa:fb;
+			Fixture fixture = getFixtureByType(fa, fb, "coin");
 			
-			coinV++;
 			fixture.getBody().setUserData( new UserData("inactive") );
 			//fixture.getBody().setType(BodyType.DynamicBody);
 			//fixture.setUserData( new UserData("gainedCoin") );
@@ -201,22 +201,21 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		//powerup
-		if( ( ( UserData.key( fa.getUserData() ) ).contains("powerup") && "player".equals( UserData.key( fb.getUserData() ) ) ) || ( ( UserData.key( fb.getUserData() ) ).contains("powerup") && "player".equals( UserData.key( fa.getUserData() ) ) ) )
+		if( checkFixturesTypes(fa, fb, "powerup", "player") )
 		{
 			if( !gameWorld.player.character.isPowerupSet() )
 			{
-				Fixture fixture = ( ( UserData.key( fa.getUserData() ) ).contains("powerup") )?fa:fb;
+				Fixture fixture = getFixtureByType(fa, fb, "powerup");
 				
 				String powerupKey = ((UserData)fixture.getUserData()).arg1;
 				gameWorld.player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
-							Logger.log(this, powerupKey);
 
 				fixture.getBody().setUserData( new UserData("inactive") );
 			}
 		}
 		
 		//meta - koniec gry
-		if( ( "finishingLine".equals( UserData.key( fa.getUserData() ) ) && "player".equals( UserData.key( fb.getUserData() ) ) ) || ( "finishingLine".equals( UserData.key( fb.getUserData() ) ) && "player".equals( UserData.key( fa.getUserData() ) ) ) )
+		if( checkFixturesTypes(fa, fb, "player", "finishingLine") )
 		{
 			gameWorld.player.character.endGame();
 			gameWorld.player.character.setRunning(false);
@@ -224,60 +223,107 @@ public class MyContactListener implements ContactListener{
 	}
 
 	@Override
-	public void endContact(Contact contact) {
+	public void endContact(Contact contact) 
+	{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 
-		if(("footSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
-				|| ("footSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
+		if( checkFixturesTypes(fa,  fb, "footSensor", "nonkilling") )
+		{
 			gameWorld.player.character.decrementFootSensor();
 		}
-		if(("wallSensor".equals( UserData.key( fa.getUserData() ) ) && "nonkilling".equals( UserData.key( fb.getUserData() ))) 
-				|| ("wallSensor".equals( UserData.key( fb.getUserData() ) ) && "nonkilling".equals( UserData.key( fa.getUserData() )))){
+		
+		if( checkFixturesTypes(fa,  fb, "wallSensor", "nonkilling") )
+		{
 			gameWorld.player.character.decrementWallSensor();
 		}
 		
-		if("liftField".equals( UserData.key( fa.getUserData() ))){
-			((Alien)gameWorld.player.character).liftField.removeBodyToLift(fb.getBody());
+		if( checkIsOneOfType(fa, fb, "liftField") )
+		{
+			Fixture fixture = getFixtureByType(fa, fb, "liftField");
+			
+			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
 		}
-		if("liftField".equals( UserData.key( fb.getUserData() ))){
-			((Alien)gameWorld.player.character).liftField.removeBodyToLift(fa.getBody());
-		}		
 	}
 
 	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {
-		// TODO Auto-generated method stub
-		
+	public void preSolve(Contact contact, Manifold oldManifold) 
+	{	
 	}
 
 	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {
+	public void postSolve(Contact contact, ContactImpulse impulse) 
+	{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 
-		if((("arrow".equals( UserData.key( fa.getUserData() ) ) && ("nonkilling".equals( UserData.key( fb.getUserData() ) ) || "killing".equals( UserData.key( fb.getUserData() )))))
-				|| (("arrow".equals( UserData.key( fb.getUserData() ) ) && ("nonkilling".equals( UserData.key( fa.getUserData() ) ) || "killing".equals( UserData.key( fa.getUserData() )))))){
+		if( checkFixturesTypes(fa, fb, "arrow", "nonkilling") || checkFixturesTypes(fa, fb, "arrow", "killing") )
+		{
 			float[] impulses = impulse.getNormalImpulses();
-			if(impulses[0] > 0.2f){
-				if("arrow".equals( UserData.key( fa.getUserData() )))
-					arrowsToSetInactive.add(fa.getBody());
-				else if("arrow".equals( UserData.key( fb.getUserData() )))
-					arrowsToSetInactive.add(fb.getBody());
-			}
-				
+			
+			if(impulses[0] > 0.2f)
+			{
+				Fixture fixture = getFixtureByType(fa, fb, "arrow");
+				arrowsToSetInactive.add( fixture.getBody() );
+			}	
 		}		
 	}
 	
-	public void postStep(){
-		for(Body body : arrowsToSetInactive){
+	public void postStep()
+	{
+		for(Body body : arrowsToSetInactive)
+		{
 			body.setActive(false);
 		}
 		arrowsToSetInactive.clear();
 		
-		for(Body body : barrelsToSetActive){
+		for(Body body : barrelsToSetActive)
+		{
 			body.setType(BodyType.DynamicBody);
 		}
 		barrelsToSetActive.clear();
+	}
+	
+	private boolean checkFixturesTypes(Fixture fixtureA, Fixture fixtureB, String typeA, String typeB)
+	{
+		if //wiem polecialem ale tego gowna nie da sie inaczej rozczytac
+		(
+			( 
+					( UserData.key( fixtureA.getUserData() ) ).equals( typeA ) 
+					&& 
+					( UserData.key( fixtureB.getUserData() ) ).equals( typeB ) 
+			) 
+			|| 
+			( 
+					( UserData.key( fixtureA.getUserData() ) ).equals( typeB ) 
+					&& 
+					( UserData.key( fixtureB.getUserData() ) ).equals( typeA ) 
+			)
+		)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean checkIsOneOfType(Fixture fixtureA, Fixture fixtureB, String type)
+	{
+		if
+		(
+				( UserData.key( fixtureA.getUserData() ) ).equals( type ) 
+				||
+				( UserData.key( fixtureB.getUserData() ) ).equals( type ) 
+		)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private Fixture getFixtureByType(Fixture fixtureA, Fixture fixtureB, String type)
+	{
+		return ( ( UserData.key( fixtureA.getUserData() ) ).equals( type ) )?fixtureA:fixtureB;
 	}
 }
