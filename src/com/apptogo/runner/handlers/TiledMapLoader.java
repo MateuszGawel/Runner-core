@@ -15,6 +15,7 @@ import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
+import com.apptogo.runner.actors.Rock;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -224,7 +225,7 @@ public class TiledMapLoader
 				{
 					bodyDef.type = BodyDef.BodyType.DynamicBody;
 				}
-				
+				Logger.log(this, "tworze ");
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
@@ -328,6 +329,12 @@ public class TiledMapLoader
 					bodies.add( coinBody );
 				}
 			}
+			else if( checkObjectType(object, "rock") )
+			{
+				body = createRock(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -355,8 +362,11 @@ public class TiledMapLoader
 					fixture = body.createFixture(obstacleFixture);
 				}
 				
-				fixture.setUserData( new UserData( object.getProperties().get("type") ) );
-				body.setUserData( new UserData( object.getProperties().get("type") ) );
+				Object type = object.getProperties().get("type");
+				if(type!=null){
+					fixture.setUserData( new UserData( object.getProperties().get("type") ) );
+					body.setUserData( new UserData( object.getProperties().get("type") ) );
+				}
 				
 				if( checkObjectType(object, "jointHandle") )
 				{
@@ -413,6 +423,12 @@ public class TiledMapLoader
 	{
 		Powerup powerup = new Powerup(object, world, gameWorld);
 		return powerup.getBody();
+	}
+	
+	private Body createRock(MapObject object)
+	{
+		Rock rock = new Rock(object, world, gameWorld);
+		return rock.getBody();
 	}
 	
 	private Array<Body> createCoins(MapObject object)
