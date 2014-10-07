@@ -92,7 +92,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), players );
+            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "", "0", GameWorldType.WILDWEST), players );
             }
         });
         

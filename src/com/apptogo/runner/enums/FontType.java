@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public enum FontType
-{
-	
+{	
 	BIG,
 	MEDIUM,
 	SMALL,

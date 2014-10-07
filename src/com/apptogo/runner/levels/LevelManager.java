@@ -74,11 +74,13 @@ public class LevelManager {
 			Array<Level> levels = getLevels( world, campaign );
 			
 			String levelWorldName = world.getAttribute("name");
+			String levelWorldLabel = world.getAttribute("label");
 			GameWorldType levelWorldType = null;
 
 			levelWorldType = GameWorldType.parseFromString( levelWorldName );
 			
 			LevelWorld levelWorld = new LevelWorld( levelWorldName, levelWorldType );
+			levelWorld.setLabel(levelWorldLabel);
 			levelWorld.setLevels( levels );
 			
 			worlds.add( levelWorld );
@@ -105,7 +107,7 @@ public class LevelManager {
 		{
 			XmlReader.Element level = levelsList.get(i);
 			
-			levels.add( new Level( level.getAttribute("buttonLabel"), level.getAttribute("mapPath"), level.getAttribute("unlockKey") ) );
+			levels.add( new Level( level.getAttribute("buttonLabel"), level.getAttribute("mapPath"), level.getAttribute("unlockKey"), level.getAttribute("requiredLevels"), level.getAttribute("requiredStars") ) );
 		}
 		
 		return levels;

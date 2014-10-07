@@ -21,9 +21,14 @@ public class ObjectAnimation extends Actor
 	
 	protected boolean scaleFrames;
 	protected float scale;
+	
+	protected int progress = 0;
+	protected int framesCount = 0;
 		
 	public ObjectAnimation(String atlasName, String frameName, int runningFramesCount, float x, float y, boolean doStart, boolean loop)
 	{				
+		this.framesCount = runningFramesCount;
+		
 		this.setPosition(x, y);
 		
 		this.animationManager = new AnimationManager( atlasName );

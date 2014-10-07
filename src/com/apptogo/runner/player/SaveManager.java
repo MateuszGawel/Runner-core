@@ -1,7 +1,13 @@
 package com.apptogo.runner.player;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
@@ -9,7 +15,11 @@ import com.apptogo.runner.exception.AppWarpConnectionException;
 import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.googlecode.gwt.crypto.bouncycastle.DataLengthException;
+import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
+import com.googlecode.gwt.crypto.client.TripleDesCipher;
+import com.googlecode.gwt.crypto.client.TripleDesKeyGenerator;
 
 /** klasa do zapisywania Playera NA DYSKU z opcja synchronizacji z appWarpem */
 public class SaveManager 
@@ -29,54 +39,74 @@ public class SaveManager
 	}
 	
 	private Preferences save;
-	private long lastSynchronization;
+	private TripleDesCipher encryptor; 	
 	
-	private final String DEFAULT_NAME = "";
-	private final String DEFAULT_PASSWORD = "";
-	private final String DEFAULT_UNLOCKED_LEVELS = "map1.0,200;map7.0,0;";
-	private final String DEFAULT_CURRENT_CHARACTER = CharacterType.BANDIT.toString();
-	private final String DEFAULT_STATISTICS = (new Statistics()).serialize();
-	
-	/** Oczywiscie trzeba wymyslic jakas bezpieczniejsza metode niz Preferences ale tym sie mozna zajac potem - teraz byle dzialalo 'na zewnatrz' */
 	public SaveManager()
 	{
-		save = Gdx.app.getPreferences("gameSave");
-		save.remove("PLAYER_CURRENT_CHARACTER");
+		save = Gdx.app.getPreferences("save");
+		
+		initializeEncryptor();
 	}
 	
-	
 	public Player loadPlayer()
-	{
-		Player player = new Player();
-
-		String playerName = save.getString("PLAYER_NAME", "");
-		String playerPassword = save.getString("PLAYER_PASSWORD", "");
-		String unlockedLevels = DEFAULT_UNLOCKED_LEVELS;//save.getString("UNLOCKED_LEVELS", DEFAULT_UNLOCKED_LEVELS);
-		CharacterType currentCharacter = CharacterType.parseFromString( save.getString("CURRENT_CHARACTER", DEFAULT_CURRENT_CHARACTER ) );
+	{		
+		Player player = new Player("empty", CharacterType.BANDIT);
+		Json json = new Json();
 		
-		player.setName(playerName);
-		player.setPassword(playerPassword);
-		player.setUnlockedLevels(unserializeHashMap( unlockedLevels ) );
-		player.setCharacterType(currentCharacter);
-		
-		if( save.contains("STATISTICS") )
+		if( save.getString("PLAYER", "").equals("") )
 		{
-			player.getStatistics().unserialize( save.getString("STATISTICS", DEFAULT_STATISTICS) );
+			savePlayer(player);
 		}
-						
+		
+		String serializedPlayer = save.getString("PLAYER");
+		serializedPlayer = decryptString(serializedPlayer);
+		Logger.log(this, getDate());
+		player = json.fromJson(Player.class, serializedPlayer);
+							
 		return player;
 	}
 	
 	public boolean savePlayer(Player player)
 	{
-		save.putString("PLAYER_NAME", player.getName());
-		save.putString("PLAYER_PASSWORD", player.getPassword());
-		save.putString("UNLOCKED_LEVELS", serializeHashMap( player.getUnlockedLevels() ) );
-		save.putString("CURRENT_CHARACTER", player.getCharacterType().toString());
-		save.putString("STATISTICS", player.getStatistics().serialize());
+		Json json = new Json();
+		
+		String playerToSerialize = json.prettyPrint(player);
+		playerToSerialize = encryptString(playerToSerialize);
+		
+		save.putString("PLAYER", playerToSerialize );
+		save.putString("CHECKSUM", getMD5CheckSum(playerToSerialize));
+		
+		Logger.log(this, (new Date()).toString());
+		
+		save.putString("DATE", (new Date()).toString() );
 		save.flush();
 		
-		return true; //if(not everything is ok) return false;
+		return true; 
+	}
+	
+	public String getChecksum()
+	{
+		return save.getString("CHECKSUM");
+	}
+	
+	public Date getDate()
+	{
+		String dateString = save.getString("DATE");
+				
+		DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+		
+		Date date = null;
+		
+		try 
+		{
+			date = df.parse( dateString );
+		} 
+		catch (ParseException e) 
+		{
+			e.printStackTrace();
+		} 
+		
+		return date;
 	}
 	
 	/** synchronizuje dane z dysku z danymi na appWarpie */
@@ -84,44 +114,83 @@ public class SaveManager
 	{
 		if( player.isAnonymous() ) throw new AnonymousPlayerException();
 		
-		//duzo madrych rzeczy tu sie dzieje
-		
-		//if(everything is ok){
-		//lastSynchronization = (new Date()).getTime();	
-		//do not throw any exception
-		//}
-		//else
+		//pobranie jsona z appWarp, deszyfrowanie, parsowanie do jSona, porownanie daty i checksumy, lub w druga strone (w zaleznosci od daty)
 		throw new AppWarpConnectionException();	
 	}
 	
-	private String serializeHashMap( HashMap<String, Integer> map )
+	private void initializeEncryptor()
 	{
-		String serializedMap = "";
+		TripleDesKeyGenerator generator = new TripleDesKeyGenerator();
+		byte[] key = generator.decodeKey("04578a8f0be3a7109d9e5e86839e3bc41654927034df92ec");
 		
-		Iterator<String> mapIter = map.keySet().iterator();
-		
-		while( mapIter.hasNext() )
-		{
-			String key = mapIter.next();
-			int value = map.get(key);
-			
-			serializedMap += key + "," + String.valueOf( value ) + ";";
-		}
-		
-		return serializedMap;
+		encryptor = new TripleDesCipher();
+		encryptor.setKey(key);
 	}
 	
-	private HashMap<String, Integer> unserializeHashMap( String serializedMap )
+	private String encryptString(String string)
 	{
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-		
-		Array<String> records = new Array<String>( serializedMap.split(";") );
-		
-		for(String s: records)
+		try 
 		{
-			map.put(s.split(",")[0], Integer.parseInt( s.split(",")[1] ) );
+			string = encryptor.encrypt( string );
+		} 
+		catch (DataLengthException e1) 
+		{
+			e1.printStackTrace();
+		} 
+		catch (IllegalStateException e1) 
+		{
+			e1.printStackTrace();
+		} 
+		catch (InvalidCipherTextException e1) 
+		{
+			e1.printStackTrace();
 		}
-		 
-		return map;
+		
+		return string;
+	}
+	
+	private String decryptString(String string)
+	{
+		try 
+		{
+			string = encryptor.decrypt(string);
+		} 
+		catch (DataLengthException e) 
+		{
+			e.printStackTrace();
+		} catch (IllegalStateException e) 
+		{
+			e.printStackTrace();
+		} catch (InvalidCipherTextException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return string;
+	}
+
+	private String getMD5CheckSum(String string)
+	{
+		MessageDigest msg = null;
+		
+		try 
+		{
+			msg = MessageDigest.getInstance("MD5");
+		} 
+		catch (NoSuchAlgorithmException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		msg.update(string.getBytes(), 0, string.length());
+		
+		String md5 = new BigInteger(1, msg.digest()).toString(16);
+		
+		while(md5.length() < 32)
+		{
+			md5 += "0" + md5;
+		}
+		
+		return md5;
 	}
 }

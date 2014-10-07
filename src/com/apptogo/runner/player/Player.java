@@ -8,7 +8,6 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
 
-
 public class Player 
 {
 	private String name;
@@ -16,14 +15,11 @@ public class Player
 	
 	private CharacterType characterType;
 	public Character character;
-	
-	private HashMap<String, Integer> levels;
-	
-	private Statistics statistics;	
-	
+		
+	public Statistics statistics;	
+		
 	public Player()
 	{
-		levels = new HashMap<String, Integer>();
 		statistics = new Statistics();
 	}
 	
@@ -52,15 +48,16 @@ public class Player
 		}
 	}
 	
-	public void unlockLevel(Level level)
+	public void setLevelScore(Level level, int score)
 	{
-		levels.put(level.unlockKey, 0);
+		if( score > 0)
+		{
+			this.statistics.setLevelScore(level, score);
+		}
 	}
-	
-	public boolean isLevelUnlocked(Level level)
+	public boolean isLevelUnlocked(Level level, LevelWorld levelWorld)
 	{
-		if( levels.containsKey( level.unlockKey ) ) return true;
-		else return false;
+		return statistics.getLevelUnlockStatus(level, levelWorld);
 	}
 	
 	public String getName() 
@@ -69,13 +66,15 @@ public class Player
 	}
 	public void setName(String name) 
 	{
-		this.name = "jaJuzNie";
+		this.name = name;
 	}
 
-	public String getPassword() {
+	public String getPassword() 
+	{
 		return password;
 	}
-	public void setPassword(String password) {
+	public void setPassword(String password) 
+	{
 		this.password = password;
 	}
 
@@ -87,39 +86,18 @@ public class Player
 	{
 		this.characterType = currentCharacter;
 	}
-
-	/*ta funkcja ma sens wtedy kiedy przenosimy logike obliczania gwiazdek do campaignScreena ale czy to ma sens? takie rozwiazanie np praktycznie wymusza liniowa zaleznosc pkt od gwiazdek*/
-	public int getWorldScore(LevelWorld levelWorld)
-	{
-		int score = 0;
-		
-		for(Level level: levelWorld.getLevels() )
-		{
-			score += this.getLevelScore( level );
-		}
-		
-		return score;
-	}
-	public int getLevelScore(Level level)
-	{
-		if( levels.containsKey( level.unlockKey ) )
-		{
-			return (int)levels.get( level.unlockKey );
-		}
-		else
-			return 0;
-	}
-	public void setLevelScore(Level level, int score)
-	{
-		levels.put(level.unlockKey, score);
-	}
 	
-	public void setUnlockedLevels(HashMap<String, Integer> levels)
+	public void save()
 	{
-		this.levels = levels;
-	}
-	public HashMap<String, Integer> getUnlockedLevels()
-	{
-		return this.levels;
+		//musze przekopiowac playera, zeby czasem nie zapisac instancji charactera do pamieci
+		Player temp = new Player();
+		
+		temp.name = this.name;
+		temp.password = this.password;
+		temp.characterType = this.characterType;
+		temp.character = null;
+		temp.statistics = this.statistics;
+		
+		SaveManager.getInstance().savePlayer( temp );
 	}
 }

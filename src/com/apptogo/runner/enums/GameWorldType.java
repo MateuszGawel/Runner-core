@@ -164,24 +164,6 @@ public enum GameWorldType
 		return null;
 	}
 	
-	public static String convertToFullName( GameWorldType gameWorldType )
-	{
-		if( gameWorldType == WILDWEST )
-		{
-			return "Wild West";
-		}
-		else if( gameWorldType == FOREST )
-		{
-			return "Forest";
-		}
-		else if( gameWorldType == SPACE )
-		{
-			return "Space";
-		}
-		
-		return null;
-	}
-
 	public static FontType convertToButtonFontType( GameWorldType gameWorldType)
 	{
 		if( gameWorldType == WILDWEST )

@@ -11,21 +11,19 @@ import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.SaveManager;
+import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
@@ -34,6 +32,8 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private TextButton manageProfileButton;
 	
 	private Widget manageWidget;
+	
+	private DialogWidget confirmWidget;
 	
     private Button backButton;
     
@@ -103,6 +103,9 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		createManageWidget();
 		
+		confirmWidget = new DialogWidget("To jest jakas wiadomosc", null, null);
+		createRoomButton.addListener( confirmWidget.toggleWidgetListener );
+		
 		manageProfileButton = new TextButton( "your profile", skin, "default");
 		setTextButtonFont(manageProfileButton, FontType.WOODFONT);
 		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
@@ -115,6 +118,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		addToScreen(currentCharacterAnimation);
 		addToScreen(manageWidget.actor());
+		addToScreen(confirmWidget.actor());
 	}
 	
 	public void step()

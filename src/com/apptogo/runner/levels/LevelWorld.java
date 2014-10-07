@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 public class LevelWorld 
 {
 	public String name;
+	public String label;
 	private Array<Level> levels = new Array<Level>();
 	private GameWorldType worldType;
 	
@@ -32,5 +33,10 @@ public class LevelWorld
 	public Array<Level> getLevels()
 	{
 		return this.levels;
+	}
+
+	public void setLabel(String levelWorldLabel) 
+	{
+		this.label = levelWorldLabel;	
 	}
 }

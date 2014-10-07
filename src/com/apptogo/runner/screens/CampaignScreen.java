@@ -27,8 +27,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class CampaignScreen extends BaseScreen
 {	
-	private final int POINTS_PER_STAR = 100;	
-	
 	private LevelManager levelManager;
 
 	private TextButton button;
@@ -122,9 +120,9 @@ public class CampaignScreen extends BaseScreen
         nextWorldButton.setPosition( 470.0f + (worldsCount * 1280.0f), -100.0f );
         nextWorldButton.addListener( moveGroupLeftListener );
         
-        int achievedStarsCount = player.getWorldScore(levelWorld) / POINTS_PER_STAR;
+        int achievedStarsCount = player.statistics.getWorldStars(levelWorld);
         
-        label = new Label( GameWorldType.convertToFullName( levelWorld.getWorldType() ) + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
+        label = new Label( levelWorld.label + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
         setLabelFont(label, FontType.BIG);
         label.setPosition((runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
         
@@ -193,7 +191,7 @@ public class CampaignScreen extends BaseScreen
     	{
     		final Level level = levelWorldLevels.get(l);
         	
-        	if( player.isLevelUnlocked(level) )
+        	if( player.isLevelUnlocked(level, levelWorld) )
         	{
         		button = new TextButton( level.buttonLabel, skin, buttonStyleName);
         		setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
@@ -230,7 +228,7 @@ public class CampaignScreen extends BaseScreen
 	        button.setPosition( buttonX + indent, buttonY - 50.0f );       
 	        button.setUserObject( levelWorld.getWorldType() );
 	       	
-	        if( player.isLevelUnlocked(level) )
+	        if( player.isLevelUnlocked(level, levelWorld) )
 	        {
 	        	button = drawStars( button, level );
 	        }
@@ -249,7 +247,7 @@ public class CampaignScreen extends BaseScreen
 		float margin = 0.0f;
 		float startX = ( button.getWidth() - (3 * starWidth) - (3 * margin) ) / 2.0f;
 		
-		int score = player.getLevelScore(level);
+		int score = player.statistics.getLevelScore(level);
 		
 		if( score >= 100 && score < 200 )
 		{

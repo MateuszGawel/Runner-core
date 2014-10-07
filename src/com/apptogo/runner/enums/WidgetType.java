@@ -50,7 +50,7 @@ public enum WidgetType
 	{
 		if(widgetType == WidgetType.SMALL)
 		{
-			return "gfx/menu/paper.png";
+			return "gfx/menu/paperSmall.png";
 		}
 		else if(widgetType == WidgetType.MEDIUM)
 		{
@@ -58,7 +58,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.BIG)
 		{
-			return "gfx/menu/paper.png";
+			return "gfx/menu/paperBig.png";
 		}
 		else
 		{

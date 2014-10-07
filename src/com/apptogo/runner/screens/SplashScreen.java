@@ -1,7 +1,6 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -25,8 +24,11 @@ public class SplashScreen extends BaseScreen
 		LOGO_ANIMATING,
 		LOGO_WAITING,
 		BACKGROUND_WAITING,
+		FONT_INITIALIZATION_WAITING,
 		FINISHED
 	}
+	
+	private Thread t;
 	
 	private SplashPhase currentPhase;
 	
@@ -112,20 +114,13 @@ public class SplashScreen extends BaseScreen
 	{		
 		if( currentPhase == SplashPhase.FINISHED ) 
 		{
-			if( menuAssetManager.update() )
-			{
-				if( stillAssetManager.update() )
-				{
-						loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
-				}
-			}
+			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}
 		
 		//Animation flow
 		if( currentPhase == SplashPhase.SPLASH_IMAGE_IN && splashImage.getActions().size <= 0)
 		{
 			currentPhase = SplashPhase.SPLASH_IMAGE_WAITING;
-			FontManager.getInstance().initializeFonts();
 			ResourcesManager.getInstance().loadLogoResources();
 		}
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
@@ -145,11 +140,11 @@ public class SplashScreen extends BaseScreen
 			dustAnimation.setVisible(false);
 			
 			loadingLabel = new Label(getLangString("loadingLabel"), skin);
-			setLabelFont(loadingLabel, FontType.LOADINGSMALL);
+			//setLabelFont(loadingLabel, FontType.LOADINGSMALL);
 			loadingLabel.setPosition( -60.0f, 260.0f );
 			loadingLabel.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 10, -110.0f, 250.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 30, -210.0f, 220.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logo);
@@ -191,14 +186,28 @@ public class SplashScreen extends BaseScreen
 			loadingAnimation.setVisible(true);
 			loadingAnimation.start();
 			
+			t = new Thread() {
+			    public void run() {
+			    	
+			    }
+			};
+			t.start();
+			
 			ResourcesManager.getInstance().loadMenuResources();
 			ResourcesManager.getInstance().loadStillResources();
 			
 			menuAssetManager = ResourcesManager.getInstance().getMenuAssetManager();
 			stillAssetManager = ResourcesManager.getInstance().getStillAssetManager();
 			
+			currentPhase = SplashPhase.FONT_INITIALIZATION_WAITING;
+		}
+		else if( currentPhase == SplashPhase.FONT_INITIALIZATION_WAITING && menuAssetManager.update() && stillAssetManager.update() )
+		{
+			FontManager.getInstance().initializeFonts();
+			
 			currentPhase = SplashPhase.FINISHED;
 		}
+		
 	}
 	
 	@Override

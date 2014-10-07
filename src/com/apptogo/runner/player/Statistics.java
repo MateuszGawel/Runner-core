@@ -1,120 +1,135 @@
 package com.apptogo.runner.player;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.apptogo.runner.enums.CharacterAbilityType;
-import com.apptogo.runner.logger.Logger;
-import com.badlogic.gdx.utils.Array;
+import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.levels.LevelWorld;
 
 public class Statistics
-{
-	private final int ABILITY_LEVELS_INDEX = 0;
-	private final int CASH_INDEX = 1;
-	private final int DIAMONDS_INDEX = 2;
-	
-	private HashMap<CharacterAbilityType, Integer> abilityLevels;
-	private int cash;
+{	
+	private HashMap<String, Integer> gameLevels;
+	private HashMap<CharacterAbilityType, Integer> abilities;
+	private int coins;
 	private int diamonds;
 	
 	public Statistics()
 	{
-		abilityLevels = new HashMap<CharacterAbilityType, Integer>();
+		gameLevels = new HashMap<String, Integer>();
+		
+		gameLevels.put("map1.0", 100);
+		
+		abilities = new HashMap<CharacterAbilityType, Integer>();
 		
 		for(CharacterAbilityType characterAbilityType: CharacterAbilityType.values())
 		{
-			abilityLevels.put(characterAbilityType, 0);
+			abilities.put(characterAbilityType, 0);
 		}
 		
-		cash = 0;
+		coins = 0;
 		diamonds = 0;
 	}
 
+	public boolean getLevelUnlockStatus(Level level, LevelWorld levelWorld) 
+	{
+		if( ( gameLevels.containsKey( level.requiredLevels ) || level.requiredLevels.equals("") ) && getWorldStars( levelWorld ) >= level.requiredStars ) return true;
+		else return false;
+	}
+	public int getLevelScore(Level level) 
+	{
+		if( gameLevels.containsKey( level.unlockKey ) )
+		{
+			return (int)gameLevels.get( level.unlockKey );
+		}
+		else
+			return 0;
+	}
+	public void setLevelScore(Level level, int score)
+	{
+		gameLevels.put(level.unlockKey, score);
+	}
+	
+	public void setUnlockedLevels(HashMap<String, Integer> levels)
+	{
+		this.gameLevels = levels;
+	}
+	public HashMap<String, Integer> getUnlockedLevels()
+	{
+		return this.gameLevels;
+	}
+	/*ta funkcja ma sens wtedy kiedy przenosimy logike obliczania gwiazdek do campaignScreena ale czy to ma sens? takie rozwiazanie np praktycznie wymusza liniowa zaleznosc pkt od gwiazdek*/
+	public int getWorldStars(LevelWorld levelWorld)
+	{
+		int score = 0;
+		
+		for(Level level: levelWorld.getLevels() )
+		{
+			score += this.getLevelScore( level );
+		}
+		
+		return 10;//score;
+	}	
+	
 	public int getAbilityLevel(CharacterAbilityType characterAbilityType)
 	{
-		return abilityLevels.get(characterAbilityType);
+		return abilities.get(characterAbilityType);
 	}
 	public void setAbilityLevel(CharacterAbilityType characterAbilityType, Integer level)
 	{
-		abilityLevels.put(characterAbilityType, level);
+		abilities.put(characterAbilityType, level);
 	}
 	
-	public int getCash()
+	public int getCoinsValue()
 	{
-		return this.cash;
+		return this.coins;
 	}
-	public void setCash(int cash)
+	public void setCoinsValue(int coins)
 	{
-		this.cash = cash;
+		this.coins = coins;
+	}
+	public void addCoin()
+	{
+		addCoins(1);
+	}
+	public void addCoins(int coins)
+	{
+		this.coins += coins;
+	}
+	public boolean takeCoins(int howMuch)
+	{
+		if( howMuch > this.coins )
+		{
+			return false;
+		}
+		else
+		{
+			this.coins -= howMuch;
+			return true;
+		}
 	}
 	
-	public int getDiamonds()
+	public int getDiamondsValue()
 	{
 		return this.diamonds;
 	}
-	public void setDiamonds(int diamonds)
+	public void setDiamondsValue(int diamonds)
 	{
 		this.diamonds = diamonds;
 	}
-	
-	//Statistics serialization
-	public void unserialize(String serializedStatistics)
-	{	
-		unserializeHashMap( serializedStatistics.split("\\$")[ ABILITY_LEVELS_INDEX ] );
-		unserializeCash( serializedStatistics.split("\\$")[ CASH_INDEX ] );
-		unserializeDiamonds( serializedStatistics.split("\\$")[ DIAMONDS_INDEX ] );
-	}
-	public String serialize()
+	public void addDiamonds(int diamonds)
 	{
-		String serializedStatistics = "";
-		
-		serializedStatistics += serializeAbilityLevels() + "$";
-		serializedStatistics += serializeCash() + "$";
-		serializedStatistics += serializeDiamonds() + "$";
-		
-		return serializedStatistics;
+		this.diamonds += diamonds;
 	}
-	
-	//Statistics members serialization
-	private String serializeAbilityLevels()
+	public boolean takeDiamonds(int howMuch)
 	{
-		String serializedAbilityLevels = "";
-		
-		Iterator<CharacterAbilityType> mapIter = abilityLevels.keySet().iterator();
-		
-		while( mapIter.hasNext() )
+		if( howMuch > this.diamonds )
 		{
-			CharacterAbilityType key = mapIter.next();
-			int value = abilityLevels.get(key);
-			
-			serializedAbilityLevels += key.toString() + "," + String.valueOf( value ) + ";";
+			return false;
 		}
-		
-		return serializedAbilityLevels;
-	}
-	private void unserializeHashMap( String serializedMap )
-	{
-		Array<String> records = new Array<String>( serializedMap.split(";") );
-		
-		for(String s: records)
-		{		
-			abilityLevels.put( CharacterAbilityType.parseFromString( s.split(",")[0] ), Integer.parseInt( s.split(",")[1] ) );
+		else
+		{
+			this.diamonds -= howMuch;
+			return true;
 		}
-	}
-	private String serializeCash()
-	{
-		return String.valueOf(cash);
-	}
-	private void unserializeCash( String serializedCash )
-	{
-		this.cash = Integer.parseInt(serializedCash);
-	}
-	private String serializeDiamonds()
-	{
-		return String.valueOf(diamonds);
-	}
-	private void unserializeDiamonds( String serializedDiamonds )
-	{
-		this.diamonds = Integer.parseInt(serializedDiamonds);
 	}
 }
