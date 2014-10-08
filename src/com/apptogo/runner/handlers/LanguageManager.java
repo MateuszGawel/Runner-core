@@ -132,4 +132,21 @@ public class LanguageManager {
 		
 		return icon;
 	}
+	public String getFullnameLanguage(String key)
+	{
+		String fullname = null;
+		
+		for(int i = 0; i < languages.size; i++)
+		{
+			XmlReader.Element node = languages.get(i);
+			
+			if( node.getAttribute("id").equals(key) )
+			{
+				fullname = node.getAttribute("fullname");
+				break;
+			}
+		}
+		
+		return fullname;
+	}
 }

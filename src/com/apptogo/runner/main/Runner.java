@@ -5,12 +5,11 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.SettingsManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.player.SaveManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
@@ -55,7 +54,6 @@ public class Runner extends Game
 		//wiem ze to troche psuje singletony ale musimy odswiezac managery za kazdym wlaczeniem aplikacji bo inaczej android je trzyma w pamieci i sie dzieja cuda 
 		ResourcesManager.create(); 
 		ScreensManager.create();
-		SettingsManager.create();
 		LanguageManager.create();
 		TiledMapLoader.create();
 		NotificationManager.create();
@@ -68,7 +66,6 @@ public class Runner extends Game
 	{
 		ResourcesManager.destroy();
 		ScreensManager.destroy();
-		SettingsManager.destroy();
 		LanguageManager.destroy();
 		TiledMapLoader.destroy();
 		NotificationManager.destroy();

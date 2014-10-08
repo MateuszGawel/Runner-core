@@ -8,10 +8,10 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.SettingsManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.player.SaveManager;
+import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -38,9 +38,10 @@ public abstract class BaseScreen implements Screen
 {	
 	protected Runner runner;
 	protected LanguageManager languageManager;
-	protected SettingsManager settingsManager;
 	protected Image background;
 	protected Texture backgroundTexture;
+	
+	protected Settings settings;
 	
 	protected Stage stage;
 	protected Viewport viewport;
@@ -73,15 +74,20 @@ public abstract class BaseScreen implements Screen
 	protected BaseScreen(Runner runner) 
 	{
 		this.runner = runner;
-		this.settingsManager = SettingsManager.getInstance();
+		
+		settings = Settings.load();
+		
 		this.languageManager = LanguageManager.getInstance();
-		this.languageManager.setCurrentLanguage( settingsManager.getLanguage() );
+		
+		Logger.log(this, settings.getLanguage());
+		
+		this.languageManager.setCurrentLanguage( settings.getLanguage() );
 	}
 	
 	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
 	protected void loadPlayer()
 	{
-		this.player = SaveManager.getInstance().loadPlayer();
+		this.player = Player.load();
 	}
 	
 	@Override

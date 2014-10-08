@@ -1,4 +1,4 @@
-package com.apptogo.runner.player;
+package com.apptogo.runner.handlers;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -13,6 +13,8 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.player.Player;
+import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Json;
@@ -21,7 +23,6 @@ import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.googlecode.gwt.crypto.client.TripleDesKeyGenerator;
 
-/** klasa do zapisywania Playera NA DYSKU z opcja synchronizacji z appWarpem */
 public class SaveManager 
 {
 	private static SaveManager INSTANCE;
@@ -38,50 +39,74 @@ public class SaveManager
 		return INSTANCE;
 	}
 	
+	private Preferences preferences;
 	private Preferences save;
 	private TripleDesCipher encryptor; 	
 	
 	public SaveManager()
 	{
+		preferences = Gdx.app.getPreferences("gamePreferences");
 		save = Gdx.app.getPreferences("save");
 		
 		initializeEncryptor();
 	}
+		
+	public Settings loadSettings()
+	{
+		Settings settings = new Settings();
+		Json json = new Json();
+		
+		if( preferences.getString("PREFERENCES", "").equals("") )
+		{
+			save( settings );
+		}
+		
+		String serializedSettings = preferences.getString("PREFERENCES");
+		serializedSettings = decryptString(serializedSettings);
+
+		return json.fromJson(Settings.class, serializedSettings);
+	}
 	
 	public Player loadPlayer()
-	{		
+	{			
 		Player player = new Player("empty", CharacterType.BANDIT);
 		Json json = new Json();
 		
 		if( save.getString("PLAYER", "").equals("") )
 		{
-			savePlayer(player);
+			save(player);
 		}
 		
 		String serializedPlayer = save.getString("PLAYER");
 		serializedPlayer = decryptString(serializedPlayer);
-		Logger.log(this, getDate());
-		player = json.fromJson(Player.class, serializedPlayer);
-							
-		return player;
+
+		return json.fromJson(Player.class, serializedPlayer);
 	}
 	
-	public boolean savePlayer(Player player)
+	public void save(Settings settings)
 	{
 		Json json = new Json();
 		
+		String settingsToSerialize = json.prettyPrint(settings);
+		settingsToSerialize = encryptString(settingsToSerialize);
+		
+		preferences.putString("PREFERENCES", settingsToSerialize );
+		preferences.putString("CHECKSUM", getMD5CheckSum(settingsToSerialize));		
+		preferences.putString("DATE", (new Date()).toString() );
+		preferences.flush();
+	}
+	
+	public void save(Player player)
+	{
+		Json json = new Json();
+
 		String playerToSerialize = json.prettyPrint(player);
 		playerToSerialize = encryptString(playerToSerialize);
 		
 		save.putString("PLAYER", playerToSerialize );
 		save.putString("CHECKSUM", getMD5CheckSum(playerToSerialize));
-		
-		Logger.log(this, (new Date()).toString());
-		
 		save.putString("DATE", (new Date()).toString() );
 		save.flush();
-		
-		return true; 
 	}
 	
 	public String getChecksum()

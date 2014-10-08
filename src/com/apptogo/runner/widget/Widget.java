@@ -2,13 +2,13 @@ package com.apptogo.runner.widget;
 
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -40,7 +41,7 @@ public class Widget
 	
 	protected Widget widget = this;
 	
-	private Group window;
+	public Group window;
 	
 	private Texture widgetBackgroundTexture;
 	private Image widgetBackground;
@@ -64,11 +65,13 @@ public class Widget
 	protected Array< Array<Actor> > widgetTab;
 	protected int currentTab = 0;
 	
+	public boolean getToFrontOnClick = false;
+	
 	/** @param hiddenPartWidth Jesli fading nie porusza widgetem to powinien byc ustawiony na 0 
 	 *  @param x Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie
 	 *  @param y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w poziomie*/
 	public Widget(float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
-	{	
+	{			
 		this.skin = ResourcesManager.getInstance().getUiSkin();
 		
 		this.hiddenPartWidth = hiddenPartWidth;
@@ -178,21 +181,27 @@ public class Widget
 	
 	//---Getting and adding actors
 	public Group actor()
-	{
+	{		
 		final Group widgetGroup = new Group();
 		
 		widgetGroup.addActor(blackOutButton);
 		
 		widgetGroup.addActor(window);
+		
+		if( getToFrontOnClick )
+		{
+			widgetGroup.addListener( new ClickListener()
+			{
+				
+				public void clicked(InputEvent event, float x, float y) 
+	            {
+					widgetGroup.toFront();
+	            }
+				
+			}
+			);
 
-		widgetGroup.addListener( new ClickListener(){
-			
-			public void clicked(InputEvent event, float x, float y) 
-            {
-				widgetGroup.toFront();
-            }
-			
-		} );
+		}
 		
 		return widgetGroup;
 	}
@@ -225,12 +234,15 @@ public class Widget
 			if( setBlackOut )
 			{
 				blackOutButton.setVisible(true);
+				blackOutButton.toFront();
 			}
 			
 			playFading(false);
 			this.isShowed = true;
 			
 			setCurrentTabVisibile(true);
+			
+			this.window.toFront();
 		}
 	}
 	

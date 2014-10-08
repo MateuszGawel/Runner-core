@@ -1,12 +1,11 @@
 package com.apptogo.runner.player;
 
-import java.util.HashMap;
-import java.util.Random;
-
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
+import com.apptogo.runner.logger.Logger;
 
 public class Player 
 {
@@ -87,17 +86,22 @@ public class Player
 		this.characterType = currentCharacter;
 	}
 	
+	static public Player load()
+	{
+		return SaveManager.getInstance().loadPlayer();
+	}
+	
 	public void save()
 	{
 		//musze przekopiowac playera, zeby czasem nie zapisac instancji charactera do pamieci
-		Player temp = new Player();
+		Player copyOfThis = new Player();
 		
-		temp.name = this.name;
-		temp.password = this.password;
-		temp.characterType = this.characterType;
-		temp.character = null;
-		temp.statistics = this.statistics;
+		copyOfThis.name = this.name;
+		copyOfThis.password = this.password;
+		copyOfThis.characterType = this.characterType;
+		copyOfThis.character = null;
+		copyOfThis.statistics = this.statistics;
 		
-		SaveManager.getInstance().savePlayer( temp );
+		SaveManager.getInstance().save( copyOfThis );
 	}
 }

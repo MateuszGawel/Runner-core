@@ -10,7 +10,6 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.player.SaveManager;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -38,7 +37,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     private Button backButton;
     
     private CharacterAnimation currentCharacterAnimation;
-    private ClickListener changeCurrentCharacterAnimationListener;
 	
     private CharacterAnimation manageBanditAnimation;
     private CharacterAnimation manageArcherAnimation;
@@ -143,7 +141,8 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	{
 		manageWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		manageWidget.setEasing( Interpolation.elasticOut );
-
+		manageWidget.getToFrontOnClick = true;
+		
 		manageBanditAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -550.0f, 1075.0f, false);
 		manageArcherAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -400.0f, 1075.0f, false);
 		manageAlienAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -250.0f, 1075.0f, false);
@@ -160,7 +159,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageAlienAnimation.stop();
 				
 				player.setCharacterType(CharacterType.BANDIT);
-				SaveManager.getInstance().savePlayer(player);
+				player.save();
 				
 				changeCurrentCharacterAnimation();
             }
@@ -178,7 +177,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageAlienAnimation.stop();
 				
 				player.setCharacterType(CharacterType.ARCHER);
-				SaveManager.getInstance().savePlayer(player);
+				player.save();
 				
 				changeCurrentCharacterAnimation();
             }
@@ -196,7 +195,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				manageAlienAnimation.start();
 				
 				player.setCharacterType(CharacterType.ALIEN);
-				SaveManager.getInstance().savePlayer(player);
+				player.save();
 				
 				changeCurrentCharacterAnimation();
             }
@@ -242,7 +241,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         			Logger.log(this, "teraz odkliknieto");
         			stage.setKeyboardFocus(null);
         			player.setName( textField.getText() );
-            		SaveManager.getInstance().savePlayer(player);
+            		player.save();
     			}
         		
         		return true;

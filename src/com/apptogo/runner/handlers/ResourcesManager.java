@@ -234,6 +234,14 @@ public class ResourcesManager
 		menuSpecialMeta.addTexture("gfx/menu/paperSmall.png");
 		menuSpecialMeta.addTexture("gfx/menu/paperBig.png");
 		
+		menuSpecialMeta.addTexture("gfx/menu/generalTab.png");
+		menuSpecialMeta.addTexture("gfx/menu/resetTab.png");
+		menuSpecialMeta.addTexture("gfx/menu/newsFeedTab.png");
+		
+		menuSpecialMeta.addTexture("gfx/menu/shareButtonFacebook.png");
+		menuSpecialMeta.addTexture("gfx/menu/shareButtonGoogle.png");
+		menuSpecialMeta.addTexture("gfx/menu/shareButtonTwitter.png");
+		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");

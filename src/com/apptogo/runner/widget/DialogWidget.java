@@ -55,5 +55,21 @@ public class DialogWidget extends Widget
 		this.addActor(noButton);
         this.addActor(label);
 	}
+
+	public void setYesListener(ClickListener listener) 
+	{
+		yesButton.clearListeners();
+		yesButton.addListener(listener);
+	}
 	
+	public void setNoListener(ClickListener listener) 
+	{
+		noButton.clearListeners();
+		noButton.addListener(listener);
+	}
+
+	public void setLabel(String text) 
+	{
+		label.setText( text );
+	}
 }
