@@ -93,6 +93,7 @@ public class FontManager
 	        FreeTypeFontGenerator generator = new FreeTypeFontGenerator( Gdx.files.internal( "gfx/fonts/ComicSerif.ttf" ) );
 			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 			
+			parameter.characters = "QWERTYUIOPASDFGHJKLZXCVBNMÊÓ¥Œ£¯ÆÑqwertyuiopasdfghjklzxcvbnmêó¹œ³¿Ÿæñ1234567890";
 			parameter.size = 60;
 			parameter.minFilter = TextureFilter.Linear;
 			parameter.magFilter = TextureFilter.Linear;

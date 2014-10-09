@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -71,7 +72,7 @@ public class MainMenuScreen extends BaseScreen{
 	
 	@Override
 	public void prepare() 
-	{		
+	{
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 					
 		flagTextures = new Array<Texture>();
@@ -167,7 +168,7 @@ public class MainMenuScreen extends BaseScreen{
 		
 		Label label = null;
 		CheckBox checkBox = null;
-		ProgressBar progressBar = null;
+		Slider progressBar = null;
 		
 		//---Obrazki tabow
 		Texture generalTabTexture = new Texture( Gdx.files.internal("gfx/menu/generalTab.png") );
@@ -256,9 +257,9 @@ public class MainMenuScreen extends BaseScreen{
 		
 		settingsWidget.addActorToTab(checkBox, 1);
 		
-		progressBar = new ProgressBar(0, 100, 10, false, skin);
-		progressBar.setWidth(300f);
-		progressBar.setPosition(-400f, 980f);
+		progressBar = new Slider(0, 100, 20, false, skin);
+		progressBar.setWidth(150f);
+		progressBar.setPosition(-250f, 1010f);
 		
 		settingsWidget.addActorToTab(progressBar, 1);
 		
@@ -273,9 +274,10 @@ public class MainMenuScreen extends BaseScreen{
 		
 		settingsWidget.addActorToTab(checkBox, 1);
 		
-		progressBar = new ProgressBar(0, 100, 10, false, skin);
-		progressBar.setWidth(300f);
-		progressBar.setPosition(-400f, 790f);
+		progressBar = new Slider(0, 100, 20, false, skin);
+		progressBar.setWidth(150f);
+		progressBar.setHeight(50f);
+		progressBar.setPosition(-250f, 820f);
 		
 		settingsWidget.addActorToTab(progressBar, 1);
 		
