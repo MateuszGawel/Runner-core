@@ -57,6 +57,7 @@ public abstract class Character extends Actor{
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	protected float playerMaxSpeed = 8;
+	protected int slowAmmount = 0;
 	
 	protected Body body;
 	protected Vector2 deathPosition;
@@ -78,6 +79,7 @@ public abstract class Character extends Actor{
 	protected Array<Button> powerupButtons;
 
 	private boolean isPowerupSet = false;
+	
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
@@ -356,7 +358,7 @@ public abstract class Character extends Actor{
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
 		if(running && !sliding && speed < playerMaxSpeed)
-			body.applyForceToCenter(new Vector2(3000, 0), true);
+			body.applyForceToCenter(new Vector2(3000-slowAmmount, 0), true);
 		else if(sliding){
 			body.applyForceToCenter(new Vector2(200, 0), true);
 		}
@@ -545,4 +547,5 @@ public abstract class Character extends Actor{
 	{
 		return this.isPowerupSet;
 	}
+	public void setSlowAmmount(int slowAmmount){this.slowAmmount = slowAmmount; }
 }

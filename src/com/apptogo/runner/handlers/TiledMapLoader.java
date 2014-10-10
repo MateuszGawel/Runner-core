@@ -16,6 +16,7 @@ import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.Rock;
+import com.apptogo.runner.actors.Swamp;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -314,6 +315,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "swamp") )
+			{
+				body = createSwamp(object);
+								
+				bodies.add( body );
+			}
 			else if( checkObjectType(object, "powerup") )
 			{
 				body = createPowerup(object);
@@ -417,6 +424,12 @@ public class TiledMapLoader
 	{
 		Hedgehog hedgehog = new Hedgehog(object, world, gameWorld);
 		return hedgehog.getBody();
+	}
+	
+	private Body createSwamp(MapObject object)
+	{
+		Swamp swamp = new Swamp(object, world, gameWorld);
+		return swamp.getBody();
 	}
 	
 	private Body createPowerup(MapObject object)

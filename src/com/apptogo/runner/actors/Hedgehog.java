@@ -33,10 +33,7 @@ public class Hedgehog extends Obstacle{
 	public void act(float delta){
 		super.act(delta);
 		
-		Logger.log(this, getBody().getLinearVelocity().x);
-		
 		if(Math.abs(getBody().getLinearVelocity().x) < 0.1f && direction!=prevDirection){
-			Logger.log(this, "zmiana");
 			prevDirection = direction;
 			direction*= -1;
 		}
