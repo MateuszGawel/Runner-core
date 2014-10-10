@@ -32,7 +32,7 @@ public class Swamp extends Obstacle{
 		
 		for(int i=0; i<segmentCount; i++){
 			SwampSegment segment = new SwampSegment();
-			segment.setPosition(getBody().getPosition().x - objectWidth/2/PPM + (i+1)*64f/PPM - 2/PPM, getBody().getPosition().y + 10f/PPM);
+			segment.setPosition(getBody().getPosition().x - objectWidth/2/PPM + (i+1)*64f/PPM, getBody().getPosition().y + 10f/PPM);
 			gameWorld.getWorldStage().addActor(segment);
 		}
 		

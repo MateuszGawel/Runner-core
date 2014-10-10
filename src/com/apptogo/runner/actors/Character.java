@@ -355,10 +355,15 @@ public abstract class Character extends Actor{
 			touchGround = false;
 	}
 	
+	private void handleSlowing(){
+		if(((UserData)body.getUserData()).arg1 != null)
+			slowAmmount = Integer.valueOf(((UserData)body.getUserData()).arg1);
+	}
+	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && !sliding && speed < playerMaxSpeed)
-			body.applyForceToCenter(new Vector2(3000-slowAmmount, 0), true);
+		if(running && !sliding && speed < playerMaxSpeed-slowAmmount)
+			body.applyForceToCenter(new Vector2(3000, 0), true);
 		else if(sliding){
 			body.applyForceToCenter(new Vector2(200, 0), true);
 		}
@@ -389,6 +394,7 @@ public abstract class Character extends Actor{
 		handleBlinking();
 		handleStopping();
 		handleSensors();
+		handleSlowing();
 		handleRunning();
 		handleDismemberment();
 		//Logger.log(this, body.getPosition().x + " ");

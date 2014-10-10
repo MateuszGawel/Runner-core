@@ -21,7 +21,6 @@ public class AnimationManager {
 	private TextureRegion currentFrame;
 	private float initStateTime = 0;
 	
-	public boolean test = false;
 	
 	public AnimationManager(String atlasName){
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasName);
@@ -31,8 +30,6 @@ public class AnimationManager {
 		this(atlasName);
 		this.stateTime = initStateTime;
 		this.initStateTime = initStateTime;
-		if(test)Logger.log(this, "init0: " + this.initStateTime);
-		if(test)Logger.log(this, "init: " + this.stateTime);
 	}
 	
 	public AtlasRegion[] createFrames(int framesCount, String name){
@@ -68,29 +65,23 @@ public class AnimationManager {
 	public void setCurrentAnimationState(Object animationState){
 		this.prevAnimationState = this.currentAnimationState;
 		this.currentAnimationState = animationState;
-		if(test)Logger.log(this, "init2: " + stateTime);
 	}
 	
 	public TextureRegion animate(float delta){
 		if(prevAnimationState != currentAnimationState){
 			stateTime = initStateTime;
-			if(test)Logger.log(this, "init3: " + stateTime);
 		}
 		prevAnimationState = currentAnimationState;
 		
 		for(MyAnimation animation : animations){
 			if(animation.getAnimationState() == currentAnimationState){
-				if(test)Logger.log(this, "init3.5: " + stateTime);
 				if(stateTime == 0)
 					animation.resetLoops();
-				if(test)Logger.log(this, "init4: " + stateTime);
 				stateTime += delta;
-				if(test)Logger.log(this, "init5: " + stateTime);
 				currentFrame = animation.getKeyFrame(stateTime);
-				if(test)Logger.log(this, "init6: " + stateTime);
 			}
 		}
-		if(test) Logger.log(this, "init7: " + stateTime);
+
 		return currentFrame;
 	}
 	

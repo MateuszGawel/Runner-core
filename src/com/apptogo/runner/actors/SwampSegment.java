@@ -16,12 +16,10 @@ public class SwampSegment extends Actor{
 	}
 	private TextureRegion currentFrame;
 	private AnimationManager animationManager;
-	private boolean init = true;
 	
 	public SwampSegment(){
 		animationManager = new AnimationManager("gfx/game/levels/swamp.pack", new Random().nextFloat()*3, true);	
 		animationManager.createAnimation(45, 0.05f, "swamp", SwampAnimationState.ANIMATING, true);
-		animationManager.test = true;
 		animationManager.setCurrentAnimationState(SwampAnimationState.ANIMATING);
 		currentFrame = animationManager.animate(0f);
 		

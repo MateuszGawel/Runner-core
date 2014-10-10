@@ -65,6 +65,16 @@ public class MyContactListener implements ContactListener
 			}
 		}
 		
+		//bagno
+		if( checkFixturesTypes(fa, fb, "swamp", "footSensor") )
+		{
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
+			{
+				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
+				((UserData)fixture.getBody().getUserData()).arg1 = "5";
+				Logger.log(this, "PLAYER W BAGNIE");
+			}
+		}
 		
 		//smierc od ogniska
 		if( checkFixturesTypes(fa, fb, "bonfire", "player") )
@@ -243,6 +253,17 @@ public class MyContactListener implements ContactListener
 			Fixture fixture = getFixtureByType(fa, fb, "liftField");
 			
 			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
+		}
+		
+		//bagno
+		if( checkFixturesTypes(fa, fb, "swamp", "footSensor") )
+		{
+			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
+			{
+				Logger.log(this, "PLAYER POZA BAGNEM");
+				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
+				((UserData)fixture.getBody().getUserData()).arg1 = "0";
+			}
 		}
 	}
 
