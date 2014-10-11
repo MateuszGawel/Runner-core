@@ -23,20 +23,20 @@ public class Swamp extends Obstacle{
 	public Swamp(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/swamp.pack", "swamp", 45, 0.05f, SwampAnimationState.ANIMATING);
 		super.animate = false;
-		//gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.worldObjectBody, "swamp");
-		//setOffset(-((RectangleMapObject)object).getRectangle().width/PPM/2+64/PPM, 10f/PPM);
 		
 		objectWidth = ((RectangleMapObject)object).getRectangle().width;
 		segmentCount = Math.round((objectWidth - 128f) / 64f);
 		
 		for(int i=0; i<segmentCount; i++){
 			SwampSegment segment = new SwampSegment();
-			segment.setPosition(getBody().getPosition().x - objectWidth/2/PPM + (i+1)*64f/PPM, getBody().getPosition().y + 10f/PPM);
+			float offset = getBody().getPosition().x - (objectWidth/2 - (i+1)*64f)/PPM;
+			Logger.log(this, "offset: " + offset);
+			segment.setPosition(offset, getBody().getPosition().y + 10f/PPM);
 			gameWorld.getWorldStage().addActor(segment);
 		}
 		
 		Logger.log(this, "width: " + ((RectangleMapObject)object).getRectangle().width);
-		Logger.log(this, "bede tworzyc: " + segmentCount);
+		Logger.log(this, "pozycja: " + getBody().getPosition().x);
 	}
 }

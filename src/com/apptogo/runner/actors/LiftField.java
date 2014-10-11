@@ -115,7 +115,7 @@ public class LiftField extends Actor{
         //setRotation(fieldBody.getAngle() * MathUtils.radiansToDegrees);
         for(Body bodyToLift : bodiesToLift)
         {
-        	if( UserData.key( bodyToLift.getUserData() ).equals("enemy") )
+        	if(((UserData)bodyToLift.getUserData()).key.equals("enemy") )
         		bodyToLift.applyForceToCenter(enemyForceStrength, true);
         	else
         		bodyToLift.applyForceToCenter(obstacleForceStrength, true);

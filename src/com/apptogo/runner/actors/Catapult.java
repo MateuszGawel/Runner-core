@@ -43,7 +43,7 @@ public class Catapult extends Obstacle{
 	{
 		super.act(delta);
 	
-		if( UserData.key( getBody().getUserData() ).equals("catapultWorking"))
+		if(((UserData)getBody().getUserData()).key.equals("catapultWorking"))
 		{
 			setVisible(true);
 			animate = true;

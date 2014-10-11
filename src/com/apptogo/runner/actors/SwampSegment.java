@@ -22,7 +22,8 @@ public class SwampSegment extends Actor{
 		animationManager.createAnimation(45, 0.05f, "swamp", SwampAnimationState.ANIMATING, true);
 		animationManager.setCurrentAnimationState(SwampAnimationState.ANIMATING);
 		currentFrame = animationManager.animate(0f);
-		
+        setWidth(currentFrame.getRegionWidth() / PPM);
+        setHeight(currentFrame.getRegionHeight() / PPM);
 	}
 	
 	@Override
@@ -33,8 +34,7 @@ public class SwampSegment extends Actor{
 	
 	@Override
 	public void act(float delta){
-        setWidth(currentFrame.getRegionWidth() / PPM);
-        setHeight(currentFrame.getRegionHeight() / PPM);
+
         
         if(animationManager != null)
         	currentFrame = animationManager.animate(delta);

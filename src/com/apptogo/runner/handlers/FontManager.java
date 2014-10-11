@@ -30,11 +30,11 @@ public class FontManager
 	{		
 		INSTANCE = new FontManager();
 		
-		Logger.log(INSTANCE, "Manager has been created", LogLevel.LOW);
+		//Logger.log(INSTANCE, "Manager has been created", LogLevel.LOW);
 	}
 	public static void destroy()
 	{
-		Logger.log(INSTANCE, "Manager has been destroyed", LogLevel.LOW);
+		//Logger.log(INSTANCE, "Manager has been destroyed", LogLevel.LOW);
 		
 		INSTANCE = null;
 	}
@@ -64,7 +64,7 @@ public class FontManager
 	    
 	    if (displayWidth != Gdx.graphics.getWidth() || displayHeight != Gdx.graphics.getHeight()) 
 	    {
-	        Logger.log(this, "Generating fonts because of: display size has changed!", LogLevel.HIGH);
+	        //Logger.log(this, "Generating fonts because of: display size has changed!", LogLevel.HIGH);
 	    } 
 	    else 
 	    {
@@ -78,7 +78,7 @@ public class FontManager
 	        } 
 	        catch (GdxRuntimeException e) 
 	        {
-	        	Logger.log(this, "Generating fonts because of: fonts have not been generated yet!", LogLevel.HIGH);
+	        	//Logger.log(this, "Generating fonts because of: fonts have not been generated yet!", LogLevel.HIGH);
 	        }
 	    }
 	    
@@ -125,7 +125,7 @@ public class FontManager
 	 
 		String[] pageRefs = BitmapFontWriter.writePixmaps(packer.getPages(), pixmapDir, fontName);
 		
-		Logger.log(this, "  - saving font file: " + fontFile.path(), LogLevel.HIGH);
+		//Logger.log(this, "  - saving font file: " + fontFile.path(), LogLevel.HIGH);
 		
 		// here we must add the png dir to the page refs
 		for (int i = 0; i < pageRefs.length; i++) 

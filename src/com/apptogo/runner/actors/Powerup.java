@@ -30,7 +30,8 @@ public class Powerup extends Obstacle{
 		super.animate = true;
 				
 		PowerupType powerup = PowerupType.getRandom();
-		UserData userData = new UserData("powerup", powerup.toString());
+		UserData userData = new UserData("powerup");
+		userData.powerup = powerup.toString();
 		
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.KinematicBody, Materials.obstacleGhostBody, "active");
@@ -52,7 +53,7 @@ public class Powerup extends Obstacle{
 		}
 		getBody().setLinearVelocity(velocity);
 		
-		if( UserData.key( getBody().getUserData() ).equals("inactive") )
+		if(((UserData)getBody().getUserData()).key.equals("inactive") )
 		{
 			//tutaj mozna odpalic animacjê zbierania )np jakies gwiazdki albo zmniejszenie sie skrzynki do 0 albo cokolwiek innego.
 			tutajNalezyZaimplementowacToCoSieDziejeKiedyGraczPodniesieSkrzynkeZwanaPrzezNasTakzePowerupem();

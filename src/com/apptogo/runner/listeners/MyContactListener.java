@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
-import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class MyContactListener implements ContactListener
@@ -71,7 +70,7 @@ public class MyContactListener implements ContactListener
 			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-				((UserData)fixture.getBody().getUserData()).arg1 = "5";
+				((UserData)fixture.getBody().getUserData()).slowAmmount = "5";
 				Logger.log(this, "PLAYER W BAGNIE");
 			}
 		}
@@ -103,8 +102,22 @@ public class MyContactListener implements ContactListener
 		//skok i sciany
 		if( checkFixturesTypes(fa, fb, "footSensor", "nonkilling") )
 		{
-			gameWorld.player.character.incrementFootSensor();
-			gameWorld.player.character.land();
+		
+			String playerName = ((UserData)getFixtureByType(fa, fb, "footSensor").getBody().getUserData()).playerName;
+			if(((UserData)gameWorld.player.character.getBody().getUserData()).playerName.equals(playerName)){
+				gameWorld.player.character.incrementFootSensor();
+				gameWorld.player.character.land();
+			}
+			else{
+				try {
+					Player player = gameWorld.getEnemy(playerName);
+					player.character.incrementFootSensor();
+					player.character.land();
+					Logger.log(this, "wykrylem ze gracz: " + playerName + " dotyka ziemi");
+				} catch (PlayerDoesntExistException e) {
+					Logger.log(this, "There is no player with name: " + playerName);
+				}
+			}
 		}
 		
 		if( checkFixturesTypes(fa, fb, "wallSensor", "nonkilling") )
@@ -152,7 +165,7 @@ public class MyContactListener implements ContactListener
 			Fixture fixture = getFixtureByType(fa, fb, "liftField");
 			fixture = ( fixture == fb )?fa:fb; //bo chcemy fixture tego drugiego a nie liftField
 			
-			String fixtureType = UserData.key( fb.getUserData() );
+			String fixtureType = ((UserData)fb.getUserData()).key;
 			
 			if( !( fixtureType.equals("player") || fixtureType.equals("wallSensor") || fixtureType.equals("footSensor") ) )
 			{
@@ -217,7 +230,7 @@ public class MyContactListener implements ContactListener
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "powerup");
 				
-				String powerupKey = ((UserData)fixture.getUserData()).arg1;
+				String powerupKey = ((UserData)fixture.getUserData()).key;
 				gameWorld.player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
 
 				fixture.getBody().setUserData( new UserData("inactive") );
@@ -262,7 +275,7 @@ public class MyContactListener implements ContactListener
 			{
 				Logger.log(this, "PLAYER POZA BAGNEM");
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-				((UserData)fixture.getBody().getUserData()).arg1 = "0";
+				((UserData)fixture.getBody().getUserData()).slowAmmount = "0";
 			}
 		}
 	}
@@ -310,15 +323,15 @@ public class MyContactListener implements ContactListener
 		if //wiem polecialem ale tego gowna nie da sie inaczej rozczytac
 		(
 			( 
-					( UserData.key( fixtureA.getUserData() ) ).equals( typeA ) 
+					((UserData)fixtureA.getUserData()).key.equals( typeA ) 
 					&& 
-					( UserData.key( fixtureB.getUserData() ) ).equals( typeB ) 
+					((UserData)fixtureB.getUserData()).key.equals( typeB ) 
 			) 
 			|| 
 			( 
-					( UserData.key( fixtureA.getUserData() ) ).equals( typeB ) 
+					((UserData)fixtureA.getUserData()).key.equals( typeB ) 
 					&& 
-					( UserData.key( fixtureB.getUserData() ) ).equals( typeA ) 
+					((UserData)fixtureB.getUserData()).key.equals( typeA ) 
 			)
 		)
 		{
@@ -332,9 +345,9 @@ public class MyContactListener implements ContactListener
 	{
 		if
 		(
-				( UserData.key( fixtureA.getUserData() ) ).equals( type ) 
+				((UserData)fixtureA.getUserData()).key.equals( type ) 
 				||
-				( UserData.key( fixtureB.getUserData() ) ).equals( type ) 
+				((UserData)fixtureB.getUserData()).key.equals( type ) 
 		)
 		{
 			return true;
@@ -345,6 +358,6 @@ public class MyContactListener implements ContactListener
 	
 	private Fixture getFixtureByType(Fixture fixtureA, Fixture fixtureB, String type)
 	{
-		return ( ( UserData.key( fixtureA.getUserData() ) ).equals( type ) )?fixtureA:fixtureB;
+		return ((UserData)fixtureA.getUserData()).key.equals(type) ? fixtureA : fixtureB;
 	}
 }

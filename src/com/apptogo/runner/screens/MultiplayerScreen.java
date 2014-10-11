@@ -62,6 +62,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		if( !(WarpController.getInstance().isOnline) )
 		{
+			Logger.log(this, "odpalam");
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);

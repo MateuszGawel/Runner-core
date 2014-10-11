@@ -84,7 +84,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(1/getSpeed() * 0.24f);
+				this.setFrameDuration(1/getSpeed() * 0.3f);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 10){

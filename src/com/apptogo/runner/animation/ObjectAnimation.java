@@ -53,7 +53,6 @@ public class ObjectAnimation extends Actor
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 		isFinished = false;
-		Logger.log(this, "ANIMACJA START");
 	}
 	
 	public boolean isFinished()

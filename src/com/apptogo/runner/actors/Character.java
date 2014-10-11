@@ -56,7 +56,7 @@ public abstract class Character extends Actor{
 	protected int footSensor = 0;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
-	protected float playerMaxSpeed = 8;
+	protected float playerMaxSpeed = 12;
 	protected int slowAmmount = 0;
 	
 	protected Body body;
@@ -155,7 +155,8 @@ public abstract class Character extends Actor{
 	}
 	public boolean jump()
 	{
-		if(started && alive && (touchWall || touchGround))
+		Logger.log(this, "skoks " + alive + touchWall + touchGround);
+		if(/*started && */alive && (touchWall || touchGround))
 		{
 			sliding = false;
 			jumped = true;
@@ -163,7 +164,7 @@ public abstract class Character extends Actor{
 			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
 			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-			
+
 			return true;
 		}
 		else return false;
@@ -356,8 +357,8 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleSlowing(){
-		if(((UserData)body.getUserData()).arg1 != null)
-			slowAmmount = Integer.valueOf(((UserData)body.getUserData()).arg1);
+		if(((UserData)body.getUserData()).slowAmmount != null)
+			slowAmmount = Integer.valueOf(((UserData)body.getUserData()).slowAmmount);
 	}
 	
 	private void handleRunning(){

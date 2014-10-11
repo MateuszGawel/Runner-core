@@ -36,7 +36,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		super(runner);	
 		
 		NotificationManager.getInstance().enableAppWarpNotifications(); //uwaga - to powoduje ze tak czy siak jest wywolywana funkcja z notifManagera w Character (i na starcie w gameWorld) - moze spowalniac program :<
-		//WarpController.getInstance().setListener(this);
+		WarpController.getInstance().setGameListener(this);
 	}
 		
 	public void prepare() 
@@ -44,7 +44,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		super.prepare();	
 
 		createGui();
-		NotificationManager.getInstance().screamMyName();
+		//NotificationManager.getInstance().screamMyName();
 	}
 					
 	@Override
@@ -91,6 +91,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			try
 			{
 				enemy = world.getEnemy(enemyName);
+				Logger.log(this, "Dostalem wiadomosc od: " + enemyName + " tresc: " + data);
 			}
 			catch(PlayerDoesntExistException e)
 			{
@@ -111,6 +112,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			}
 			else if( data.has("JUMP") && (boolean)data.getBoolean("JUMP") )
 			{
+				Logger.log(this, "mam jumpa");
 				enemy.character.jump();
 			}
 			else if( data.has("SLIDE") && (boolean)data.getBoolean("SLIDE") )

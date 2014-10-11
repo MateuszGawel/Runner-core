@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class ForestWorld extends GameWorld{
-	public static final Vector2 GRAVITY = new Vector2(0f, -60f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -80f);
 
 
 	public Image tree4;

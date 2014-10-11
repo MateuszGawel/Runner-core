@@ -38,7 +38,7 @@ public class Coin extends Obstacle
 	{
 		super.act(delta);
 		
-		if( UserData.key( getBody().getUserData() ).equals("inactive") )
+		if(((UserData)getBody().getUserData()).key.equals("inactive") )
 		{
 			gainCoinResult();
 			

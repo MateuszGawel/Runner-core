@@ -47,7 +47,7 @@ public class Mushroom extends Obstacle{
 	{
 		super.act(delta);
 		
-		if( UserData.key( mushroomFixture.getUserData() ).equals("mushroomWorking") )
+		if(((UserData)mushroomFixture.getUserData()).key.equals("mushroomWorking") )
 		{
 			animate = true;
 			animationManager.setCurrentAnimationState(MushroomAnimationState.WORKING);

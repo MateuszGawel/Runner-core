@@ -1,9 +1,6 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-
-import java.util.HashMap;
-
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Character;
@@ -17,15 +14,13 @@ import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -99,6 +94,8 @@ public abstract class GameWorld
 	private void createWorld(String mapPath)
 	{
 		this.player.character = createCharacter( this.player.getCharacterType() );
+		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
+
 		worldStage.addActor( this.player.character );
 		
 		TiledMapLoader.getInstance().setWorld(world);
@@ -188,6 +185,7 @@ public abstract class GameWorld
     	}
     	
 		enemy.character = createCharacter( enemy.getCharacterType() );
+		((UserData)enemy.character.getBody().getUserData()).playerName = enemy.getName();
 		enemies.add( enemy );
 		
 		worldStage.addActor( enemy.character );
@@ -197,7 +195,7 @@ public abstract class GameWorld
     {
     	for(Player enemyPlayer: enemies)
     	{
-    		if( enemyPlayer.equals( enemyName ) )
+    		if( enemyPlayer.getName().equals( enemyName ) )
     		{
     			return enemyPlayer;
     		}

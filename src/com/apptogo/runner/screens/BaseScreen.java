@@ -79,7 +79,7 @@ public abstract class BaseScreen implements Screen
 		
 		this.languageManager = LanguageManager.getInstance();
 		
-		Logger.log(this, settings.getLanguage());
+		//Logger.log(this, settings.getLanguage());
 		
 		this.languageManager.setCurrentLanguage( settings.getLanguage() );
 	}

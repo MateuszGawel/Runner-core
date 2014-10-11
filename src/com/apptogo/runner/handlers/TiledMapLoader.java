@@ -226,7 +226,6 @@ public class TiledMapLoader
 				{
 					bodyDef.type = BodyDef.BodyType.DynamicBody;
 				}
-				Logger.log(this, "tworze ");
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				

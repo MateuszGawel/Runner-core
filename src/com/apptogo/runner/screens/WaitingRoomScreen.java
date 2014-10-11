@@ -34,7 +34,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	private TextButton playButton;
 	private Button backButton;
 	
-	private Array<Player> players;
+	private Array<Player> enemyPlayers;
 	
 	private Array<CharacterAnimation> playersAnimation;
 	private final Array<Vector2> playerAnimationPosition = new Array<Vector2>( new Vector2[]{ new Vector2(-400, 150), 
@@ -59,11 +59,11 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		
 		fadeInOnStart();
 		
-		//if( !(WarpController.getInstance().isOnline) )
-		//{
-		//	Logger.log(this, "Jeszcze nie byl online //waiting");
+		if( !(WarpController.getInstance().isOnline) )
+		{
+			Logger.log(this, "Jeszcze nie byl online //waiting");
 			//WarpController.getInstance().startApp( player.getName() );
-		//}
+		}
 		Logger.log(this,  "ustawiam waiting room listener");
 		WarpController.getInstance().setWaitingRoomListener(this);
 		try {
@@ -92,11 +92,11 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "", "0", GameWorldType.WILDWEST), players );
+            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "", "0", GameWorldType.WILDWEST), enemyPlayers );
             }
         });
         
-		players = new Array<Player>();
+		enemyPlayers = new Array<Player>();
 		playersAnimation = new Array<CharacterAnimation>();
 		currentPlayersCount = 0;
 		
@@ -217,7 +217,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					presentAlready = true;
 				}
 					
-				for(Player player : players){
+				for(Player player : enemyPlayers){
 					
 					Logger.log(this, "porownuje: " + player.getName() + " oraz " + enemyName);
 					
@@ -235,15 +235,19 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					CharacterType enemyCharacter = CharacterType.parseFromString( (String)data.getString("PLAYER_CHARACTER") );
 					Player enemy = new Player(enemyName, enemyCharacter);
 
-					players.add(enemy);
+					enemyPlayers.add(enemy);
 					addPlayer(enemy);
 					
 					NotificationManager.getInstance().screamMyName();
 				}
-			}
-			Logger.log(this, "ostatecznie takich mam graczy na swojej liscie: ");
-			for(Player player : players){
-				Logger.log(this, "gracz: " + player.getName());
+				Logger.log(this, "ostatecznie takich mam graczy na swojej liscie: ");
+				for(Player player : enemyPlayers){
+					Logger.log(this, "gracz: " + player.getName());
+				}
+				if(enemyPlayers.size == 1){
+					Logger.log(this, "OK JEST 2 GRACZY, ODPALAM!");
+					WarpController.getInstance().startGame();
+				}
 			}
 		} 
 		catch (JSONException e) { e.printStackTrace(); }
@@ -285,9 +289,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			@Override
 			public void run () {
 				//nie chcemy na razie nic robic - dopiero jak ktos kliknie play
-				//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", GameWorldType.WILDWEST), player, enemies);
-			
-					NotificationManager.getInstance().screamMyName();
+				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "0", "0", GameWorldType.WILDWEST), enemyPlayers);
 			
 			}
 		});
