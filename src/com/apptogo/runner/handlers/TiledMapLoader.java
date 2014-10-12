@@ -15,9 +15,9 @@ import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
-import com.apptogo.runner.actors.Rock;
+import com.apptogo.runner.actors.RockBig;
+import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -335,9 +335,15 @@ public class TiledMapLoader
 					bodies.add( coinBody );
 				}
 			}
-			else if( checkObjectType(object, "rock") )
+			else if( checkObjectType(object, "rockBig") )
 			{
-				body = createRock(object);
+				body = createRockBig(object);
+								
+				bodies.add( body );
+			}
+			else if( checkObjectType(object, "rockSmall") )
+			{
+				body = createRockSmall(object);
 								
 				bodies.add( body );
 			}
@@ -437,9 +443,15 @@ public class TiledMapLoader
 		return powerup.getBody();
 	}
 	
-	private Body createRock(MapObject object)
+	private Body createRockBig(MapObject object)
 	{
-		Rock rock = new Rock(object, world, gameWorld);
+		RockBig rock = new RockBig(object, world, gameWorld);
+		return rock.getBody();
+	}
+	
+	private Body createRockSmall(MapObject object)
+	{
+		RockSmall rock = new RockSmall(object, world, gameWorld);
 		return rock.getBody();
 	}
 	

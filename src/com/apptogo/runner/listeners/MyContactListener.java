@@ -34,7 +34,7 @@ public class MyContactListener implements ContactListener
 		this.world = world;
 		this.gameWorld = gameWorld;
 	}
-	
+
 	@Override
 	public void beginContact(Contact contact)
 	{
@@ -70,7 +70,7 @@ public class MyContactListener implements ContactListener
 			if(  gameWorld.player.character.isAlive() && !gameWorld.player.character.isImmortal() )
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-				((UserData)fixture.getBody().getUserData()).slowAmmount = "5";
+				((UserData)fixture.getBody().getUserData()).slowPercent = 0.8f;
 				Logger.log(this, "PLAYER W BAGNIE");
 			}
 		}
@@ -99,30 +99,32 @@ public class MyContactListener implements ContactListener
 			}
 		}
 		
+
 		//skok i sciany
 		if( checkFixturesTypes(fa, fb, "footSensor", "nonkilling") )
 		{
-		
 			String playerName = ((UserData)getFixtureByType(fa, fb, "footSensor").getBody().getUserData()).playerName;
-			if(((UserData)gameWorld.player.character.getBody().getUserData()).playerName.equals(playerName)){
-				gameWorld.player.character.incrementFootSensor();
-				gameWorld.player.character.land();
-			}
-			else{
-				try {
-					Player player = gameWorld.getEnemy(playerName);
-					player.character.incrementFootSensor();
-					player.character.land();
-					Logger.log(this, "wykrylem ze gracz: " + playerName + " dotyka ziemi");
-				} catch (PlayerDoesntExistException e) {
-					Logger.log(this, "There is no player with name: " + playerName);
-				}
-			}
+			Player player = findPlayerByName(playerName);
+			
+			player.character.incrementFootSensor();
+			player.character.land();
 		}
 		
 		if( checkFixturesTypes(fa, fb, "wallSensor", "nonkilling") )
 		{
-			gameWorld.player.character.incrementWallSensor();
+			String playerName = ((UserData)getFixtureByType(fa, fb, "wallSensor").getBody().getUserData()).playerName;
+			Player player = findPlayerByName(playerName);
+			
+			player.character.incrementWallSensor();
+		}
+		
+		if( checkFixturesTypes(fa, fb, "standupSensor", "nonkilling") )
+		{
+			Logger.log(this, "wykrylem standupa");
+			String playerName = ((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).playerName;
+			Player player = findPlayerByName(playerName);
+			
+			player.character.incrementStandupSensor();
 		}
 		
 		//zmienianie typu beczek
@@ -131,6 +133,11 @@ public class MyContactListener implements ContactListener
 			Fixture fixture = getFixtureByType(fa, fb, "barrel");
 			
 			barrelsToSetActive.add( fixture.getBody() );
+		}
+		if( checkFixturesTypes(fa, fb, "barrel", "barrel") )
+		{
+			barrelsToSetActive.add( fa.getBody() );
+			barrelsToSetActive.add( fb.getBody() );
 		}
 		
 		//smierc od beczek
@@ -251,14 +258,28 @@ public class MyContactListener implements ContactListener
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 
-		if( checkFixturesTypes(fa,  fb, "footSensor", "nonkilling") )
+		if( checkFixturesTypes(fa, fb, "footSensor", "nonkilling") )
 		{
-			gameWorld.player.character.decrementFootSensor();
+			String playerName = ((UserData)getFixtureByType(fa, fb, "footSensor").getBody().getUserData()).playerName;
+			Player player = findPlayerByName(playerName);
+			
+			player.character.decrementFootSensor();
 		}
 		
-		if( checkFixturesTypes(fa,  fb, "wallSensor", "nonkilling") )
+		if( checkFixturesTypes(fa, fb, "wallSensor", "nonkilling") )
 		{
-			gameWorld.player.character.decrementWallSensor();
+			String playerName = ((UserData)getFixtureByType(fa, fb, "wallSensor").getBody().getUserData()).playerName;
+			Player player = findPlayerByName(playerName);
+			
+			player.character.decrementWallSensor();
+		}
+		
+		if( checkFixturesTypes(fa, fb, "standupSensor", "nonkilling") )
+		{
+			String playerName = ((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).playerName;
+			Player player = findPlayerByName(playerName);
+			
+			player.character.decrementStandupSensor();
 		}
 		
 		if( checkIsOneOfType(fa, fb, "liftField") )
@@ -275,7 +296,7 @@ public class MyContactListener implements ContactListener
 			{
 				Logger.log(this, "PLAYER POZA BAGNEM");
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-				((UserData)fixture.getBody().getUserData()).slowAmmount = "0";
+				((UserData)fixture.getBody().getUserData()).slowPercent = 0;
 			}
 		}
 	}
@@ -359,5 +380,20 @@ public class MyContactListener implements ContactListener
 	private Fixture getFixtureByType(Fixture fixtureA, Fixture fixtureB, String type)
 	{
 		return ((UserData)fixtureA.getUserData()).key.equals(type) ? fixtureA : fixtureB;
+	}
+	
+	private Player findPlayerByName(String playerName){
+		Player player = null;
+		if(((UserData)gameWorld.player.character.getBody().getUserData()).playerName.equals(playerName)){
+			player = gameWorld.player;
+		}
+		else{
+			try {
+				player = gameWorld.getEnemy(playerName);
+			} catch (PlayerDoesntExistException e) {
+				Logger.log(this, "There is no player with name: " + playerName);
+			}
+		}
+		return player;
 	}
 }

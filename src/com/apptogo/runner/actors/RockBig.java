@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Rock extends Obstacle{
+public class RockBig extends Obstacle{
 
 	private float stateTime = 0;
 	private float timeElapsed = 0;
@@ -20,14 +20,13 @@ public class Rock extends Obstacle{
 	private Vector2 velocity = new Vector2(0, 0.4f);
 
 	
-	public Rock(MapObject object, World world, GameWorld gameWorld)
+	public RockBig(MapObject object, World world, GameWorld gameWorld)
 	{
-		super(object, world, "gfx/game/levels/asteroid1.png");
+		super(object, world, "gfx/game/levels/rockBig.png");
 				
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.KinematicBody, Materials.obstacleBody, "active");
-		getBody().getFixtureList().get(0).setSensor(false); // do sprawdzenia
-		//setOffset(-40f/PPM, -35f/PPM);
+		setOffset(-5/PPM, -currentFrame.getTexture().getHeight()/PPM);
 	}
 	
 	

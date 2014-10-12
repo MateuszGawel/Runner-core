@@ -35,8 +35,7 @@ public class Alien extends Character{
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
-		bodySize = new Vector2(25 / PPM, 65 / PPM);
-		createBody(bodySize);
+		createBody();
         setOrigin(0, 0);
         liftField = new LiftField(this, world);
         gameWorld.backgroundStage.addActor(liftField);

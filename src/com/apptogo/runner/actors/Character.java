@@ -4,6 +4,8 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.appwarp.NotificationManager;
@@ -11,6 +13,7 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
@@ -45,19 +48,26 @@ public abstract class Character extends Actor{
 	protected boolean running = false;
 	protected boolean stopped = false;
 	protected boolean touchWall = false;
+	protected boolean canStandup = true;
 	protected boolean jumped = false;
 	protected boolean started = false;
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
+	protected boolean forceStandup = false;
 	
 	protected boolean gameIsEnded = false;
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
+	protected int standupSensor = 0;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
-	protected float playerMaxSpeed = 12;
-	protected int slowAmmount = 0;
+	
+	protected float playerSpeedLimit = 12;
+	protected float playerMinSpeed = 2;
+	protected float playerSlowAmmount = 0;
+	
+	protected float playerSwampSlowAmmount = 0;
 	
 	protected Body body;
 	protected Vector2 deathPosition;
@@ -97,8 +107,8 @@ public abstract class Character extends Actor{
 		powerupButtons = new Array<Button>();
 	}
 	
-	protected void createBody(Vector2 bodySize){
-		bodySize = new Vector2(25 / PPM, 63 / PPM);
+	protected void createBody(){
+		Vector2 bodySize = new Vector2(25 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
@@ -117,7 +127,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 		
 		//sliding fixture
-		shape.setAsBox(bodySize.y - 15/PPM, bodySize.x, new Vector2(-bodySize.x, -40/PPM), 0);
+		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x, -30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
@@ -135,6 +145,12 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
+		
+		//slide sensor
+		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, 8/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
 	}
 	
 	
@@ -153,9 +169,31 @@ public abstract class Character extends Actor{
 		}
 		else return false;
 	}
+	
+	private void testMethod(){
+		registerAction(new CharacterAction(this, 2f) {
+			@Override
+			public void perform() {
+				Logger.log(this, "akcja 2");
+			}
+		});
+		registerAction(new CharacterAction(this, 5f) {
+			@Override
+			public void perform() {
+				Logger.log(this, "akcja 5");
+			}
+		});
+		registerAction(new CharacterAction(this, 8f) {
+			@Override
+			public void perform() {
+				Logger.log(this, "akcja 8");
+			}
+		});
+	}
+	
 	public boolean jump()
 	{
-		Logger.log(this, "skoks " + alive + touchWall + touchGround);
+		testMethod();
 		if(/*started && */alive && (touchWall || touchGround))
 		{
 			sliding = false;
@@ -189,19 +227,25 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
-			
+			slowPlayerBy(0.5f);
 			return true;
 		}
 		else return false;
 	}
 	public boolean standUp()
 	{
-		if(alive && sliding){
+		if(alive && sliding && canStandup){
 			sliding = false;
+			Logger.log(this, "WSTAJE");
 			body.getFixtureList().get(0).setSensor(false);
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
+			speedPlayerBy(0.5f);
 			
+			return true;
+		}
+		else if(!canStandup){
+			forceStandup = true;
 			return true;
 		}
 		else return false;
@@ -288,7 +332,27 @@ public abstract class Character extends Actor{
 	public void decrementFootSensor(){
 		footSensor--;
 	}
+	public void incrementStandupSensor(){
+		standupSensor++;
+	}
 	
+	public void decrementStandupSensor(){
+		standupSensor--;
+	}
+	public boolean slowPlayerBy(float percent){
+		if(percent < 0 || percent > 1)
+			return false;
+		else
+			playerSlowAmmount += playerSpeedLimit * percent;
+		return true;
+	}
+	public boolean speedPlayerBy(float percent){
+		if(percent < 0 || percent > 1)
+			return false;
+		else
+			playerSlowAmmount -= playerSpeedLimit * percent;
+		return true;
+	}
 	/*--- HANDLERS ---*/
 	public void handleImmortality(float immortalityLenght)
 	{
@@ -335,7 +399,7 @@ public abstract class Character extends Actor{
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			stopped = true;
 		}
-		else if(alive && speed > 0.001f && stopped){
+		else if(alive && speed > 0.001f && stopped && !sliding){
 			if(touchGround)
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			else
@@ -354,20 +418,40 @@ public abstract class Character extends Actor{
 			touchGround = true;
 		else
 			touchGround = false;
+		
+		if(standupSensor > 0)
+			canStandup = false;
+		else
+			canStandup = true;
 	}
 	
+	private List<CharacterAction> actions = new ArrayList<CharacterAction>();
+	
+	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
+	public void registerAction(CharacterAction action){
+		this.actions.add(action);
+	}
+	
+	/**metoda obslugujaca slowy z ContactListnera*/
 	private void handleSlowing(){
-		if(((UserData)body.getUserData()).slowAmmount != null)
-			slowAmmount = Integer.valueOf(((UserData)body.getUserData()).slowAmmount);
+		playerSwampSlowAmmount = playerSpeedLimit * ((UserData)body.getUserData()).slowPercent;
+	}
+	
+	private void handleActions(float delta){
+		Iterator<CharacterAction> iter = actions.listIterator();
+		while(iter.hasNext()) {
+		    CharacterAction action = iter.next();
+		    action.act(delta);
+		    if (action.isFinished()) {
+		        iter.remove();
+		    }
+		}
 	}
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && !sliding && speed < playerMaxSpeed-slowAmmount)
+		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			body.applyForceToCenter(new Vector2(3000, 0), true);
-		else if(sliding){
-			body.applyForceToCenter(new Vector2(200, 0), true);
-		}
 	}
 	
 	public void superJump()
@@ -388,6 +472,12 @@ public abstract class Character extends Actor{
 			}
 		}
 	}
+	private void handleStandingUp(){
+		if(forceStandup && canStandup && sliding){
+			standUp();
+			forceStandup = false;
+		}
+	}
 
 	@Override
 	public void act(float delta) 
@@ -398,7 +488,9 @@ public abstract class Character extends Actor{
 		handleSlowing();
 		handleRunning();
 		handleDismemberment();
-		//Logger.log(this, body.getPosition().x + " ");
+		handleActions(delta);
+		handleStandingUp();
+		
 		currentFrame = animationManager.animate(delta);
 		
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
@@ -554,5 +646,5 @@ public abstract class Character extends Actor{
 	{
 		return this.isPowerupSet;
 	}
-	public void setSlowAmmount(int slowAmmount){this.slowAmmount = slowAmmount; }
+
 }

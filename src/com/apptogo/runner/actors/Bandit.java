@@ -41,8 +41,7 @@ public class Bandit extends Character{
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
-		bodySize = new Vector2(25 / PPM, 65 / PPM);
-		createBody(bodySize);
+		createBody();
 		
 		createBodyMembers();
 		 
