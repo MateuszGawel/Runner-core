@@ -95,7 +95,9 @@ public abstract class GameWorld
 	{
 		this.player.character = createCharacter( this.player.getCharacterType() );
 		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
-
+		((UserData)this.player.character.getBody().getUserData()).me = true;
+		this.player.character.setMe(true);
+		
 		worldStage.addActor( this.player.character );
 		
 		TiledMapLoader.getInstance().setWorld(world);
@@ -133,7 +135,8 @@ public abstract class GameWorld
 	{
 		if( Input.isPressed() ) 
 		{
-			if( this.player.character.start() ) NotificationManager.getInstance().notifyStartRunning();
+			if( this.player.character.start() ) 
+				NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
 		}
 	}
 	

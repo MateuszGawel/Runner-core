@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 public abstract class Character extends Actor{
 	private World world;
 	
+	protected boolean me = false;
 	protected boolean alive = true;
 	protected boolean touchGround = false;
 	protected boolean sliding = false;
@@ -85,7 +86,7 @@ public abstract class Character extends Actor{
 	protected AnimationManager animationManager;
 		
 	protected ArrayList<BodyMember> bodyMembers;
-	
+	private List<CharacterAction> actions = new ArrayList<CharacterAction>();
 	protected Array<Button> powerupButtons;
 
 	private boolean isPowerupSet = false;
@@ -160,11 +161,7 @@ public abstract class Character extends Actor{
 		{			
 			running = true;
 			started = true;
-			//if(touchGround)
-			//{
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
-			//}
-			
 			return true;
 		}
 		else return false;
@@ -193,8 +190,8 @@ public abstract class Character extends Actor{
 	
 	public boolean jump()
 	{
-		testMethod();
-		if(/*started && */alive && (touchWall || touchGround))
+		//testMethod();
+		if(/*started && */alive && (touchWall || touchGround || !me))
 		{
 			sliding = false;
 			jumped = true;
@@ -221,7 +218,7 @@ public abstract class Character extends Actor{
 	}
 	public boolean slide()
 	{
-		if(started && alive && touchGround && !sliding)
+		if(started && alive && (touchGround || !me) && !sliding)
 		{
 			sliding = true;
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
@@ -232,11 +229,11 @@ public abstract class Character extends Actor{
 		}
 		else return false;
 	}
+	
 	public boolean standUp()
 	{
 		if(alive && sliding && canStandup){
 			sliding = false;
-			Logger.log(this, "WSTAJE");
 			body.getFixtureList().get(0).setSensor(false);
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
@@ -250,7 +247,7 @@ public abstract class Character extends Actor{
 		}
 		else return false;
 	}
-	/** NotificationManager.getInstance().notifyDieTop() przy uzyciu i zwroceniu true */
+
 	public boolean dieTop()
 	{
 		boolean success = die();
@@ -259,7 +256,7 @@ public abstract class Character extends Actor{
 		body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 		return success;
 	}
-	/** NotificationManager.getInstance().notifyDieBottom() przy uzyciu i zwroceniu true */
+
 	public boolean dieBottom()
 	{
 		boolean success = die();
@@ -378,7 +375,7 @@ public abstract class Character extends Actor{
 					public void run() {
 						visible = false;
 					}
-				}, 0.1f);
+				}, 0.08f);
 			}
 			else if(blinking && !visible){
 				Timer.schedule(new Task() {
@@ -424,8 +421,6 @@ public abstract class Character extends Actor{
 		else
 			canStandup = true;
 	}
-	
-	private List<CharacterAction> actions = new ArrayList<CharacterAction>();
 	
 	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
 	public void registerAction(CharacterAction action){
@@ -544,7 +539,7 @@ public abstract class Character extends Actor{
 			{
 				if( character.jump() )
 				{
-					NotificationManager.getInstance().notifyJump();
+					NotificationManager.getInstance().notifyJump(getBody().getPosition());
 				}
 				
 		        return true;
@@ -567,7 +562,7 @@ public abstract class Character extends Actor{
 			{
 				if( character.slide() )
 				{
-					NotificationManager.getInstance().notifySlide();
+					NotificationManager.getInstance().notifySlide(getBody().getPosition());
 				}
 		        return true;
 		    }
@@ -576,7 +571,7 @@ public abstract class Character extends Actor{
 			{
 				if( character.standUp() )
 				{
-					NotificationManager.getInstance().notifyStandUp();
+					NotificationManager.getInstance().notifyStandUp(getBody().getPosition());
 				}
 		    }
 		});
@@ -646,5 +641,6 @@ public abstract class Character extends Actor{
 	{
 		return this.isPowerupSet;
 	}
+	public void setMe(boolean me){ this.me = me; }
 
 }

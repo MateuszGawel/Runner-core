@@ -1,6 +1,5 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.actors.Character;
 
 public abstract class CharacterAction {
@@ -14,9 +13,27 @@ public abstract class CharacterAction {
 	private float timeElapsed = 0;
 	private float delay;
 	private boolean finished;
+	protected Object[] args;
+	protected Character character;
+	
+	public CharacterAction(float delay){
+		this.delay = delay;
+	}
 	
 	public CharacterAction(Character character, float delay){
 		this.delay = delay;
+		this.character = character;
+	}
+	
+	public CharacterAction(float delay, Object... args){
+		this.delay = delay;
+		this.args = args;
+	}
+	
+	public CharacterAction(Character character, float delay, Object... args){
+		this.delay = delay;
+		this.args = args;
+		this.character = character;
 	}
 	
 	public abstract void perform();

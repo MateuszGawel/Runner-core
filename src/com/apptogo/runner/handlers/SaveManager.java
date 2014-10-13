@@ -69,7 +69,7 @@ public class SaveManager
 	
 	public Player loadPlayer()
 	{			
-		Player player = new Player("siurek", CharacterType.BANDIT); //tutaj ustawiam sobie imie zebym mogl testowac na 1 kompie
+		Player player = new Player("cycek", CharacterType.BANDIT); //tutaj ustawiam sobie imie zebym mogl testowac na 1 kompie
 		Json json = new Json();
 		save(player); //dodaltem te linijke i wykomentowalem nizej
 		if( save.getString("PLAYER", "").equals("") )

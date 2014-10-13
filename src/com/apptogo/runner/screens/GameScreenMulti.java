@@ -1,33 +1,19 @@
 package com.apptogo.runner.screens;
 
-import java.lang.reflect.Type;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.actors.Archer;
-import com.apptogo.runner.actors.Bandit;
-import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
-import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.SaveManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.world.GameWorld;
-import com.apptogo.runner.world.GameWorldRenderer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.math.Vector2;
 
 public class GameScreenMulti extends GameScreen implements WarpListener{
 		
@@ -100,8 +86,15 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			
 			if( data.has("START_RUNNING") && (boolean)data.getBoolean("START_RUNNING") ) 
 			{
-				enemy.character.start();
+				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+					@Override
+					public void perform() {
+						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
+						character.start();
+					}
+				});
 			}
+			/*
 			else if( data.has("DIE_TOP") && (boolean)data.getBoolean("DIE_TOP") )
 			{
 				enemy.character.dieTop();
@@ -109,20 +102,37 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			else if( data.has("DIE_BOTTOM") && (boolean)data.getBoolean("DIE_BOTTOM") )
 			{
 				enemy.character.dieBottom();
-			}
+			}*/
 			else if( data.has("JUMP") && (boolean)data.getBoolean("JUMP") )
 			{
-				Logger.log(this, "mam jumpa");
-				enemy.character.jump();
+				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+					@Override
+					public void perform() {
+						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
+						character.jump();
+					}
+				});
 			}
 			else if( data.has("SLIDE") && (boolean)data.getBoolean("SLIDE") )
 			{
-				enemy.character.slide();
+				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+					@Override
+					public void perform() {
+						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
+						character.slide();
+					}
+				});
 			}
 			else if( data.has("STAND_UP") && (boolean)data.getBoolean("STAND_UP") )
 			{
-				enemy.character.standUp();
-			}
+				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+					@Override
+					public void perform() {
+						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
+						character.standUp();
+					}
+				});
+			}/*
 			else if( data.has("SLOW") && (boolean)data.getBoolean("SLOW") )
 			{
 				enemy.character.setRunning(false);
@@ -130,7 +140,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			else if( data.has("ABORT_SLOW") && (boolean)data.getBoolean("ABORT_SLOW") )
 			{
 				enemy.character.setRunning(true);
-			}
+			}*/
 			else if( data.has("ABILITY") && (boolean)data.getBoolean("ABILITY") )
 			{
 				if( !(data.getString("ABILITY_TYPE").equals("")) )
