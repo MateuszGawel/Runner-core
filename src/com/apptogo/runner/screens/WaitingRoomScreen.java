@@ -199,6 +199,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
+		Logger.log(this, "³apiê w waitongroom");
 		Logger.log(this, "Ja jestem: " + player.getName() + " przyszed³ update: " + message);
 		try 
 		{

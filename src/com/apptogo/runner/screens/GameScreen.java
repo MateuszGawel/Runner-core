@@ -2,6 +2,7 @@ package com.apptogo.runner.screens;
 
 import java.lang.reflect.Type;
 
+import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -36,6 +37,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected Button slideButton;
 	protected Button slowButton;
 	protected Array<Button> powerupButtons;
+	protected boolean multiplayer;
 	
 	public GameScreen(Runner runner)
 	{
@@ -108,11 +110,15 @@ public abstract class GameScreen extends BaseScreen{
 	@Override
 	public void handleInput() 
 	{
-		world.handleInput();
-		
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+		}
+		else if( Input.isPressed() ) 
+		{
+			if(!multiplayer) 
+				this.player.character.start();
+				//NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
 		}
 	}
 	

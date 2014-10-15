@@ -168,19 +168,19 @@ public abstract class Character extends Actor{
 	}
 	
 	private void testMethod(){
-		registerAction(new CharacterAction(this, 2f) {
+		registerAction(new CharacterAction(2f) {
 			@Override
 			public void perform() {
 				Logger.log(this, "akcja 2");
 			}
 		});
-		registerAction(new CharacterAction(this, 5f) {
+		registerAction(new CharacterAction(5f) {
 			@Override
 			public void perform() {
 				Logger.log(this, "akcja 5");
 			}
 		});
-		registerAction(new CharacterAction(this, 8f) {
+		registerAction(new CharacterAction(8f) {
 			@Override
 			public void perform() {
 				Logger.log(this, "akcja 8");

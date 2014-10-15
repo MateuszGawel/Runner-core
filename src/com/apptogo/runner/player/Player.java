@@ -16,6 +16,8 @@ public class Player
 	public Character character;
 		
 	public Statistics statistics;	
+	
+	public boolean readyToRun;
 		
 	public Player()
 	{

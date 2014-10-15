@@ -10,9 +10,11 @@ public abstract class CharacterAction {
 	 */
 	
 	private float stateTime = 0;
-	private float timeElapsed = 0;
+	protected float timeElapsed = 0;
 	private float delay;
 	private boolean finished;
+	private int loopCount = 0;
+	private int loops = 1;
 	protected Object[] args;
 	protected Character character;
 	
@@ -20,31 +22,31 @@ public abstract class CharacterAction {
 		this.delay = delay;
 	}
 	
-	public CharacterAction(Character character, float delay){
-		this.delay = delay;
+	/**loops: 0 - nieskonczona, 1 - tylko raz, x - ilosc razy */
+	public CharacterAction(Character character, float delay, int loops){
+		this(delay);
 		this.character = character;
+		this.loops = loops;
 	}
 	
-	public CharacterAction(float delay, Object... args){
-		this.delay = delay;
+	/**loops: 0 - nieskonczona, 1 - tylko raz, x - ilosc razy */
+	public CharacterAction(Character character, float delay, int loops, Object... args){
+		this(character, delay, loops);
 		this.args = args;
-	}
-	
-	public CharacterAction(Character character, float delay, Object... args){
-		this.delay = delay;
-		this.args = args;
-		this.character = character;
 	}
 	
 	public abstract void perform();
 	
 	public void act(float delta){
 		stateTime += delta;
-		
+
 		if((stateTime - timeElapsed)/delay >= 1){
+			loopCount++;
 			timeElapsed+=delay;
 			perform();
-			this.finished = true;
+			if(loops > 0 && loopCount >= loops){
+				this.finished = true;
+			}	
 		}
 	}
 	

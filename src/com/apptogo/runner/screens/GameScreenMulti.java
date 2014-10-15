@@ -1,5 +1,8 @@
 package com.apptogo.runner.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,6 +10,7 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.CharacterAction;
@@ -17,6 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GameScreenMulti extends GameScreen implements WarpListener{
 		
+	private List<String> enemyNames = new ArrayList<String>();
 	public GameScreenMulti(Runner runner)
 	{
 		super(runner);	
@@ -28,9 +33,9 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 	public void prepare() 
 	{			
 		super.prepare();	
-
+		super.multiplayer = true;
 		createGui();
-		//NotificationManager.getInstance().screamMyName();
+		NotificationManager.getInstance().notifyReadyToRun();
 	}
 					
 	@Override
@@ -63,49 +68,87 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		
 	}
 
+	
+	private void handleReadyToRun(Player sender){
+		Logger.log(this, "jest to wiadomosc readytorun");
+
+		if( world.player.getName().equals(sender.getName()) )
+		{
+			Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
+			return;
+		}
+		else if(sender.readyToRun){
+			return;
+		}
+		else if(!sender.readyToRun){
+			sender.readyToRun = true;
+			NotificationManager.getInstance().notifyReadyToRun();
+		}
+		
+			
+		for(Player enemy : enemies){
+			if(!enemy.readyToRun)
+				return;
+		}
+		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
+		
+		for(Player enemy : enemies){
+			enemy.character.registerAction(new CharacterAction(enemy.character, 1f, 4) {
+				@Override
+				public void perform() {
+					if(timeElapsed == 4)
+						character.start();
+				}
+			});
+		}
+		world.player.character.registerAction(new CharacterAction(world.player.character, 1f, 4) {
+			@Override
+			public void perform() {
+				if(timeElapsed < 4)
+					Logger.log(this, "ODLICZAM: " + (4 - timeElapsed));
+				else if(timeElapsed == 4){
+					Logger.log(this, "ODLICZAM: GO!!!!");
+					character.start();
+				}
+					
+			}
+		});
+	}
+	
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
+		Logger.log(this, "≥apiÍ w gamescreenulti");
 		try 
 		{
 			JSONObject data = new JSONObject(message);
 							
 			//rozparsowuje do zmiennych
-			Player enemy = null;
+			Player sender = null;
 			String enemyName = (String)data.getString("PLAYER_NAME");
 			
 			try
 			{
-				enemy = world.getEnemy(enemyName);
+				sender = world.getEnemy(enemyName);
 				Logger.log(this, "Dostalem wiadomosc od: " + enemyName + " tresc: " + data);
 			}
 			catch(PlayerDoesntExistException e)
 			{
 				Logger.log(this, "Player " + enemyName + " is not created and cannot be used");
 			}
-			
-			if( data.has("START_RUNNING") && (boolean)data.getBoolean("START_RUNNING") ) 
+
+			if( world.player.getName().equals(enemyName) )
 			{
-				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
-					@Override
-					public void perform() {
-						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
-						character.start();
-					}
-				});
+				Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
+				return;
 			}
-			/*
-			else if( data.has("DIE_TOP") && (boolean)data.getBoolean("DIE_TOP") )
+			else if( data.has("READY_TO_RUN") && (boolean)data.getBoolean("READY_TO_RUN") ) 
 			{
-				enemy.character.dieTop();
+				handleReadyToRun(sender);
 			}
-			else if( data.has("DIE_BOTTOM") && (boolean)data.getBoolean("DIE_BOTTOM") )
-			{
-				enemy.character.dieBottom();
-			}*/
 			else if( data.has("JUMP") && (boolean)data.getBoolean("JUMP") )
 			{
-				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
 						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
@@ -115,7 +158,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			}
 			else if( data.has("SLIDE") && (boolean)data.getBoolean("SLIDE") )
 			{
-				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
 						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
@@ -125,7 +168,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			}
 			else if( data.has("STAND_UP") && (boolean)data.getBoolean("STAND_UP") )
 			{
-				enemy.character.registerAction(new CharacterAction(enemy.character, 0, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
 						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
@@ -146,7 +189,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 				if( !(data.getString("ABILITY_TYPE").equals("")) )
 				{
 					CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-					enemy.character.useAbility(abilityType);
+					sender.character.useAbility(abilityType);
 				}
 			}
 			//mala uwaga

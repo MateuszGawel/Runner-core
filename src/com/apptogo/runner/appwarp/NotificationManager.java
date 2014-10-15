@@ -120,6 +120,19 @@ public class NotificationManager
 		sendNotification(data);
 	}
 	*/
+	public void notifyReadyToRun()
+	{
+		//JSONObject data = getData(false, false, false, false, false, true, false, false, false, null);
+		JSONObject data = new JSONObject();
+		try
+		{
+			data.put("PLAYER_NAME", playerName);
+			data.put("READY_TO_RUN", true);
+		} 
+		catch(JSONException e) { e.printStackTrace(); }
+		sendNotification(data);
+	}
+	
 	public void notifyAbility(CharacterAbilityType abilityType, Vector2 playerPosition)
 	{
 		//JSONObject data = getData(false, false, false, false, false, false, false, false, true, abilityType);

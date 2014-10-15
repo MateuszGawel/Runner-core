@@ -131,14 +131,7 @@ public abstract class GameWorld
 		}
 	}
 	
-	public void handleInput()
-	{
-		if( Input.isPressed() ) 
-		{
-			if( this.player.character.start() ) 
-				NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
-		}
-	}
+
 	
     public void update(float delta) 
     {  
