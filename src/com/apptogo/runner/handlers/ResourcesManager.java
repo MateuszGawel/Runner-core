@@ -91,31 +91,6 @@ public class ResourcesManager
 		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
 		public void addSounds(String[] sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
 		public void addSound(String sound) { this.sounds.add(soundsDirectory+sound+soundsExtension); }
-
-		public void setTexturesDirectory(String texturesDirectory) {
-			this.texturesDirectory = texturesDirectory;
-		}
-		public void setTexturesExtension(String texturesExtension) {
-			this.texturesExtension = texturesExtension;
-		}
-		public void setTextureAtlasesDirectory(String textureAtlasesDirectory) {
-			this.textureAtlasesDirectory = textureAtlasesDirectory;
-		}
-		public void setTextureAtlasesExtension(String textureAtlasesExtension) {
-			this.textureAtlasesExtension = textureAtlasesExtension;
-		}
-		public void setMusicsDirectory(String musicsDirectory) {
-			this.musicsDirectory = musicsDirectory;
-		}
-		public void setMusicsExtension(String musicsExtension) {
-			this.musicsExtension = musicsExtension;
-		}
-		public void setSoundsDirectory(String soundsDirectory) {
-			this.soundsDirectory = soundsDirectory;
-		}
-		public void setSoundsExtension(String soundsExtension) {
-			this.soundsExtension = soundsExtension;
-		}	
 		
 		public void loadTextures()
 		{
@@ -266,6 +241,10 @@ public class ResourcesManager
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ALIEN ) );
+		
+		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
+		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
+		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
 		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	

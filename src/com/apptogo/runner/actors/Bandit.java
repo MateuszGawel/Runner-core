@@ -2,19 +2,26 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.HashMap;
+
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -25,6 +32,8 @@ public class Bandit extends Character{
 	private Vector2 bodySize;
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
+	
+	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 
     private final Array<Bomb> activeBombs = new Array<Bomb>();
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
@@ -36,6 +45,13 @@ public class Bandit extends Character{
 	    }
     };
 	
+    private void addSounds(){
+    	ResourcesManager rm = ResourcesManager.getInstance();
+    	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
+    	
+    	sounds.put(CharacterSound.BANDIT_JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/gameClick.ogg"));
+    }
+    
 	public Bandit(World world, GameWorld gameWorld){
 		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
 		this.gameWorld = gameWorld;
@@ -46,6 +62,7 @@ public class Bandit extends Character{
 		createBodyMembers();
 		 
         setOrigin(0, 0);
+        addSounds();
 	}
 	
 	private void initAnimations(){
@@ -140,6 +157,14 @@ public class Bandit extends Character{
 			bomb.init();
 	        activeBombs.add(bomb);
 		}
+	}
+	
+	@Override
+	public boolean jump(){
+		boolean jumped = super.jump();
+		if(jumped)
+			sounds.get(CharacterSound.BANDIT_JUMP).play(1.0f);
+		return jumped;
 	}
 	
 	public void createBodyMembers(){

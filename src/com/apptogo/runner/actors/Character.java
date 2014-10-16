@@ -191,7 +191,7 @@ public abstract class Character extends Actor{
 	public boolean jump()
 	{
 		//testMethod();
-		if(/*started && */alive && (touchWall || touchGround || !me))
+		if(/*started && */alive && canStandup && (touchWall || touchGround || !me))
 		{
 			sliding = false;
 			jumped = true;
@@ -243,7 +243,7 @@ public abstract class Character extends Actor{
 		}
 		else if(!canStandup){
 			forceStandup = true;
-			return true;
+			return false;
 		}
 		else return false;
 	}

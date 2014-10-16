@@ -51,6 +51,24 @@ public enum CharacterType
 		return null;
 	}
 	
+	public static String[] convertToSoundsList(CharacterType characterType)
+	{
+		if( characterType == BANDIT )
+		{
+			return new String[]{"mfx/game/characters/gameClick.ogg"};
+		}
+		else if( characterType == ARCHER )
+		{
+			return new String[]{};
+		}
+		else if( characterType == ALIEN )
+		{
+			return new String[]{};
+		}
+		
+		return null;
+	}
+	
 	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld)
 	{
 		if( characterType == BANDIT )
