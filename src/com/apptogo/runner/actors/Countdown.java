@@ -17,10 +17,11 @@ public class Countdown extends Obstacle{
 	public enum CountdownAnimationState{
 		STATIC, NORMAL
 	}
-	
+	private Sound sound;
 	private int frameCounter = 0;
 	public Countdown(){
 		super("gfx/game/levels/countdown.pack", "countdown", 1, 0.05f, CountdownAnimationState.STATIC);
+		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown3.ogg");
 		ScreensManager.getInstance().getCurrentScreen().guiStage.addActor(this);
 		updatePosition = false;	
 		
@@ -45,9 +46,8 @@ public class Countdown extends Obstacle{
 	
 	public void startCountdown(){
 		animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
-		Sound sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown3.ogg");
-		sound.play();
 		animate = true;
+		sound.play();
 	}
 	
 	public void act(float delta){

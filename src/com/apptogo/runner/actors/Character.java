@@ -4,8 +4,8 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.appwarp.NotificationManager;
@@ -33,8 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public abstract class Character extends Actor{
 	private World world;
@@ -87,6 +85,7 @@ public abstract class Character extends Actor{
 		
 	protected ArrayList<BodyMember> bodyMembers;
 	private List<CharacterAction> actions = new ArrayList<CharacterAction>();
+	private List<CharacterAction> actionsCreated = new ArrayList<CharacterAction>();
 	protected Array<Button> powerupButtons;
 
 	private boolean isPowerupSet = false;
@@ -286,15 +285,14 @@ public abstract class Character extends Actor{
 			jumped = false;
 
 			deathPosition = new Vector2(body.getPosition());
-			
-			Timer.schedule(new Task() {
+			registerAction(new CharacterAction(1f) {
+				
 				@Override
-				public void run() {
+				public void perform() {
 					dismemberment = false;
 					respawn();
 				}
-			}, 1);
-			
+			});
 			return true;
 		}
 		else return false;
@@ -355,13 +353,14 @@ public abstract class Character extends Actor{
 	{
 		immortal = true;
 		blinking = true;
-		Timer.schedule(new Task() {
+		registerAction(new CharacterAction(immortalityLenght) {
+			
 			@Override
-			public void run() {
+			public void perform() {
 				immortal = false;
 				blinking = false;
 			}
-		}, immortalityLenght);
+		});
 	}
 	
 	private void handleBlinking()
@@ -370,20 +369,20 @@ public abstract class Character extends Actor{
 		
 		if(!dismemberment){
 			if(blinking && visible){
-				Timer.schedule(new Task() {
+				registerAction(new CharacterAction(0.08f) {
 					@Override
-					public void run() {
+					public void perform() {
 						visible = false;
 					}
-				}, 0.08f);
+				});
 			}
 			else if(blinking && !visible){
-				Timer.schedule(new Task() {
+				registerAction(new CharacterAction(0.08f) {
 					@Override
-					public void run() {
+					public void perform() {
 						visible = true;
 					}
-				}, 0.08f);
+				});
 			}
 			else if(!blinking){
 				visible = true;
@@ -424,7 +423,7 @@ public abstract class Character extends Actor{
 	
 	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
 	public void registerAction(CharacterAction action){
-		this.actions.add(action);
+		this.actionsCreated.add(action);
 	}
 	
 	/**metoda obslugujaca slowy z ContactListnera*/
@@ -433,7 +432,7 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleActions(float delta){
-		Iterator<CharacterAction> iter = actions.listIterator();
+		ListIterator<CharacterAction> iter = actions.listIterator();
 		while(iter.hasNext()) {
 		    CharacterAction action = iter.next();
 		    action.act(delta);
@@ -477,6 +476,11 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
+		for(CharacterAction action : actionsCreated){
+			actions.add(action);
+		}
+		actionsCreated.clear();
+		
 		handleBlinking();
 		handleStopping();
 		handleSensors();
