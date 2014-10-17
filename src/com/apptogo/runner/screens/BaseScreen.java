@@ -276,6 +276,10 @@ public abstract class BaseScreen implements Screen
 		textField.setStyle(textFieldStyle);
 	}
 	
+	protected void setCenterPosition(Actor actor, float y)
+	{
+		actor.setPosition(-(actor.getWidth() / 2.0f), y);
+	}
 	
 	@Override
 	public void dispose() 

@@ -141,10 +141,11 @@ public class SplashScreen extends BaseScreen
 			
 			loadingLabel = new Label(getLangString("loadingLabel"), skin);
 			//setLabelFont(loadingLabel, FontType.LOADINGSMALL);
-			loadingLabel.setPosition( -60.0f, 260.0f );
+			setCenterPosition(loadingLabel, 300);
 			loadingLabel.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 30, -210.0f, 220.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, 270.0f, false, true);
+			//loadingAnimation.scaleFrames(2.0f);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logo);
