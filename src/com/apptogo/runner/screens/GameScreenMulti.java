@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
@@ -91,6 +92,8 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 				return;
 		}
 		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
+		Countdown countdown = new Countdown();
+		countdown.startCountdown();
 		
 		for(Player enemy : enemies){
 			enemy.character.registerAction(new CharacterAction(enemy.character, 1f, 4) {
@@ -108,7 +111,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 					Logger.log(this, "ODLICZAM: " + (4 - timeElapsed));
 				else if(timeElapsed == 4){
 					Logger.log(this, "ODLICZAM: GO!!!!");
-					character.start();
+					character.start(); 
 				}
 					
 			}

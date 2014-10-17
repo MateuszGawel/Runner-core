@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -40,6 +41,8 @@ public class Obstacle extends Actor{
 	private float offsetX = 0;
 	private float offsetY = 0;
 	
+	protected boolean updatePosition = true;
+	
 	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
 
@@ -50,10 +53,21 @@ public class Obstacle extends Actor{
 		this.object = object;
 	}
 	
+	public Obstacle(String atlasPath){	
+		animationManager = new AnimationManager(atlasPath);	
+	}
+	
 	public Obstacle(MapObject object, World world, String texturePath){	
 		this(object, world);
-		this.animate = false;
 		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), texturePath));
+	}
+	
+	public Obstacle(String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
+		animationManager = new AnimationManager(atlasPath);	
+		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
+		animationManager.setCurrentAnimationState(animationState);
+		currentFrame = animationManager.animate(0f);
+		Logger.log(this, "oto jest: " + currentFrame);
 	}
 	
 	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
@@ -62,10 +76,13 @@ public class Obstacle extends Actor{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
+		Logger.log(this, "oto jest: " + currentFrame);
 	}
 	
 	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, looping);
+		animationManager.setCurrentAnimationState(animationState);
+		currentFrame = animationManager.animate(0f);
 	}
 
 	private Shape createShape(MapObject object)
@@ -163,14 +180,18 @@ public class Obstacle extends Actor{
 	
 	@Override
 	public void act(float delta){
-		setPosition(body.getPosition().x + offsetX, body.getPosition().y + offsetY);
-        setWidth(currentFrame.getRegionWidth() / PPM);
-        setHeight(currentFrame.getRegionHeight() / PPM);
-        setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+		if(body != null){
+			setPosition(body.getPosition().x + offsetX, body.getPosition().y + offsetY);
+			setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+		}
+		else if(updatePosition)
+			setPosition(offsetX, offsetY);  
         
         if(animationManager != null && animate)
         	currentFrame = animationManager.animate(delta);
         
+        setWidth(currentFrame.getRegionWidth() / PPM);
+        setHeight(currentFrame.getRegionHeight() / PPM);
 		setOrigin(-offsetX, -offsetY);
 	}
 	

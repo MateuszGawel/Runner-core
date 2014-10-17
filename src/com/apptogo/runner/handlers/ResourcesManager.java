@@ -237,6 +237,7 @@ public class ResourcesManager
 		
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/coin.pack" );
+		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
 
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
@@ -245,6 +246,8 @@ public class ResourcesManager
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
+		
+		gameSpecialMeta.addSound("mfx/game/levels/countdown3.ogg");
 		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	

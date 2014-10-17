@@ -127,6 +127,7 @@ public class MyAnimation extends Animation{
 	}*/
 	
 	public TextureRegion getKeyFrame (float stateTime) {
+		additionalTaskDuringAnimation();
 		PlayMode oldPlayMode = playMode;
 		if (looping && (playMode == PlayMode.NORMAL || playMode == PlayMode.REVERSED)) {
 			if (playMode == PlayMode.NORMAL)
@@ -143,7 +144,7 @@ public class MyAnimation extends Animation{
 		playMode = oldPlayMode;
 		if(isAnimationFinished())
 			onAnimationFinished();
-		additionalTaskDuringAnimation();
+		
 		return frame;
 	}
 

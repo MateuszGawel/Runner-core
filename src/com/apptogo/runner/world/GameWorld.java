@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
@@ -87,6 +88,10 @@ public abstract class GameWorld
 		createWorld(mapPath);
 		
 		fpsLogger = new FPSLogger();
+		
+		Countdown countdown = new Countdown();
+		countdown.startCountdown();
+		
 	}
 	
 	public abstract void dispose();
@@ -166,7 +171,6 @@ public abstract class GameWorld
     }
     
     public Stage getWorldStage(){ return this.worldStage; }
-    
     
     /** ta i metode getEnemy() nalezy obstawic wyjatkami 
      * @throws PlayerExistsException */
