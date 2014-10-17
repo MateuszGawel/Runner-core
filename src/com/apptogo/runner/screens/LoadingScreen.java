@@ -13,6 +13,7 @@ import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -84,10 +85,13 @@ public class LoadingScreen extends BaseScreen{
 			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setLabelFont(smallLabel, FontType.LOADINGBIG);
-			smallLabel.setPosition( ((runner.SCREEN_WIDTH / Box2DVars.PPM) / 2.0f ) - (smallLabel.getWidth() / 2.0f), -250.0f);
+			setLabelFont(smallLabel, FontType.LOADINGSMALL);
+			setCenterPosition(smallLabel, -245.0f);
 			
 			slider = new TextButton("", skin, "loader");
+			Color sliderColor = slider.getColor();
+			sliderColor.r += 20;
+			slider.setColor(sliderColor);
 			slider.setSize(475.0f, 50.0f);
 			slider.setPosition( -712.0f, -275.0f);
 			
@@ -102,10 +106,10 @@ public class LoadingScreen extends BaseScreen{
 		{
 			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
 			setLabelFont(loadingLabel, FontType.LOADINGSMALL);
-			loadingLabel.setPosition( -60.0f, 10.0f );
+			setCenterPosition(loadingLabel, 10.0f);
 			loadingLabel.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 10, -110.0f, 0.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 10, -85.0f, -20.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(loadingLabel);
