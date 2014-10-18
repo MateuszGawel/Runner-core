@@ -1,10 +1,7 @@
 package com.apptogo.runner.screens;
 
-import java.lang.reflect.Type;
-
-import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
-import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
@@ -15,14 +12,12 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
-import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 
 public abstract class GameScreen extends BaseScreen{
@@ -79,6 +74,14 @@ public abstract class GameScreen extends BaseScreen{
 		}
 		
 		worldRenderer = new GameWorldRenderer(world);
+		createLabels();
+	}
+	
+	private void createLabels(){
+		Label label = new Label( getLangString("touchToStart"), ResourcesManager.getInstance().getUiSkin());
+		label.setPosition(0,0);
+		setLabelFont(label, FontType.WOODFONT);
+		guiStage.addActor(label);
 	}
 	
 	protected void createGui()
