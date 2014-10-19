@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -11,14 +12,18 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.handlers.ScreensManager;
+
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -53,6 +58,9 @@ public abstract class Character extends Actor{
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	protected boolean forceStandup = false;
+	
+	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
+	protected HashMap<CharacterSound, Long> soundInstances = new HashMap<CharacterSound, Long>();
 	
 	protected boolean gameIsEnded = false;
 	
@@ -105,8 +113,29 @@ public abstract class Character extends Actor{
 		this.slowButtonStyleName = slowButtonStyleName;
 		
 		powerupButtons = new Array<Button>();
+		addSounds();
 	}
 	
+	
+
+	private void playSound(CharacterSound soundType){
+		if(soundInstances.get(soundType) == null){
+			soundInstances.put(soundType, sounds.get(soundType).play());
+			sounds.get(soundType).setLooping(soundInstances.get(soundType), true);
+		}
+		else{
+			sounds.get(soundType).resume(soundInstances.get(soundType));
+		}
+	}
+	
+	
+    private void addSounds(){
+    	ResourcesManager rm = ResourcesManager.getInstance();
+    	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
+    	
+    	sounds.put(CharacterSound.STEPS, (Sound)rm.getResource(cs, "mfx/game/characters/steps.ogg"));
+    }
+    
 	protected void createBody(){
 		Vector2 bodySize = new Vector2(25 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
@@ -153,7 +182,6 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
 	}
 	
-	
 	public boolean start()
 	{
 		if(!running && alive && touchGround && !gameIsEnded)
@@ -161,35 +189,15 @@ public abstract class Character extends Actor{
 			running = true;
 			started = true;
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			playSound(CharacterSound.STEPS);
+			
 			return true;
 		}
 		else return false;
 	}
 	
-	private void testMethod(){
-		registerAction(new CharacterAction(2f) {
-			@Override
-			public void perform() {
-				Logger.log(this, "akcja 2");
-			}
-		});
-		registerAction(new CharacterAction(5f) {
-			@Override
-			public void perform() {
-				Logger.log(this, "akcja 5");
-			}
-		});
-		registerAction(new CharacterAction(8f) {
-			@Override
-			public void perform() {
-				Logger.log(this, "akcja 8");
-			}
-		});
-	}
-	
 	public boolean jump()
 	{
-		//testMethod();
 		if(/*started && */alive && canStandup && (touchWall || touchGround || !me))
 		{
 			sliding = false;
@@ -198,7 +206,7 @@ public abstract class Character extends Actor{
 			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
 			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-
+			sounds.get(CharacterSound.STEPS).pause();
 			return true;
 		}
 		else return false;
@@ -212,6 +220,8 @@ public abstract class Character extends Actor{
 				touchGround = true;
 				jumped = false;
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+				if(body.getLinearVelocity().x > 0.01f)
+					sounds.get(CharacterSound.STEPS).resume();
 			}
 		}
 	}
@@ -224,6 +234,7 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
 			slowPlayerBy(0.5f);
+			sounds.get(CharacterSound.STEPS).pause();
 			return true;
 		}
 		else return false;
@@ -237,7 +248,7 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
 			speedPlayerBy(0.5f);
-			
+			sounds.get(CharacterSound.STEPS).resume();
 			return true;
 		}
 		else if(!canStandup){
@@ -283,7 +294,7 @@ public abstract class Character extends Actor{
 			running = false;
 			sliding = false;
 			jumped = false;
-
+			sounds.get(CharacterSound.STEPS).pause();
 			deathPosition = new Vector2(body.getPosition());
 			registerAction(new CharacterAction(1f) {
 				
@@ -348,6 +359,18 @@ public abstract class Character extends Actor{
 			playerSlowAmmount -= playerSpeedLimit * percent;
 		return true;
 	}
+	
+	public void superJump()
+	{
+		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 3) );
+		body.setLinearVelocity( body.getLinearVelocity().x, v0 );
+	}
+	private void superRun()
+	{
+		body.applyForceToCenter(new Vector2(60000, 0), true);
+	}
+	
+	
 	/*--- HANDLERS ---*/
 	public void handleImmortality(float immortalityLenght)
 	{
@@ -393,11 +416,14 @@ public abstract class Character extends Actor{
 	private void handleStopping(){
 		if(alive && speed < 0.001f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+			sounds.get(CharacterSound.STEPS).pause();
 			stopped = true;
 		}
 		else if(alive && speed > 0.001f && stopped && !sliding){
-			if(touchGround)
+			if(touchGround){
+				sounds.get(CharacterSound.STEPS).resume();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			stopped = false;
@@ -445,17 +471,14 @@ public abstract class Character extends Actor{
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
+			//body.setLinearVelocity(playerSpeedLimit, 0);
 			body.applyForceToCenter(new Vector2(3000, 0), true);
 	}
 	
-	public void superJump()
-	{
-		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 3) );
-		body.setLinearVelocity( body.getLinearVelocity().x, v0 );
-	}
-	private void superRun()
-	{
-		body.applyForceToCenter(new Vector2(60000, 0), true);
+	private void handleStepSoundSpeed(){
+		if(soundInstances.get(CharacterSound.STEPS) != null){
+			sounds.get(CharacterSound.STEPS).setPitch(soundInstances.get(CharacterSound.STEPS), getSpeed()/10);
+		}
 	}
 	
 	private void handleDismemberment(){
@@ -489,6 +512,7 @@ public abstract class Character extends Actor{
 		handleDismemberment();
 		handleActions(delta);
 		handleStandingUp();
+		handleStepSoundSpeed();
 		
 		currentFrame = animationManager.animate(delta);
 		
@@ -496,6 +520,7 @@ public abstract class Character extends Actor{
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        
 	}
 	
 	public boolean isAlive(){ return this.alive; }
@@ -532,8 +557,8 @@ public abstract class Character extends Actor{
 	{
 		Button jumpButton = new Button(guiSkin, this.jumpButtonStyleName);
 		
-		jumpButton.setPosition(Runner.SCREEN_WIDTH/PPM - jumpButton.getWidth()/PPM - 20/PPM, jumpButton.getHeight()/PPM + 20/PPM + 40/PPM);
-		jumpButton.setSize(jumpButton.getWidth()/PPM, jumpButton.getHeight()/PPM);
+		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, jumpButton.getHeight() + 20 + 40);
+		jumpButton.setSize(jumpButton.getWidth(), jumpButton.getHeight());
 		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
 		
 		jumpButton.addListener(new InputListener() 
@@ -556,8 +581,8 @@ public abstract class Character extends Actor{
 	{
 		Button slideButton = new Button(guiSkin, this.slideButtonStyleName);
 		
-		slideButton.setPosition(Runner.SCREEN_WIDTH/PPM - slideButton.getWidth()/PPM - 20/PPM, 20/PPM);
-		slideButton.setSize(slideButton.getWidth()/PPM, slideButton.getHeight()/PPM);
+		slideButton.setPosition(Runner.SCREEN_WIDTH - slideButton.getWidth() - 20, 20);
+		slideButton.setSize(slideButton.getWidth(), slideButton.getHeight());
 		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
 		
 		slideButton.addListener(new InputListener() {

@@ -67,7 +67,6 @@ public class Obstacle extends Actor{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
-		Logger.log(this, "oto jest: " + currentFrame);
 	}
 	
 	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
@@ -76,7 +75,6 @@ public class Obstacle extends Actor{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
-		Logger.log(this, "oto jest: " + currentFrame);
 	}
 	
 	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){

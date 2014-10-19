@@ -84,7 +84,7 @@ public class BitmapFontWriter {
 		/** Face name */
 		public String face;
 		/** Font size (pt) */
-		public int size = 12;
+		public float size = 12;
 		/** Whether the font is bold */
 		public boolean bold;
 		/** Whether the font is italic */
@@ -108,7 +108,7 @@ public class BitmapFontWriter {
 		public FontInfo () {
 		}
 
-		public FontInfo (String face, int size) {
+		public FontInfo (String face, float size) {
 			this.face = face;
 			this.size = size;
 		}

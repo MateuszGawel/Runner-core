@@ -71,6 +71,25 @@ public enum GameWorldType
 		return null;
 	}
 	
+	static public String[] convertToMusics(GameWorldType gameWorldType)
+	{
+		
+		if( gameWorldType == WILDWEST )
+		{
+			return new String[]{"mfx/game/levels/wildWestMusic.ogg"};
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return new String[]{"mfx/game/levels/forestMusic.ogg"};
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return new String[]{"mfx/game/levels/spaceMusic.ogg"};
+		}
+		
+		return null;
+	}
+	
 	public static String convertToButtonStyleName( GameWorldType gameWorldType)
 	{
 		if( gameWorldType == WILDWEST )

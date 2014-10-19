@@ -32,8 +32,6 @@ public class Bandit extends Character{
 	private Vector2 bodySize;
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
-	
-	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 
     private final Array<Bomb> activeBombs = new Array<Bomb>();
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {

@@ -1,5 +1,8 @@
 package com.apptogo.runner.screens;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
+import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -22,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class GameScreen extends BaseScreen{
 	
-	protected GameWorld world;
+	public GameWorld world;
 	protected GameWorldRenderer worldRenderer;
 	
 	protected Level level;
@@ -74,14 +77,10 @@ public abstract class GameScreen extends BaseScreen{
 		}
 		
 		worldRenderer = new GameWorldRenderer(world);
-		createLabels();
-	}
-	
-	private void createLabels(){
-		Label label = new Label( getLangString("touchToStart"), ResourcesManager.getInstance().getUiSkin());
-		label.setPosition(0,0);
-		setLabelFont(label, FontType.WOODFONT);
-		guiStage.addActor(label);
+		
+		
+		Countdown countdown = new Countdown(world);
+		countdown.startCountdown();
 	}
 	
 	protected void createGui()

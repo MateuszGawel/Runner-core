@@ -66,7 +66,8 @@ public class SpaceWorld extends GameWorld{
 		super(mapPath, player);
 		super.world.setGravity(GRAVITY);
 		createBackground();
-
+		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/spaceMusic.ogg");
+		music.setVolume(0.2f);
 		asteroidsTask = new Task() {
 			@Override
 			public void run() {

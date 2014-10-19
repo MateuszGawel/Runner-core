@@ -13,5 +13,5 @@ import com.badlogic.gdx.physics.box2d.World;
  *  oraz w tablicy z selectCharacter w MainMenuScreen                                              */
 public enum CharacterSound
 {
-	BANDIT_JUMP
+	BANDIT_JUMP, STEPS
 }

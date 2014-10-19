@@ -16,6 +16,7 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -58,6 +59,8 @@ public abstract class GameWorld
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
+	public Music music;
+	
 	public GameWorld(String mapPath, Player player)
 	{
 		world = new World(DEFAULT_GRAVITY, true);
@@ -89,8 +92,7 @@ public abstract class GameWorld
 		
 		fpsLogger = new FPSLogger();
 		
-		Countdown countdown = new Countdown();
-		countdown.startCountdown();
+
 		
 	}
 	

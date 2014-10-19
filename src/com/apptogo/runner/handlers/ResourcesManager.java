@@ -89,7 +89,7 @@ public class ResourcesManager
 		public void addTextureAtlas(String textureAtlas) { this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
 		public void addMusics(String[] musics) { for(String m: musics) this.musics.add(musicsDirectory+m+musicsExtension); }
 		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
-		public void addSounds(String[] sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
+		public void addSounds(String... sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
 		public void addSound(String sound) { this.sounds.add(soundsDirectory+sound+soundsExtension); }
 		
 		public void loadTextures()
@@ -247,7 +247,12 @@ public class ResourcesManager
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
 		
-		gameSpecialMeta.addSound("mfx/game/levels/countdown3.ogg");
+		gameSpecialMeta.addSounds("mfx/game/levels/countdown1.ogg", "mfx/game/levels/countdown2.ogg", "mfx/game/levels/countdown3.ogg", "mfx/game/levels/countdownGo.ogg");
+		gameSpecialMeta.addSounds("mfx/game/characters/steps.ogg");
+		
+		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.WILDWEST ) );
+		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.FOREST ) );
+		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.SPACE ) );
 		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
@@ -322,10 +327,12 @@ public class ResourcesManager
 	{		
 		if( gameSpecialMeta.manager.getLoadedAssets() == 0 )
 		{
-			Logger.log(this, "Loading game resources", LogLevel.LOW);
+			Logger.log(this, "Loading game resources");
 			
 			loadSpecialResources(gameSpecialMeta);
 		}
+		else
+			Logger.log(this, "kaszanka z chlebem");
 	}
 	
 	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
@@ -431,7 +438,7 @@ public class ResourcesManager
 	{		
 		if( gameSpecialMeta.manager.getLoadedAssets() > 0 )
 		{
-			Logger.log(this, "Unloading game resources", LogLevel.LOW);
+			Logger.log(this, "Unloading game resources");
 			
 			gameSpecialMeta.manager.clear();
 		}

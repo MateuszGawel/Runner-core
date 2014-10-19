@@ -1,5 +1,6 @@
 package com.apptogo.runner.handlers;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.BitmapFontWriter.FontInfo;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.logger.Logger.LogLevel;
@@ -51,6 +52,7 @@ public class FontManager
 	public BitmapFont bigFont;
 	public BitmapFont mediumFont;
 	public BitmapFont smallFont;
+	public BitmapFont gameWorldFont;
 	
 	private PixmapPacker packer;
 	
@@ -73,6 +75,7 @@ public class FontManager
 	        	bigFont = new BitmapFont( Gdx.files.local("title.fnt") );
 	        	mediumFont = new BitmapFont( Gdx.files.local("medium.fnt") );
 	        	smallFont = new BitmapFont( Gdx.files.local("small.fnt") );
+	        	gameWorldFont = new BitmapFont( Gdx.files.local("gameWorld.fnt") );
 
 	            fontsLoaded = true;
 	        } 
@@ -110,13 +113,18 @@ public class FontManager
 			
 			smallFont = generator.generateFont(parameter);
 			saveFontToFile(smallFont, 28, "small");
-						
+			
+			parameter.size = 60;
+			
+			gameWorldFont = generator.generateFont(parameter);
+			saveFontToFile(gameWorldFont, 60, "gameWorld");
+			
 			generator.dispose();
 			packer.dispose();
 	    }
 	}
 		 
-	private void saveFontToFile(BitmapFont font, int fontSize, String fontName) 
+	private void saveFontToFile(BitmapFont font, float fontSize, String fontName) 
 	{
 		FileHandle fontFile = Gdx.files.local("generatedFonts/" + fontName + ".fnt");
 		FileHandle pixmapDir = Gdx.files.local("generatedFonts/" + fontName);

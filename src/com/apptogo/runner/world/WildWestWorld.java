@@ -4,8 +4,8 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,12 +19,13 @@ public class WildWestWorld extends GameWorld{
 	public Image skyBlue;
 	public Actor sand;
 	
-	
 	public WildWestWorld(String mapPath, Player player)
 	{
 		super(mapPath, player);
 		super.world.setGravity(GRAVITY);
 		createBackground();
+		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/wildWestMusic.ogg");
+		music.setVolume(0.15f);
 	}
 	
 	private void createBackground(){

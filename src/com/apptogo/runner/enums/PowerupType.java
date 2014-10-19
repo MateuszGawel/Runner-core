@@ -90,8 +90,8 @@ public enum PowerupType
 			}
 		}
 		
-		button.setPosition(20/PPM, 20/PPM);
-		button.setSize(button.getWidth()/PPM, button.getHeight()/PPM);
+		button.setPosition(20, 20);
+		button.setSize(button.getWidth(), button.getHeight());
 		button.setBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight());
 		
 		return button;

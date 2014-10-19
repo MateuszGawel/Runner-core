@@ -111,7 +111,7 @@ public abstract class BaseScreen implements Screen
 			guiStage = new Stage();
 			guiCamera = (OrthographicCamera) guiStage.getCamera();  
 			guiCamera.setToOrtho(false, Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM);
-			guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM, guiCamera);
+			guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
 			guiStage.setViewport(guiStretchViewport);
 			
 			this.prepare();

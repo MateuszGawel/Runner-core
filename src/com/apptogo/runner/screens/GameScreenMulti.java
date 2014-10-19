@@ -12,16 +12,20 @@ import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.CharacterAction;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class GameScreenMulti extends GameScreen implements WarpListener{
 		
+	private Label label = null;
 	private List<String> enemyNames = new ArrayList<String>();
 	public GameScreenMulti(Runner runner)
 	{
@@ -37,8 +41,16 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		super.multiplayer = true;
 		createGui();
 		NotificationManager.getInstance().notifyReadyToRun();
+		createLabels();
 	}
-					
+		
+	private void createLabels(){
+		label = new Label( getLangString("tapToStart"), ResourcesManager.getInstance().getUiSkin());
+		label.setPosition(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2 + 300);
+		setLabelFont(label, FontType.GAMEWORLDFONT);
+		guiStage.addActor(label);
+	}
+	
 	@Override
 	public ScreenType getSceneType() 
 	{
@@ -91,8 +103,10 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 			if(!enemy.readyToRun)
 				return;
 		}
+		
+		label.remove();
 		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
-		Countdown countdown = new Countdown();
+		Countdown countdown = new Countdown(world);
 		countdown.startCountdown();
 		
 		for(Player enemy : enemies){

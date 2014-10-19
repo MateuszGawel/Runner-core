@@ -30,6 +30,8 @@ public class ForestWorld extends GameWorld{
 		super(mapPath, player);
 		super.world.setGravity(GRAVITY);
 		createBackground();
+		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/forestMusic.ogg");
+		music.setVolume(0.2f);
 	}
 	
 	private void createBackground(){

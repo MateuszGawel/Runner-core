@@ -16,7 +16,8 @@ public enum FontType
 	LOADINGSMALL,
 	WOODFONT,
 	LEAFFONT,
-	ROCKFONT;
+	ROCKFONT,
+	GAMEWORLDFONT;
 	
 	public static BitmapFont convertToFont(FontType fontType)
 	{
@@ -51,6 +52,10 @@ public enum FontType
 		else if( fontType == FontType.ROCKFONT )
 		{
 			return FontManager.getInstance().mediumFont;
+		}
+		else if( fontType == FontType.GAMEWORLDFONT )
+		{
+			return FontManager.getInstance().gameWorldFont;
 		}
 		else 
 			return null;
@@ -87,6 +92,10 @@ public enum FontType
 			return new Color(0.05f, 0.35f, 0.04f, 1);
 		}
 		else if( fontType == FontType.ROCKFONT )
+		{
+			return new Color(0.31f, 0.22f, 0.16f, 1);
+		}
+		else if( fontType == FontType.GAMEWORLDFONT )
 		{
 			return new Color(0.31f, 0.22f, 0.16f, 1);
 		}
