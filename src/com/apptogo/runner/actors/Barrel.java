@@ -1,5 +1,6 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -18,5 +19,11 @@ public class Barrel extends Obstacle{
 		super(object, world, "gfx/game/levels/barrelSmall.png");
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.obstacleBody, "barrel");
+	}
+	
+	public void act(float delta){
+		super.act(delta);
+		if(((UserData)getBody().getUserData()).active && getBody().getType() != BodyType.DynamicBody)
+			getBody().setType(BodyType.DynamicBody);
 	}
 }

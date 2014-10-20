@@ -8,8 +8,13 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -50,6 +55,17 @@ public class Archer extends Character{
         setOrigin(0, 0);
         
         createBodyMembers();
+        addSounds();
+	}
+	
+	private void addSounds(){
+		ResourcesManager rm = ResourcesManager.getInstance();
+    	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
+    	
+    	sounds.put(CharacterSound.JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/archerJump.ogg"));
+    	sounds.put(CharacterSound.DEATH, (Sound)rm.getResource(cs, "mfx/game/characters/archerDeath.ogg"));
+    	sounds.put(CharacterSound.EXPLODE, (Sound)rm.getResource(cs, "mfx/game/characters/archerExplode.ogg"));
+    	sounds.put(CharacterSound.VICTORY, (Sound)rm.getResource(cs, "mfx/game/characters/archerVictory.ogg"));
 	}
 	
 	private void initAnimations(){

@@ -134,6 +134,8 @@ public abstract class Character extends Actor{
     	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
     	
     	sounds.put(CharacterSound.STEPS, (Sound)rm.getResource(cs, "mfx/game/characters/steps.ogg"));
+    	sounds.put(CharacterSound.LAND, (Sound)rm.getResource(cs, "mfx/game/characters/land.ogg"));
+    	sounds.put(CharacterSound.SLIDE, (Sound)rm.getResource(cs, "mfx/game/characters/slide.ogg"));
     }
     
 	protected void createBody(){
@@ -207,6 +209,7 @@ public abstract class Character extends Actor{
 			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			sounds.get(CharacterSound.STEPS).pause();
+			sounds.get(CharacterSound.JUMP).play();
 			return true;
 		}
 		else return false;
@@ -220,6 +223,8 @@ public abstract class Character extends Actor{
 				touchGround = true;
 				jumped = false;
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+				long land = sounds.get(CharacterSound.LAND).play();
+				sounds.get(CharacterSound.LAND).setVolume(land, 0.7f);
 				if(body.getLinearVelocity().x > 0.01f)
 					sounds.get(CharacterSound.STEPS).resume();
 			}
@@ -235,6 +240,8 @@ public abstract class Character extends Actor{
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
 			slowPlayerBy(0.5f);
 			sounds.get(CharacterSound.STEPS).pause();
+			long slide = sounds.get(CharacterSound.SLIDE).play();
+			sounds.get(CharacterSound.SLIDE).setVolume(slide, 0.7f);
 			return true;
 		}
 		else return false;
@@ -260,6 +267,7 @@ public abstract class Character extends Actor{
 
 	public boolean dieTop()
 	{
+		sounds.get(CharacterSound.DEATH).play();
 		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
 		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
@@ -269,6 +277,7 @@ public abstract class Character extends Actor{
 
 	public boolean dieBottom()
 	{
+		sounds.get(CharacterSound.DEATH).play();
 		boolean success = die();
 		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
 		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
@@ -278,6 +287,7 @@ public abstract class Character extends Actor{
 
 	public boolean dieDismemberment()
 	{
+		sounds.get(CharacterSound.EXPLODE).play();
 		dismemberment = true;
 		visible = false;
 		actDismemberment = true;   
@@ -495,6 +505,17 @@ public abstract class Character extends Actor{
 			forceStandup = false;
 		}
 	}
+	
+	private void handleDying(){
+		if(((UserData)body.getUserData()).dieBottom){
+			dieBottom();
+			((UserData)body.getUserData()).dieBottom = false;
+		}
+		else if(((UserData)body.getUserData()).dieTop){
+			dieTop();
+			((UserData)body.getUserData()).dieTop = false;
+		}
+	}
 
 	@Override
 	public void act(float delta) 
@@ -513,6 +534,7 @@ public abstract class Character extends Actor{
 		handleActions(delta);
 		handleStandingUp();
 		handleStepSoundSpeed();
+		handleDying();
 		
 		currentFrame = animationManager.animate(delta);
 		
@@ -544,6 +566,7 @@ public abstract class Character extends Actor{
 	
 	public void endGame()
 	{
+		sounds.get(CharacterSound.VICTORY).play();
 		gameIsEnded = true;
 	}
 	

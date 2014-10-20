@@ -26,9 +26,6 @@ public class MyContactListener implements ContactListener
 	private GameWorld gameWorld;
 	private World world;
 	
-	private ArrayList<Body> arrowsToSetInactive = new ArrayList<Body>();
-	private ArrayList<Body> barrelsToSetActive = new ArrayList<Body>();
-	
 	public MyContactListener(GameWorld gameWorld, World world)
 	{
 		this.world = world;
@@ -47,7 +44,7 @@ public class MyContactListener implements ContactListener
 			Logger.log(this, "smierc dla1: "+player.getName());
 			if(player.character.isAlive() && !player.character.isImmortal()){
 				Logger.log(this, "smierc dla2: "+player.getName());
-				player.character.dieTop();
+				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieTop = true;
 			}
 		}
 		
@@ -56,7 +53,7 @@ public class MyContactListener implements ContactListener
 			Logger.log(this, "smierc dla1: "+player.getName());
 			if(player.character.isAlive() && !player.character.isImmortal()){
 				Logger.log(this, "smierc dla2: "+player.getName());
-				player.character.dieBottom();
+				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieBottom = true;
 			}
 		}
 		
@@ -64,16 +61,6 @@ public class MyContactListener implements ContactListener
 		if( checkFixturesTypes(fa, fb, "bonfire", "player")){
 			if(player.character.isAlive() && !player.character.isImmortal()){
 				player.character.dieDismemberment();
-			}
-		}
-
-		//smierc od beczek
-		if(checkFixturesTypes(fa, fb, "barrel", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
-				Fixture fixture = getFixtureByType(fa, fb, "barrel");
-				if((Math.abs(fixture.getBody().getLinearVelocity().x) > 5f || fixture.getBody().getLinearVelocity().x > 5f)){
-					player.character.dieBottom();
-				}
 			}
 		}
 
@@ -91,14 +78,22 @@ public class MyContactListener implements ContactListener
 			player.character.incrementStandupSensor();
 		}
 		
-		//zmienianie typu beczek
+		//beczki (tu moze byc problem bo jesli blednie wbiegnie na beczki to rozwali)
 		if(checkFixturesTypes(fa, fb, "barrel", "player")){
-			Fixture fixture = getFixtureByType(fa, fb, "barrel");
-			barrelsToSetActive.add(fixture.getBody());
+			Fixture playerFixture = getFixtureByType(fa, fb, "player");
+			Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");
+			((UserData)barrelFixture.getBody().getUserData()).active = true;
+			
+			if(player.character.isAlive() && !player.character.isImmortal() && 
+					(Math.abs(playerFixture.getBody().getLinearVelocity().x - barrelFixture.getBody().getLinearVelocity().x) > 10f 
+							|| Math.abs(playerFixture.getBody().getLinearVelocity().y - barrelFixture.getBody().getLinearVelocity().y) > 10f ))
+			{
+				((UserData)playerFixture.getBody().getUserData()).dieBottom = true;
+			}
 		}
 		if(checkFixturesTypes(fa, fb, "barrel", "barrel")){
-			barrelsToSetActive.add(fa.getBody());
-			barrelsToSetActive.add(fb.getBody());
+			((UserData)fa.getBody().getUserData()).active = true;
+			((UserData)fb.getBody().getUserData()).active = true;
 		}
 
 		//bagno
@@ -233,24 +228,14 @@ public class MyContactListener implements ContactListener
 			if(impulses[0] > 0.2f)
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "arrow");
-				arrowsToSetInactive.add( fixture.getBody() );
+				((UserData)fixture.getBody().getUserData()).active = false;
 			}	
 		}		
 	}
 	
 	public void postStep()
 	{
-		for(Body body : arrowsToSetInactive)
-		{
-			body.setActive(false);
-		}
-		arrowsToSetInactive.clear();
-		
-		for(Body body : barrelsToSetActive)
-		{
-			body.setType(BodyType.DynamicBody);
-		}
-		barrelsToSetActive.clear();
+
 	}
 	
 	private boolean checkFixturesTypes(Fixture fixtureA, Fixture fixtureB, String typeA, String typeB)

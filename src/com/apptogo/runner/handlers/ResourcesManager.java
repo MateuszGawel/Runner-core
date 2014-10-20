@@ -248,7 +248,7 @@ public class ResourcesManager
 		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
 		
 		gameSpecialMeta.addSounds("mfx/game/levels/countdown1.ogg", "mfx/game/levels/countdown2.ogg", "mfx/game/levels/countdown3.ogg", "mfx/game/levels/countdownGo.ogg");
-		gameSpecialMeta.addSounds("mfx/game/characters/steps.ogg");
+		gameSpecialMeta.addSounds("mfx/game/characters/steps.ogg", "mfx/game/characters/land.ogg", "mfx/game/characters/slide.ogg");
 		
 		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.WILDWEST ) );
 		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.FOREST ) );

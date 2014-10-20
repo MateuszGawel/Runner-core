@@ -10,9 +10,15 @@ public class UserData
 	public boolean me;
 	public String playerName;
 	public float slowPercent = 0; //od 0 do 1
+	public boolean dieBottom;
+	public boolean dieTop;
 
 	//powerup
 	public String powerup;
+	
+	//obstacle
+	public boolean active;
+	
 	
 	
 	public UserData(Object key){

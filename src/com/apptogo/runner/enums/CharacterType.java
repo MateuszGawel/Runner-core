@@ -54,11 +54,11 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return new String[]{"mfx/game/characters/gameClick.ogg"};
+			return new String[]{"mfx/game/characters/banditJump.ogg", "mfx/game/characters/banditDeath.ogg", "mfx/game/characters/banditExplode.ogg", "mfx/game/characters/banditVictory.ogg"};
 		}
 		else if( characterType == ARCHER )
 		{
-			return new String[]{};
+			return new String[]{"mfx/game/characters/archerJump.ogg", "mfx/game/characters/archerDeath.ogg", "mfx/game/characters/archerExplode.ogg", "mfx/game/characters/archerVictory.ogg"};
 		}
 		else if( characterType == ALIEN )
 		{

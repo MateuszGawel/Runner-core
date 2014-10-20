@@ -127,7 +127,8 @@ public class Arrow extends Actor implements Poolable{
         setWidth(arrowTexture.getWidth() / PPM);
         setHeight(arrowTexture.getHeight() / PPM);
         setRotation(arrowBody.getAngle() * MathUtils.radiansToDegrees);
-        
+        if(((UserData)arrowBody.getUserData()).active)
+        	arrowBody.setActive(false);
 	}
 	
 	@Override

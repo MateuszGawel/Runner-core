@@ -47,7 +47,10 @@ public class Bandit extends Character{
     	ResourcesManager rm = ResourcesManager.getInstance();
     	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
     	
-    	sounds.put(CharacterSound.BANDIT_JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/gameClick.ogg"));
+    	sounds.put(CharacterSound.JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/banditJump.ogg"));
+    	sounds.put(CharacterSound.DEATH, (Sound)rm.getResource(cs, "mfx/game/characters/banditDeath.ogg"));
+    	sounds.put(CharacterSound.EXPLODE, (Sound)rm.getResource(cs, "mfx/game/characters/banditExplode.ogg"));
+    	sounds.put(CharacterSound.VICTORY, (Sound)rm.getResource(cs, "mfx/game/characters/banditVictory.ogg"));
     }
     
 	public Bandit(World world, GameWorld gameWorld){
@@ -155,14 +158,6 @@ public class Bandit extends Character{
 			bomb.init();
 	        activeBombs.add(bomb);
 		}
-	}
-	
-	@Override
-	public boolean jump(){
-		boolean jumped = super.jump();
-		if(jumped)
-			sounds.get(CharacterSound.BANDIT_JUMP).play(1.0f);
-		return jumped;
 	}
 	
 	public void createBodyMembers(){
