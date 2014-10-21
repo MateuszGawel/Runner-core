@@ -9,8 +9,8 @@ public class Settings
 	public boolean musicState;
 	public boolean vibrationState;
 	
-	public int soundLevel;
-	public int musicLevel;
+	public float soundLevel;
+	public float musicLevel;
 	
 	public String language;
 	
@@ -59,24 +59,24 @@ public class Settings
 		this.vibrationState = vibrationState;
 	}
 
-	public int getSoundLevel() 
+	public float getSoundLevel() 
 	{
 		return soundLevel;
 	}
 
-	public void setSoundLevel(int soundLevel) 
+	public void setSoundLevel(float f) 
 	{
-		this.soundLevel = soundLevel;
+		this.soundLevel = f;
 	}
 
-	public int getMusicLevel() 
+	public float getMusicLevel() 
 	{
 		return musicLevel;
 	}
 
-	public void setMusicLevel(int musicLevel) 
+	public void setMusicLevel(float f) 
 	{
-		this.musicLevel = musicLevel;
+		this.musicLevel = f;
 	}
 
 	public String getLanguage() 

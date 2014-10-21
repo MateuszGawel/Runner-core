@@ -301,9 +301,16 @@ public class Widget
 		}
 		
 		action.restart();
-		action.setReverse(hide);
 		
-		action.setInterpolation(interpolation);
+		if( !hide ) 
+		{
+			action.setInterpolation(interpolation);
+		}
+		else
+		{
+			action.setReverse(true);
+			action.setDuration(0);
+		}
 		
 		this.window.addAction(action);
 	}
