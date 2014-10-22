@@ -5,6 +5,8 @@ import com.apptogo.runner.handlers.SaveManager;
 
 public class Settings 
 {
+	public boolean mute;
+	
 	public boolean soundState;
 	public boolean musicState;
 	public boolean vibrationState;
