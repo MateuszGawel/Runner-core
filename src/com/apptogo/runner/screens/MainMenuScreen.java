@@ -4,18 +4,14 @@ import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.settings.Settings;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,16 +24,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 
 public class MainMenuScreen extends BaseScreen
 {		
-	Button settingsButton;
-	Button soundButtonOn;
-	Button soundButtonOff;
-	Button googlePlusButton;
-	Button facebookButton;
-	Button joinRandomRoomButton;
+	private Button settingsButton;
+	private Button soundButtonOn;
+	private Button soundButtonOff;
+	private Button googlePlusButton;
+	private Button facebookButton;
+	private Button joinRandomRoomButton;
+	
+	private CheckBox musicCheckBox;
+	private CheckBox soundsCheckBox;
+	private CheckBox vibrationsCheckBox;
+	
+	private Slider musicVolume;
+	private Slider soundsVolume;
 	
 	private TextButton campaignButton;
 	private TextButton multiplayerButton;
@@ -101,6 +103,7 @@ public class MainMenuScreen extends BaseScreen
 		joinRandomRoomButton.setPosition( 85.0f, -375.0f );
 		
 		createSettingsWidget();
+		refreshSettingsControls();
 		
 		createListeners();
 		setListeners();
@@ -176,86 +179,24 @@ public class MainMenuScreen extends BaseScreen
 		
 		Label musicLabel = createLabel( getLangString("music"), FontType.WOODFONT, -450f, 1090f);
 		
-		final CheckBox musicCheckBox = new CheckBox(" On", skin, "default");
+		musicCheckBox = new CheckBox(" On", skin, "default");
 		musicCheckBox.setPosition(-400f, 1020f);
-		musicCheckBox.setChecked( settings.musicState );
 				
-		final Slider musicVolume = new Slider(0, 100, 20, false, skin);
+		musicVolume = new Slider(0, 100, 20, false, skin);
 		musicVolume.setPosition(-400f, 910f);
-		musicVolume.setValue( settings.getMusicLevel() );
-		musicVolume.setDisabled( !musicCheckBox.isChecked() );
-		musicVolume.getColor().a = musicCheckBox.isChecked()?1.0f:0.5f;
-		
-		musicCheckBox.addListener( 
-				new ChangeListener(){
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						settings.setMusicState( musicCheckBox.isChecked() );
-						saveManager.save( settings );
-						musicVolume.setDisabled( !musicCheckBox.isChecked() );
-						musicVolume.getColor().a = musicCheckBox.isChecked()?1.0f:0.5f;
-					}
-				});
-		musicVolume.addListener( 
-				new ChangeListener(){
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						settings.setMusicLevel( musicVolume.getValue() );
-						saveManager.save( settings );
-					}
-				});
-		
+				
 		Label soundsLabel = createLabel( getLangString("sounds"), FontType.WOODFONT, -450f, 840f);
 				
-		final CheckBox soundsCheckBox = new CheckBox(" On", skin, "default");
+		soundsCheckBox = new CheckBox(" On", skin, "default");
 		soundsCheckBox.setPosition(-400f, 770f);
-		soundsCheckBox.setChecked( settings.soundState );
 		
-		final Slider soundsVolume = new Slider(0, 100, 20, false, skin);
+		soundsVolume = new Slider(0, 100, 20, false, skin);
 		soundsVolume.setPosition(-400f, 660f);
-		soundsVolume.setValue( settings.getSoundLevel() );
-		soundsVolume.setDisabled( !soundsCheckBox.isChecked() );
-		soundsVolume.getColor().a = soundsCheckBox.isChecked()?1.0f:0.5f;
-		
-		soundsCheckBox.addListener( 
-			new ChangeListener(){
-				@Override
-				public void changed (ChangeEvent event, Actor actor) 
-				{
-					settings.setSoundState( soundsCheckBox.isChecked() );
-					saveManager.save( settings );
-					soundsVolume.setDisabled( !soundsCheckBox.isChecked() );
-					soundsVolume.getColor().a = soundsCheckBox.isChecked()?1.0f:0.5f;
-				}
-			});
-		
-		soundsVolume.addListener( 
-				new ChangeListener(){
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						settings.setSoundLevel( soundsVolume.getValue() );
-						saveManager.save( settings );
-					}
-				});
-		
+				
 		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT, -50f, 1090f);
 		
-		final CheckBox vibrationsCheckBox = new CheckBox(" On", skin, "default");
+		vibrationsCheckBox = new CheckBox(" On", skin, "default");
 		vibrationsCheckBox.setPosition(0f, 1020f);
-		vibrationsCheckBox.setChecked( settings.vibrationState );
-		
-		vibrationsCheckBox.addListener( 
-				new ChangeListener(){
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						settings.setVibrationState( vibrationsCheckBox.isChecked() );
-						saveManager.save( settings );
-					}
-				});
 				
 		Label languageLabel = createLabel( getLangString("language"), FontType.WOODFONT, -50f, 900f);
 				
@@ -266,6 +207,122 @@ public class MainMenuScreen extends BaseScreen
         Image esflag = getLanguageFlag("es", 100, 700, false);
         Image inflag = getLanguageFlag("in", 200, 700, false);
         
+        musicCheckBox.addListener
+        ( 
+        		new ClickListener()
+        		{
+        			public void clicked(InputEvent event, float x, float y) 
+                    {
+        				settings.musicState = musicCheckBox.isChecked();      				
+        				settings.save();
+        				
+        				refreshSettingsControls();
+                    }
+		});
+        
+        musicCheckBox.addListener
+		( 
+				new ChangeListener()
+				{
+					@Override
+					public void changed (ChangeEvent event, Actor actor) 
+					{
+						if( musicCheckBox.isChecked() ) 
+						{
+							musicCheckBox.setText(" On");
+						}
+						else
+						{
+							musicCheckBox.setText(" Off");
+						}
+					}
+		});
+		
+        musicVolume.addListener
+        ( 
+				new ChangeListener()
+				{
+					@Override
+					public void changed (ChangeEvent event, Actor actor) 
+					{
+						settings.setMusicLevel( musicVolume.getValue() );
+						settings.save();
+					}
+		});
+        
+		soundsCheckBox.addListener
+		( 
+				new ClickListener()
+				{
+					public void clicked(InputEvent event, float x, float y) 
+		            {
+						settings.soundsState = soundsCheckBox.isChecked();        				
+						settings.save();
+        				
+        				refreshSettingsControls();
+		            }
+		});
+		
+		soundsCheckBox.addListener
+		( 
+				new ChangeListener()
+				{
+					@Override
+					public void changed (ChangeEvent event, Actor actor) 
+					{
+						if( soundsCheckBox.isChecked() ) 
+						{
+							soundsCheckBox.setText(" On");
+						}
+						else
+						{
+							soundsCheckBox.setText(" Off");
+						}
+					}
+		});
+		
+		soundsVolume.addListener
+		( 
+				new ChangeListener()
+				{
+					@Override
+					public void changed (ChangeEvent event, Actor actor) 
+					{
+						settings.setSoundLevel( soundsVolume.getValue() );
+						settings.save();
+					}
+		});
+		
+		vibrationsCheckBox.addListener
+		( 
+				new ClickListener()
+				{
+					public void clicked(InputEvent event, float x, float y) 
+		            {
+						settings.vibrationState = vibrationsCheckBox.isChecked();        				
+						settings.save();
+        				
+        				refreshSettingsControls();
+		            }
+		});
+		
+		vibrationsCheckBox.addListener
+		( 
+				new ChangeListener()
+				{
+					@Override
+					public void changed (ChangeEvent event, Actor actor) 
+					{
+						if( vibrationsCheckBox.isChecked() ) 
+						{
+							vibrationsCheckBox.setText(" On");
+						}
+						else
+						{
+							vibrationsCheckBox.setText(" Off");
+						}
+					}
+		});
         
         settingsWidget.addActorToTab(musicLabel, 1);
 		settingsWidget.addActorToTab(musicCheckBox, 1);
@@ -293,6 +350,49 @@ public class MainMenuScreen extends BaseScreen
         settingsWidget.setCurrentTab(1);
 	}
 	
+	private void refreshSettingsControls()
+	{   			
+        if( !settings.musicState && !settings.soundsState )
+        {
+        	soundButtonOff.setVisible(true);
+        	soundButtonOn.setVisible(false);
+        }
+        else
+        {
+        	soundButtonOff.setVisible(false);
+        	soundButtonOn.setVisible(true);
+        }
+        
+    	musicCheckBox.setChecked( settings.musicState );
+    	soundsCheckBox.setChecked( settings.soundsState );
+        vibrationsCheckBox.setChecked( settings.vibrationState );
+        
+        musicVolume.setValue( settings.musicLevel );
+        soundsVolume.setValue( settings.musicLevel );
+        
+        if( musicCheckBox.isChecked() )
+        {
+        	musicVolume.setDisabled(false);
+        	musicVolume.getColor().a = 1.0f;
+        }
+        else
+        {
+        	musicVolume.setDisabled(true);
+        	musicVolume.getColor().a = 0.5f;
+        }
+        
+        if( soundsCheckBox.isChecked() )
+        {
+        	soundsVolume.setDisabled(false);
+        	soundsVolume.getColor().a = 1.0f;
+        }
+        else
+        {
+        	soundsVolume.setDisabled(true);
+        	soundsVolume.getColor().a = 0.5f;
+        }
+	}
+	
 	private void createListeners()
 	{		
 		settingsButtonListener = settingsWidget.toggleWidgetListener;
@@ -300,16 +400,22 @@ public class MainMenuScreen extends BaseScreen
 		soundButtonOnListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				soundButtonOff.setVisible(true);
-            	soundButtonOn.setVisible(false);
+				settings.musicState = false;
+				settings.soundsState = false;
+				settings.save();
+				
+				refreshSettingsControls();
             }
 		};
 		
 		soundButtonOffListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {				
-				soundButtonOn.setVisible(true);
-				soundButtonOff.setVisible(false);
+				settings.musicState = true;
+				settings.soundsState = true;
+				settings.save();
+				
+				refreshSettingsControls();
             }
 		};
 		
@@ -422,15 +528,15 @@ public class MainMenuScreen extends BaseScreen
 	}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
+	public void pause() 
+	{
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
+	public void resume() 
+	{
+		// TODO Auto-generated method stub	
 	}
 	
 	@Override
