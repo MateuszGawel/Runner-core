@@ -165,8 +165,11 @@ public abstract class BaseScreen implements Screen
 	protected void setBackground(String path)
 	{
 		backgroundTexture = new Texture( Gdx.files.internal(path) );
+		
+		textures.add(backgroundTexture);
+		
 		background = new Image( backgroundTexture );
-		background.setPosition(0 - (runner.SCREEN_WIDTH/2.0f), 0 - (runner.SCREEN_HEIGHT/2.0f));
+		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
 		stage.addActor( background );
 	}
 
@@ -289,17 +292,7 @@ public abstract class BaseScreen implements Screen
 		
 		return label;
 	}
-	
-	protected void setLabelFont(Label label, FontType fontType)
-	{
-		LabelStyle labelStyle = new LabelStyle(label.getStyle());
-        
-		labelStyle.font = FontType.convertToFont(fontType);
-		label.setColor( FontType.convertToColor(fontType) );
-        
-        label.setStyle(labelStyle);
-	}
-	
+		
 	protected void setTextButtonFont(TextButton textButton, FontType fontType)
 	{
 		TextButtonStyle textButtonStyle = new TextButtonStyle(textButton.getStyle());
@@ -327,14 +320,18 @@ public abstract class BaseScreen implements Screen
 	@Override
 	public void dispose() 
 	{
-		if(backgroundTexture != null) backgroundTexture.dispose();
-		
 		for(Texture texture: textures)
 		{
-			texture.dispose();
+			if( texture != null )
+			{
+				texture.dispose();
+			}
 		}
 		
-		stage.clear();
-		stage.dispose();
+		if( stage != null)
+		{
+			stage.clear();
+			stage.dispose();
+		}
 	}
 }

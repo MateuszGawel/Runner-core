@@ -23,10 +23,8 @@ import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class GameScreenMulti extends GameScreen implements WarpListener{
-		
-	private Label label = null;
-	private List<String> enemyNames = new ArrayList<String>();
+public class GameScreenMulti extends GameScreen implements WarpListener
+{	
 	public GameScreenMulti(Runner runner)
 	{
 		super(runner);	
@@ -42,13 +40,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener{
 		createGui();
 		NotificationManager.getInstance().notifyReadyToRun();
 		createLabels();
-	}
-		
-	private void createLabels(){
-		label = new Label( getLangString("tapToStart"), ResourcesManager.getInstance().getUiSkin());
-		label.setPosition(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2 + 300);
-		setLabelFont(label, FontType.GAMEWORLDFONT);
-		guiStage.addActor(label);
 	}
 	
 	@Override

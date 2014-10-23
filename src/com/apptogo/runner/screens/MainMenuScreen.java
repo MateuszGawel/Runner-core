@@ -368,7 +368,7 @@ public class MainMenuScreen extends BaseScreen
         vibrationsCheckBox.setChecked( settings.vibrationState );
         
         musicVolume.setValue( settings.musicLevel );
-        soundsVolume.setValue( settings.musicLevel );
+        soundsVolume.setValue( settings.soundsLevel );
         
         if( musicCheckBox.isChecked() )
         {

@@ -16,6 +16,7 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -91,9 +92,6 @@ public abstract class GameWorld
 		createWorld(mapPath);
 		
 		fpsLogger = new FPSLogger();
-		
-
-		
 	}
 	
 	public abstract void dispose();
@@ -138,10 +136,8 @@ public abstract class GameWorld
 		}
 	}
 	
-
-	
     public void update(float delta) 
-    {  
+    {
         world.step(delta, 3, 3);
         
         handleBodyToDestroy();

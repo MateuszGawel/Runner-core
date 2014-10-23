@@ -18,7 +18,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -45,11 +44,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     private Button manageBanditAnimationButton;
     private Button manageArcherAnimationButton;
     private Button manageAlienAnimationButton;
-    
-    private Label tab1;
-    private Label tab2;
-    private Label tab3;
-    
+        
     private boolean isTextFieldClicked = false;
     private boolean isTextFieldLastActorClicked = false;
     
@@ -66,7 +61,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);
-		NotificationManager.getInstance().prepareManager(player.getName(), player.getCharacterType());
+		NotificationManager.prepareManager(player.getName(), player.getCharacterType());
 	}
 	
 	@Override
@@ -75,6 +70,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 				
 		backButton = new Button( skin, "back");
+		backButton = null;
         backButton.setPosition( -580f, 240f );
         backButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
@@ -201,11 +197,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				changeCurrentCharacterAnimation();
             }
 		});
-		
-		Label nameLabel = new Label("name:", skin, "default");
-		setLabelFont(nameLabel, FontType.BIG);
-		nameLabel.setPosition(-25, 1175);
-		
+				
 		final TextField textField = new TextField(player.getName(), skin);
 		//setTextFieldFont(textField, FontType.SMALL); - niestety nie da sie tak prosto, textField musi miec podana odpowiednia czcionke juz w momencie tworzenia bo w ten sposob okresla wielkosc jednej pozycji kursora :(
         textField.setSize(450f, 50f);
@@ -248,22 +240,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         		return true;
         	};
 		});
-        //---
-        
-        //creating tabs
-        tab1 = new Label("TO JEST TAB 1", skin);
-        tab1.setPosition(0, 800);
-        
-        tab2 = new Label("TO JEST TAB 2", skin);
-        tab2.setPosition(0, 800);
-        
-        tab3 = new Label("TO JEST TAB 3", skin);
-        tab3.setPosition(0, 800);
-        
-        manageWidget.addActorToTab(tab1, 1);
-        manageWidget.addActorToTab(tab2, 2);
-        manageWidget.addActorToTab(tab3, 3);
-        
+        //---        
         manageWidget.setCurrentTab(1);
         
         manageBanditAnimationButton.addListener( manageWidget.getChangeWidgetTabListener(1) );
@@ -279,7 +256,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		manageWidget.addActor(manageArcherAnimationButton);
 		manageWidget.addActor(manageAlienAnimationButton);
 		
-		manageWidget.addActor(nameLabel);
 		manageWidget.addActor(textField);
 	}
 		

@@ -12,9 +12,7 @@ import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class GameScreenSingle extends GameScreen
-{	
-	private Label label = null;
-	
+{		
 	public GameScreenSingle(Runner runner)
 	{
 		super(runner);
@@ -30,16 +28,10 @@ public class GameScreenSingle extends GameScreen
 		createGui();
 		createLabels();
 	}
-			
-	private void createLabels(){
-		label = new Label( getLangString("tapToStart"), ResourcesManager.getInstance().getUiSkin());
-		label.setPosition(Runner.SCREEN_WIDTH/2, Runner.SCREEN_HEIGHT/2 + 300);
-		setLabelFont(label, FontType.GAMEWORLDFONT);
-		guiStage.addActor(label);
-	}
 	
 	@Override
-	public void handleInput(){
+	public void handleInput()
+	{
 		if( Input.isPressed() ) 
 		{
 			label.remove();

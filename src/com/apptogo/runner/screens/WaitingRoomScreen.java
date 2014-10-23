@@ -29,27 +29,18 @@ import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 
 public class WaitingRoomScreen extends BaseScreen implements WarpListener
 {			
-	private Label label;
-	
 	private TextButton playButton;
 	private Button backButton;
 	
 	private Array<Player> enemyPlayers;
 	
-	private Array<CharacterAnimation> playersAnimation;
 	private final Array<Vector2> playerAnimationPosition = new Array<Vector2>( new Vector2[]{ new Vector2(-400, 150), 
 																			   				  new Vector2(-100, 150), 
 																			   				  new Vector2(-400, -150), 
 																			   				  new Vector2(-100, -150) } );
 	
 	private int currentPlayersCount;
-	
-	//do wywalenia
-	boolean a=true, s=true, d=true;
-	//--
-	
-	private float lastLabelY = 250f;
-	
+		
 	public WaitingRoomScreen(Runner runner)
 	{
 		super(runner);	
@@ -97,7 +88,6 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
         });
         
 		enemyPlayers = new Array<Player>();
-		playersAnimation = new Array<CharacterAnimation>();
 		currentPlayersCount = 0;
 		
         //addToScreen(playButton);
@@ -118,48 +108,6 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		{
 			WarpController.getInstance().stopApp();
 			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
-		}
-		
-		if( Gdx.input.isKeyPressed(Keys.A) )
-		{
-			if(a)
-			{
-				Player playerA = new Player();
-				playerA.setName("MACIEK");
-				playerA.setCharacterType(CharacterType.ALIEN);
-			
-				addPlayer( playerA );
-			
-				a = false;
-			}
-		}
-		
-		if( Gdx.input.isKeyPressed(Keys.S) )
-		{
-			if(s)
-			{
-				Player playerA = new Player();
-				playerA.setName("MARIAN");
-				playerA.setCharacterType(CharacterType.BANDIT);
-				
-				addPlayer( playerA );
-				
-				s = false;
-			}
-		}
-		
-		if( Gdx.input.isKeyPressed(Keys.D) )
-		{
-			if(d)
-			{
-				Player playerA = new Player();
-				playerA.setName("WILHELM");
-				playerA.setCharacterType(CharacterType.ARCHER);
-				
-				addPlayer( playerA );
-				
-				d = false;
-			}
 		}
 	}
 	
@@ -187,7 +135,9 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose() 
+	{
+		super.dispose();
 	}
 
 	@Override
@@ -260,8 +210,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		{
 			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
 			
-			Label playerNameLabel = new Label(player.getName(), skin);
-			setLabelFont(playerNameLabel, FontType.BIG);
+			Label playerNameLabel = createLabel(player.getName(), FontType.BIG);
 			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
 			
 			addToScreen(playerAnimation);
