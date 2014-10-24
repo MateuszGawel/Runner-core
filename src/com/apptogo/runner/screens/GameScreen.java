@@ -78,9 +78,6 @@ public abstract class GameScreen extends BaseScreen{
 		
 		worldRenderer = new GameWorldRenderer(world);
 		
-		
-		Countdown countdown = new Countdown(world);
-		countdown.startCountdown();
 	}
 	
 	protected void createGui()

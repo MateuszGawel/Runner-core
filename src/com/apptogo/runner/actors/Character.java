@@ -18,7 +18,7 @@ import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -58,9 +58,11 @@ public abstract class Character extends Actor{
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	protected boolean forceStandup = false;
-	
+
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
-	protected HashMap<CharacterSound, Long> soundInstances = new HashMap<CharacterSound, Long>();
+	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
+	protected boolean stepSoundPlayed = false;
+	protected long stepSoundId = 0;
 	
 	protected boolean gameIsEnded = false;
 	
@@ -71,7 +73,7 @@ public abstract class Character extends Actor{
 	protected float jumpHeight = 4;
 	
 	protected float playerSpeedLimit = 12;
-	protected float playerMinSpeed = 2;
+	protected float playerMinSpeed = 3;
 	protected float playerSlowAmmount = 0;
 	
 	protected float playerSwampSlowAmmount = 0;
@@ -116,17 +118,25 @@ public abstract class Character extends Actor{
 		addSounds();
 	}
 	
-	
+//	
+//	private void playSound(CharacterSound sound, boolean loop){
+//		sounds.get(sound).play();
+//	}
+//
+//	private void stopSound(CharacterSound sound, boolean loop){
+//		sounds.get(sound).stop();
+//	}
+//	
 
-	private void playSound(CharacterSound soundType){
-		if(soundInstances.get(soundType) == null){
-			soundInstances.put(soundType, sounds.get(soundType).play());
-			sounds.get(soundType).setLooping(soundInstances.get(soundType), true);
-		}
-		else{
-			sounds.get(soundType).resume(soundInstances.get(soundType));
-		}
-	}
+//	private void playSound(CharacterSound soundType){
+//		if(soundInstances.get(soundType) == null){
+//			soundInstances.put(soundType, sounds.get(soundType).play());
+//			sounds.get(soundType).setLooping(soundInstances.get(soundType), true);
+//		}
+//		else{
+//			sounds.get(soundType).resume();
+//		}
+//	}
 	
 	
     private void addSounds(){
@@ -187,12 +197,14 @@ public abstract class Character extends Actor{
 	public boolean start()
 	{
 		if(!running && alive && touchGround && !gameIsEnded)
-		{			
+		{		
+			if(!stepSoundPlayed){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
+			}
 			running = true;
 			started = true;
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
-			playSound(CharacterSound.STEPS);
-			
 			return true;
 		}
 		else return false;
@@ -208,7 +220,10 @@ public abstract class Character extends Actor{
 			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
 			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-			sounds.get(CharacterSound.STEPS).pause();
+			if(stepSoundPlayed){
+				sounds.get(CharacterSound.STEPS).stop();
+				stepSoundPlayed = false;
+			}
 			sounds.get(CharacterSound.JUMP).play();
 			return true;
 		}
@@ -223,10 +238,11 @@ public abstract class Character extends Actor{
 				touchGround = true;
 				jumped = false;
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
-				long land = sounds.get(CharacterSound.LAND).play();
-				sounds.get(CharacterSound.LAND).setVolume(land, 0.7f);
-				if(body.getLinearVelocity().x > 0.01f)
-					sounds.get(CharacterSound.STEPS).resume();
+				sounds.get(CharacterSound.LAND).play(0.4f);
+				if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
+					stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+					stepSoundPlayed = true;
+				}
 			}
 		}
 	}
@@ -239,9 +255,11 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
 			slowPlayerBy(0.5f);
-			sounds.get(CharacterSound.STEPS).pause();
-			long slide = sounds.get(CharacterSound.SLIDE).play();
-			sounds.get(CharacterSound.SLIDE).setVolume(slide, 0.7f);
+			if(stepSoundPlayed){
+				sounds.get(CharacterSound.STEPS).stop();
+				stepSoundPlayed = false;
+			}
+			sounds.get(CharacterSound.SLIDE).play();
 			return true;
 		}
 		else return false;
@@ -255,7 +273,10 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
 			speedPlayerBy(0.5f);
-			sounds.get(CharacterSound.STEPS).resume();
+			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
+			}
 			return true;
 		}
 		else if(!canStandup){
@@ -267,44 +288,57 @@ public abstract class Character extends Actor{
 
 	public boolean dieTop()
 	{
-		sounds.get(CharacterSound.DEATH).play();
-		boolean success = die();
-		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
-		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-		body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
-		return success;
+		if(alive){
+			sounds.get(CharacterSound.DEATH).play();
+			boolean success = die();
+			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
+			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			return success;
+		}
+		return false;
 	}
 
 	public boolean dieBottom()
 	{
-		sounds.get(CharacterSound.DEATH).play();
-		boolean success = die();
-		animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
-		body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-		body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
-		return success;
+		if(alive){
+			sounds.get(CharacterSound.DEATH).play();
+			boolean success = die();
+			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
+			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			return success;
+		}
+		return false;
 	}
 
 	public boolean dieDismemberment()
 	{
-		sounds.get(CharacterSound.EXPLODE).play();
-		dismemberment = true;
-		visible = false;
-		actDismemberment = true;   
-		boolean success = die();
-			
-		return success;
+		if(alive){
+			sounds.get(CharacterSound.EXPLODE).play();
+			dismemberment = true;
+			visible = false;
+			actDismemberment = true;   
+			boolean success = die();
+				
+			return success;
+		}
+		return false;
 	}
 	
 	private boolean die()
 	{
 		if(alive)
 		{
+			if(stepSoundPlayed){
+				sounds.get(CharacterSound.STEPS).stop();
+				stepSoundPlayed = false;
+			}
 			alive = false;
 			running = false;
 			sliding = false;
 			jumped = false;
-			sounds.get(CharacterSound.STEPS).pause();
+			
 			deathPosition = new Vector2(body.getPosition());
 			registerAction(new CharacterAction(1f) {
 				
@@ -328,6 +362,7 @@ public abstract class Character extends Actor{
 		alive = true;
 		body.setTransform(deathPosition, 0);
 		
+		playerSlowAmmount = 0;
 		start();
 	}
 	
@@ -424,19 +459,27 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStopping(){
-		if(alive && speed < 0.001f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
+		if(alive && Math.abs(speed) < 1f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-			sounds.get(CharacterSound.STEPS).pause();
+			if(stepSoundPlayed){
+				sounds.get(CharacterSound.STEPS).stop();
+				stepSoundPlayed = false;
+			}
 			stopped = true;
+			Logger.log(this, "predkosc playera (stop): " + Math.abs(speed));
 		}
-		else if(alive && speed > 0.001f && stopped && !sliding){
+		else if(alive && Math.abs(speed) > 3f && stopped && !sliding){
 			if(touchGround){
-				sounds.get(CharacterSound.STEPS).resume();
+				if(!stepSoundPlayed){
+					stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+					stepSoundPlayed = true;
+				}
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			stopped = false;
+			Logger.log(this, "predkosc playera (start): " + Math.abs(speed));
 		}
 	}
 
@@ -487,7 +530,7 @@ public abstract class Character extends Actor{
 	
 	private void handleStepSoundSpeed(){
 		if(soundInstances.get(CharacterSound.STEPS) != null){
-			sounds.get(CharacterSound.STEPS).setPitch(soundInstances.get(CharacterSound.STEPS), getSpeed()/10);
+			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/10);
 		}
 	}
 	

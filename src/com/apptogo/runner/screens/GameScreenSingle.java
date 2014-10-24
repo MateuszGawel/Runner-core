@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
@@ -29,6 +30,9 @@ public class GameScreenSingle extends GameScreen
 		
 		createGui();
 		createLabels();
+		
+		Countdown countdown = new Countdown(world);
+		countdown.startCountdown();
 	}
 			
 	private void createLabels(){

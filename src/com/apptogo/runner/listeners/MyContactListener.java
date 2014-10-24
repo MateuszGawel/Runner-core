@@ -41,9 +41,7 @@ public class MyContactListener implements ContactListener
 		
 		//smierc TOP
 		if(checkFixturesTypes(fa, fb, "killingTop", "player")){	
-			Logger.log(this, "smierc dla1: "+player.getName());
 			if(player.character.isAlive() && !player.character.isImmortal()){
-				Logger.log(this, "smierc dla2: "+player.getName());
 				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieTop = true;
 			}
 		}
