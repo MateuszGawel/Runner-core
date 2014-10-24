@@ -45,6 +45,7 @@ public abstract class Character extends Actor{
 	protected boolean me = false;
 	protected boolean alive = true;
 	protected boolean touchGround = false;
+	protected boolean touchBarrel = false;
 	protected boolean sliding = false;
 	protected boolean immortal = false;
 	protected boolean blinking = false;
@@ -58,6 +59,7 @@ public abstract class Character extends Actor{
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	protected boolean forceStandup = false;
+	protected boolean shouldLand = false;
 
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
@@ -69,6 +71,7 @@ public abstract class Character extends Actor{
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
 	protected int standupSensor = 0;
+	protected int barrelSensor = 0;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	
@@ -196,7 +199,7 @@ public abstract class Character extends Actor{
 	
 	public boolean start()
 	{
-		if(!running && alive && touchGround && !gameIsEnded)
+		if(!running && alive && !gameIsEnded)
 		{		
 			if(!stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
@@ -204,7 +207,10 @@ public abstract class Character extends Actor{
 			}
 			running = true;
 			started = true;
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			if(touchGround || touchBarrel)
+				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			else
+				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			return true;
 		}
 		else return false;
@@ -212,7 +218,7 @@ public abstract class Character extends Actor{
 	
 	public boolean jump()
 	{
-		if(/*started && */alive && canStandup && (touchWall || touchGround || !me))
+		if(/*started && */alive && canStandup && (touchWall || touchGround || touchBarrel || !me))
 		{
 			sliding = false;
 			jumped = true;
@@ -225,27 +231,33 @@ public abstract class Character extends Actor{
 				stepSoundPlayed = false;
 			}
 			sounds.get(CharacterSound.JUMP).play();
+			Logger.log(this, "JUMP");
 			return true;
 		}
 		else return false;
 	}	
 	public void land()
 	{
-		if(alive && !sliding && footSensor > 0)
+		if(shouldLand)
 		{
-			if(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB)
-			{
-				touchGround = true;
-				jumped = false;
-				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
-				sounds.get(CharacterSound.LAND).play(0.4f);
-				if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
-					stepSoundId = sounds.get(CharacterSound.STEPS).loop();
-					stepSoundPlayed = true;
-				}
+			Logger.log(this, "LAND");
+			touchGround = true;
+			jumped = false;
+			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+			sounds.get(CharacterSound.LAND).play(0.3f);
+			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
 			}
 		}
 	}
+	
+	public void boostAfterLand(){
+		if(shouldLand && running && !touchWall){
+			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
+		}
+	}
+	
 	public boolean slide()
 	{
 		if(started && alive && (touchGround || !me) && !sliding)
@@ -315,6 +327,7 @@ public abstract class Character extends Actor{
 	public boolean dieDismemberment()
 	{
 		if(alive){
+			getBody().setLinearVelocity(0,0);
 			sounds.get(CharacterSound.EXPLODE).play();
 			dismemberment = true;
 			visible = false;
@@ -372,6 +385,11 @@ public abstract class Character extends Actor{
 		wallSensor++;
 	}
 	
+	public void incrementBarrelSensor(){
+		if(!touchBarrel)
+			barrelSensor++;
+	}
+	
 	public void decrementWallSensor(){
 		wallSensor--;
 	}
@@ -390,6 +408,11 @@ public abstract class Character extends Actor{
 	public void decrementStandupSensor(){
 		standupSensor--;
 	}
+	public void decrementBarrelSensor(){
+		if(touchBarrel)
+			barrelSensor--;
+	}
+	
 	public boolean slowPlayerBy(float percent){
 		if(percent < 0 || percent > 1)
 			return false;
@@ -466,7 +489,6 @@ public abstract class Character extends Actor{
 				stepSoundPlayed = false;
 			}
 			stopped = true;
-			Logger.log(this, "predkosc playera (stop): " + Math.abs(speed));
 		}
 		else if(alive && Math.abs(speed) > 3f && stopped && !sliding){
 			if(touchGround){
@@ -479,7 +501,6 @@ public abstract class Character extends Actor{
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			stopped = false;
-			Logger.log(this, "predkosc playera (start): " + Math.abs(speed));
 		}
 	}
 
@@ -498,6 +519,12 @@ public abstract class Character extends Actor{
 			canStandup = false;
 		else
 			canStandup = true;
+		
+		if(barrelSensor > 0){
+			touchBarrel = true;
+		}
+		else
+			touchBarrel = false;
 	}
 	
 	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
@@ -529,9 +556,7 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStepSoundSpeed(){
-		if(soundInstances.get(CharacterSound.STEPS) != null){
-			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/10);
-		}
+		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/10);
 	}
 	
 	private void handleDismemberment(){
@@ -549,6 +574,13 @@ public abstract class Character extends Actor{
 		}
 	}
 	
+	private void handleShouldLand(){
+		if(alive && !sliding && (touchGround || touchBarrel) && animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB)
+			shouldLand = true;
+		else
+			shouldLand = false;
+	}
+	
 	private void handleDying(){
 		if(((UserData)body.getUserData()).dieBottom){
 			dieBottom();
@@ -557,6 +589,25 @@ public abstract class Character extends Actor{
 		else if(((UserData)body.getUserData()).dieTop){
 			dieTop();
 			((UserData)body.getUserData()).dieTop = false;
+		}
+	}
+	
+	private void handleFlying(){
+		if(!touchGround && !touchWall && !touchBarrel){
+			registerAction(new CharacterAction(this, 0.1f, 1) {
+				
+				@Override
+				public void perform() {
+					if(!touchGround && !touchWall && !touchBarrel && alive){
+						animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
+						if(stepSoundPlayed){
+							sounds.get(CharacterSound.STEPS).stop();
+							stepSoundPlayed = false;
+						}
+					}
+						
+				}
+			});
 		}
 	}
 
@@ -578,6 +629,8 @@ public abstract class Character extends Actor{
 		handleStandingUp();
 		handleStepSoundSpeed();
 		handleDying();
+		handleShouldLand();
+		handleFlying();
 		
 		currentFrame = animationManager.animate(delta);
 		
@@ -609,7 +662,7 @@ public abstract class Character extends Actor{
 	
 	public void endGame()
 	{
-		sounds.get(CharacterSound.VICTORY).play();
+		sounds.get(CharacterSound.VICTORY).play(0.4f);
 		gameIsEnded = true;
 	}
 	

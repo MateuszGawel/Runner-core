@@ -25,7 +25,7 @@ public class WildWestWorld extends GameWorld{
 		super.world.setGravity(GRAVITY);
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/wildWestMusic.ogg");
-		music.setVolume(0.4f);
+		music.setVolume(0.25f);
 	}
 	
 	private void createBackground(){

@@ -5,6 +5,7 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.main.Runner;
 
 public class GameScreenSingle extends GameScreen
@@ -24,8 +25,17 @@ public class GameScreenSingle extends GameScreen
 		createGui();
 		createLabels();
 		
-		Countdown countdown = new Countdown(world);
-		countdown.startCountdown();
+		
+		player.character.registerAction(new CharacterAction(player.character, 2f, 1) {
+			
+			@Override
+			public void perform() {
+				Countdown countdown = new Countdown(world);
+				countdown.startCountdown();
+				
+			}
+		});
+
 	}
 	
 	@Override

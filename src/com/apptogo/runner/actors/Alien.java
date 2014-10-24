@@ -6,9 +6,15 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -39,6 +45,17 @@ public class Alien extends Character{
         setOrigin(0, 0);
         liftField = new LiftField(this, world);
         gameWorld.backgroundStage.addActor(liftField);
+        addSounds();
+	}
+	
+	private void addSounds(){
+		ResourcesManager rm = ResourcesManager.getInstance();
+    	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
+    	
+    	sounds.put(CharacterSound.JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/archerJump.ogg"));
+    	sounds.put(CharacterSound.DEATH, (Sound)rm.getResource(cs, "mfx/game/characters/archerDeath.ogg"));
+    	sounds.put(CharacterSound.EXPLODE, (Sound)rm.getResource(cs, "mfx/game/characters/archerExplode.ogg"));
+    	sounds.put(CharacterSound.VICTORY, (Sound)rm.getResource(cs, "mfx/game/characters/archerVictory.ogg"));
 	}
 	
 	private void initAnimations(){
@@ -52,8 +69,14 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f)
+				if(getSpeed() < 0.001f){
+					if(stepSoundPlayed){
+						Logger.log(this, "stopuje");
+						sounds.get(CharacterSound.STEPS).stop();
+						stepSoundPlayed = false;
+					}
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+				}
 				else
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
@@ -67,8 +90,14 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "standup"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f)
+				if(getSpeed() < 0.001f){
+					if(stepSoundPlayed){
+						Logger.log(this, "stopuje");
+						sounds.get(CharacterSound.STEPS).stop();
+						stepSoundPlayed = false;
+					}
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+				}
 				else
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
@@ -103,8 +132,14 @@ public class Alien extends Character{
 			public void onAnimationFinished(){
 				if(speed > 0.001f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
-				else
+				else{
+					if(stepSoundPlayed){
+						Logger.log(this, "stopuje");
+						sounds.get(CharacterSound.STEPS).stop();
+						stepSoundPlayed = false;
+					}
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+				}
 			}
 		});	
 		

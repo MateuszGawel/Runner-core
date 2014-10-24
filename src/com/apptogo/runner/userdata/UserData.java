@@ -12,6 +12,7 @@ public class UserData
 	public float slowPercent = 0; //od 0 do 1
 	public boolean dieBottom;
 	public boolean dieTop;
+	public float speedBeforeLand;
 
 	//powerup
 	public String powerup;

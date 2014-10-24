@@ -48,9 +48,7 @@ public class MyContactListener implements ContactListener
 		
 		//smierc BOTTOM
 		if( checkFixturesTypes(fa, fb, "killingBottom", "player")){
-			Logger.log(this, "smierc dla1: "+player.getName());
 			if(player.character.isAlive() && !player.character.isImmortal()){
-				Logger.log(this, "smierc dla2: "+player.getName());
 				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieBottom = true;
 			}
 		}
@@ -66,6 +64,7 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.incrementFootSensor();
 			player.character.land();
+			//Logger.log(this, "fixtury: " + ((UserData)fa.getUserData()).key + ((UserData)fb.getUserData()).key );
 		}
 		
 		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
@@ -75,6 +74,18 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
 			player.character.incrementStandupSensor();
 		}
+		if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
+			player.character.incrementBarrelSensor();
+			player.character.land();
+		}
+		
+		//boost po l¹dowaniu
+		if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){
+			if(player.character.isAlive() && !player.character.isImmortal()){
+				player.character.boostAfterLand();
+			}
+		}
+		
 		
 		//beczki (tu moze byc problem bo jesli blednie wbiegnie na beczki to rozwali)
 		if(checkFixturesTypes(fa, fb, "barrel", "player")){
@@ -83,8 +94,8 @@ public class MyContactListener implements ContactListener
 			((UserData)barrelFixture.getBody().getUserData()).active = true;
 			
 			if(player.character.isAlive() && !player.character.isImmortal() && 
-					(Math.abs(playerFixture.getBody().getLinearVelocity().x - barrelFixture.getBody().getLinearVelocity().x) > 10f 
-							|| Math.abs(playerFixture.getBody().getLinearVelocity().y - barrelFixture.getBody().getLinearVelocity().y) > 10f ))
+					(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f 
+							|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
 			{
 				((UserData)playerFixture.getBody().getUserData()).dieBottom = true;
 			}
@@ -184,6 +195,7 @@ public class MyContactListener implements ContactListener
 		
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.decrementFootSensor();
+			//Logger.log(this, "endcontact: " + ((UserData)fa.getUserData()).key + ((UserData)fb.getUserData()).key );
 		}
 		
 		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
@@ -198,6 +210,9 @@ public class MyContactListener implements ContactListener
 			Fixture fixture = getFixtureByType(fa, fb, "liftField");
 			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
 		}
+		if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
+			player.character.decrementBarrelSensor();
+		}
 		
 		//bagno
 		if( checkFixturesTypes(fa, fb, "swamp", "footSensor") ){
@@ -211,6 +226,15 @@ public class MyContactListener implements ContactListener
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) 
 	{	
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+		Player player = checkIfFixtureIsPlayer(fa, fb);		
+		//Logger.log(this, "przed ladowaniem: " + ((UserData)fa.getUserData()).key + " oraz " + ((UserData)fb.getUserData()).key);
+		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
+			Fixture fixture = getFixtureByType(fa, fb, "footSensor");
+			((UserData)fixture.getBody().getUserData()).speedBeforeLand = fixture.getBody().getLinearVelocity().x;
+			//Logger.log(this, "przed ladowaniem: " + fixture.getBody().getLinearVelocity().x);
+		}
 	}
 
 	@Override
