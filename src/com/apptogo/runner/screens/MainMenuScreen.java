@@ -5,8 +5,8 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -342,6 +342,31 @@ public class MainMenuScreen extends BaseScreen
 		//---
 		
         //---Drugi tab
+        Label removePlayer = createLabel(getLangString("removePlayer"), FontType.WOODFONT, -450f, 1090f);
+        removePlayer.addListener(new ClickListener(){
+        	
+        	public void clicked(InputEvent event, float x, float y) 
+            {
+        		final ClickListener confirmChangeListener = new ClickListener()
+        		{
+        			public void clicked(InputEvent event, float x, float y)
+        			{
+        				player = new Player();
+        				player.save();
+        				
+        				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_MAIN_MENU );	
+        			}
+        		};
+        		
+            	languageChangeDialog.setYesListener( confirmChangeListener );
+            	languageChangeDialog.setLabel( getLangString("areYouSureToRemovePlayer"));
+            	languageChangeDialog.toggleWidget();
+            }
+        	
+        });
+        
+        settingsWidget.addActorToTab(removePlayer, 2);
+        
         //---
       
         //---Trzeci tab
@@ -408,7 +433,8 @@ public class MainMenuScreen extends BaseScreen
             }
 		};
 		
-		soundButtonOffListener = new ClickListener(){
+		soundButtonOffListener = new ClickListener()
+		{
 			public void clicked(InputEvent event, float x, float y) 
             {				
 				settings.musicState = true;
@@ -419,21 +445,24 @@ public class MainMenuScreen extends BaseScreen
             }
 		};
 		
-		googlePlusButtonListener = new ClickListener(){
+		googlePlusButtonListener = new ClickListener()
+		{
 			public void clicked(InputEvent event, float x, float y) 
             {
             	//languageChanged = true;
             }
 		};
 		
-		facebookButtonListener = new ClickListener(){
+		facebookButtonListener = new ClickListener()
+		{
 			public void clicked(InputEvent event, float x, float y) 
             {
             	//languageChanged = true;
             }
 		};
 		
-		campaignButtonListener = new ClickListener(){
+		campaignButtonListener = new ClickListener()
+		{
 			public void clicked(InputEvent event, float x, float y) 
             {
 				loadScreenAfterFadeOut(ScreenType.SCREEN_CAMPAIGN);
@@ -443,14 +472,28 @@ public class MainMenuScreen extends BaseScreen
 		multiplayerButtonListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				loadScreenAfterFadeOut(ScreenType.SCREEN_MULTIPLAYER);
+				if( player.getName().equals("") )
+				{
+					loadScreenAfterFadeOut(ScreenType.SCREEN_REGISTER);
+				}
+				else
+				{
+					loadScreenAfterFadeOut(ScreenType.SCREEN_MULTIPLAYER);
+				}
             }
 		};
 		
 		joinRandomRoomButtonListener = new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
-				loadScreenAfterFadeOut(ScreenType.SCREEN_WAITING_ROOM);
+				if( player.getName().equals("") )
+				{
+					loadScreenAfterFadeOut(ScreenType.SCREEN_REGISTER);
+				}
+				else
+				{
+					loadScreenAfterFadeOut(ScreenType.SCREEN_WAITING_ROOM);
+				}
             }
 		};
 	}

@@ -29,8 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -301,15 +299,6 @@ public abstract class BaseScreen implements Screen
 		textButtonStyle.fontColor = FontType.convertToColor(fontType) ;
         
 		textButton.setStyle(textButtonStyle);
-	}
-	
-	protected void setTextFieldFont(TextField textField, FontType fontType)
-	{
-		TextFieldStyle textFieldStyle = new TextFieldStyle(textField.getStyle());
-        
-		textFieldStyle.font = FontType.convertToFont(fontType);
-		textFieldStyle.fontColor = FontType.convertToColor(fontType) ;
-		textField.setStyle(textFieldStyle);
 	}
 	
 	protected void setCenterPosition(Actor actor, float y)

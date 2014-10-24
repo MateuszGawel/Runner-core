@@ -182,6 +182,10 @@ public class ResourcesManager
 		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
 		screenMetaArray.add( waitingRoomMeta );
 		
+		//|9. REGISTER SCREEN
+		ScreenMeta registerMeta = new ScreenMeta(ScreenType.SCREEN_REGISTER);
+		screenMetaArray.add( registerMeta );
+		
 		//ADDING SPECIALS:
 		//-----------------------------------------------------------------------------
 		//-1. LOGO RESOURCES

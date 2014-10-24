@@ -67,7 +67,7 @@ public class Statistics
 			score += this.getLevelScore( level );
 		}
 		
-		return 10;//score;
+		return score;
 	}	
 	
 	public int getAbilityLevel(CharacterAbilityType characterAbilityType)
