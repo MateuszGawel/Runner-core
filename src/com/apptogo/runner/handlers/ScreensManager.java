@@ -15,6 +15,7 @@ import com.apptogo.runner.screens.GameScreenSingle;
 import com.apptogo.runner.screens.LoadingScreen;
 import com.apptogo.runner.screens.MainMenuScreen;
 import com.apptogo.runner.screens.MultiplayerScreen;
+import com.apptogo.runner.screens.RegisterScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.WaitingRoomScreen;
 import com.badlogic.gdx.Gdx;
@@ -115,6 +116,8 @@ public class ScreensManager {
 			screen = new GameScreenMulti(runner);
 		else if(screenType == ScreenType.SCREEN_WAITING_ROOM)
 			screen = new WaitingRoomScreen(runner);
+		else if(screenType == ScreenType.SCREEN_REGISTER)
+			screen = new RegisterScreen(runner);
 		else
 			screen = null;
 		

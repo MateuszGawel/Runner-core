@@ -10,7 +10,7 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.widget.DialogWidget;
+import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
@@ -18,9 +18,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -32,7 +30,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private Widget manageWidget;
 	
-	private DialogWidget confirmWidget;
+	private InfoWidget confirmWidget;
 	
     private Button backButton;
     
@@ -45,13 +43,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     private Button manageBanditAnimationButton;
     private Button manageArcherAnimationButton;
     private Button manageAlienAnimationButton;
-    
-    private Label tab1;
-    private Label tab2;
-    private Label tab3;
-    
-    private boolean isTextFieldClicked = false;
-    private boolean isTextFieldLastActorClicked = false;
     
 	public MultiplayerScreen(Runner runner)
 	{
@@ -66,7 +57,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);
-		NotificationManager.getInstance().prepareManager(player.getName(), player.getCharacterType());
+		NotificationManager.prepareManager(player.getName(), player.getCharacterType());
 	}
 	
 	@Override
@@ -102,7 +93,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		createManageWidget();
 		
-		confirmWidget = new DialogWidget("To jest jakas wiadomosc", null, null);
+		confirmWidget = new InfoWidget(player.getName());
 		createRoomButton.addListener( confirmWidget.toggleWidgetListener );
 		
 		manageProfileButton = new TextButton( "your profile", skin, "default");
@@ -201,69 +192,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 				changeCurrentCharacterAnimation();
             }
 		});
-		
-		Label nameLabel = new Label("name:", skin, "default");
-		setLabelFont(nameLabel, FontType.BIG);
-		nameLabel.setPosition(-25, 1175);
-		
-		final TextField textField = new TextField(player.getName(), skin);
-		//setTextFieldFont(textField, FontType.SMALL); - niestety nie da sie tak prosto, textField musi miec podana odpowiednia czcionke juz w momencie tworzenia bo w ten sposob okresla wielkosc jednej pozycji kursora :(
-        textField.setSize(450f, 50f);
-        textField.setPosition(0f, 1115f);
-        textField.setOnlyFontChars(true);
-        
-        //--Ten kod obsluguje utracenie focusa na textField, moga pojawic sie problemy przy nastepnych textFieldach + to na pewno nie jest najlepsze wyjscie moze da sie to zrobic inaczej?
-        textField.addListener( new ClickListener()
-		{
-        	@Override
-        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) 
-        	{
-        		isTextFieldClicked = true;
-        		return true;
-        	};
-        	
-        	@Override
-        	public void touchUp(InputEvent event, float x, float y, int pointer, int button) 
-        	{
-        		isTextFieldClicked = false;
-        		isTextFieldLastActorClicked = true;
-        	};
-		});
-        
-        stage.addListener( new ClickListener()
-		{
-        	@Override
-        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) 
-        	{
-        		if( !isTextFieldClicked && isTextFieldLastActorClicked ) 
-    			{
-        			isTextFieldLastActorClicked = false;
-        			
-        			Logger.log(this, "teraz odkliknieto");
-        			stage.setKeyboardFocus(null);
-        			player.setName( textField.getText() );
-            		player.save();
-    			}
-        		
-        		return true;
-        	};
-		});
-        //---
-        
-        //creating tabs
-        tab1 = new Label("TO JEST TAB 1", skin);
-        tab1.setPosition(0, 800);
-        
-        tab2 = new Label("TO JEST TAB 2", skin);
-        tab2.setPosition(0, 800);
-        
-        tab3 = new Label("TO JEST TAB 3", skin);
-        tab3.setPosition(0, 800);
-        
-        manageWidget.addActorToTab(tab1, 1);
-        manageWidget.addActorToTab(tab2, 2);
-        manageWidget.addActorToTab(tab3, 3);
-        
+				  
         manageWidget.setCurrentTab(1);
         
         manageBanditAnimationButton.addListener( manageWidget.getChangeWidgetTabListener(1) );
@@ -278,9 +207,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		manageWidget.addActor(manageBanditAnimationButton);
 		manageWidget.addActor(manageArcherAnimationButton);
 		manageWidget.addActor(manageAlienAnimationButton);
-		
-		manageWidget.addActor(nameLabel);
-		manageWidget.addActor(textField);
 	}
 		
 	@Override

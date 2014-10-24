@@ -6,7 +6,6 @@ import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -41,9 +40,7 @@ public class SplashScreen extends BaseScreen
 	private ObjectAnimation dustAnimation;
 	private ObjectAnimation loadingAnimation;
 		
-	private Texture splashImageTexture;
 	private Image splashImage;
-	private Texture logoTexture;
 	private Image logoImage;
 	
 	private MoveToAction splashImageInAction;
@@ -73,10 +70,7 @@ public class SplashScreen extends BaseScreen
 		
 		initializeActions();
 		
-		splashImageTexture = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_SPLASH, "gfx/splash/splash.png");
-		
-		splashImage = new Image( splashImageTexture );
-		splashImage.setPosition( -106.0f, -800.0f );
+		splashImage = createImage("gfx/splash/splash.png", -106.0f, -800.0f);
 		splashImage.addAction( splashImageInAction );
 	
 		addToScreen(splashImage);
@@ -126,9 +120,7 @@ public class SplashScreen extends BaseScreen
 		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
 		{
 			//tworze animacje itd tutaj bo musimy czekac na zaladowanie sie animacji do pamieci
-			logoTexture = (Texture)ResourcesManager.getInstance().getResource(ScreenType.SCREEN_SPLASH, "gfx/splash/logoSplash.png");
-			logoImage = new Image( logoTexture );
-			logoImage.setPosition( -421.0f, 400.0f );
+			logoImage = createImage("gfx/splash/logoSplash.png", -421.0f, 400.0f);
 			
 			letterDAnimation = new ObjectAnimation("gfx/splash/logoSplashLetterD.pack", "d", 16, -422.0f, 270.0f, false, false);
 			
@@ -140,12 +132,10 @@ public class SplashScreen extends BaseScreen
 			dustAnimation.setVisible(false);
 			
 			loadingLabel = new Label(getLangString("loadingLabel"), skin);
-			//setLabelFont(loadingLabel, FontType.LOADINGSMALL);
 			setCenterPosition(loadingLabel, 300);
 			loadingLabel.setVisible(false);
 			
 			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, 270.0f, false, true);
-			//loadingAnimation.scaleFrames(2.0f);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(logo);
@@ -244,8 +234,6 @@ public class SplashScreen extends BaseScreen
 	public void dispose() 
 	{
 		super.dispose();	
-		splashImageTexture.dispose();
-		logoTexture.dispose();
 	}
 
 	@Override

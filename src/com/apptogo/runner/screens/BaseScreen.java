@@ -7,8 +7,8 @@ import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
@@ -18,6 +18,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -28,8 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -40,6 +40,8 @@ public abstract class BaseScreen implements Screen
 	protected LanguageManager languageManager;
 	protected Image background;
 	protected Texture backgroundTexture;
+	
+	protected Array<Texture> textures;
 	
 	protected Settings settings;
 	
@@ -65,6 +67,8 @@ public abstract class BaseScreen implements Screen
 	
 	protected ScreenType screenToLoadAfterFadeOut;
 	
+	SaveManager saveManager;
+	
 	public abstract void handleInput();
 	public abstract ScreenType getSceneType();
 	public abstract void step();
@@ -77,11 +81,15 @@ public abstract class BaseScreen implements Screen
 		
 		settings = Settings.load();
 		
+		saveManager = SaveManager.getInstance();
+		
 		this.languageManager = LanguageManager.getInstance();
 		
 		//Logger.log(this, settings.getLanguage());
 		
 		this.languageManager.setCurrentLanguage( settings.getLanguage() );
+		
+		textures = new Array<Texture>();
 	}
 	
 	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
@@ -155,8 +163,11 @@ public abstract class BaseScreen implements Screen
 	protected void setBackground(String path)
 	{
 		backgroundTexture = new Texture( Gdx.files.internal(path) );
+		
+		textures.add(backgroundTexture);
+		
 		background = new Image( backgroundTexture );
-		background.setPosition(0 - (runner.SCREEN_WIDTH/2.0f), 0 - (runner.SCREEN_HEIGHT/2.0f));
+		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
 		stage.addActor( background );
 	}
 
@@ -246,17 +257,40 @@ public abstract class BaseScreen implements Screen
 		fadeInScreen = true;
 	}
 	
-	
-	protected void setLabelFont(Label label, FontType fontType)
+	protected Image createImage(String imagePath, float x, float y)
 	{
-		LabelStyle labelStyle = new LabelStyle(label.getStyle());
-        
-		labelStyle.font = FontType.convertToFont(fontType);
-		label.setColor( FontType.convertToColor(fontType) );
-        
-        label.setStyle(labelStyle);
+		return createImage(imagePath, x, y, TextureFilter.Linear, TextureFilter.Linear);
+	}
+	protected Image createImage(String imagePath, float x, float y, TextureFilter minFilter, TextureFilter magFilter)
+	{
+		Texture texture = new Texture( Gdx.files.internal(imagePath) );
+		texture.setFilter(minFilter, magFilter);
+		
+		textures.add(texture);
+		
+		Image image = new Image(texture);
+		image.setPosition(x, y);
+		
+		return image;
 	}
 	
+	protected Label createLabel(String text, FontType fontType)
+	{
+		return createLabel(text, fontType, 0, 0);
+	}
+	
+	protected Label createLabel(String text, FontType fontType, float x, float y)
+	{
+		LabelStyle labelStyle = new LabelStyle();	
+		labelStyle.font = FontType.convertToFont(fontType);
+		
+		Label label = new Label(text, labelStyle);
+		label.setColor( FontType.convertToColor(fontType) );
+		label.setPosition(x, y);
+		
+		return label;
+	}
+		
 	protected void setTextButtonFont(TextButton textButton, FontType fontType)
 	{
 		TextButtonStyle textButtonStyle = new TextButtonStyle(textButton.getStyle());
@@ -267,15 +301,6 @@ public abstract class BaseScreen implements Screen
 		textButton.setStyle(textButtonStyle);
 	}
 	
-	protected void setTextFieldFont(TextField textField, FontType fontType)
-	{
-		TextFieldStyle textFieldStyle = new TextFieldStyle(textField.getStyle());
-        
-		textFieldStyle.font = FontType.convertToFont(fontType);
-		textFieldStyle.fontColor = FontType.convertToColor(fontType) ;
-		textField.setStyle(textFieldStyle);
-	}
-	
 	protected void setCenterPosition(Actor actor, float y)
 	{
 		actor.setPosition(-(actor.getWidth() / 2.0f), y);
@@ -284,9 +309,18 @@ public abstract class BaseScreen implements Screen
 	@Override
 	public void dispose() 
 	{
-		//skin.dispose();
-		if(backgroundTexture != null) backgroundTexture.dispose();
-		stage.clear();
-		stage.dispose();
+		for(Texture texture: textures)
+		{
+			if( texture != null )
+			{
+				texture.dispose();
+			}
+		}
+		
+		if( stage != null)
+		{
+			stage.clear();
+			stage.dispose();
+		}
 	}
 }

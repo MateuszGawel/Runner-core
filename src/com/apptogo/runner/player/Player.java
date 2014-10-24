@@ -5,7 +5,6 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
-import com.apptogo.runner.logger.Logger;
 
 public class Player 
 {
@@ -21,6 +20,11 @@ public class Player
 		
 	public Player()
 	{
+		name = "";
+		password = "";
+		
+		characterType = CharacterType.BANDIT;
+		
 		statistics = new Statistics();
 	}
 	

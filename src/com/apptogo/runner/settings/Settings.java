@@ -4,13 +4,13 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.SaveManager;
 
 public class Settings 
-{
-	public boolean soundState;
+{	
+	public boolean soundsState;
 	public boolean musicState;
 	public boolean vibrationState;
 	
-	public int soundLevel;
-	public int musicLevel;
+	public float soundsLevel;
+	public float musicLevel;
 	
 	public String language;
 	
@@ -31,12 +31,12 @@ public class Settings
 
 	public boolean isSoundState() 
 	{
-		return soundState;
+		return soundsState;
 	}
 
 	public void setSoundState(boolean soundState) 
 	{
-		this.soundState = soundState;
+		this.soundsState = soundState;
 	}
 
 	public boolean isMusicState() 
@@ -59,24 +59,24 @@ public class Settings
 		this.vibrationState = vibrationState;
 	}
 
-	public int getSoundLevel() 
+	public float getSoundLevel() 
 	{
-		return soundLevel;
+		return soundsLevel;
 	}
 
-	public void setSoundLevel(int soundLevel) 
+	public void setSoundLevel(float f) 
 	{
-		this.soundLevel = soundLevel;
+		this.soundsLevel = f;
 	}
 
-	public int getMusicLevel() 
+	public float getMusicLevel() 
 	{
 		return musicLevel;
 	}
 
-	public void setMusicLevel(int musicLevel) 
+	public void setMusicLevel(float f) 
 	{
-		this.musicLevel = musicLevel;
+		this.musicLevel = f;
 	}
 
 	public String getLanguage() 

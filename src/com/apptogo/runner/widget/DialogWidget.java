@@ -3,18 +3,20 @@ package com.apptogo.runner.widget;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class DialogWidget extends Widget
 {
-
+	private Table table;
+	
 	private Label label;
+	
 	private Button yesButton;
 	private Button noButton;
 	
@@ -42,18 +44,22 @@ public class DialogWidget extends Widget
 		
 		label = new Label(message, skin, "dialogLabel");
 		
-		
 		//przy czcionce WOODFONT max szerokosc wiersza to 23 znaki [lub 356px]
 		LabelStyle ls = label.getStyle();
 		ls.font = FontType.convertToFont( FontType.WOODFONT );
 		ls.fontColor = FontType.convertToColor( FontType.WOODFONT );
 		label.setStyle(ls);
+		label.setWrap(true);
 		
-		label.setPosition(-350f, 75f);
-        
+		table = new Table(skin);
+		table.setSize(520.0f, 400.0f);
+		table.setPosition(-350.0f, -200.0f);
+		
+		table.add(label).width(520.0f);
+		
 		this.addActor(yesButton);
 		this.addActor(noButton);
-        this.addActor(label);
+        this.addActor(table);
 	}
 
 	public void setYesListener(ClickListener listener) 

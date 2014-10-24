@@ -33,7 +33,8 @@ public class GameWorldRenderer
         
     }  
     
-    public void render(){  	
+    public void render()
+    {  	
 		tiledMapRenderer.setView(camera);
 	
 	    camera.position.set(
@@ -49,9 +50,7 @@ public class GameWorldRenderer
     	gameWorld.backgroundStage.draw();
     	tiledMapRenderer.render();
     	gameWorld.worldStage.draw();
-    	//debugRenderer.render(gameWorld.world, camera.combined);
-    	
-    	
+    	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

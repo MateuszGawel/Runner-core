@@ -35,7 +35,15 @@ public class Runner extends Game
 	@Override
 	public void render() 
 	{
-		super.render();	
+		try
+		{
+			super.render();	
+		}
+		catch(Exception e)
+		{ 
+			e.printStackTrace();
+			Gdx.app.exit();
+		}
 	}
 	
 	@Override

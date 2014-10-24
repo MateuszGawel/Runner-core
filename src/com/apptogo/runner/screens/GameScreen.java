@@ -1,7 +1,5 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.FontType;
@@ -37,6 +35,8 @@ public abstract class GameScreen extends BaseScreen{
 	protected Array<Button> powerupButtons;
 	protected boolean multiplayer;
 	
+	protected Label label;
+	
 	public GameScreen(Runner runner)
 	{
 		super(runner);		
@@ -44,7 +44,14 @@ public abstract class GameScreen extends BaseScreen{
 		
 		ResourcesManager.getInstance().unloadMenuResources(); //czy to na pewno dobre miejsce na ta funkcje? tu sie fajnie wpasowuje ale tak naprawde to powinno byc zrobione na etapie loadingu
 	}
-		
+	
+	protected void createLabels()
+	{
+		label = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
+		label.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (label.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
+		guiStage.addActor(label);
+	}
+	
 	public void setLevel(Level level)
 	{
 		this.level = level;
@@ -146,7 +153,9 @@ public abstract class GameScreen extends BaseScreen{
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose() 
+	{
+		super.dispose();
 		world.dispose();
 	}
 

@@ -9,10 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
@@ -69,12 +67,13 @@ public class SaveManager
 	
 	public Player loadPlayer()
 	{			
-		Player player = new Player("cycek", CharacterType.BANDIT); //tutaj ustawiam sobie imie zebym mogl testowac na 1 kompie
+		//Player player = new Player("cycek", CharacterType.BANDIT); //tutaj ustawiam sobie imie zebym mogl testowac na 1 kompie
+		//player.save();
 		Json json = new Json();
-		save(player); //dodaltem te linijke i wykomentowalem nizej
+
 		if( save.getString("PLAYER", "").equals("") )
 		{
-			//save(player);
+			save( new Player() );
 		}
 		
 		String serializedPlayer = save.getString("PLAYER");

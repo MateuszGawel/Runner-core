@@ -2,30 +2,24 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.vars.Box2DVars;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class LoadingScreen extends BaseScreen{	
-    
+public class LoadingScreen extends BaseScreen
+{	    
 	private ScreenType screenToLoad;
 	private ResourcesManager resourcesManager;
 	
-	private TextButton slider;
+	private Button slider;
 	private Image sliderMask;
 	
 	private Label loadingLabel;
@@ -85,18 +79,13 @@ public class LoadingScreen extends BaseScreen{
 			}
 					
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setLabelFont(smallLabel, FontType.LOADINGSMALL);
 			setCenterPosition(smallLabel, -245.0f);
 			
-			slider = new TextButton("", skin, "loader");
-			Color sliderColor = slider.getColor();
-			sliderColor.r += 20;
-			slider.setColor(sliderColor);
+			slider = new Button(skin, "westWildLoader");
 			slider.setSize(475.0f, 50.0f);
 			slider.setPosition( -712.0f, -275.0f);
 			
-			sliderMask = new Image( new Texture( Gdx.files.internal( "gfx/menu/sliderMask.png" ) ) );
-			sliderMask.setPosition( -640.0f, -275.0f);
+			sliderMask = createImage("gfx/menu/sliderMask.png", -640.0f, -275.0f);
 			
 			addToScreen(slider);
 			addToScreen(sliderMask);
@@ -105,11 +94,10 @@ public class LoadingScreen extends BaseScreen{
 		else
 		{
 			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setLabelFont(loadingLabel, FontType.LOADINGSMALL);
 			setCenterPosition(loadingLabel, 10.0f);
 			loadingLabel.setVisible(false);
 			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 10, -85.0f, -20.0f, false, true);
+			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f, false, true);
 			loadingAnimation.setVisible(false);
 			
 			addToScreen(loadingLabel);

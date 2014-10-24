@@ -144,22 +144,19 @@ public enum GameWorldType
 		return null;
 	}
 	
-	public static Image convertToWorldBackground( GameWorldType gameWorldType, ScreenType screenType )
+	public static String convertToWorldBackgroundPath( GameWorldType gameWorldType, ScreenType screenType )
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
-			return new Image( texture );
+			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png";
 		}
 		else if( gameWorldType == FOREST )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
-			return new Image( texture );
+			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png";
 		}
 		else if( gameWorldType == SPACE )
 		{
-			Texture texture = ResourcesManager.getInstance().getResource(screenType, "gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
-			return new Image( texture );
+			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png";
 		}
 		
 		return null;

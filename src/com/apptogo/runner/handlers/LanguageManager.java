@@ -111,9 +111,9 @@ public class LanguageManager {
 		
 		return defaultLanguage;
 	}
-	public FileHandle getIcoFile(String key)
+	public String getIcoFile(String key)
 	{
-		FileHandle icon = null;
+		String iconPath = null;
 		
 		for(int i = 0; i < languages.size; i++)
 		{
@@ -123,14 +123,14 @@ public class LanguageManager {
 			{
 				if( currentLanguage.getAttribute("id").equals(key) )
 				{
-					icon = Gdx.files.internal( node.getAttribute("chosenIcoFilePath") );
+					iconPath = node.getAttribute("chosenIcoFilePath");
 				}
-				else icon = Gdx.files.internal( node.getAttribute("icoFilePath") );
+				else iconPath = node.getAttribute("icoFilePath");
 				break;
 			}
 		}
 		
-		return icon;
+		return iconPath;
 	}
 	public String getFullnameLanguage(String key)
 	{
