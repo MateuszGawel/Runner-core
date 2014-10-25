@@ -18,6 +18,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -28,6 +30,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private TextButton joinRandomButton;
 	private TextButton manageProfileButton;
 	
+	private Widget profileView;
 	private Widget manageWidget;
 	
 	private InfoWidget confirmWidget;
@@ -74,39 +77,61 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
             }
          });
         
-        createRoomButton = new TextButton( "create room", skin, "default");
-        setTextButtonFont(createRoomButton, FontType.WOODFONT);
-        createRoomButton.setPosition( -(createRoomButton.getWidth() / 2.0f), 100.0f );
+        currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -360.0f, 50.0f, true);
+		currentCharacterAnimation.setVisible(true);
+        
+		Image ground = createImage("temp/ground.png", -360.0f, 5.0f);
 		
-        joinRandomButton = new TextButton( "random room", skin, "default");
+		Label playerName = createLabel( player.getName(), FontType.WOODFONTSMALL, -320.0f, 230.0f);
+		
+		Label worldRankLabel = createLabel( getLangString("worldRank"), FontType.WOODFONTSMALL, -150.0f, 150.0f);
+		Label worldRankValue = createLabel( "123", FontType.WOODFONTSMALL, 50.0f, 150.0f);
+		Label ligueRankLabel = createLabel( getLangString("ligueRank"), FontType.WOODFONTSMALL, -150.0f, 100.0f);
+		Label ligueRankValue = createLabel( "5", FontType.WOODFONTSMALL, 50.0f, 100.0f);
+		
+		Image achievmentsButton = createImage("temp/achievments.png", 190.0f, 5.0f);
+		Image shopButton = createImage("temp/shop.png", 280.0f, 5.0f);
+		
+        profileView = new Widget(Align.center, -20.0f, 0.0f, WidgetType.SMALL, WidgetFadingType.NONE, false);
+        profileView.toggleWidget();        
+        
+        profileView.addActor(playerName);
+        profileView.addActor(ground);
+        profileView.addActor(currentCharacterAnimation);
+        profileView.addActor(worldRankLabel);
+        profileView.addActor(worldRankValue);
+        profileView.addActor(ligueRankLabel);
+        profileView.addActor(ligueRankValue);
+        profileView.addActor(achievmentsButton);
+        profileView.addActor(shopButton);
+		
+		confirmWidget = new InfoWidget( "Tutaj bêdzie dodawanie przyjació³ do gry" );
+		
+		joinRandomButton = new TextButton( "random room", skin, "default");
         setTextButtonFont(joinRandomButton, FontType.WOODFONT);
-		joinRandomButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -100.0f );
-		joinRandomButton.addListener( new ClickListener(){
+        joinRandomButton.setPosition( -368.0f, -250.0f );
+        joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
 				loadScreenAfterFadeOut( ScreenType.SCREEN_WAITING_ROOM );
             }
 		});
-		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), 275.0f, -300.0f, true);
-		currentCharacterAnimation.setVisible(true);
-		
+        
+        createRoomButton = new TextButton( "P+", skin, "default");
+        createRoomButton.setSize(163.0f, 163.0f);
+        createRoomButton.setPosition( 205.0f, -250.0f );
+        createRoomButton.addListener( confirmWidget.toggleWidgetListener );
+        
+        
 		createManageWidget();
 		
-		confirmWidget = new InfoWidget(player.getName());
-		createRoomButton.addListener( confirmWidget.toggleWidgetListener );
+		//manageProfileButton.addListener( manageWidget.toggleWidgetListener );
 		
-		manageProfileButton = new TextButton( "your profile", skin, "default");
-		setTextButtonFont(manageProfileButton, FontType.WOODFONT);
-		manageProfileButton.setPosition( -(joinRandomButton.getWidth() / 2.0f), -300.0f );
-		manageProfileButton.addListener( manageWidget.toggleWidgetListener );
-		
+		addToScreen(profileView.actor());
 		addToScreen(createRoomButton);
 		addToScreen(joinRandomButton);
-		addToScreen(manageProfileButton);
 		addToScreen(backButton);
 		
-		addToScreen(currentCharacterAnimation);
 		addToScreen(manageWidget.actor());
 		addToScreen(confirmWidget.actor());
 	}
@@ -135,6 +160,17 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		manageWidget.setEasing( Interpolation.elasticOut );
 		manageWidget.getToFrontOnClick = true;
 		
+		
+		//CharacterAnimation playerCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), 275.0f, -300.0f, true);
+		
+		//Image playerCharacterAnimationBackgorund = createImage( CharacterType.convertToCharacterAnimationBackground , x, y)
+		
+		//manageWidget.addActor(playerName);
+		//manageWidget.addActor(playerCharacterAnimation);
+		
+		
+		
+		/*		
 		manageBanditAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -550.0f, 1075.0f, false);
 		manageArcherAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -400.0f, 1075.0f, false);
 		manageAlienAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -250.0f, 1075.0f, false);
@@ -206,7 +242,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		manageWidget.addActor(manageBanditAnimationButton);
 		manageWidget.addActor(manageArcherAnimationButton);
-		manageWidget.addActor(manageAlienAnimationButton);
+		manageWidget.addActor(manageAlienAnimationButton);*/
 	}
 		
 	@Override

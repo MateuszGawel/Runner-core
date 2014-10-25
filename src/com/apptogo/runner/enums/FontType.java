@@ -15,6 +15,7 @@ public enum FontType
 	LOADINGBIG,
 	LOADINGSMALL,
 	WOODFONT,
+	WOODFONTSMALL,
 	LEAFFONT,
 	ROCKFONT,
 	GAMEWORLDFONT;
@@ -44,6 +45,10 @@ public enum FontType
 		else if( fontType == FontType.WOODFONT )
 		{
 			return FontManager.getInstance().mediumFont;
+		}
+		else if( fontType == FontType.WOODFONTSMALL )
+		{
+			return FontManager.getInstance().smallFont;
 		}
 		else if( fontType == FontType.LEAFFONT )
 		{
@@ -84,6 +89,10 @@ public enum FontType
 			return new Color(0.9f, 0.9f, 0.9f, 1);
 		}
 		else if( fontType == FontType.WOODFONT )
+		{
+			return new Color(151f/255f, 127f/255f, 91f/255f, 1);
+		}
+		else if( fontType == FontType.WOODFONTSMALL )
 		{
 			return new Color(151f/255f, 127f/255f, 91f/255f, 1);
 		}
