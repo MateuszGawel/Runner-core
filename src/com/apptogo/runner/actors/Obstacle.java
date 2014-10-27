@@ -3,9 +3,11 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.AnimationManager;
+import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -45,6 +47,8 @@ public class Obstacle extends Actor{
 	
 	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
+	
+	private float soundVolume = 1;
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
@@ -176,6 +180,26 @@ public class Obstacle extends Actor{
 		this.offsetY = offsetY;
 	}
 	
+	private void handleSoundVolume(){
+		if(getBody() != null && (ScreensManager.getInstance().getCurrentScreenType() == ScreenType.SCREEN_GAME_SINGLE || ScreensManager.getInstance().getCurrentScreenType() == ScreenType.SCREEN_GAME_MULTI)){
+			float myPosition = getBody().getPosition().x;
+			float playerPosition = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.player.character.getBody().getPosition().x;
+			float distance = Math.abs(myPosition - playerPosition);
+			
+			//Logger.log(this, "my position: " + myPosition + " player position: " + playerPosition + " i roznica: " + (Math.abs(playerPosition - myPosition)));
+			
+			if(distance > 10){
+				setSoundVolume(0);
+			}
+			else if(1/(distance)>=1){
+				setSoundVolume(1);
+			}
+			else{
+				setSoundVolume(1/(distance));
+			}
+			//Logger.log(this, "glosnosc: " + 1/(distance));
+		}
+	}
 	@Override
 	public void act(float delta){
 		if(body != null){
@@ -191,6 +215,8 @@ public class Obstacle extends Actor{
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
 		setOrigin(-offsetX, -offsetY);
+		handleSoundVolume();
+		
 	}
 	
 	@Override
@@ -200,4 +226,6 @@ public class Obstacle extends Actor{
 	}
 	
 	public Body getBody(){ return this.body; }
+	public void setSoundVolume(float soundVolume){ this.soundVolume = soundVolume; }
+	public float getSoundVolume(){ return this.soundVolume; }
 }

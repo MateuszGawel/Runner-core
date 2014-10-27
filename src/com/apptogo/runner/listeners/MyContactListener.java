@@ -59,7 +59,16 @@ public class MyContactListener implements ContactListener
 				player.character.dieDismemberment();
 			}
 		}
+		
+		//smierc od krzaczka (troche workaround i ginie sie na standup sensor)
+		if( checkFixturesTypes(fa, fb, "bush", "standupSensor")){
+			if(player.character.isAlive() && !player.character.isImmortal()){
+				((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).dieBottom = true;
+			}
+		}
 
+
+		
 		//sensory playera
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.incrementFootSensor();
@@ -91,13 +100,19 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "barrel", "player")){
 			Fixture playerFixture = getFixtureByType(fa, fb, "player");
 			Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");
-			((UserData)barrelFixture.getBody().getUserData()).active = true;
 			
+			
+			if(!((UserData)barrelFixture.getBody().getUserData()).active){
+				((UserData)barrelFixture.getBody().getUserData()).active = true;
+				((UserData)barrelFixture.getBody().getUserData()).playSound = true;
+			}
+				
 			if(player.character.isAlive() && !player.character.isImmortal() && 
 					(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f 
 							|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
 			{
 				((UserData)playerFixture.getBody().getUserData()).dieBottom = true;
+				((UserData)barrelFixture.getBody().getUserData()).playSound = true;
 			}
 		}
 		if(checkFixturesTypes(fa, fb, "barrel", "barrel")){
@@ -229,12 +244,19 @@ public class MyContactListener implements ContactListener
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);		
-		//Logger.log(this, "przed ladowaniem: " + ((UserData)fa.getUserData()).key + " oraz " + ((UserData)fb.getUserData()).key);
+
 		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
 			Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 			((UserData)fixture.getBody().getUserData()).speedBeforeLand = fixture.getBody().getLinearVelocity().x;
-			//Logger.log(this, "przed ladowaniem: " + fixture.getBody().getLinearVelocity().x);
 		}
+		
+		//dŸwiêk krzaczka
+		if( checkFixturesTypes(fa, fb, "bush", "nonkilling")){
+			Body body = getFixtureByType(fa, fb, "bush").getBody();
+			if(Math.abs(body.getLinearVelocity().x) > 5 && body.getLinearVelocity().y < -5)
+				((UserData)body.getUserData()).playSound = true;
+		}
+
 	}
 
 	@Override
@@ -252,7 +274,19 @@ public class MyContactListener implements ContactListener
 				Fixture fixture = getFixtureByType(fa, fb, "arrow");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}	
-		}		
+		}	
+		
+		//dŸwiêk beczki
+		if( checkFixturesTypes(fa, fb, "barrel", "nonkilling")){
+			Body body = getFixtureByType(fa, fb, "barrel").getBody();
+			float[] impulses = impulse.getNormalImpulses();
+			
+			if(impulses[0] > 3000)
+			{
+				Logger.log(this, impulses[0]);
+				((UserData)body.getUserData()).playSound = true;
+			}
+		}
 	}
 	
 	public void postStep()

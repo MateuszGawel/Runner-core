@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,6 +47,8 @@ public class WildWestWorld extends GameWorld{
 	
 	@Override
 	public void dispose(){
-		
+		Logger.log(this, "dispose wildwest");
+		music.stop();
+		music.dispose();
 	}
 }

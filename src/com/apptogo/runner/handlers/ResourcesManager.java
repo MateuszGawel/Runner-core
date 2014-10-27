@@ -258,6 +258,10 @@ public class ResourcesManager
 		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.FOREST ) );
 		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.SPACE ) );
 		
+		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.WILDWEST ) );
+		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.FOREST ) );
+		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.SPACE ) );
+		
 		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
 		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
 		

@@ -14,6 +14,7 @@ public class Materials {
 	public static FixtureDef obstacleGhostBody;
 	public static FixtureDef obstacleBody;
 	public static FixtureDef obstacleSensor;
+	public static FixtureDef bushBody;
 	
 	public static FixtureDef bombBody;
 	public static FixtureDef arrowBody;
@@ -34,6 +35,7 @@ public class Materials {
 		obstacleGhostBody = createFixtureDef(1000f, 0.1f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false); //bez kolizji z playerem, trzeba sensor jesli ma byc wykrywane
 		obstacleBody = createFixtureDef(500f, 1f, 0f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR), false); //z kolizja z playerem, nie trzeba sensora
 		obstacleSensor = createFixtureDef(0.1f, 1f, 0.8f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_CHARACTER_SENSOR), true); //wystarczy jesli przeszkoda jest statyczna
+		bushBody = createFixtureDef(10f, 1f, 0.99f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_CHARACTER_SENSOR), false);
 		
 		bombBody = createFixtureDef(10f, 0.1f, 0.5f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		arrowBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);

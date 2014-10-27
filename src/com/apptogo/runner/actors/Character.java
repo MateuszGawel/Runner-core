@@ -207,8 +207,9 @@ public abstract class Character extends Actor{
 			}
 			running = true;
 			started = true;
-			if(touchGround || touchBarrel)
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			if(touchGround || touchBarrel){
+				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			return true;
@@ -553,6 +554,8 @@ public abstract class Character extends Actor{
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
 			body.applyForceToCenter(new Vector2(3000, 0), true);
+		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}
 	
 	private void handleStepSoundSpeed(){

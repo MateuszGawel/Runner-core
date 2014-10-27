@@ -9,6 +9,7 @@ import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
@@ -119,6 +120,9 @@ public class SpaceWorld extends GameWorld{
 	@Override
 	public void dispose(){
 		asteroidsTask.cancel();
+		Logger.log(this, "dispose space");
+		music.stop();
+		music.dispose();
 	}
 
 }
