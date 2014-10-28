@@ -81,7 +81,7 @@ public class LoadingScreen extends BaseScreen
 			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
 			setCenterPosition(smallLabel, -245.0f);
 			
-			slider = new Button(skin, "westWildLoader");
+			slider = new Button(skin, GameWorldType.convertToLoaderButtonName( levelToLoad.worldType ));
 			slider.setSize(475.0f, 50.0f);
 			slider.setPosition( -712.0f, -275.0f);
 			

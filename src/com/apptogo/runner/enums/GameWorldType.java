@@ -197,4 +197,22 @@ public enum GameWorldType
 		
 		return null;
 	}
+	
+	public static String convertToLoaderButtonName( GameWorldType gameWorldType )
+	{
+		if( gameWorldType == WILDWEST )
+		{
+			return "westWildLoader";
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return "forrestLoader";
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return "spaceLoader";
+		}
+		
+		return null;
+	}
 }

@@ -203,10 +203,7 @@ public class CampaignScreen extends BaseScreen
         	{
         		button = new TextButton( "", skin, buttonLockedStyleName);
         	}
-        	
-        	//nalezy dostosowac grafiki, tymczasem jako workaround:
-        	button.setSize(140f, 140f);
-        	
+        	        	
         	float buttonX = ( ((Runner.SCREEN_WIDTH / Box2DVars.PPM) - ((maxInRow * button.getWidth()) + ((maxInRow - 1) * buttonMargin)) / 2f) + (currentColumnCounter * (button.getWidth() + buttonMargin)) );
         	float buttonY = ( -button.getHeight() ) - ( ((Runner.SCREEN_HEIGHT / Box2DVars.PPM) - ((maxInColumn * button.getHeight()) + ((maxInColumn - 1) * buttonMargin)) / 2f) + (currentRowCounter * (button.getHeight() + buttonMargin)) );
         	

@@ -211,11 +211,8 @@ public class ResourcesManager
 		menuSpecialMeta.addTexture("gfx/menu/sliderMask.png");
 		
 		menuSpecialMeta.addTexture("gfx/menu/paperSmall.png");
+		menuSpecialMeta.addTexture("gfx/menu/blackBoardMedium.png");
 		menuSpecialMeta.addTexture("gfx/menu/paperBig.png");
-		
-		menuSpecialMeta.addTexture("gfx/menu/generalTab.png");
-		menuSpecialMeta.addTexture("gfx/menu/resetTab.png");
-		menuSpecialMeta.addTexture("gfx/menu/newsFeedTab.png");
 		
 		menuSpecialMeta.addTexture("gfx/menu/shareButtonFacebook.png");
 		menuSpecialMeta.addTexture("gfx/menu/shareButtonGoogle.png");

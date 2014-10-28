@@ -104,12 +104,12 @@ public class FontManager
 			bigFont = generator.generateFont(parameter);
 			saveFontToFile(bigFont, 28, "title");
 			
-			parameter.size = 45;
+			parameter.size = 38;
 			
 			mediumFont = generator.generateFont(parameter);
 			saveFontToFile(mediumFont, 28, "medium");
 			
-			parameter.size = 30;
+			parameter.size = 25;
 			
 			smallFont = generator.generateFont(parameter);
 			saveFontToFile(smallFont, 28, "small");

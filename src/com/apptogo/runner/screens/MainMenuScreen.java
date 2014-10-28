@@ -5,6 +5,7 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.DialogWidget;
@@ -75,7 +76,7 @@ public class MainMenuScreen extends BaseScreen
 	public void prepare() 
 	{
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
-							
+		
 		settingsButton = new Button(skin, "settings");
 		settingsButton.setPosition(-550f, 140f);
 		
@@ -140,39 +141,9 @@ public class MainMenuScreen extends BaseScreen
 		settingsWidget.setEasing( Interpolation.elasticOut );
 
 		//---Obrazki tabow        
-        Image generalTabImageNonActive = createImage("gfx/menu/generalTab.png", -550f, 1200f);
-        generalTabImageNonActive.addListener( settingsWidget.getChangeWidgetTabListener(1) );
-        generalTabImageNonActive.getColor().a /= 3.0f;
-        
-        Image generalTabImageActive = createImage("gfx/menu/generalTab.png", -550f, 1200f);
-        generalTabImageActive.addListener( settingsWidget.getChangeWidgetTabListener(1) );
-        
-        Image resetTabImageNonActive = createImage("gfx/menu/resetTab.png", -250f, 1200f);
-        resetTabImageNonActive.addListener( settingsWidget.getChangeWidgetTabListener(2) );
-        resetTabImageNonActive.getColor().a /= 3.0f;
-        
-        Image resetTabImageActive = createImage("gfx/menu/resetTab.png", -250f, 1200f);
-        resetTabImageActive.addListener( settingsWidget.getChangeWidgetTabListener(2) );
-        
-        Image newsFeedTabImageNonActive = createImage("gfx/menu/newsFeedTab.png", 50f, 1200f);
-        newsFeedTabImageNonActive.addListener( settingsWidget.getChangeWidgetTabListener(3) );
-        newsFeedTabImageNonActive.getColor().a /= 3.0f;
-        
-        Image newsFeedTabImageActive  = createImage("gfx/menu/newsFeedTab.png", 50f, 1200f);
-        newsFeedTabImageActive.addListener( settingsWidget.getChangeWidgetTabListener(3) );
-        
-        settingsWidget.addActorToTab( generalTabImageActive , 1 );
-        settingsWidget.addActorToTab( resetTabImageNonActive , 1 );
-        settingsWidget.addActorToTab( newsFeedTabImageNonActive , 1 );
-        
-        settingsWidget.addActorToTab( generalTabImageNonActive , 2 );
-        settingsWidget.addActorToTab( resetTabImageActive , 2 );
-        settingsWidget.addActorToTab( newsFeedTabImageNonActive , 2 );
-        
-        settingsWidget.addActorToTab( generalTabImageNonActive , 3 );
-        settingsWidget.addActorToTab( resetTabImageNonActive , 3 );
-        settingsWidget.addActorToTab( newsFeedTabImageActive , 3 );
-        //---
+		settingsWidget.addTabButton(1, "generalTab");
+		settingsWidget.addTabButton(2, "newsFeedTab");
+		//---
 		
         //---
 		//---Pierwszy tab
@@ -183,29 +154,31 @@ public class MainMenuScreen extends BaseScreen
 		musicCheckBox.setPosition(-400f, 1020f);
 				
 		musicVolume = new Slider(0, 100, 20, false, skin);
-		musicVolume.setPosition(-400f, 910f);
-				
+		musicVolume.setWidth(300.0f);
+		musicVolume.setPosition(-400f, 930f);
+		
 		Label soundsLabel = createLabel( getLangString("sounds"), FontType.WOODFONT, -450f, 840f);
 				
 		soundsCheckBox = new CheckBox(" On", skin, "default");
 		soundsCheckBox.setPosition(-400f, 770f);
 		
 		soundsVolume = new Slider(0, 100, 20, false, skin);
-		soundsVolume.setPosition(-400f, 660f);
+		soundsVolume.setWidth(300.0f);
+		soundsVolume.setPosition(-400f, 680f);
 				
-		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT, -50f, 1090f);
+		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT, 50f, 1090f);
 		
 		vibrationsCheckBox = new CheckBox(" On", skin, "default");
-		vibrationsCheckBox.setPosition(0f, 1020f);
+		vibrationsCheckBox.setPosition(100f, 1020f);
 				
-		Label languageLabel = createLabel( getLangString("language"), FontType.WOODFONT, -50f, 900f);
+		Label languageLabel = createLabel( getLangString("language"), FontType.WOODFONT, 50f, 900f);
 				
-		Image enflag = getLanguageFlag("en", 0, 800, true);
-        Image plflag = getLanguageFlag("pl", 100, 800, true);
-        Image ruflag = getLanguageFlag("ru", 200, 800, false);
-        Image deflag = getLanguageFlag("de", 0, 700, false);
-        Image esflag = getLanguageFlag("es", 100, 700, false);
-        Image inflag = getLanguageFlag("in", 200, 700, false);
+		Image enflag = getLanguageFlag("en", 100, 800, true);
+        Image plflag = getLanguageFlag("pl", 200, 800, true);
+        Image ruflag = getLanguageFlag("ru", 300, 800, false);
+        Image deflag = getLanguageFlag("de", 100, 700, false);
+        Image esflag = getLanguageFlag("es", 200, 700, false);
+        Image inflag = getLanguageFlag("in", 300, 700, false);
         
         musicCheckBox.addListener
         ( 
@@ -342,30 +315,6 @@ public class MainMenuScreen extends BaseScreen
 		//---
 		
         //---Drugi tab
-        Label removePlayer = createLabel(getLangString("removePlayer"), FontType.WOODFONT, -450f, 1090f);
-        removePlayer.addListener(new ClickListener(){
-        	
-        	public void clicked(InputEvent event, float x, float y) 
-            {
-        		final ClickListener confirmChangeListener = new ClickListener()
-        		{
-        			public void clicked(InputEvent event, float x, float y)
-        			{
-        				player = new Player();
-        				player.save();
-        				
-        				ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_MAIN_MENU );	
-        			}
-        		};
-        		
-            	languageChangeDialog.setYesListener( confirmChangeListener );
-            	languageChangeDialog.setLabel( getLangString("areYouSureToRemovePlayer"));
-            	languageChangeDialog.toggleWidget();
-            }
-        	
-        });
-        
-        settingsWidget.addActorToTab(removePlayer, 2);
         
         //---
       
@@ -398,23 +347,19 @@ public class MainMenuScreen extends BaseScreen
         if( musicCheckBox.isChecked() )
         {
         	musicVolume.setDisabled(false);
-        	musicVolume.getColor().a = 1.0f;
         }
         else
         {
         	musicVolume.setDisabled(true);
-        	musicVolume.getColor().a = 0.5f;
         }
         
         if( soundsCheckBox.isChecked() )
         {
         	soundsVolume.setDisabled(false);
-        	soundsVolume.getColor().a = 1.0f;
         }
         else
         {
         	soundsVolume.setDisabled(true);
-        	soundsVolume.getColor().a = 0.5f;
         }
 	}
 	
@@ -544,8 +489,6 @@ public class MainMenuScreen extends BaseScreen
 		{
 			flag.addListener( getChangeLanguageListener( language ) );
 		}
-				
-		flag.setSize(64, 64);
 		
 		return flag;
 	}

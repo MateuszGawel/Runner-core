@@ -14,7 +14,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.MEDIUM)
 		{
-			return 960.0f;
+			return 800.0f;
 		}
 		else if(widgetType == WidgetType.BIG)
 		{
@@ -34,7 +34,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.MEDIUM)
 		{
-			return 480.0f;
+			return 420.0f;
 		}
 		else if(widgetType == WidgetType.BIG)
 		{
@@ -54,7 +54,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.MEDIUM)
 		{
-			return "gfx/menu/paper.png";
+			return "gfx/menu/blackBoardMedium.png";
 		}
 		else if(widgetType == WidgetType.BIG)
 		{

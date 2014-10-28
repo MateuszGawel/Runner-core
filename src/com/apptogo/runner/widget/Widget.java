@@ -360,8 +360,43 @@ public class Widget
             }
 		};
 	}
-	//---
+	
+	public void addTabButton(int tabIndex, String buttonName)
+	{
+		Button activeButton = new Button(skin, buttonName);
+		activeButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
+		activeButton.setY( 1200.0f );
+		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
+		Button nonActiveButton = new Button(skin, buttonName);
+		nonActiveButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
+		nonActiveButton.setY( 1200.0f );
+		nonActiveButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
+		
+		nonActiveButton.getColor().a /= 3.0f;
+		
+		activeButton.setVisible(false);
+		nonActiveButton.setVisible(false);
+		
+		int counter = 0;
+		
+		for(Array<Actor> tab: widgetTab)
+		{
+			if(counter == tabIndex)
+			{
+				tab.add(activeButton);
+				window.addActor(activeButton);
+			}
+			else
+			{
+				tab.add(nonActiveButton);
+				window.addActor(nonActiveButton);
+			}
+			
+			counter++;
+		}
+	}
+	//---	
 	public boolean isShowed()
 	{
 		return this.isShowed;

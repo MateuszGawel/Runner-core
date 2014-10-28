@@ -14,6 +14,8 @@ public enum FontType
 	SMALL,
 	LOADINGBIG,
 	LOADINGSMALL,
+	BLACKBOARDSMALL,
+	BLACKBOARDMEDIUM,
 	WOODFONT,
 	WOODFONTSMALL,
 	LEAFFONT,
@@ -41,6 +43,14 @@ public enum FontType
 		else if( fontType == FontType.LOADINGSMALL )
 		{
 			return FontManager.getInstance().smallFont;
+		}
+		else if( fontType == FontType.BLACKBOARDSMALL )
+		{
+			return FontManager.getInstance().smallFont;
+		}
+		else if( fontType == FontType.BLACKBOARDMEDIUM )
+		{
+			return FontManager.getInstance().mediumFont;
 		}
 		else if( fontType == FontType.WOODFONT )
 		{
@@ -87,6 +97,14 @@ public enum FontType
 		else if( fontType == FontType.LOADINGSMALL )
 		{
 			return new Color(0.9f, 0.9f, 0.9f, 1);
+		}
+		else if( fontType == FontType.BLACKBOARDSMALL )
+		{
+			return new Color(0.87f, 0.78f, 0.59f, 1);
+		}
+		else if( fontType == FontType.BLACKBOARDMEDIUM )
+		{
+			return new Color(0.97f, 0.88f, 0.69f, 1);
 		}
 		else if( fontType == FontType.WOODFONT )
 		{
