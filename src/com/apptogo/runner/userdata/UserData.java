@@ -19,6 +19,8 @@ public class UserData
 	
 	//obstacle
 	public boolean active;
+	public boolean playSound;
+	
 	
 	
 	

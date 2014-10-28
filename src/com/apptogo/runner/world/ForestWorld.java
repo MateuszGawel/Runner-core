@@ -4,16 +4,12 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class ForestWorld extends GameWorld{
 	public static final Vector2 GRAVITY = new Vector2(0f, -80f);
@@ -31,7 +27,7 @@ public class ForestWorld extends GameWorld{
 		super.world.setGravity(GRAVITY);
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/forestMusic.ogg");
-		music.setVolume(0.2f);
+		music.setVolume(0.4f);
 	}
 	
 	private void createBackground(){
@@ -52,6 +48,8 @@ public class ForestWorld extends GameWorld{
 	
 	@Override
 	public void dispose(){
-		
+		Logger.log(this, "dispose forest");
+		music.stop();
+		music.dispose();
 	}
 }
