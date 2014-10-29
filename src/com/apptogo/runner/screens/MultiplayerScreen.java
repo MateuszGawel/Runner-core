@@ -36,9 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
-	private TextButton createRoomButton;
 	private TextButton joinRandomButton;
-	private TextButton manageProfileButton;
 	
 	private DialogWidget confirmationDialog;
 	
@@ -48,11 +46,11 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private Widget rankingWidget;
 	
 	private Group achievementsGroup;
-	private ScrollPane achievementsScrollPane;
 	
 	private InfoWidget confirmWidget;
 	
     private Button backButton;
+    private Button createRoomButton;
     
     private CharacterAnimation currentCharacterAnimation;
 	    
@@ -105,8 +103,9 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
             }
 		});
         
-        createRoomButton = new TextButton( "P+", skin, "default");
-        createRoomButton.setSize(163.0f, 163.0f);
+        
+        
+        createRoomButton = new Button(skin, "inviteFriends");
         createRoomButton.setPosition( 205.0f, -300.0f );
         createRoomButton.addListener( friendsWidget.toggleWidgetListener );
 		
@@ -138,7 +137,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -330.0f, 60.0f, true);
 		currentCharacterAnimation.setVisible(true);
         
-		Image ground = createImage("temp/ground.png", -330.0f, 20.0f);
+		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -330.0f, 20.0f);
 				        
         Table table = new Table();
 		
@@ -290,9 +289,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         achievementsGroup = new Group();
         
         achievementsGroup.setBounds(-400, 1000, 800, 400);
-        
-        achievementsScrollPane = new ScrollPane(achievementsGroup, skin);
-        
+                
         /*addAchievement("a1");
         addAchievement("a2");
         addAchievement("a3");

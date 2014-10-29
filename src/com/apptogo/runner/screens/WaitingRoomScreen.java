@@ -210,8 +210,8 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		{
 			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
 			
-			Label playerNameLabel = createLabel(player.getName(), FontType.BIG);
-			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
+			Label playerNameLabel = createLabel(player.getName(), FontType.SMALL);
+			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x - (playerNameLabel.getWidth() / 2.0f) + 100.0f, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
 			
 			addToScreen(playerAnimation);
 			addToScreen(playerNameLabel);

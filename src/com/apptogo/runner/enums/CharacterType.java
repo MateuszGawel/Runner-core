@@ -35,16 +35,16 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return new String[]{"gfx/game/characters/banditHead.png", "gfx/game/characters/banditTorso.png", "gfx/game/characters/banditArm.png", "gfx/game/characters/banditHand.png", "gfx/game/characters/banditLeg.png", "gfx/game/characters/banditFoot.png", "gfx/game/characters/banditBag.png" };
+			return new String[]{"gfx/game/characters/banditHead.png", "gfx/game/characters/banditTorso.png", "gfx/game/characters/banditArm.png", "gfx/game/characters/banditHand.png", "gfx/game/characters/banditLeg.png", "gfx/game/characters/banditFoot.png", "gfx/game/characters/banditBag.png", "gfx/game/characters/banditGround.png" };
 		}
 		else if( characterType == ARCHER )
 		{
 			//to trzeba zapakowaæ w atlas
-			return new String[]{ "gfx/game/characters/arrow.png", "gfx/game/characters/archerHead.png", "gfx/game/characters/archerTorso.png", "gfx/game/characters/archerArm.png", "gfx/game/characters/archerHand.png", "gfx/game/characters/archerLeg.png", "gfx/game/characters/archerFoot.png", "gfx/game/characters/archerArrows.png", "gfx/game/characters/archerBow.png" };
+			return new String[]{ "gfx/game/characters/arrow.png", "gfx/game/characters/archerHead.png", "gfx/game/characters/archerTorso.png", "gfx/game/characters/archerArm.png", "gfx/game/characters/archerHand.png", "gfx/game/characters/archerLeg.png", "gfx/game/characters/archerFoot.png", "gfx/game/characters/archerArrows.png", "gfx/game/characters/archerBow.png", "gfx/game/characters/archerGround.png" };
 		}
 		else if( characterType == ALIEN )
 		{
-			return new String[]{ };
+			return new String[]{ "gfx/game/characters/alienGround.png" };
 		}
 		
 		return null;
@@ -137,6 +137,24 @@ public enum CharacterType
 		else if( characterType == ALIEN )
 		{
 			return new CharacterAnimation("gfx/game/characters/alien.pack", x, y, running);
+		}
+
+		return null;
+	}
+	
+	static public String convertToGroundPath(CharacterType characterType)
+	{
+		if( characterType == BANDIT )
+		{
+			return "gfx/game/characters/banditGround.png";
+		}
+		else if( characterType == ARCHER )
+		{
+			return "gfx/game/characters/archerGround.png";
+		}
+		else if( characterType == ALIEN )
+		{
+			return "gfx/game/characters/alienGround.png";
 		}
 
 		return null;
