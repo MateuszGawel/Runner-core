@@ -61,6 +61,7 @@ public abstract class Character extends Actor{
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	protected boolean forceStandup = false;
 	protected boolean shouldLand = false;
+	protected boolean jumpedFromIdle = false;
 
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
@@ -225,6 +226,8 @@ public abstract class Character extends Actor{
 		{
 			sliding = false;
 			jumped = true;
+			if(speed < 0.1f) jumpedFromIdle = true;
+			
 			float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
 			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
 			
@@ -244,6 +247,7 @@ public abstract class Character extends Actor{
 		if(shouldLand)
 		{
 			Logger.log(this, "LAND");
+			jumpedFromIdle = false;
 			touchGround = true;
 			jumped = false;
 			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
@@ -553,7 +557,7 @@ public abstract class Character extends Actor{
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
+		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed) && (!jumped || jumpedFromIdle))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
 			body.applyForceToCenter(new Vector2(3000, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
