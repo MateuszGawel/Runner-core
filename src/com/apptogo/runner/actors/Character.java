@@ -18,6 +18,7 @@ import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.CharacterAction;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
@@ -155,7 +156,8 @@ public abstract class Character extends Actor{
 		Vector2 bodySize = new Vector2(25 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
+		
+		bodyDef.position.set(TiledMapLoader.getInstance().getPlayersPosition().get(0));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();

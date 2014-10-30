@@ -1,13 +1,8 @@
 package com.apptogo.runner.animation;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class CharacterAnimation extends Actor 

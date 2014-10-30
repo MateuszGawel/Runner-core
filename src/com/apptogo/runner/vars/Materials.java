@@ -1,7 +1,12 @@
 package com.apptogo.runner.vars;
 
+import static com.apptogo.runner.vars.Box2DVars.BIT_ABILITY;
+import static com.apptogo.runner.vars.Box2DVars.BIT_CHARACTER;
+import static com.apptogo.runner.vars.Box2DVars.BIT_CHARACTER_SENSOR;
+import static com.apptogo.runner.vars.Box2DVars.BIT_TERRAIN;
+import static com.apptogo.runner.vars.Box2DVars.BIT_WORLD_OBJECT;
+
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import static com.apptogo.runner.vars.Box2DVars.*;
 public class Materials {
 	
 	public static FixtureDef characterBody;

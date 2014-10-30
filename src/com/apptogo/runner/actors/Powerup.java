@@ -2,7 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;

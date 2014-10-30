@@ -2,8 +2,6 @@ package com.apptogo.runner.appwarp;
 
 
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 import java.util.HashMap;
 
 import com.apptogo.runner.logger.Logger;
@@ -19,8 +17,6 @@ public class WarpController
 	{
 		return instance;
 	}
-	
-	private boolean showLog = true;
 	
 	private final String apiKey = "60e7bc7bbade5df33eaf9f5f7a430e481c6a3d490fdbc1fa7f8aa0400908e0be";
 	private final String secretKey = "aac11a07b0b6aea604fe66e5cdb2ba79407b3176f27a993815288578ff30aa15";
@@ -338,21 +334,13 @@ public class WarpController
 	{
 		Logger.log(this, "onGetLiveRoomInfo: liveUsersCount = " + liveUsers.length);
 		NotificationManager.getInstance().screamMyName();
-		if(liveUsers!=null)
+		if( liveUsers.length == 3 )
 		{
-			if( liveUsers.length == 3 )
-			{
-				startGame();	
-			}
-			else
-			{
-				waitForOtherUser();
-			}
+			startGame();	
 		}
 		else
 		{
-			warpClient.disconnect();
-			handleError();
+			waitForOtherUser();
 		}
 	}
 	//---

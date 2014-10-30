@@ -6,7 +6,6 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,7 +36,7 @@ public class Obstacle extends Actor{
 	protected World world; 
 	private MapObject object;
 	private BodyDef bodyDef;
-	private Vector2 framePosition = new Vector2();
+
 	protected boolean animate;
 	
 	private float offsetX = 0;

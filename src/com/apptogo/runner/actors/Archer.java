@@ -2,9 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.ArrayList;
-
-import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
@@ -17,23 +14,17 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public class Archer extends Character{
 
 	private World world;
 	private GameWorld gameWorld;
-	private Vector2 bodySize;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 
     private final Array<Arrow> activeArrows = new Array<Arrow>();

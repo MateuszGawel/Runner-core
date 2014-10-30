@@ -1,21 +1,9 @@
 package com.apptogo.runner.handlers;
 
-import java.io.File;
 import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
 
 import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 
@@ -42,7 +30,6 @@ public class LanguageManager {
 	private XmlReader.Element currentLanguage;
 	private Array<XmlReader.Element> languages;
 	
-	private String currentLanguageId;
 	
 	private LanguageManager()
 	{

@@ -4,19 +4,14 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Countdown;
-import com.apptogo.runner.appwarp.NotificationManager;
-import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -97,14 +92,7 @@ public abstract class GameWorld
 	public abstract void dispose();
 	
 	private void createWorld(String mapPath)
-	{
-		this.player.character = createCharacter( this.player.getCharacterType() );
-		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
-		((UserData)this.player.character.getBody().getUserData()).me = true;
-		this.player.character.setMe(true);
-		
-		worldStage.addActor( this.player.character );
-		
+	{	
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
 		TiledMapLoader.getInstance().loadMap(mapPath);
@@ -113,6 +101,13 @@ public abstract class GameWorld
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
 		rayHandler = TiledMapLoader.getInstance().getRayHandler();
+		
+		this.player.character = createCharacter( this.player.getCharacterType() );
+		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
+		((UserData)this.player.character.getBody().getUserData()).me = true;
+		this.player.character.setMe(true);
+		
+		worldStage.addActor( this.player.character );
 	}
 	
 	public void destroyWorld()
@@ -139,34 +134,12 @@ public abstract class GameWorld
     public void update(float delta) 
     {
         world.step(delta, 3, 3);
-        
-        handleBodyToDestroy();
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
         contactListener.postStep();
        // fpsLogger.log();
     }  
-    
-    public void addBodyToDestroy(Body bodyToDestroy)
-    {
-    	bodiesToDestroy.add(bodyToDestroy);
-    }
-    
-    private void handleBodyToDestroy()
-    {
-    	for(Body body: bodiesToDestroy)
-    	{Logger.log(this, "BANG");
-    		//for(Fixture fixture: body.getFixtureList())
-    		//{
-    			//body.destroyFixture(fixture);
-    		//}
-
-    		//world.destroyBody(body);
-    	}
-    	
-    	bodiesToDestroy.clear();
-    }
     
     public Stage getWorldStage(){ return this.worldStage; }
     

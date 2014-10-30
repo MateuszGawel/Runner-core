@@ -2,11 +2,8 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;

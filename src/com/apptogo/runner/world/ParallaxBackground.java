@@ -1,12 +1,10 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-import static com.apptogo.runner.vars.Box2DVars.ZERO_GROUND_POSITION;
 
-import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.actors.Character;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -18,6 +16,7 @@ public class ParallaxBackground extends Image{
 	float yFactor = 0;
 	Character player;
 	float x, y;
+	Vector2 mapSize;
 	
 	public ParallaxBackground(Texture texture, Character player, float x, float y){
 		super(texture);
@@ -38,17 +37,21 @@ public class ParallaxBackground extends Image{
 		this(texture, player, x, y);
 		this.xFactor = - (texture.getWidth() - Runner.SCREEN_WIDTH) / mapSize.x;
 		this.yFactor = xFactor;
+		this.mapSize = mapSize;
+		Logger.log(this, "floor: " + mapSize.y/2/PPM);
 	}
 	
 	public ParallaxBackground(Texture texture, Vector2 mapSize, float yFactor, Character player, float x, float y){
 		this(texture, player, x, y);
 		this.xFactor = - (texture.getWidth() - Runner.SCREEN_WIDTH) / mapSize.x;
 		this.yFactor = yFactor;
+		this.mapSize = mapSize;
+		Logger.log(this, "floor: " + mapSize.y/2/PPM);
 	}
 	
 	@Override
 	public void act(float delta){
 		if(xFactor != 0)
-			setPosition(player.getX()*xFactor, y + (player.getY() - (float)ZERO_GROUND_POSITION) * yFactor);
+			setPosition(player.getX()*xFactor, y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor);
 	}
 }

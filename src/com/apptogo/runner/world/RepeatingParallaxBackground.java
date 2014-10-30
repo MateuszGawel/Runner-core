@@ -1,12 +1,9 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-import static com.apptogo.runner.vars.Box2DVars.ZERO_GROUND_POSITION;
 
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.logger.Logger;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,11 +30,13 @@ public class RepeatingParallaxBackground extends Actor{
 		this.y = y;
 		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		xWrapCount = (int) Math.ceil(mapSize.x / texture.getWidth());
+		Logger.log(this, "floor: " + mapSize.y/2/PPM);
 	}
 	
 	@Override
 	public void act(float delta){
-        setPosition(player.getX()*xFactor, y + (player.getY() - (float)ZERO_GROUND_POSITION) * yFactor);
+		
+        setPosition(player.getX()*xFactor, y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor);
         setWidth(texture.getWidth()/PPM * xWrapCount);
         setHeight(texture.getHeight()/PPM);
 	}

@@ -2,8 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.HashMap;
-
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
@@ -14,11 +12,9 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -29,7 +25,7 @@ import com.badlogic.gdx.utils.Pool;
 public class Bandit extends Character{
 
 	private World world;
-	private Vector2 bodySize;
+
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
 

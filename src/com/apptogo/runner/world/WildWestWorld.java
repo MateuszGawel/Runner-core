@@ -6,7 +6,6 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -32,19 +31,19 @@ public class WildWestWorld extends GameWorld{
 	private void createBackground(){
 
 		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/skyBlue.png"));
-		skyBlue.setPosition(0, 500/PPM);
+		skyBlue.setPosition(0, 400/PPM);
 		background.addActor(skyBlue);
 		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.05f, player.character, 0, 350/PPM);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.07f, player.character, 0, 350/PPM);
 		background.addActor(mountains);
 		
 		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, player.character, 0, 330/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.4f, -0.15f, mapSize, player.character, 0, 0/PPM);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.4f, -0.15f, mapSize, player.character, 0, 20/PPM);
 		background.addActor(sand);
 	}
-	
+
 	@Override
 	public void dispose(){
 		Logger.log(this, "dispose wildwest");

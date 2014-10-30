@@ -5,8 +5,6 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import java.util.Random;
 
 import com.apptogo.runner.actors.Asteroid;
-import com.apptogo.runner.actors.Bandit;
-import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -19,7 +17,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -31,8 +28,7 @@ public class SpaceWorld extends GameWorld{
 
 	public Image space, planet2, planet3, asteroid1, asteroid2, asteroid3, asteroid4, asteroid5;
 	public ConstantParallaxBackground planet1;
-	private Actor asteroidHandler;
-	
+
 	private Task asteroidsTask;
 	
 	private final Array<Asteroid> activeAsteroids = new Array<Asteroid>();

@@ -1,27 +1,17 @@
 package com.apptogo.runner.handlers;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.BitmapFontWriter.FontInfo;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.logger.Logger.LogLevel;
-import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.handlers.BitmapFontWriter.OutputFormat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker.Page;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.apptogo.runner.handlers.BitmapFontWriter.OutputFormat;
 
 public class FontManager 
 {

@@ -1,9 +1,6 @@
 package com.apptogo.runner.enums;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;

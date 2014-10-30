@@ -2,8 +2,10 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import box2dLight.RayHandler;
 
@@ -18,6 +20,7 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -70,6 +73,9 @@ public class TiledMapLoader
 	private HashMap<String, jointBody> jointObjects = new HashMap<String, jointBody>();
 	
 	private static TiledMapLoader INSTANCE;
+	
+	private List<Vector2> playersPosition = new ArrayList<Vector2>();
+
 	public static void create()
 	{
 		INSTANCE = new TiledMapLoader();
@@ -91,7 +97,7 @@ public class TiledMapLoader
 	private FixtureDef obstacleSensorFixture;
 	
 	private GameWorld gameWorld;
-	
+
 	private TiledMap tiledMap;
 	MapProperties mapProperties;
 	private RayHandler rayHandler;
@@ -108,6 +114,7 @@ public class TiledMapLoader
 		
 		//initLights();
 		
+		
 		createPhysics(tiledMap);
 	}
 	
@@ -119,7 +126,7 @@ public class TiledMapLoader
 		int mapHeight = mapProperties.get("height", Integer.class);
 		int tilePixelWidth = mapProperties.get("tilewidth", Integer.class);
 		int tilePixelHeight = mapProperties.get("tileheight", Integer.class);
-
+		
 		int mapPixelWidth = mapWidth * tilePixelWidth;
 		int mapPixelHeight = mapHeight * tilePixelHeight;
 
@@ -185,17 +192,24 @@ public class TiledMapLoader
 			}
 
 			BodyDef bodyDef = new BodyDef();
-			bodyDef.type = BodyDef.BodyType.StaticBody;
-			bodyDef.position.x = Float.parseFloat( mapObject.getProperties().get("x").toString() ) / Box2DVars.PPM;
-			bodyDef.position.y = Float.parseFloat( mapObject.getProperties().get("y").toString() ) / Box2DVars.PPM;
 			
+			if(checkObjectTypeContains(mapObject, "player") && mapObject instanceof RectangleMapObject){
+				Logger.log(this, "dodalem");
+				Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
+				this.playersPosition.add(new Vector2((rectangle.getX() + rectangle.width/2)/PPM, (rectangle.getY()+rectangle.height/2)/PPM));
+			}
+			else{
+				bodyDef.type = BodyDef.BodyType.StaticBody;
+				bodyDef.position.x = Float.parseFloat( mapObject.getProperties().get("x").toString() ) / Box2DVars.PPM;
+				bodyDef.position.y = Float.parseFloat( mapObject.getProperties().get("y").toString() ) / Box2DVars.PPM;
+				
+				groundFixture.shape = createShape(mapObject);
+				Body body = world.createBody(bodyDef);
+				body.createFixture(groundFixture).setUserData( new UserData("nonkilling") );
+				body.setUserData( new UserData("nonkilling") );
+				bodies.add(body);
+			}
 			
-			groundFixture.shape = createShape(mapObject);
-			Body body = world.createBody(bodyDef);
-			body.createFixture(groundFixture).setUserData( new UserData("nonkilling") );
-			body.setUserData( new UserData("nonkilling") );
-			
-			bodies.add(body);
 		}
 	}
 	
@@ -341,7 +355,7 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
-			else if( checkObjectType(object, "rockSmall") )
+			else if( checkObjectType(object, "player1") )
 			{
 				body = createRockSmall(object);
 								
@@ -700,9 +714,22 @@ public class TiledMapLoader
 		if( typeName.equals((String)object.getProperties().get( "type" )) ) return true;
 		return false;
 	}
+	private boolean checkObjectTypeContains(MapObject object, String typeName)
+	{
+		if((String)object.getProperties().get("type") != null && ((String)object.getProperties().get("type")).contains(typeName)) 
+			return true;
+		return false;
+	}
 	
 	public void setWorld(World world){ this.world = world; }
 	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
 	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
 	public RayHandler getRayHandler(){ return rayHandler; }
+	
+	public List<Vector2> getPlayersPosition() {
+		return playersPosition;
+	}
+	public void setPlayersPosition(List<Vector2> playersPosition) {
+		this.playersPosition = playersPosition;
+	}
 }

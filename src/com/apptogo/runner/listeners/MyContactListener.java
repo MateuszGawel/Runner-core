@@ -2,10 +2,7 @@ package com.apptogo.runner.listeners;
 
 import static java.lang.Math.sqrt;
 
-import java.util.ArrayList;
-
 import com.apptogo.runner.actors.Alien;
-import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.logger.Logger;
@@ -13,7 +10,6 @@ import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -243,7 +239,6 @@ public class MyContactListener implements ContactListener
 	{	
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		Player player = checkIfFixtureIsPlayer(fa, fb);		
 
 		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
 			Fixture fixture = getFixtureByType(fa, fb, "footSensor");

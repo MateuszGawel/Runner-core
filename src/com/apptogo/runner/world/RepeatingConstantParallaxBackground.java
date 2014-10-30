@@ -1,12 +1,7 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-import static com.apptogo.runner.vars.Box2DVars.ZERO_GROUND_POSITION;
 
-import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.logger.Logger;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;

@@ -3,10 +3,8 @@ package com.apptogo.runner.animation;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.apptogo.runner.actors.Swamp.SwampAnimationState;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
