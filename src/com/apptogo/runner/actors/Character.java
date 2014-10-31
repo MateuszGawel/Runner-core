@@ -557,9 +557,12 @@ public abstract class Character extends Actor{
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed) && (!jumped || jumpedFromIdle))
+		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
-			body.applyForceToCenter(new Vector2(3000, 0), true);
+			if(!jumped)
+				body.applyForceToCenter(new Vector2(6000, 0), true);
+			else
+				body.applyForceToCenter(new Vector2(6000 - 300*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}

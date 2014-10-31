@@ -129,6 +129,7 @@ public abstract class GameWorld
 		{
 			world.destroyJoint(joint);
 		}
+		TiledMapLoader.getInstance().getPlayersPosition().clear();
 	}
 	
     public void update(float delta) 
