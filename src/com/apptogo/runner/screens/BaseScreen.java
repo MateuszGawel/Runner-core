@@ -23,10 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
@@ -289,6 +292,28 @@ public abstract class BaseScreen implements Screen
 		label.setPosition(x, y);
 		
 		return label;
+	}
+	
+	protected Container<ScrollPane> createScroll(Table table, float width, float height, boolean vertical)
+	{
+		final ScrollPane scroller = new ScrollPane(table, skin);
+		
+		if(vertical)
+		{
+			scroller.setScrollingDisabled(true, false);
+		}
+		else
+		{
+			scroller.setScrollingDisabled(false, true);
+		}
+		
+        scroller.setFadeScrollBars(false);
+        
+        Container<ScrollPane> container = new Container<ScrollPane>();
+        container.setSize(width, height);
+        container.setActor(scroller);
+        
+        return container;
 	}
 		
 	protected void setTextButtonFont(TextButton textButton, FontType fontType)

@@ -284,38 +284,19 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
             	confirmationDialog.toggleWidget();
             }
         	
-        });
-             
-        achievementsGroup = new Group();
-        
-        achievementsGroup.setBounds(-400, 1000, 800, 400);
-                
-        /*addAchievement("a1");
-        addAchievement("a2");
-        addAchievement("a3");
-        addAchievement("a4");
-        addAchievement("a5");
-        addAchievement("a6");
-        addAchievement("a7");
-        addAchievement("a8");
-        addAchievement("a9");
-        */
+        });        
         
 		shopWidget.addActorToTab(removePlayer, 1);
 		
-		//shopWidget.addActorToTab(achievementsGroup, 3);
+		//--tab2
 		
-		String reallyLongString = "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n"
-		        + "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n"
-		        + "This\nIs\nA\nReally\nLong\nString\nThat\nHas\nLots\nOf\nLines\nAnd\nRepeats.\n";
-
-		//--
-        final Label text = new Label(reallyLongString, skin);
-        text.setAlignment(Align.center);
-        text.setWrap(true);
+		Table categoryTable = new Table();
+		
+		
+		
+		//--		
 
         final Table scrollTable = new Table();
-        //scrollTable.add(text);
         scrollTable.add( addAchievement("a1") ).pad(20.0f);
         scrollTable.add();
         scrollTable.add();
@@ -333,16 +314,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 
         scrollTable.debug();
         
-        final ScrollPane scroller = new ScrollPane(scrollTable, skin);
-        scroller.setScrollingDisabled(true, false);
-        scroller.setFadeScrollBars(false);
-        
-        Container<ScrollPane> container = new Container<ScrollPane>();
-        container.setSize(920, 480);
+        Container<ScrollPane> container = createScroll(scrollTable, 920, 480, true);
         container.setPosition(-500, 670);
-        container.setActor(scroller);
         
-		shopWidget.addActorToTab(container, 3);
+        shopWidget.addActorToTab(container, 3);
 		
 		shopWidget.setCurrentTab(1);
 	}
