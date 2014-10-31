@@ -1,7 +1,6 @@
 package com.apptogo.runner.animation;
 
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;

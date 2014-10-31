@@ -1,6 +1,5 @@
 package com.apptogo.runner.userdata;
 
-import com.apptogo.runner.logger.Logger;
 
 public class UserData 
 {

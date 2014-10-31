@@ -1,8 +1,5 @@
 package com.apptogo.runner.logger;
 
-import com.apptogo.runner.player.Player;
-import com.apptogo.runner.screens.CampaignScreen;
-import com.apptogo.runner.screens.MainMenuScreen;
 import com.badlogic.gdx.utils.Array;
 
 public class Logger 

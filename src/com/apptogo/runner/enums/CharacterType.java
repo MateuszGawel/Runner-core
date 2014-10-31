@@ -88,7 +88,6 @@ public enum CharacterType
 	
 	static public String[] convertToTextureAtlases(CharacterType characterType)
 	{
-		String[] textureAtlases;
 		
 		if( characterType == BANDIT )
 		{

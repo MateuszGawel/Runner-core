@@ -4,14 +4,12 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Swamp extends Obstacle{

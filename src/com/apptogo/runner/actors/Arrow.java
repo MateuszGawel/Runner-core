@@ -28,7 +28,7 @@ public class Arrow extends Actor implements Poolable{
 	public boolean alive;
 	private Body arrowBody;
 	private Archer player;
-	private World world;
+
 	private float timeToDisappear = 2;
 	
 	private Texture arrowTexture;
@@ -49,7 +49,7 @@ public class Arrow extends Actor implements Poolable{
 		this.position = new Vector2();
         this.alive = false;
         this.player = player;
-        this.world = world;
+
         
         arrowTexture = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/arrow.png");
 

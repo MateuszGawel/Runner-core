@@ -41,7 +41,7 @@ public class Countdown extends Obstacle{
 				animationManager.setCurrentAnimationState(CountdownAnimationState.STATIC);
 				//currentFrame = animationManager.animate(0f);
 				animate = false;
-				music.play();
+				//music.play();
 				music.setLooping(true);
 			}
 			@Override

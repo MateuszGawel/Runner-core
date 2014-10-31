@@ -2,9 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;

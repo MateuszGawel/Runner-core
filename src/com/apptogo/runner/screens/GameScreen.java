@@ -1,6 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;

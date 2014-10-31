@@ -156,36 +156,7 @@ public class NotificationManager
 		}
 	}
 	
-	private JSONObject getData(boolean startRunningState, boolean dieTopState, boolean dieBottomState, boolean jumpState, boolean slideState, boolean standUpState, boolean slowState, boolean abortSlowState, boolean abilityState, CharacterAbilityType abilityType)
-	{
-		JSONObject data = new JSONObject();
-		
-		try 
-	    {
-			data.put("PLAYER_NAME", playerName); // - to nam identyfikuje playera
-			
-			if(startRunningState) data.put("START_RUNNING", startRunningState);
-			//if(dieTopState) data.put("DIE_TOP", dieTopState);
-			//if(dieBottomState) data.put("DIE_BOTTOM", dieBottomState);
-			if(jumpState) data.put("JUMP", jumpState);
-			if(slideState) data.put("SLIDE", slideState);
-			if(standUpState) data.put("STAND_UP", standUpState);
-			//if(slowState) data.put("SLOW", slowState);
-			//if(abortSlowState) data.put("ABORT_SLOW", abortSlowState);
-			
-			if(abilityState)
-			{
-				data.put("ABILITY", abilityState);
-				
-				if(abilityType != null) data.put("ABILITY_TYPE", abilityType.toString());
-				else data.put("ABILITY_TYPE", "");
-			}
-	    } 
-	    catch (JSONException e) { e.printStackTrace(); }
-		
-		return data;
-	}
-	
+
 	public void screamMyName()
 	{
 		JSONObject data = new JSONObject();
