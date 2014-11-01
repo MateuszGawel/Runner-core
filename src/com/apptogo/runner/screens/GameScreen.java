@@ -6,6 +6,7 @@ import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
@@ -42,6 +43,7 @@ public abstract class GameScreen extends BaseScreen{
 		loadPlayer();
 		
 		ResourcesManager.getInstance().unloadMenuResources(); //czy to na pewno dobre miejsce na ta funkcje? tu sie fajnie wpasowuje ale tak naprawde to powinno byc zrobione na etapie loadingu
+		CustomActionManager.create();
 	}
 	
 	protected void createLabels()
@@ -156,6 +158,7 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		super.dispose();
 		world.dispose();
+		//CustomActionManager.destroy();
 	}
 
 	@Override

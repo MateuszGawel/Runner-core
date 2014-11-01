@@ -5,7 +5,8 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
-import com.apptogo.runner.handlers.CharacterAction;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.main.Runner;
 
 public class GameScreenSingle extends GameScreen
@@ -26,7 +27,7 @@ public class GameScreenSingle extends GameScreen
 		createLabels();
 		
 		
-		player.character.registerAction(new CharacterAction(player.character, 2f, 1) {
+		CustomActionManager.getInstance().registerAction(new CustomAction(2f, 1, player.character) {
 			
 			@Override
 			public void perform() {

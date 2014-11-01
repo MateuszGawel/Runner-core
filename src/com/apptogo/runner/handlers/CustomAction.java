@@ -2,7 +2,7 @@ package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.actors.Character;
 
-public abstract class CharacterAction {
+public abstract class CustomAction {
 
 	/*¿eby uzyc trzeba wywolac metode registerAction na character
 	 * podac jako parametr new CharacterAction implementujac metode perform
@@ -16,22 +16,20 @@ public abstract class CharacterAction {
 	private int loopCount = 0;
 	private int loops = 1;
 	protected Object[] args;
-	protected Character character;
 	
-	public CharacterAction(float delay){
+	public CustomAction(float delay){
 		this.delay = delay;
 	}
 	
 	/**loops: 0 - nieskonczona, 1 - tylko raz, x - ilosc razy */
-	public CharacterAction(Character character, float delay, int loops){
+	public CustomAction(float delay, int loops){
 		this(delay);
-		this.character = character;
 		this.loops = loops;
 	}
 	
 	/**loops: 0 - nieskonczona, 1 - tylko raz, x - ilosc razy */
-	public CharacterAction(Character character, float delay, int loops, Object... args){
-		this(character, delay, loops);
+	public CustomAction(float delay, int loops, Object... args){
+		this(delay, loops);
 		this.args = args;
 	}
 	

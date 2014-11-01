@@ -5,6 +5,8 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import java.util.Random;
 
 import com.apptogo.runner.actors.Asteroid;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -28,8 +30,6 @@ public class SpaceWorld extends GameWorld{
 
 	public Image space, planet2, planet3, asteroid1, asteroid2, asteroid3, asteroid4, asteroid5;
 	public ConstantParallaxBackground planet1;
-
-	private Task asteroidsTask;
 	
 	private final Array<Asteroid> activeAsteroids = new Array<Asteroid>();
     private Pool<Asteroid> asteroidsPool = new Pool<Asteroid>() {
@@ -65,16 +65,16 @@ public class SpaceWorld extends GameWorld{
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/spaceMusic.ogg");
 		music.setVolume(0.2f);
-		asteroidsTask = new Task() {
+		
+		CustomActionManager.getInstance().registerAction(new CustomAction(0.5f, 0) {
 			@Override
-			public void run() {
+			public void perform() {
 				Asteroid asteroid = asteroidsPool.obtain();
 				asteroid.init();
 				activeAsteroids.add(asteroid);
 				freePools();
 			}
-		};
-		Timer.schedule(asteroidsTask, 0.5f, 0.5f);
+		});
 		
 		Random random = new Random();
 		
@@ -115,7 +115,7 @@ public class SpaceWorld extends GameWorld{
 	
 	@Override
 	public void dispose(){
-		asteroidsTask.cancel();
+		super.dispose();
 		Logger.log(this, "dispose space");
 		music.stop();
 		music.dispose();

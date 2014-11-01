@@ -48,6 +48,7 @@ public class ForestWorld extends GameWorld{
 	
 	@Override
 	public void dispose(){
+		super.dispose();
 		Logger.log(this, "dispose forest");
 		music.stop();
 		music.dispose();

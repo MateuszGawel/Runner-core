@@ -10,11 +10,13 @@ import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
-import com.apptogo.runner.handlers.CharacterAction;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.math.Vector2;
+import com.apptogo.runner.actors.Character;
 
 public class GameScreenMulti extends GameScreen implements WarpListener
 {	
@@ -94,22 +96,22 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 		countdown.startCountdown();
 		
 		for(Player enemy : enemies){
-			enemy.character.registerAction(new CharacterAction(enemy.character, 1f, 4) {
-				@Override
+			CustomActionManager.getInstance().registerAction(new CustomAction(1f, 4, enemy.character) {
+				@Override 
 				public void perform() {
 					if(timeElapsed == 4)
-						character.start();
+						((Character)args[0]).start();
 				}
 			});
 		}
-		world.player.character.registerAction(new CharacterAction(world.player.character, 1f, 4) {
+		CustomActionManager.getInstance().registerAction(new CustomAction(1f, 4, world.player.character) {
 			@Override
 			public void perform() {
 				if(timeElapsed < 4)
 					Logger.log(this, "ODLICZAM: " + (4 - timeElapsed));
 				else if(timeElapsed == 4){
 					Logger.log(this, "ODLICZAM: GO!!!!");
-					character.start(); 
+					((Character)args[0]).start(); 
 				}
 					
 			}
@@ -149,31 +151,31 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 			}
 			else if( data.has("JUMP") && (boolean)data.getBoolean("JUMP") )
 			{
-				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				CustomActionManager.getInstance().registerAction(new CustomAction(0, 1, sender.character, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
-						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
-						character.jump();
+						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
+						((Character)args[0]).jump();
 					}
 				});
 			}
 			else if( data.has("SLIDE") && (boolean)data.getBoolean("SLIDE") )
 			{
-				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				CustomActionManager.getInstance().registerAction(new CustomAction(0, 1, sender.character, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
-						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
-						character.slide();
+						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
+						((Character)args[0]).slide();
 					}
 				});
 			}
 			else if( data.has("STAND_UP") && (boolean)data.getBoolean("STAND_UP") )
 			{
-				sender.character.registerAction(new CharacterAction(sender.character, 0, 1, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
+				CustomActionManager.getInstance().registerAction(new CustomAction(0, 1, sender.character, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
-						character.getBody().setTransform(new Vector2((Float)args[0], (Float)args[1]), 0);
-						character.standUp();
+						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
+						((Character)args[0]).standUp();
 					}
 				});
 			}/*
