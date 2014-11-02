@@ -4,6 +4,7 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
@@ -17,6 +18,7 @@ import com.apptogo.runner.screens.MultiplayerScreen;
 import com.apptogo.runner.screens.RegisterScreen;
 import com.apptogo.runner.screens.SplashScreen;
 import com.apptogo.runner.screens.WaitingRoomScreen;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
 
 public class ScreensManager {
@@ -138,8 +140,12 @@ public class ScreensManager {
 			((GameScreen)screen).setLevel( levelToLoad );
 			((GameScreen)screen).setEnemies( this.enemies );
 		}
-		
+		Screen prevScreen = runner.getScreen();
 		runner.setScreen(screen);
+		
+//		Logger.log(this, "wykonuje setscreen");
+//		if(prevScreen != null)
+//			prevScreen.dispose();
 		
 		
 		if( previousScreenType != null )

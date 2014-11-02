@@ -50,7 +50,7 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		label = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
 		label.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (label.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
-		guiStage.addActor(label);
+		gameGuiStage.addActor(label);
 	}
 	
 	public void setLevel(Level level)
@@ -95,12 +95,12 @@ public abstract class GameScreen extends BaseScreen{
 
 		powerupButtons = world.player.character.initializePowerupButtons();
 		
-		guiStage.addActor(slideButton);
-		guiStage.addActor(jumpButton);		
+		gameGuiStage.addActor(slideButton);
+		gameGuiStage.addActor(jumpButton);		
 		
 		for(Button powerupButton: powerupButtons)
 		{
-			guiStage.addActor(powerupButton);
+			gameGuiStage.addActor(powerupButton);
 		}
 		
 		world.player.character.setPowerup(PowerupType.NONE);
@@ -131,7 +131,7 @@ public abstract class GameScreen extends BaseScreen{
 	
 	@Override
 	public void resize(int width, int height) {
-		guiStage.getViewport().update(width, height, true);
+		gameGuiStage.getViewport().update(width, height, true);
 		world.backgroundStage.getViewport().update(width, height, true);
 	}
 

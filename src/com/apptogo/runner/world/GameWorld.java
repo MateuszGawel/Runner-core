@@ -93,8 +93,10 @@ public abstract class GameWorld
 	
 	public void dispose(){
 		TiledMapLoader.getInstance().getPlayersPosition().clear();
-		Logger.log(this, "czyszcze: " + TiledMapLoader.getInstance().getPlayersPosition());
-	};
+		music.stop();
+		music.dispose();
+		music = null;
+	}
 	
 	private void createWorld(String mapPath)
 	{	
@@ -134,8 +136,6 @@ public abstract class GameWorld
 		{
 			world.destroyJoint(joint);
 		}
-		
-
 	}
 	
     public void update(float delta) 

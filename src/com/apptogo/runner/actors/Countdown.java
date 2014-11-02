@@ -13,7 +13,6 @@ import com.badlogic.gdx.audio.Sound;
 public class Countdown extends Obstacle{
 
 	public GameWorld world;
-	protected Music music;
 	private Sound countdown1;
 	private Sound countdown2;
 	private Sound countdown3;
@@ -31,23 +30,24 @@ public class Countdown extends Obstacle{
 		countdown2 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown2.ogg");
 		countdown3 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown3.ogg");
 		countdownGo = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdownGo.ogg");
-		ScreensManager.getInstance().getCurrentScreen().guiStage.addActor(this);
+		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(this);
 		updatePosition = false;	
-		music = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music;
 		animationManager.createAnimation(new MyAnimation(1f, CountdownAnimationState.NORMAL, animationManager.createFrames(4, "countdown"), false){
 			@Override
 			public void onAnimationFinished(){
 				setVisible(false);
 				animationManager.setCurrentAnimationState(CountdownAnimationState.STATIC);
 				//currentFrame = animationManager.animate(0f);
+
 				animate = false;
-				//music.play();
-				music.setLooping(true);
+				
+				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
+				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
+				remove();
 			}
 			@Override
 			public void additionalTaskDuringAnimation(){
 				if(getFrameNumber() == frameCounter){
-					Logger.log(this, "TUTAJ WSTAWIÆ JAKIŒ EFEKT");
 					switch(frameCounter){
 						case 0:
 							countdown3.play();

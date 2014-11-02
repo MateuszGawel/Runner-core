@@ -117,8 +117,6 @@ public class SpaceWorld extends GameWorld{
 	public void dispose(){
 		super.dispose();
 		Logger.log(this, "dispose space");
-		music.stop();
-		music.dispose();
 	}
 
 }

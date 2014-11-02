@@ -69,7 +69,6 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.incrementFootSensor();
 			player.character.land();
-			Logger.log(this, "z listenera ladowanie");
 			//Logger.log(this, "fixtury: " + ((UserData)fa.getUserData()).key + ((UserData)fb.getUserData()).key );
 		}
 		

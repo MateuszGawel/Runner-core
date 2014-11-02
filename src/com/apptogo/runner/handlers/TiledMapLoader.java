@@ -20,7 +20,6 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -196,7 +195,6 @@ public class TiledMapLoader
 			if(checkObjectTypeContains(mapObject, "player") && mapObject instanceof RectangleMapObject){
 				Rectangle rectangle = ((RectangleMapObject)mapObject).getRectangle();
 				this.playersPosition.add(new Vector2((rectangle.getX() + rectangle.width/2)/PPM, (rectangle.getY()+rectangle.height/2)/PPM));
-				Logger.log(this, "ustawiam pozycje: " + new Vector2((rectangle.getX() + rectangle.width/2)/PPM, (rectangle.getY()+rectangle.height/2)/PPM));
 			}
 			else{
 				bodyDef.type = BodyDef.BodyType.StaticBody;

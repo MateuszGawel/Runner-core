@@ -38,7 +38,6 @@ public class ParallaxBackground extends Image{
 		this.xFactor = - (texture.getWidth() - Runner.SCREEN_WIDTH) / mapSize.x;
 		this.yFactor = xFactor;
 		this.mapSize = mapSize;
-		Logger.log(this, "floor: " + mapSize.y/2/PPM);
 	}
 	
 	public ParallaxBackground(Texture texture, Vector2 mapSize, float yFactor, Character player, float x, float y){
@@ -46,7 +45,6 @@ public class ParallaxBackground extends Image{
 		this.xFactor = - (texture.getWidth() - Runner.SCREEN_WIDTH) / mapSize.x;
 		this.yFactor = yFactor;
 		this.mapSize = mapSize;
-		Logger.log(this, "floor: " + mapSize.y/2/PPM);
 	}
 	
 	@Override

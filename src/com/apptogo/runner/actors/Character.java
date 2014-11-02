@@ -78,7 +78,7 @@ public abstract class Character extends Actor{
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	
-	protected float playerSpeedLimit = 12;
+	protected float playerSpeedLimit = 14;
 	protected float playerMinSpeed = 3;
 	protected float playerSlowAmmount = 0;
 	
@@ -555,7 +555,7 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStepSoundSpeed(){
-		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/10);
+		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/15);
 	}
 	
 	private void handleDismemberment(){

@@ -96,7 +96,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(1/getSpeed() * 0.3f);
+				this.setFrameDuration(1/getSpeed() * 0.5f);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 10){
