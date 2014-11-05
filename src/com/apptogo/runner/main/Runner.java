@@ -10,6 +10,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.news.NewsManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
@@ -68,6 +69,7 @@ public class Runner extends Game
 		LevelManager.create();
 		SaveManager.create();
 		FontManager.create();
+		NewsManager.create();
 	}
 	
 	private void destroyManagers()
@@ -80,5 +82,6 @@ public class Runner extends Game
 		LevelManager.destroy();
 		SaveManager.destroy();
 		FontManager.destroy();
+		NewsManager.destroy();
 	}
 }

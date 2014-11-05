@@ -11,6 +11,7 @@ import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Contact;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.InfoWidget;
@@ -20,7 +21,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -33,6 +33,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
 
 public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
@@ -44,8 +46,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private Widget friendsWidget;
 	private Widget shopWidget;
 	private Widget rankingWidget;
-	
-	private Group achievementsGroup;
 	
 	private InfoWidget confirmWidget;
 	
@@ -95,21 +95,17 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		joinRandomButton = new TextButton( "random room", skin, "default");
         setTextButtonFont(joinRandomButton, FontType.WOODFONT);
-        joinRandomButton.setPosition( -368.0f, -300.0f );
+        joinRandomButton.setPosition( -368.0f, 120.0f );
         joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
             {
 				loadScreenAfterFadeOut( ScreenType.SCREEN_WAITING_ROOM );
             }
 		});
-        
-        
-        
+                
         createRoomButton = new Button(skin, "inviteFriends");
-        createRoomButton.setPosition( 205.0f, -300.0f );
+        createRoomButton.setPosition( 205.0f, 120.0f );
         createRoomButton.addListener( friendsWidget.toggleWidgetListener );
-		
-		//manageProfileButton.addListener( manageWidget.toggleWidgetListener );
 		
 		addToScreen(profileWidget.actor());
 		addToScreen(createRoomButton);
@@ -131,70 +127,86 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private void createProfileWidget()
 	{
-		profileWidget = new Widget(Align.center, -90.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
+		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
         profileWidget.toggleWidget();        
         		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -330.0f, 60.0f, true);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -330.0f, -200.0f, true);
 		currentCharacterAnimation.setVisible(true);
         
-		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -330.0f, 20.0f);
+		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -330.0f, -240.0f);
 				        
         Table table = new Table();
 		
 		table.setSize(700.0f, 320.0f);
-		table.setPosition(-350.0f, -40.0f);
+		table.setPosition(-350.0f, -300.0f);
 		//table.debug();
 		
 		Image flag = createImage("temp/exampleFlag.png", 0, 0);
 		Label playerName = createLabel( player.getName(), FontType.BLACKBOARDMEDIUM);
 		
 		table.add(flag).width(32.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).center().top();
-		table.add(playerName).width(628.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f).left().top();
+		table.add(playerName).colspan(4).width(628.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f).left().top();
 		
 		table.row();
-		table.add().width(32.0f).height(192.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add().width(30.0f).height(192.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add().colspan(3).width(280.0f).height(192.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		
 		
 		Table innerTable = new Table();
 		
-		innerTable.setSize(350.0f, 192.0f);
+		innerTable.setSize(330.0f, 192.0f);
 		//innerTable.debug();
 		
-		innerTable.add( createLabel("Ligue:", FontType.BLACKBOARDSMALL) ).width(170.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).align(Align.right);
-		innerTable.add( createLabel("A", FontType.BLACKBOARDSMALL) ).width(100.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f);
-		innerTable.add().width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
+		Image coinImage = createImage("temp/coin.png", 0, 0);
+		coinImage.setScaling(Scaling.none);
+		coinImage.setAlign(Align.right);
+		
+		Image diamondImage = createImage("temp/diamond.png", 0, 0);
+		diamondImage.setScaling(Scaling.none);
+		diamondImage.setAlign(Align.right);
+		
+		Label ligueLabel = createLabel("Ligue:", FontType.BLACKBOARDSMALL);
+		ligueLabel.setAlignment(Align.right);
+		
+		Label positionLabel = createLabel("Position:", FontType.BLACKBOARDSMALL);
+		positionLabel.setAlignment(Align.right);
+		
+		Label worldPositionLabel = createLabel("World rank:", FontType.BLACKBOARDSMALL);
+		worldPositionLabel.setAlignment(Align.right);
+		
+		innerTable.add( ligueLabel ).width(160.0f).height(64.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).right();
+		innerTable.add( createLabel("A", FontType.BIG) ).width(140.0f).height(64.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
 		
 		innerTable.row();
-		innerTable.add( createLabel("Position:", FontType.BLACKBOARDSMALL) ).width(170.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).align(Align.right);
-		innerTable.add( createLabel("123", FontType.BLACKBOARDSMALL) ).width(100.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f);
-		innerTable.add().width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
+		innerTable.add( positionLabel ).width(160.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).right();
+		innerTable.add( createLabel("124", FontType.BLACKBOARDSMALL) ).width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
 		
 		innerTable.row();
-		innerTable.add( createLabel("Best time:", FontType.BLACKBOARDSMALL) ).width(170.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).align(Align.right);
-		innerTable.add( createLabel("01:00:12", FontType.BLACKBOARDSMALL) ).width(100.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f);
-		innerTable.add().width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
+		innerTable.add( worldPositionLabel ).width(160.0f).height(32.0f).pad(10.0f, 10.0f, 36.0f, 0.0f).right();
+		innerTable.add( createLabel("124 469", FontType.BLACKBOARDSMALL) ).width(140.0f).height(32.0f).pad(10.0f, 10.0f, 36.0f, 10.0f);
 		
-		innerTable.row();
-		innerTable.add( createLabel("Wins:", FontType.BLACKBOARDSMALL) ).width(170.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).align(Align.right);
-		innerTable.add( createLabel("15", FontType.BLACKBOARDSMALL) ).width(100.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f);
-		innerTable.add().width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
-		
-		table.add(innerTable).height(192.0f).pad(18.0f, 10.0f, 0.0f, 10.0f).top().right();
+		Label more = createLabel("more...", FontType.MEDIUM, 200.0f, -280.0f);
+		more.addListener(rankingWidget.toggleWidgetListener);
+		profileWidget.addActor(more);
+				
+		table.add(innerTable).width(330.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 10.0f);
 		
 		table.row();
-		table.add().colspan(2).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add( diamondImage ).width(30.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add( createLabel("99999", FontType.BLACKBOARDSMALL) ).width(70.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add( coinImage ).width(30.0f).height(30.0f).pad(18.0f, 20.0f, 0.0f, 0.0f);
+		table.add( createLabel("9999999999", FontType.BLACKBOARDSMALL) ).width(150.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
+		table.add().width(330.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 10.0f);
 
 		//--to ofc tymczasowe
-		Image b1 = createImage("temp/b1.png", -300.0f, -40.0f);
-		Image b2 = createImage("temp/b2.png", -100.0f, -40.0f);
-		Image b3 = createImage("temp/b3.png", 100.0f, -40.0f);
+		Image b1 = createImage("temp/settingsButton.png", -100.0f, -130.0f);
+		
+		Image b3 = createImage("temp/achievementsButton.png", -100.0f, -230.0f);
 		
 		b1.addListener( shopWidget.getChangeWidgetTabListener(1) );
 		b1.addListener( shopWidget.toggleWidgetListener );
-		
-		b2.addListener( shopWidget.getChangeWidgetTabListener(2) );
-		b2.addListener( shopWidget.toggleWidgetListener );
-		
-		b3.addListener( shopWidget.getChangeWidgetTabListener(3) );
+				
+		b3.addListener( shopWidget.getChangeWidgetTabListener(2) );
 		b3.addListener( shopWidget.toggleWidgetListener );
 		
 		//--
@@ -202,11 +214,14 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		profileWidget.addActor(table);
 		
 		profileWidget.addActor(b1);
-		profileWidget.addActor(b2);
 		profileWidget.addActor(b3);
 	
         profileWidget.addActor(ground);
         profileWidget.addActor(currentCharacterAnimation);
+        
+        Image shopSign = createImage("temp/shopSign.png", -600.0f, -400.0f);
+        shopSign.setSize(150, 150);
+        profileWidget.addActor(shopSign);
 	}
 	
 	private void createFriendsWidget()
@@ -216,7 +231,61 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		friendsWidget.addTabButton(1, "contactsTab");
 		friendsWidget.addTabButton(2, "findFriendsTab");
-		        
+		
+		Array<Contact> contactsArray = new Array<Contact>();
+		contactsArray.add( new Contact("Contact1", false) );
+		contactsArray.add( new Contact("Contact2", true) );
+		contactsArray.add( new Contact("Contact3", false) );
+		contactsArray.add( new Contact("Contact4", true) );
+		contactsArray.add( new Contact("Contact5", true) );	
+		contactsArray.add( new Contact("Contact6", true) );
+		contactsArray.add( new Contact("Contact7", false) );
+		contactsArray.add( new Contact("Contact8", true) );
+		contactsArray.add( new Contact("Contact9", true) );	
+		
+		contactsArray.sort();
+		
+		Table contactsTable = new Table();
+		contactsTable.setSize(920.0f, 370.0f);	
+		contactsTable.setPosition(-460.0f, 750.0f);
+		
+		Label nameTitle = createLabel("Name", FontType.WOODFONT);
+		nameTitle.setAlignment(Align.center);
+		
+		Label statusTitle = createLabel("Status", FontType.WOODFONT);
+		statusTitle.setAlignment(Align.center);
+		
+		contactsTable.add().width(130.0f).height(50.0f).center().pad(0,0,0,0);
+		contactsTable.add(nameTitle).width(500.0f).height(50.0f).colspan(2).center().pad(0,0,0,30);
+		contactsTable.add(statusTitle).width(210.0f).height(50.0f).center().pad(0,50,0,0);
+		
+		Table contactsScrollTable = new Table();
+		
+		for(final Contact contact: contactsArray)
+		{
+			CheckBox check = new CheckBox("", skin);
+			Label name = createLabel( contact.name, FontType.WOODFONTSMALL);
+			Image flag = createImage( "temp/exampleFlag.png", 0, 0);			
+			Image status = createImage( (contact.status)?("temp/online.png"):("temp/offline.png"), 0, 0);
+
+			contactsScrollTable.row();
+			contactsScrollTable.add(check).width(50.0f).height(50.0f).center().pad(30,0,0,80);
+			contactsScrollTable.add(flag).width(32.0f).height(32.0f).center().pad(39,0,0,18);
+			contactsScrollTable.add(name).width(450.0f).height(50.0f).center().pad(30,0,0,30);
+			contactsScrollTable.add(status).width(32.0f).height(32.0f).center().pad(39,144,0,94);
+		}
+					
+		Container<ScrollPane> contactsContainer = createScroll(contactsScrollTable, 920.0f, 328.0f, true);
+		
+		contactsTable.row();
+		contactsTable.add(contactsContainer).colspan(4);
+				
+		Label inviteLabel = createLabel("Invite!", FontType.WOODFONT);
+		setCenterPosition(inviteLabel, 660.0f);
+		
+		friendsWidget.addActorToTab(contactsTable, 1);
+		friendsWidget.addActorToTab(inviteLabel, 1);
+		
 		TextField searchTextField = new TextField("", skin, "default");
 		searchTextField.setSize(500.0f, 35.0f);
 		searchTextField.getStyle().fontColor = new Color(0,0,0,1);
@@ -237,31 +306,14 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 	int achievmentMargin = 0;
 	int achievmentMarginY = 0;
-	
-	private Image addAchievement(String achievmentName)
-	{
-		Image image = createImage("temp/"+achievmentName+".png", 0,0);//, achievmentMargin, -achievmentMarginY);
-		/*Label label = createLabel(achievmentName, FontType.WOODFONT);
-		label.setPosition(image.getX() + (image.getWidth()/2.0f) - (label.getWidth()/2.0f), image.getY() - 60.0f);
 		
-		achievmentMargin += 256.0f;
-		if(achievmentMargin > 512.0f) achievmentMargin = 0;
-		if(achievmentMargin == 0) achievmentMarginY += 256.0f;
-		
-		achievementsGroup.addActor(image);
-		achievementsGroup.addActor(label);*/
-		
-		return image;
-	}
-	
 	private void createShopWidget()
 	{
 		shopWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		shopWidget.setEasing( Interpolation.elasticOut );
 		
 		shopWidget.addTabButton(1, "profileTab");
-		shopWidget.addTabButton(2, "shopTab");
-		shopWidget.addTabButton(3, "achievementsTab");
+		shopWidget.addTabButton(2, "achievementsTab");
 		
         Label removePlayer = createLabel(getLangString("removePlayer"), FontType.WOODFONT, -450f, 1090f);
         removePlayer.addListener(new ClickListener(){
@@ -289,35 +341,42 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		shopWidget.addActorToTab(removePlayer, 1);
 		
 		//--tab2
-		
+		/*
 		Table categoryTable = new Table();
 		
+		Label category1 = createLabel("category1", FontType.WOODFONT);
+		Label category2 = createLabel("category2", FontType.WOODFONT);
+		Label category3 = createLabel("category3", FontType.WOODFONT);
+		Label category4 = createLabel("category4", FontType.WOODFONT);
+		Label category5 = createLabel("category5", FontType.WOODFONT);
+		Label category6 = createLabel("category6", FontType.WOODFONT);
+		Label category7 = createLabel("category7", FontType.WOODFONT);
+		Label category8 = createLabel("category8", FontType.WOODFONT);
+		
+		categoryTable.add(category1).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category2).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category3).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category4).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category5).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category6).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category7).center().expand().pad(20);
+		categoryTable.row();
+		categoryTable.add(category8).center().expand().pad(20);
+		
+		categoryTable.debug();
+		
+		Container<ScrollPane> categoryContainer = createScroll(categoryTable, 250.0f, 500.0f, true);
+		categoryContainer.setPosition(-550, 650);
+		
+		shopWidget.addActorToTab(categoryContainer, 2);*/
 		
 		
-		//--		
-
-        final Table scrollTable = new Table();
-        scrollTable.add( addAchievement("a1") ).pad(20.0f);
-        scrollTable.add();
-        scrollTable.add();
-        scrollTable.add();
-        scrollTable.add( addAchievement("a2") ).pad(20.0f);
-        scrollTable.add( addAchievement("a3") ).pad(20.0f);
-        scrollTable.row();
-        scrollTable.add( addAchievement("a4") ).pad(20.0f);
-        scrollTable.add( addAchievement("a5") ).pad(20.0f);
-        scrollTable.add( addAchievement("a6") ).pad(20.0f);
-        scrollTable.row();
-        scrollTable.add( addAchievement("a7") ).pad(20.0f);
-        scrollTable.add( addAchievement("a8") ).pad(20.0f);
-        scrollTable.add( addAchievement("a9") ).pad(20.0f);
-
-        scrollTable.debug();
-        
-        Container<ScrollPane> container = createScroll(scrollTable, 920, 480, true);
-        container.setPosition(-500, 670);
-        
-        shopWidget.addActorToTab(container, 3);
 		
 		shopWidget.setCurrentTab(1);
 	}

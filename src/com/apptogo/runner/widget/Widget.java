@@ -361,14 +361,14 @@ public class Widget
 	
 	public void addTabButton(int tabIndex, String buttonName)
 	{
-		Button activeButton = new Button(skin, buttonName);
+		Button activeButton = new Button(skin, "tempTab");//buttonName);
 		activeButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
-		activeButton.setY( 1200.0f );
+		activeButton.setY( 1160.0f );
 		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
-		Button nonActiveButton = new Button(skin, buttonName);
+		Button nonActiveButton = new Button(skin, "tempTab");//buttonName);
 		nonActiveButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
-		nonActiveButton.setY( 1200.0f );
+		nonActiveButton.setY( 1160.0f );
 		nonActiveButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
 		nonActiveButton.getColor().a /= 3.0f;

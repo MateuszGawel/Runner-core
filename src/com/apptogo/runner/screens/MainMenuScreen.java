@@ -6,6 +6,8 @@ import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.news.News;
+import com.apptogo.runner.news.NewsManager;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -16,16 +18,20 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class MainMenuScreen extends BaseScreen
-{		
+{			
 	private Button settingsButton;
 	private Button soundButtonOn;
 	private Button soundButtonOff;
@@ -56,6 +62,7 @@ public class MainMenuScreen extends BaseScreen
 	private ClickListener multiplayerButtonListener;
 	private ClickListener joinRandomRoomButtonListener;
 	
+	private Image newContent;
 	private Image chainsDecoration;	
 	private Image logoImage;
 		
@@ -107,6 +114,9 @@ public class MainMenuScreen extends BaseScreen
 		createListeners();
 		setListeners();
         
+		newContent = createImage("temp/new.png", -450, 230);
+		newContent.setVisible( NewsManager.getInstance().isNewContent() );
+		
 		chainsDecoration = createImage("gfx/menu/chainsDecoration.png", 100.0f, -290.0f);
 
 		logoImage = createImage("gfx/menu/logoMenu.png", -387.0f, 150.0f);
@@ -114,6 +124,8 @@ public class MainMenuScreen extends BaseScreen
 		languageChangeDialog = new DialogWidget("", null, null);
                  
 		addToScreen(settingsButton);
+		addToScreen(newContent);
+		
 		addToScreen(soundButtonOn);
 		addToScreen(soundButtonOff);
         addToScreen(googlePlusButton);
@@ -141,42 +153,44 @@ public class MainMenuScreen extends BaseScreen
 		//---Obrazki tabow        
 		settingsWidget.addTabButton(1, "generalTab");
 		settingsWidget.addTabButton(2, "newsFeedTab");
-		//---
 		
+		Image tabNewContent = createImage("temp/new.png", -100.0f, 1245.0f);
+		tabNewContent.setVisible( NewsManager.getInstance().isNewContent() );
+		settingsWidget.addActor(tabNewContent);
+		//---
+			
         //---
 		//---Pierwszy tab
 		
-		Label musicLabel = createLabel( getLangString("music"), FontType.WOODFONT, -450f, 1090f);
+		Label musicLabel = createLabel( getLangString("music"), FontType.WOODFONT);
 		
 		musicCheckBox = new CheckBox(" On", skin, "default");
-		musicCheckBox.setPosition(-400f, 1020f);
+		musicCheckBox.align(Align.left);
 				
 		musicVolume = new Slider(0, 100, 20, false, skin);
 		musicVolume.setWidth(300.0f);
-		musicVolume.setPosition(-400f, 930f);
 		
-		Label soundsLabel = createLabel( getLangString("sounds"), FontType.WOODFONT, -450f, 840f);
+		Label soundsLabel = createLabel( getLangString("sounds"), FontType.WOODFONT);
 				
 		soundsCheckBox = new CheckBox(" On", skin, "default");
-		soundsCheckBox.setPosition(-400f, 770f);
+		soundsCheckBox.align(Align.left);
 		
 		soundsVolume = new Slider(0, 100, 20, false, skin);
 		soundsVolume.setWidth(300.0f);
-		soundsVolume.setPosition(-400f, 680f);
 				
-		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT, 50f, 1090f);
+		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT);
 		
 		vibrationsCheckBox = new CheckBox(" On", skin, "default");
-		vibrationsCheckBox.setPosition(100f, 1020f);
+		vibrationsCheckBox.align(Align.left);
 				
 		Label languageLabel = createLabel( getLangString("language"), FontType.WOODFONT, 50f, 900f);
 				
-		Image enflag = getLanguageFlag("en", 100, 800, true);
-        Image plflag = getLanguageFlag("pl", 200, 800, true);
-        Image ruflag = getLanguageFlag("ru", 300, 800, false);
-        Image deflag = getLanguageFlag("de", 100, 700, false);
-        Image esflag = getLanguageFlag("es", 200, 700, false);
-        Image inflag = getLanguageFlag("in", 300, 700, false);
+		Image enflag = getLanguageFlag("en", 30, 820, true);
+        Image plflag = getLanguageFlag("pl", 130, 820, true);
+        Image ruflag = getLanguageFlag("ru", 230, 820, false);
+        Image deflag = getLanguageFlag("de", 30, 720, false);
+        Image esflag = getLanguageFlag("es", 130, 720, false);
+        Image inflag = getLanguageFlag("in", 230, 720, false);
         
         musicCheckBox.addListener
         ( 
@@ -190,25 +204,7 @@ public class MainMenuScreen extends BaseScreen
         				refreshSettingsControls();
                     }
 		});
-        
-        musicCheckBox.addListener
-		( 
-				new ChangeListener()
-				{
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						if( musicCheckBox.isChecked() ) 
-						{
-							musicCheckBox.setText(" On");
-						}
-						else
-						{
-							musicCheckBox.setText(" Off");
-						}
-					}
-		});
-		
+        		
         musicVolume.addListener
         ( 
 				new ChangeListener()
@@ -233,25 +229,7 @@ public class MainMenuScreen extends BaseScreen
         				refreshSettingsControls();
 		            }
 		});
-		
-		soundsCheckBox.addListener
-		( 
-				new ChangeListener()
-				{
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						if( soundsCheckBox.isChecked() ) 
-						{
-							soundsCheckBox.setText(" On");
-						}
-						else
-						{
-							soundsCheckBox.setText(" Off");
-						}
-					}
-		});
-		
+				
 		soundsVolume.addListener
 		( 
 				new ChangeListener()
@@ -276,34 +254,45 @@ public class MainMenuScreen extends BaseScreen
         				refreshSettingsControls();
 		            }
 		});
+				
+		Table settingsTable = new Table();
+				
+		settingsTable.add( musicLabel ).colspan(2).width(440.0f).height(45.0f).left().pad(0, 0, 0, 50);
+		settingsTable.add( vibrationsLabel ).colspan(2).width(440.0f).height(45.0f).left().pad(0, 0, 0, 0);
 		
-		vibrationsCheckBox.addListener
-		( 
-				new ChangeListener()
-				{
-					@Override
-					public void changed (ChangeEvent event, Actor actor) 
-					{
-						if( vibrationsCheckBox.isChecked() ) 
-						{
-							vibrationsCheckBox.setText(" On");
-						}
-						else
-						{
-							vibrationsCheckBox.setText(" Off");
-						}
-					}
-		});
-        
-        settingsWidget.addActorToTab(musicLabel, 1);
-		settingsWidget.addActorToTab(musicCheckBox, 1);
-		settingsWidget.addActorToTab(musicVolume, 1);
-		settingsWidget.addActorToTab(soundsLabel, 1);
-		settingsWidget.addActorToTab(soundsCheckBox, 1);
-		settingsWidget.addActorToTab(soundsVolume, 1);
-		settingsWidget.addActorToTab(vibrationsLabel, 1);
-		settingsWidget.addActorToTab(vibrationsCheckBox, 1);
-		settingsWidget.addActorToTab(languageLabel, 1);
+		settingsTable.row();
+		settingsTable.add().width(40.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		settingsTable.add( musicCheckBox ).width(400.0f).height(45.0f).left().pad(30, 0, 0, 50);
+		settingsTable.add().width(40.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		settingsTable.add( vibrationsCheckBox ).width(400.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		
+		settingsTable.row();
+		settingsTable.add().width(40.0f).height(65.0f).left().pad(15, 0, 0, 0);
+		settingsTable.add( musicVolume ).width(350.0f).height(65.0f).left().pad(15, 0, 0, 100);
+		settingsTable.add( languageLabel ).width(440.0f).height(65.0f).left().colspan(2).pad(15, 0, 0, 0);
+			
+		settingsTable.row();
+		settingsTable.add( soundsLabel ).colspan(2).width(440.0f).height(45.0f).left().pad(30, 0, 0, 50);
+		settingsTable.add().colspan(2).width(440.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		
+		settingsTable.row();
+		settingsTable.add().width(40.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		settingsTable.add( soundsCheckBox ).width(400.0f).height(45.0f).left().pad(30, 0, 0, 50);
+		settingsTable.add().width(40.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		settingsTable.add().width(400.0f).height(45.0f).left().pad(30, 0, 0, 0);
+		
+		settingsTable.row();
+		settingsTable.add().width(40.0f).height(65.0f).left().pad(15, 0, 0, 0);
+		settingsTable.add( soundsVolume ).width(350.0f).height(65.0f).left().pad(15, 0, 0, 100);
+		settingsTable.add().width(40.0f).height(65.0f).left().pad(15, 0, 0, 0);
+		settingsTable.add().width(400.0f).height(65.0f).left().pad(15, 0, 0, 0);
+		
+		settingsTable.setSize(930.0f, 430.0f);
+		settingsTable.setPosition(-500.0f, 680.0f);
+		//settingsTable.debug();
+		
+		settingsWidget.addActorToTab(settingsTable, 1);
+		
         settingsWidget.addActorToTab(enflag, 1);
         settingsWidget.addActorToTab(plflag, 1);
         settingsWidget.addActorToTab(ruflag, 1);
@@ -313,6 +302,38 @@ public class MainMenuScreen extends BaseScreen
 		//---
 		
         //---Drugi tab
+        
+        Image newsfeed = createImage("temp/newsfeed.png", -530.0f, 750.0f);
+        
+        Array<News> newsArray = NewsManager.getInstance().getNewsArray();
+      
+        Table newsfeedTable = new Table();
+       
+        for(News news: newsArray)
+        {
+        	Label date = createLabel(news.date, FontType.WOODFONTSMALL);
+        	
+        	newsfeedTable.add(date).width(700.0f).left().pad(50, 0, 0, 0);
+        	newsfeedTable.row();
+        	
+        	Label topic = createLabel(news.topic, FontType.WOODFONT);
+        	topic.setWrap(true);
+        	
+        	newsfeedTable.add(topic).width(700.0f).left().pad(10, 0, 0, 0);
+        	newsfeedTable.row();
+        	
+        	Label message = createLabel(news.message, FontType.WOODFONTSMALL);
+        	message.setWrap(true);
+        	
+        	newsfeedTable.add(message).width(700.0f).left().pad(20, 0, 0, 0);
+        	newsfeedTable.row();
+        }    
+                
+        Container<ScrollPane> newsFeedContainer = createScroll(newsfeedTable, 700.0f, 400.0f, true);
+        newsFeedContainer.setPosition(-200.0f, 720.0f);
+        
+        settingsWidget.addActorToTab(newsfeed, 2);
+        settingsWidget.addActorToTab(newsFeedContainer, 2);
         
         //---
       
@@ -344,20 +365,33 @@ public class MainMenuScreen extends BaseScreen
         
         if( musicCheckBox.isChecked() )
         {
+        	musicCheckBox.setText(" On");
         	musicVolume.setDisabled(false);
         }
         else
         {
+        	musicCheckBox.setText(" Off");
         	musicVolume.setDisabled(true);
         }
         
         if( soundsCheckBox.isChecked() )
         {
+        	soundsCheckBox.setText(" On");
         	soundsVolume.setDisabled(false);
         }
         else
         {
+        	soundsCheckBox.setText(" Off");
         	soundsVolume.setDisabled(true);
+        }
+        
+        if( vibrationsCheckBox.isChecked() )
+        {
+        	vibrationsCheckBox.setText(" On");
+        }
+        else
+        {
+        	vibrationsCheckBox.setText(" Off");
         }
 	}
 	
