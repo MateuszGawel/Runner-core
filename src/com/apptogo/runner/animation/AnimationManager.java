@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -63,23 +64,25 @@ public class AnimationManager {
 	public void setCurrentAnimationState(Object animationState){
 		this.prevAnimationState = this.currentAnimationState;
 		this.currentAnimationState = animationState;
+		stateTime = initStateTime;
 	}
 	
 	public TextureRegion animate(float delta){
-		if(prevAnimationState != currentAnimationState){
-			stateTime = initStateTime;
+		if(prevAnimationState == null || prevAnimationState != currentAnimationState){
+			//stateTime = initStateTime;
+			prevAnimationState = currentAnimationState;
 		}
-		prevAnimationState = currentAnimationState;
+		
 		
 		for(MyAnimation animation : animations){
 			if(animation.getAnimationState() == currentAnimationState){
-				if(stateTime == 0)
+				if(stateTime == 0){
 					animation.resetLoops();
+				}
 				stateTime += delta;
 				currentFrame = animation.getKeyFrame(stateTime);
 			}
 		}
-
 		return currentFrame;
 	}
 	

@@ -70,19 +70,19 @@ public class Bandit extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(6, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
 				}
-				else
+				else{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+				}
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
@@ -109,7 +109,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(1/getSpeed() * 0.3f);
+				this.setFrameDuration(1/getSpeed() * 0.5f);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 10){

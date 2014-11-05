@@ -1,6 +1,7 @@
 package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -47,7 +48,7 @@ public class ResourcesManager
 	//do zaimplementowania bedzie ladowanie tekstur do atlasów	
 		
 	//---
-	private class ScreenMeta
+	public class ScreenMeta
 	{
 		public ScreenType screenType;
 		public AssetManager manager;
@@ -134,7 +135,7 @@ public class ResourcesManager
 	private Array<ScreenMeta> screenMetaArray;
 	ScreenMeta logoSpecialMeta;
 	ScreenMeta menuSpecialMeta;
-	ScreenMeta gameSpecialMeta;
+	public ScreenMeta gameSpecialMeta;
 	ScreenMeta stillSpecialMeta;
 	
 	private Skin uiskin;
@@ -444,6 +445,23 @@ public class ResourcesManager
 		if( gameSpecialMeta.manager.getLoadedAssets() > 0 )
 		{
 			Logger.log(this, "Unloading game resources");
+			Array<Music> tempMusicsListToStop = new Array<Music>();
+			gameSpecialMeta.manager.getAll(Music.class, tempMusicsListToStop);
+			
+			for(Music music : tempMusicsListToStop){
+				music.stop();
+				music.dispose();
+			}
+			tempMusicsListToStop = null;
+			
+			Array<Sound> tempSoundsListToStop = new Array<Sound>();
+			gameSpecialMeta.manager.getAll(Sound.class, tempSoundsListToStop);
+			for(Sound sound : tempSoundsListToStop){
+				Logger.log(this, "znalazlem zaladowany dzwiek: " + sound.toString());
+				sound.stop();
+				sound.dispose();
+			}
+			tempSoundsListToStop = null;
 			
 			gameSpecialMeta.manager.clear();
 		}

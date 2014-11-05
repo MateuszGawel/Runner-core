@@ -46,8 +46,7 @@ public class WildWestWorld extends GameWorld{
 
 	@Override
 	public void dispose(){
+		super.dispose();
 		Logger.log(this, "dispose wildwest");
-		music.stop();
-		music.dispose();
 	}
 }

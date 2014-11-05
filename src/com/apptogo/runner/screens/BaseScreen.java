@@ -9,6 +9,7 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
@@ -26,8 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -48,11 +49,11 @@ public abstract class BaseScreen implements Screen
 	
 	protected Settings settings;
 	
-	protected Stage stage;
+	protected Stage menuStage;
 	protected Viewport viewport;
 	protected Skin skin;
 	
-	public Stage guiStage;
+	public Stage gameGuiStage;
 	public StretchViewport guiStretchViewport;
 	public OrthographicCamera guiCamera;
 	protected InputMultiplexer inputMultiplexer;
@@ -106,29 +107,29 @@ public abstract class BaseScreen implements Screen
 	{
 		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI)  )
 		{
-			stage = new Stage();
+			menuStage = new Stage();
 			viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-			stage.setViewport(viewport);
+			menuStage.setViewport(viewport);
 			skin = ResourcesManager.getInstance().getUiSkin();
 
 			initializeFadeOutButton();
 			
 			this.prepare();
 			
-			Gdx.input.setInputProcessor(stage);
+			Gdx.input.setInputProcessor(menuStage);
 		}
 		else
 		{
-			guiStage = new Stage();
-			guiCamera = (OrthographicCamera) guiStage.getCamera();  
+			gameGuiStage = new Stage();
+			guiCamera = (OrthographicCamera) gameGuiStage.getCamera();  
 			guiCamera.setToOrtho(false, Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM);
 			guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
-			guiStage.setViewport(guiStretchViewport);
+			gameGuiStage.setViewport(guiStretchViewport);
 			
 			this.prepare();
 			
 			inputMultiplexer = new InputMultiplexer(); 
-			inputMultiplexer.addProcessor(guiStage);
+			inputMultiplexer.addProcessor(gameGuiStage);
 			inputMultiplexer.addProcessor(new InputHandler());
 			
 			Gdx.input.setInputProcessor(inputMultiplexer);
@@ -150,16 +151,16 @@ public abstract class BaseScreen implements Screen
 			handleFadingOutScreen();
 			handleFadingInScreen();
 			
-			stage.act();
-			stage.draw();
+			menuStage.act();
+			menuStage.draw();
 		}
 		else
 		{
 			this.step();
 			
-			guiStage.act(delta);
+			gameGuiStage.act(delta);
 			guiCamera.update();
-    		guiStage.draw();
+    		gameGuiStage.draw();
 		}
 	}	
 	
@@ -171,12 +172,12 @@ public abstract class BaseScreen implements Screen
 		
 		background = new Image( backgroundTexture );
 		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
-		stage.addActor( background );
+		menuStage.addActor( background );
 	}
 
 	protected void addToScreen(Actor actor)
 	{
-		this.stage.addActor(actor);
+		this.menuStage.addActor(actor);
 	}
 	
 	protected void initializeFadeOutButton()
@@ -192,7 +193,7 @@ public abstract class BaseScreen implements Screen
 		
 		isFadedOut = false;
 		
-		stage.addActor(fadeButton);
+		menuStage.addActor(fadeButton);
 	}
 		
 	public void handleFadingOutScreen()
@@ -342,10 +343,17 @@ public abstract class BaseScreen implements Screen
 			}
 		}
 		
-		if( stage != null)
+		if( menuStage != null)
 		{
-			stage.clear();
-			stage.dispose();
+			Logger.log(this, "dispose menuStage");
+			menuStage.clear();
+			menuStage.dispose();
+		}
+		
+		if(gameGuiStage != null){
+			Logger.log(this, "dispose gameGuiStage");
+			gameGuiStage.clear();
+			gameGuiStage.dispose();
 		}
 	}
 }

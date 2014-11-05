@@ -7,8 +7,10 @@ import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -89,7 +91,12 @@ public abstract class GameWorld
 		fpsLogger = new FPSLogger();
 	}
 	
-	public abstract void dispose();
+	public void dispose(){
+		TiledMapLoader.getInstance().getPlayersPosition().clear();
+		music.stop();
+		music.dispose();
+		music = null;
+	}
 	
 	private void createWorld(String mapPath)
 	{	
@@ -137,6 +144,7 @@ public abstract class GameWorld
 
 		backgroundStage.act(delta);
         worldStage.act(delta);
+        CustomActionManager.getInstance().act(delta);
         contactListener.postStep();
        // fpsLogger.log();
     }  

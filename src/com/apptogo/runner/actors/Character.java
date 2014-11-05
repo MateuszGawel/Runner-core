@@ -15,11 +15,11 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
-import com.apptogo.runner.handlers.CharacterAction;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -42,6 +42,7 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
 	private World world;
+	private CustomActionManager customActionManager = CustomActionManager.getInstance();
 	
 	protected boolean me = false;
 	protected boolean alive = true;
@@ -77,7 +78,7 @@ public abstract class Character extends Actor{
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	
-	protected float playerSpeedLimit = 12;
+	protected float playerSpeedLimit = 14;
 	protected float playerMinSpeed = 3;
 	protected float playerSlowAmmount = 0;
 	
@@ -99,8 +100,7 @@ public abstract class Character extends Actor{
 	protected AnimationManager animationManager;
 		
 	protected ArrayList<BodyMember> bodyMembers;
-	private List<CharacterAction> actions = new ArrayList<CharacterAction>();
-	private List<CharacterAction> actionsCreated = new ArrayList<CharacterAction>();
+
 	protected Array<Button> powerupButtons;
 
 	private boolean isPowerupSet = false;
@@ -237,20 +237,19 @@ public abstract class Character extends Actor{
 				stepSoundPlayed = false;
 			}
 			sounds.get(CharacterSound.JUMP).play();
-			Logger.log(this, "JUMP");
 			return true;
 		}
 		else return false;
 	}	
 	public void land()
 	{
-		if(shouldLand)
+		if(shouldLand && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
 		{
-			Logger.log(this, "LAND");
 			jumpedFromIdle = false;
 			touchGround = true;
 			jumped = false;
 			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+
 			sounds.get(CharacterSound.LAND).play(0.3f);
 			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
@@ -360,7 +359,7 @@ public abstract class Character extends Actor{
 			jumped = false;
 			
 			deathPosition = new Vector2(body.getPosition());
-			registerAction(new CharacterAction(1f) {
+			customActionManager.registerAction(new CustomAction(1f) {
 				
 				@Override
 				public void perform() {
@@ -451,7 +450,7 @@ public abstract class Character extends Actor{
 	{
 		immortal = true;
 		blinking = true;
-		registerAction(new CharacterAction(immortalityLenght) {
+		customActionManager.registerAction(new CustomAction(immortalityLenght) {
 			
 			@Override
 			public void perform() {
@@ -467,7 +466,7 @@ public abstract class Character extends Actor{
 		
 		if(!dismemberment){
 			if(blinking && visible){
-				registerAction(new CharacterAction(0.08f) {
+				customActionManager.registerAction(new CustomAction(0.08f) {
 					@Override
 					public void perform() {
 						visible = false;
@@ -475,7 +474,7 @@ public abstract class Character extends Actor{
 				});
 			}
 			else if(blinking && !visible){
-				registerAction(new CharacterAction(0.08f) {
+				customActionManager.registerAction(new CustomAction(0.08f) {
 					@Override
 					public void perform() {
 						visible = true;
@@ -534,38 +533,29 @@ public abstract class Character extends Actor{
 			touchBarrel = false;
 	}
 	
-	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
-	public void registerAction(CharacterAction action){
-		this.actionsCreated.add(action);
-	}
+
 	
 	/**metoda obslugujaca slowy z ContactListnera*/
 	private void handleSlowing(){
 		playerSwampSlowAmmount = playerSpeedLimit * ((UserData)body.getUserData()).slowPercent;
 	}
 	
-	private void handleActions(float delta){
-		ListIterator<CharacterAction> iter = actions.listIterator();
-		while(iter.hasNext()) {
-		    CharacterAction action = iter.next();
-		    action.act(delta);
-		    if (action.isFinished()) {
-		        iter.remove();
-		    }
-		}
-	}
+
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed) && (!jumped || jumpedFromIdle))
+		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
-			body.applyForceToCenter(new Vector2(3000, 0), true);
+			if(!jumped)
+				body.applyForceToCenter(new Vector2(6000, 0), true);
+			else
+				body.applyForceToCenter(new Vector2(6000 - 30*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}
 	
 	private void handleStepSoundSpeed(){
-		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/10);
+		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/15);
 	}
 	
 	private void handleDismemberment(){
@@ -584,10 +574,17 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleShouldLand(){
-		if(alive && !sliding && (touchGround || touchBarrel) && animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB)
-			shouldLand = true;
-		else
+		if(alive && !sliding && !(touchGround || touchBarrel) && 
+				(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING 
+				|| animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING 
+				|| animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB) &&
+				animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING
+			){
+				shouldLand = true;
+		}
+		else{
 			shouldLand = false;
+		}
 	}
 	
 	private void handleDying(){
@@ -603,7 +600,7 @@ public abstract class Character extends Actor{
 	
 	private void handleFlying(){
 		if(!touchGround && !touchWall && !touchBarrel){
-			registerAction(new CharacterAction(this, 0.1f, 1) {
+			customActionManager.registerAction(new CustomAction(0.1f, 1, this) {
 				
 				@Override
 				public void perform() {
@@ -623,18 +620,12 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
-		for(CharacterAction action : actionsCreated){
-			actions.add(action);
-		}
-		actionsCreated.clear();
-		
 		handleBlinking();
 		handleStopping();
 		handleSensors();
 		handleSlowing();
 		handleRunning();
 		handleDismemberment();
-		handleActions(delta);
 		handleStandingUp();
 		handleStepSoundSpeed();
 		handleDying();
