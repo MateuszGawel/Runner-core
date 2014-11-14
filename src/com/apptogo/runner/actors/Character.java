@@ -724,7 +724,8 @@ public abstract class Character extends Actor{
 		jumpButton.setSize(jumpButton.getWidth(), jumpButton.getHeight());
 		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
 		jumpButton.setOrigin(jumpButton.getWidth()/2, jumpButton.getHeight()/2);
-		jumpButton.setScale(2f);
+		jumpButton.setScaleX(5f);
+		jumpButton.setScaleY(3f);
 		jumpButton.addListener(new InputListener() 
 		{
 			@Override
@@ -749,7 +750,8 @@ public abstract class Character extends Actor{
 		slideButton.setSize(slideButton.getWidth(), slideButton.getHeight());
 		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
 		slideButton.setOrigin(slideButton.getWidth()/2, slideButton.getHeight()/2);
-		slideButton.setScale(2f);
+		slideButton.setScaleX(5f);
+		slideButton.setScaleY(3f);
 		slideButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
