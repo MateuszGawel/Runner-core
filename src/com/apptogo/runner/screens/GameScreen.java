@@ -65,6 +65,7 @@ public abstract class GameScreen extends BaseScreen{
 	
 	public void prepare()
 	{
+		Logger.log(this, "prepare z gamescreen");
 		powerupButtons = new Array<Button>();
 		
 		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );

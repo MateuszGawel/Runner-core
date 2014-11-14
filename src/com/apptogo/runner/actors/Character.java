@@ -5,8 +5,6 @@ import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
 
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.appwarp.NotificationManager;
@@ -20,6 +18,7 @@ import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -57,13 +56,16 @@ public abstract class Character extends Actor{
 	protected boolean touchWall = false;
 	protected boolean canStandup = true;
 	protected boolean jumped = false;
+	protected boolean doubleJump = false;
 	protected boolean started = false;
 	protected boolean dismemberment = false;
 	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
 	protected boolean forceStandup = false;
 	protected boolean shouldLand = false;
 	protected boolean jumpedFromIdle = false;
-
+	protected boolean minimumSlidingTimePassed = false;
+	protected boolean slideButtonTouched = false;
+	
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
 	protected boolean stepSoundPlayed = false;
@@ -78,7 +80,7 @@ public abstract class Character extends Actor{
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	
-	protected float playerSpeedLimit = 14;
+	protected float playerSpeedLimit = 12;
 	protected float playerMinSpeed = 3;
 	protected float playerSlowAmmount = 0;
 	
@@ -111,7 +113,7 @@ public abstract class Character extends Actor{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		
+		Logger.log(this, "tworze wlasnie character i ostawilem mu idle z statetime: " + animationManager.stateTime);
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		bodyMembers = new ArrayList<BodyMember>();
 		
@@ -154,7 +156,7 @@ public abstract class Character extends Actor{
     }
     
 	protected void createBody(){
-		Vector2 bodySize = new Vector2(25 / PPM, 55 / PPM);
+		Vector2 bodySize = new Vector2(23 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		
@@ -185,6 +187,12 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
+		
+		//wall sensor body
+		shape.setAsBox(2 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
+		fixtureDef = Materials.wallSensorBody;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
 		
 		
 		//foot sensor
@@ -222,21 +230,36 @@ public abstract class Character extends Actor{
 	
 	public boolean jump()
 	{
-		if(/*started && */alive && canStandup && (touchWall || touchGround || touchBarrel || !me))
+		if(/*started && */alive && canStandup && (doubleJump || touchWall || touchGround || touchBarrel || !me))
 		{
 			sliding = false;
 			jumped = true;
 			if(speed < 0.1f) jumpedFromIdle = true;
 			
-			float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
-			body.setLinearVelocity( body.getLinearVelocity().x, v0 ); //wczesniej x bylo 0 i stad widoczny lag przy skoku :) ale teraz leci chyba za daleko jak sie rozpedzi z gorki :( - trzeba sprawdzic
 			
-			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+			
+			
+			if(!doubleJump){
+				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
+				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+				body.setLinearVelocity( body.getLinearVelocity().x, v0 );
+			}
+			else{
+				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight * 0.7f );
+				body.setLinearVelocity( body.getLinearVelocity().x/2, v0 );
+				//body.applyForceToCenter(new Vector2(body.getLinearVelocity().x, 10000f), true);
+			}
+			
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
 			}
 			sounds.get(CharacterSound.JUMP).play();
+			
+			if(doubleJump)
+				doubleJump = false;
+			else if(!touchWall)
+				doubleJump = true;
 			return true;
 		}
 		else return false;
@@ -245,6 +268,7 @@ public abstract class Character extends Actor{
 	{
 		if(shouldLand && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
 		{
+			doubleJump = false;
 			jumpedFromIdle = false;
 			touchGround = true;
 			jumped = false;
@@ -266,9 +290,10 @@ public abstract class Character extends Actor{
 	
 	public boolean slide()
 	{
-		if(started && alive && (touchGround || !me) && !sliding)
+		if(/*started && */ alive && (touchGround || !me) && !sliding)
 		{
 			sliding = true;
+			minimumSlidingTimePassed = false;
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
@@ -278,6 +303,21 @@ public abstract class Character extends Actor{
 				stepSoundPlayed = false;
 			}
 			sounds.get(CharacterSound.SLIDE).play();
+			
+			customActionManager.registerAction(new CustomAction(0.6f) {
+				
+				@Override
+				public void perform() {
+					minimumSlidingTimePassed = true;
+					if(!slideButtonTouched) standUp();
+				}
+			});
+			NotificationManager.getInstance().notifySlide(getBody().getPosition());
+			return true;
+		}
+		else if(!touchGround){
+			Logger.log(this, "charge");
+			body.setLinearVelocity( body.getLinearVelocity().x, -30f );
 			return true;
 		}
 		else return false;
@@ -285,7 +325,7 @@ public abstract class Character extends Actor{
 	
 	public boolean standUp()
 	{
-		if(alive && sliding && canStandup){
+		if(alive && sliding && canStandup && minimumSlidingTimePassed){
 			sliding = false;
 			body.getFixtureList().get(0).setSensor(false);
 			body.getFixtureList().get(1).setSensor(true);
@@ -295,6 +335,7 @@ public abstract class Character extends Actor{
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
 			}
+			NotificationManager.getInstance().notifyStandUp(getBody().getPosition());
 			return true;
 		}
 		else if(!canStandup){
@@ -511,8 +552,10 @@ public abstract class Character extends Actor{
 	}
 
 	private void handleSensors(){
-		if(wallSensor > 0)
+		if(wallSensor > 0){
 			touchWall = true;
+			doubleJump = false;
+		}
 		else
 			touchWall = false;
 		
@@ -555,7 +598,8 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStepSoundSpeed(){
-		sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/15);
+		if(stepSoundId != 0)
+			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/15);
 	}
 	
 	private void handleDismemberment(){
@@ -633,7 +677,7 @@ public abstract class Character extends Actor{
 		handleFlying();
 		
 		currentFrame = animationManager.animate(delta);
-		
+		//Logger.log(this, "char wykonuje sie z takim delta: " + delta + " i statetime: " + animationManager.stateTime);
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
@@ -676,10 +720,11 @@ public abstract class Character extends Actor{
 	{
 		Button jumpButton = new Button(guiSkin, this.jumpButtonStyleName);
 		
-		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, jumpButton.getHeight() + 20 + 40);
+		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, 20);
 		jumpButton.setSize(jumpButton.getWidth(), jumpButton.getHeight());
 		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
-		
+		jumpButton.setOrigin(jumpButton.getWidth()/2, jumpButton.getHeight()/2);
+		jumpButton.setScale(2f);
 		jumpButton.addListener(new InputListener() 
 		{
 			@Override
@@ -700,27 +745,24 @@ public abstract class Character extends Actor{
 	{
 		Button slideButton = new Button(guiSkin, this.slideButtonStyleName);
 		
-		slideButton.setPosition(Runner.SCREEN_WIDTH - slideButton.getWidth() - 20, 20);
+		slideButton.setPosition(20, 20);
 		slideButton.setSize(slideButton.getWidth(), slideButton.getHeight());
 		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
-		
+		slideButton.setOrigin(slideButton.getWidth()/2, slideButton.getHeight()/2);
+		slideButton.setScale(2f);
 		slideButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 			{
-				if( character.slide() )
-				{
-					NotificationManager.getInstance().notifySlide(getBody().getPosition());
-				}
+				slideButtonTouched = true;
+				character.slide();
 		        return true;
 		    }
 			@Override
 		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
 			{
-				if( character.standUp() )
-				{
-					NotificationManager.getInstance().notifyStandUp(getBody().getPosition());
-				}
+				slideButtonTouched = false;
+				character.standUp();
 		    }
 		});
 		

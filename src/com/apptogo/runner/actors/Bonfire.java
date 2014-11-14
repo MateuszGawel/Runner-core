@@ -27,11 +27,14 @@ public class Bonfire extends Obstacle{
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "bonfire");
 		setOffset(-15f/PPM, -15f/PPM);
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/bonfire.ogg");
-		soundId = sound.loop(getSoundVolume());
+		
 	}
-	
+
 	@Override
 	public void act(float delta){
+		if(soundId == 0)
+			soundId = sound.loop(getSoundVolume());
+		
 		super.act(delta);
 		sound.setVolume(soundId, getSoundVolume());
 	}

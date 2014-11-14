@@ -16,7 +16,7 @@ public class AnimationManager {
 	private Object currentAnimationState;
 	private Object prevAnimationState;
 	private List<MyAnimation> animations = new ArrayList<MyAnimation>();
-	private float stateTime = 0;
+	public float stateTime = 0;
 	private TextureRegion currentFrame;
 	private float initStateTime = 0;
 	

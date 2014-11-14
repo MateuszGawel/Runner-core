@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -146,7 +147,6 @@ public class LoadingScreen extends BaseScreen
 		{			
 			AssetManager assetManager = resourcesManager.getGameAssetManager();
 			float progress = assetManager.getProgress();
-			
 			slider.setPosition(-712.0f + (progress * 475.0f), slider.getY());	
 		}
 	}

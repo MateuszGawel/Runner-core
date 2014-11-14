@@ -37,28 +37,28 @@ public class MyContactListener implements ContactListener
 		
 		//smierc TOP
 		if(checkFixturesTypes(fa, fb, "killingTop", "player")){	
-			if(player.character.isAlive() && !player.character.isImmortal()){
+			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
 				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieTop = true;
 			}
 		}
 		
 		//smierc BOTTOM
 		if( checkFixturesTypes(fa, fb, "killingBottom", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
+			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
 				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieBottom = true;
 			}
 		}
 		
 		//smierc od ogniska
 		if( checkFixturesTypes(fa, fb, "bonfire", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
+			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
 				player.character.dieDismemberment();
 			}
 		}
 		
 		//smierc od krzaczka (troche workaround i ginie sie na standup sensor)
 		if( checkFixturesTypes(fa, fb, "bush", "standupSensor")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
+			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
 				((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).dieBottom = true;
 			}
 		}
