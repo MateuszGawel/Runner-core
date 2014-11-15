@@ -113,7 +113,6 @@ public abstract class Character extends Actor{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		Logger.log(this, "tworze wlasnie character i ostawilem mu idle z statetime: " + animationManager.stateTime);
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		bodyMembers = new ArrayList<BodyMember>();
 		
@@ -196,7 +195,7 @@ public abstract class Character extends Actor{
 		
 		
 		//foot sensor
-		shape.setAsBox(25 / PPM, 20 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
+		shape.setAsBox(25 / PPM, 30 / PPM, new Vector2(-10 / PPM, -75 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
@@ -232,6 +231,9 @@ public abstract class Character extends Actor{
 	{
 		if(/*started && */alive && canStandup && (doubleJump || touchWall || touchGround || touchBarrel || !me))
 		{
+//			if(sliding)
+//				speedPlayerBy(0.5f);
+			
 			sliding = false;
 			jumped = true;
 			if(speed < 0.1f) jumpedFromIdle = true;
@@ -297,7 +299,7 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
 			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
-			slowPlayerBy(0.5f);
+			//slowPlayerBy(0.5f);
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
@@ -316,7 +318,6 @@ public abstract class Character extends Actor{
 			return true;
 		}
 		else if(!touchGround){
-			Logger.log(this, "charge");
 			body.setLinearVelocity( body.getLinearVelocity().x, -30f );
 			return true;
 		}
@@ -330,7 +331,7 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(0).setSensor(false);
 			body.getFixtureList().get(1).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
-			speedPlayerBy(0.5f);
+			//speedPlayerBy(0.5f);
 			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
@@ -477,12 +478,19 @@ public abstract class Character extends Actor{
 	
 	public void superJump()
 	{
-		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 3) );
+		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 2) );
 		body.setLinearVelocity( body.getLinearVelocity().x, v0 );
 	}
 	private void superRun()
 	{
-		body.applyForceToCenter(new Vector2(60000, 0), true);
+		speedPlayerBy(0.7f);
+		customActionManager.registerAction(new CustomAction(4f, 1, this) {
+			
+			@Override
+			public void perform() {
+				slowPlayerBy(0.7f);
+			}
+		});
 	}
 	
 	
@@ -725,7 +733,7 @@ public abstract class Character extends Actor{
 		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
 		jumpButton.setOrigin(jumpButton.getWidth()/2, jumpButton.getHeight()/2);
 		jumpButton.setScaleX(5f);
-		jumpButton.setScaleY(3f);
+		jumpButton.setScaleY(2f);
 		jumpButton.addListener(new InputListener() 
 		{
 			@Override
@@ -751,7 +759,7 @@ public abstract class Character extends Actor{
 		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
 		slideButton.setOrigin(slideButton.getWidth()/2, slideButton.getHeight()/2);
 		slideButton.setScaleX(5f);
-		slideButton.setScaleY(3f);
+		slideButton.setScaleY(2f);
 		slideButton.addListener(new InputListener() {
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
@@ -777,7 +785,6 @@ public abstract class Character extends Actor{
 		{
 			Button button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
 			button.setUserObject(powerupType);
-			
 			button.addListener(new InputListener() 
 			{
 				@Override
@@ -807,6 +814,15 @@ public abstract class Character extends Actor{
 		else if( powerupType == PowerupType.SUPERSPEED )
 		{
 			character.superRun();
+		}
+		else if( powerupType == PowerupType.ABILITY1 )
+		{
+			if(getCharacterType() == CharacterType.BANDIT)
+				character.useAbility(CharacterAbilityType.BOMB);
+			else if(getCharacterType() == CharacterType.ARCHER)
+				character.useAbility(CharacterAbilityType.ARROW);
+			else if(getCharacterType() == CharacterType.ALIEN)
+				character.useAbility(CharacterAbilityType.LIFT);
 		}
 		
 		character.setPowerup(PowerupType.NONE);

@@ -30,7 +30,7 @@ public class Materials {
 	{
 		//player
 		characterBody = createFixtureDef(12f, 0.7f, 0f, BIT_CHARACTER, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_ABILITY), false); //postaæ
-		wallSensorBody = createFixtureDef(0f, 0.2f, 0f, BIT_CHARACTER_SENSOR, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), false);
+		wallSensorBody = createFixtureDef(0f, 0.1f, 0f, BIT_CHARACTER_SENSOR, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), false);
 		characterSensor = createFixtureDef(0f, 0f, 0f, BIT_CHARACTER_SENSOR, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), true); //obydwa sensory
 		bodyMemberBody = createFixtureDef(10f, 0.5f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), false); //czesci cia³a
 		
