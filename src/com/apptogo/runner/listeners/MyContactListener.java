@@ -171,7 +171,7 @@ public class MyContactListener implements ContactListener
 				{
 					Fixture fixture = getFixtureByType(fa, fb, "powerup");
 					
-					String powerupKey = ((UserData)fixture.getUserData()).key;
+					String powerupKey = ((UserData)fixture.getUserData()).powerup;
 					gameWorld.player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
 	
 					fixture.getBody().setUserData(new UserData("inactive"));
