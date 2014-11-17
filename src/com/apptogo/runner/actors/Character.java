@@ -46,6 +46,7 @@ public abstract class Character extends Actor{
 	protected boolean me = false;
 	protected boolean alive = true;
 	protected boolean touchGround = false;
+	protected boolean canJump = true;
 	protected boolean touchBarrel = false;
 	protected boolean sliding = false;
 	protected boolean immortal = false;
@@ -76,6 +77,7 @@ public abstract class Character extends Actor{
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
 	protected int standupSensor = 0;
+	protected int jumpSensor = 0;
 	protected int barrelSensor = 0;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
@@ -113,7 +115,7 @@ public abstract class Character extends Actor{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		Logger.log(this, "tworze wlasnie character i ostawilem mu idle z statetime: " + animationManager.stateTime);
+
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		bodyMembers = new ArrayList<BodyMember>();
 		
@@ -175,12 +177,18 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 		
+		//wall sensor body
+		shape.setAsBox(6 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
+		fixtureDef = Materials.wallSensorBody;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
+		
 		//sliding fixture
 		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x, -30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
-		body.getFixtureList().get(1).setSensor(true);
+		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor
 		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
@@ -188,18 +196,18 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
-		//wall sensor body
-		shape.setAsBox(2 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
-		fixtureDef = Materials.wallSensorBody;
-		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
-		
-		
+
 		//foot sensor
 		shape.setAsBox(25 / PPM, 20 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
+		
+		//jump sensor
+		shape.setAsBox(30 / PPM, 40 / PPM, new Vector2(0 / PPM, -80 / PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
 		
 		//slide sensor
 		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, 8/PPM), 0);
@@ -230,15 +238,12 @@ public abstract class Character extends Actor{
 	
 	public boolean jump()
 	{
-		if(/*started && */alive && canStandup && (doubleJump || touchWall || touchGround || touchBarrel || !me))
+		if(/*started && */alive && canStandup && (doubleJump || touchWall || canJump || touchBarrel || !me))
 		{
 			sliding = false;
 			jumped = true;
 			if(speed < 0.1f) jumpedFromIdle = true;
-			
-			
-			
-			
+
 			if(!doubleJump){
 				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
@@ -266,14 +271,18 @@ public abstract class Character extends Actor{
 	}	
 	public void land()
 	{
-		if(shouldLand && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
+		
+		if(shouldLand && getBody().getLinearVelocity().y < 0 && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
 		{
+			Logger.log(this, "L¥DUJE: " +getBody().getLinearVelocity().y);
 			doubleJump = false;
 			jumpedFromIdle = false;
 			touchGround = true;
 			jumped = false;
-			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
-
+			if(speed > 0.05f)
+				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+			else
+				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 			sounds.get(CharacterSound.LAND).play(0.3f);
 			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
@@ -285,6 +294,7 @@ public abstract class Character extends Actor{
 	public void boostAfterLand(){
 		if(shouldLand && running && !touchWall){
 			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
+			Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
 		}
 	}
 	
@@ -294,10 +304,11 @@ public abstract class Character extends Actor{
 		{
 			sliding = true;
 			minimumSlidingTimePassed = false;
-			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			body.getFixtureList().get(0).setSensor(true); 
+			body.getFixtureList().get(1).setSensor(true);//wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(2).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
-			slowPlayerBy(0.5f);
+//			slowPlayerBy(0.5f);
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
@@ -316,7 +327,6 @@ public abstract class Character extends Actor{
 			return true;
 		}
 		else if(!touchGround){
-			Logger.log(this, "charge");
 			body.setLinearVelocity( body.getLinearVelocity().x, -30f );
 			return true;
 		}
@@ -328,9 +338,10 @@ public abstract class Character extends Actor{
 		if(alive && sliding && canStandup && minimumSlidingTimePassed){
 			sliding = false;
 			body.getFixtureList().get(0).setSensor(false);
-			body.getFixtureList().get(1).setSensor(true);
+			body.getFixtureList().get(1).setSensor(false);
+			body.getFixtureList().get(2).setSensor(true);
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
-			speedPlayerBy(0.5f);
+//			speedPlayerBy(0.5f);
 			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
@@ -351,8 +362,9 @@ public abstract class Character extends Actor{
 			sounds.get(CharacterSound.DEATH).play();
 			boolean success = die();
 			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
-			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			body.getFixtureList().get(0).setSensor(true);
+			body.getFixtureList().get(1).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(2).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			return success;
 		}
 		return false;
@@ -364,8 +376,9 @@ public abstract class Character extends Actor{
 			sounds.get(CharacterSound.DEATH).play();
 			boolean success = die();
 			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
-			body.getFixtureList().get(0).setSensor(true); //wy³¹cz kolizje stoj¹cego body
-			body.getFixtureList().get(1).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			body.getFixtureList().get(0).setSensor(true);
+			body.getFixtureList().get(1).setSensor(true); //wy³¹cz kolizje stoj¹cego body
+			body.getFixtureList().get(2).setSensor(false); //w³¹cz kolizjê le¿¹cego body
 			return success;
 		}
 		return false;
@@ -415,7 +428,8 @@ public abstract class Character extends Actor{
 	public void respawn()
 	{
 		body.getFixtureList().get(0).setSensor(false);
-		body.getFixtureList().get(1).setSensor(true);
+		body.getFixtureList().get(1).setSensor(false);
+		body.getFixtureList().get(2).setSensor(true);
 		
 		handleImmortality(2.0f);
 		
@@ -443,6 +457,14 @@ public abstract class Character extends Actor{
 	
 	public void incrementFootSensor(){
 		footSensor++;
+	}
+	
+	public void decrementJumpSensor(){
+		jumpSensor--;
+	}
+	
+	public void incrementJumpSensor(){
+		jumpSensor++;
 	}
 	
 	public void decrementFootSensor(){
@@ -482,7 +504,15 @@ public abstract class Character extends Actor{
 	}
 	private void superRun()
 	{
-		body.applyForceToCenter(new Vector2(60000, 0), true);
+		speedPlayerBy(0.7f);
+		customActionManager.registerAction(new CustomAction(3f) {
+			
+			@Override
+			public void perform() {
+				if(playerSpeedLimit > 0)
+					slowPlayerBy(0.7f);
+			}
+		});
 	}
 	
 	
@@ -529,8 +559,9 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStopping(){
-		if(alive && Math.abs(speed) < 1f && !stopped && touchGround && !sliding && (animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)){
-			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+		if(alive && Math.abs(speed) < 0.5f && !stopped && touchGround && !sliding){
+			animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
+			Logger.log(this, "ustawiam idle");
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
@@ -545,13 +576,15 @@ public abstract class Character extends Actor{
 				}
 				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
-			else
+			else if(animationManager.getCurrentAnimationState() != CharacterAnimationState.JUMPING){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+			}
 			stopped = false;
 		}
 	}
 
 	private void handleSensors(){
+		//Logger.log(this, "jumpSensor: " + jumpSensor + " canJump: " + canJump);
 		if(wallSensor > 0){
 			touchWall = true;
 			doubleJump = false;
@@ -559,8 +592,9 @@ public abstract class Character extends Actor{
 		else
 			touchWall = false;
 		
-		if(footSensor > 0)
+		if(footSensor > 0){
 			touchGround = true;
+		}
 		else
 			touchGround = false;
 		
@@ -574,6 +608,12 @@ public abstract class Character extends Actor{
 		}
 		else
 			touchBarrel = false;
+		
+		if(jumpSensor > 0){
+			canJump = true;
+		}
+		else
+			canJump = false;
 	}
 	
 
@@ -587,12 +627,13 @@ public abstract class Character extends Actor{
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
+
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
 			if(!jumped)
-				body.applyForceToCenter(new Vector2(6000, 0), true);
+				body.applyForceToCenter(new Vector2(10000, 0), true);
 			else
-				body.applyForceToCenter(new Vector2(6000 - 30*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
+				body.applyForceToCenter(new Vector2(10000 - 30*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}
@@ -643,12 +684,11 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleFlying(){
-		if(!touchGround && !touchWall && !touchBarrel){
-			customActionManager.registerAction(new CustomAction(0.1f, 1, this) {
-				
+		if(!canJump && !touchGround && !touchWall && !touchBarrel){
+			CustomAction action = new CustomAction(0.1f, 1, this) {
 				@Override
 				public void perform() {
-					if(!touchGround && !touchWall && !touchBarrel && alive){
+					if(!canJump && !touchGround && !touchWall && !touchBarrel && alive && animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING){
 						animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 						if(stepSoundPlayed){
 							sounds.get(CharacterSound.STEPS).stop();
@@ -657,7 +697,12 @@ public abstract class Character extends Actor{
 					}
 						
 				}
-			});
+			};
+			
+			customActionManager.registerAction(action);
+			if(canJump || touchGround || touchWall || touchBarrel){
+				action.setFinished(true);
+			}
 		}
 	}
 
@@ -665,10 +710,10 @@ public abstract class Character extends Actor{
 	public void act(float delta) 
 	{
 		handleBlinking();
-		handleStopping();
 		handleSensors();
 		handleSlowing();
 		handleRunning();
+		handleStopping();
 		handleDismemberment();
 		handleStandingUp();
 		handleStepSoundSpeed();

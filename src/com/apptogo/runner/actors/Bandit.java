@@ -85,6 +85,21 @@ public class Bandit extends Character{
 				}
 			}
 		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(5, "land"), false){
+			@Override
+			public void onAnimationFinished(){
+				if(getSpeed() < 0.001f){
+					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+					if(stepSoundPlayed){
+						sounds.get(CharacterSound.STEPS).stop();
+						stepSoundPlayed = false;
+					}
+				}
+				else{
+					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+				}
+			}
+		});
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
 			@Override
 			public void onAnimationFinished(){

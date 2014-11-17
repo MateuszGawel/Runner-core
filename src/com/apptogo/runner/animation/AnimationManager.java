@@ -3,6 +3,7 @@ package com.apptogo.runner.animation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;

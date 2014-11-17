@@ -69,7 +69,10 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.incrementFootSensor();
 			player.character.land();
-			//Logger.log(this, "fixtury: " + ((UserData)fa.getUserData()).key + ((UserData)fb.getUserData()).key );
+		}
+		
+		if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
+			player.character.incrementJumpSensor();
 		}
 		
 		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
@@ -211,6 +214,10 @@ public class MyContactListener implements ContactListener
 		
 		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
 			player.character.decrementWallSensor();
+		}
+		
+		if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
+			player.character.decrementJumpSensor();
 		}
 		
 		if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
@@ -367,6 +374,10 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "standupSensor")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "jumpSensor")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "jumpSensor").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		return player;
