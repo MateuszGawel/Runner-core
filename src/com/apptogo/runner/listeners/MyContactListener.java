@@ -68,7 +68,7 @@ public class MyContactListener implements ContactListener
 		//sensory playera
 		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 			player.character.incrementFootSensor();
-			player.character.land();
+			//player.character.land();
 		}
 		
 		if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
@@ -84,7 +84,7 @@ public class MyContactListener implements ContactListener
 		}
 		if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
 			player.character.incrementBarrelSensor();
-			player.character.land();
+			//player.character.land();
 		}
 		
 		//boost po l¹dowaniu

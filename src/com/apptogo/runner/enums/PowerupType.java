@@ -112,6 +112,7 @@ public enum PowerupType
 		button.setBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight());
 		button.setScaleX(5f);
 		button.setScaleY(2f);
+		button.setVisible(false);
 		return button;
 	}
 

@@ -76,6 +76,21 @@ public class Archer extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(8, "land"), false){
+			@Override
+			public void onAnimationFinished(){
+				if(getSpeed() < 0.001f){
+					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+					if(stepSoundPlayed){
+						sounds.get(CharacterSound.STEPS).stop();
+						stepSoundPlayed = false;
+					}
+				}
+				else{
+					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+				}
+			}
+		});
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
 			@Override
 			public void onAnimationFinished(){
@@ -94,7 +109,7 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(1/getSpeed() * 0.5f);
+				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 10){
@@ -203,7 +218,7 @@ public class Archer extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
+		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 	}
 		
 	public Button getAbilityButton()

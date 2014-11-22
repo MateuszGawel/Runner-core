@@ -50,7 +50,7 @@ public class Bandit extends Character{
     }
     
 	public Bandit(World world, GameWorld gameWorld){
-		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
+		super(world, "gfx/game/characters/bandit-new.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
@@ -124,7 +124,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
-				this.setFrameDuration(1/getSpeed() * 0.5f);
+				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 10){

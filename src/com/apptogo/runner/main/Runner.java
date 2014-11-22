@@ -13,6 +13,8 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.news.NewsManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.profiling.GL20Profiler;
 
 public class Runner extends Game
 {
@@ -36,6 +38,11 @@ public class Runner extends Game
 	@Override
 	public void render() 
 	{
+		int error = Gdx.gl.glGetError();
+		if (error != GL20.GL_NO_ERROR) {
+			Logger.log(this, "DEBUG Z DASHANDSMASH: " + Gdx.gl.glGetError());
+		}
+		
 		try
 		{
 			super.render();	
