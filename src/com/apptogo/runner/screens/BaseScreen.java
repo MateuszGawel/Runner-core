@@ -2,6 +2,7 @@ package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
@@ -94,6 +95,7 @@ public abstract class BaseScreen implements Screen
 		this.languageManager.setCurrentLanguage( settings.getLanguage() );
 		
 		textures = new Array<Texture>();
+		
 	}
 	
 	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
@@ -111,7 +113,6 @@ public abstract class BaseScreen implements Screen
 			viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			menuStage.setViewport(viewport);
 			skin = ResourcesManager.getInstance().getUiSkin();
-
 			initializeFadeOutButton();
 			
 			this.prepare();
@@ -140,12 +141,10 @@ public abstract class BaseScreen implements Screen
 	public void render(float delta) 
 	{
 		this.delta = delta;
-		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI) )
 		{
-			Gdx.gl.glClearColor(0, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			
 			this.step();
 			
 			handleFadingOutScreen();
@@ -267,6 +266,7 @@ public abstract class BaseScreen implements Screen
 	}
 	protected Image createImage(String imagePath, float x, float y, TextureFilter minFilter, TextureFilter magFilter)
 	{
+		//to musi byc z resources managera. Tak jest bez sensu
 		Texture texture = new Texture( Gdx.files.internal(imagePath) );
 		texture.setFilter(minFilter, magFilter);
 		

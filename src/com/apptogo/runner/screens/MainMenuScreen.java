@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
@@ -226,6 +227,7 @@ public class MainMenuScreen extends BaseScreen
 				{
 					public void clicked(InputEvent event, float x, float y) 
 		            {
+						//runner.setScreen(new ParticleScreen());
 						settings.soundsState = soundsCheckBox.isChecked();        				
 						settings.save();
         				

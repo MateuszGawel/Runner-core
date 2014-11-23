@@ -91,15 +91,15 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{"mfx/game/levels/bonfire.ogg", "mfx/game/levels/bush.ogg", "mfx/game/levels/barrel.ogg"};
+			return new String[]{"mfx/game/levels/bonfire.ogg", "mfx/game/levels/bush.ogg", "mfx/game/levels/barrel.ogg", "mfx/game/levels/powerup.ogg"};
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{"mfx/game/levels/swamp.ogg"};
+			return new String[]{"mfx/game/levels/swamp.ogg", "mfx/game/levels/powerup.ogg"};
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new String[]{};
+			return new String[]{"mfx/game/levels/powerup.ogg"};
 		}
 		
 		return null;

@@ -222,6 +222,7 @@ public class Obstacle extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		//Logger.log(this, getX() + " " + getY());
 	}
 	
 	public Body getBody(){ return this.body; }
