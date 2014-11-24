@@ -33,8 +33,8 @@ public class GameWorldRenderer
 		tiledMapRenderer.setView(camera);
 	
 	    camera.position.set(
-	            Math.min(gameWorld.maxCameraX, Math.max(gameWorld.player.character.getBody().getPosition().x, gameWorld.minCameraX)),
-	            Math.min(gameWorld.maxCameraY, Math.max(gameWorld.player.character.getBody().getPosition().y, gameWorld.minCameraY)),
+	            Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
+	            Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
 	            0);
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
 		

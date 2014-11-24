@@ -6,6 +6,8 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -33,14 +35,14 @@ public class WildWestWorld extends GameWorld{
 		skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/skyBlue.png"));
 		skyBlue.setPosition(0, 400/PPM);
 		background.addActor(skyBlue);
-		
-		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -0.07f, player.character, 0, 350/PPM);
+		Logger.log(this, "wsp: " + mapSize.y/PPM/266);
+		mountains = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/mountains.png"), mapSize, -179/mapSize.y, player.character, 0, 270/PPM);
 		background.addActor(mountains);
 		
-		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -0.1f, player.character, 0, 330/PPM);
+		rocks = new ParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/rocks.png"), mapSize, -256/mapSize.y, player.character, 0, 260/PPM);
 		background.addActor(rocks);
 		
-		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.4f, -0.15f, mapSize, player.character, 0, 20/PPM);
+		sand = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/sand.png"), -0.4f, -384/mapSize.y, mapSize, player.character, 0, -60/PPM);
 		background.addActor(sand);
 	}
 
@@ -48,5 +50,12 @@ public class WildWestWorld extends GameWorld{
 	public void dispose(){
 		super.dispose();
 		Logger.log(this, "dispose wildwest");
+	}
+	
+	@Override
+	public void update(float delta){	
+		Gdx.gl.glClearColor(0.855f, 0.639f, 0.321f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		super.update(delta);
 	}
 }

@@ -8,6 +8,10 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.world.ForestWorld;
+import com.apptogo.runner.world.GameWorld;
+import com.apptogo.runner.world.SpaceWorld;
+import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -46,7 +50,7 @@ public class Obstacle extends Actor{
 	
 	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
-	
+	protected GameWorld gameWorld;
 	private float soundVolume = 1;
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
@@ -57,7 +61,14 @@ public class Obstacle extends Actor{
 	}
 	
 	public Obstacle(String atlasPath){	
-		animationManager = new AnimationManager(atlasPath);	
+		
+		if(atlasPath.contains("powerup")){
+	        if(gameWorld instanceof WildWestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+	        else if(gameWorld instanceof ForestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+	        else if(gameWorld instanceof SpaceWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+		}
+		else
+			animationManager = new AnimationManager(atlasPath);	
 	}
 	
 	public Obstacle(MapObject object, World world, String texturePath){	
@@ -78,6 +89,11 @@ public class Obstacle extends Actor{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
+	}
+	
+	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState, GameWorld gameWorld){
+		this(object, world, atlasPath, regionName, frameCount, frameDuration, animationState);
+		this.gameWorld = gameWorld;
 	}
 	
 	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){

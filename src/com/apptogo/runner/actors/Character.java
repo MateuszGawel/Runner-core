@@ -66,6 +66,7 @@ public abstract class Character extends Actor{
 	protected boolean jumpedFromIdle = false;
 	protected boolean minimumSlidingTimePassed = false;
 	protected boolean slideButtonTouched = false;
+	protected boolean touchSwamp = false;
 	
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
@@ -234,9 +235,9 @@ public abstract class Character extends Actor{
 		else return false;
 	}
 	
-	public boolean jump()
+	public boolean jump(float jumpModifier)
 	{
-		if(/*started && */alive && canStandup && (doubleJump || touchWall || canJump || touchBarrel || !me))
+		if(/*started && */alive && canStandup && (doubleJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
 		{
 //			if(sliding)
 //				speedPlayerBy(0.5f);
@@ -251,7 +252,7 @@ public abstract class Character extends Actor{
 			if(speed < 0.1f) jumpedFromIdle = true;
 
 			if(!doubleJump){
-				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight );
+				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight * jumpModifier );
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 				body.setLinearVelocity( body.getLinearVelocity().x, v0 );
 			}
@@ -496,10 +497,9 @@ public abstract class Character extends Actor{
 		return true;
 	}
 	
-	public void superJump()
+	public boolean superJump()
 	{
-		float v0 = (float) sqrt(-world.getGravity().y*2 * (jumpHeight * 2) );
-		body.setLinearVelocity( body.getLinearVelocity().x, v0 );
+		return jump(2);
 	}
 	private void superRun()
 	{
@@ -612,6 +612,8 @@ public abstract class Character extends Actor{
 		}
 		else
 			canJump = false;
+		
+		touchSwamp = ((UserData)getBody().getUserData()).touchSwamp;
 	}
 	
 
@@ -775,7 +777,7 @@ public abstract class Character extends Actor{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
-				if( character.jump() )
+				if( character.jump(1) )
 				{
 					NotificationManager.getInstance().notifyJump(getBody().getPosition());
 				}
@@ -826,7 +828,7 @@ public abstract class Character extends Actor{
 				@Override
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 				{
-					character.usePowerup( powerupType );
+					if(started && alive) character.usePowerup( powerupType );
 			        return true;
 			    }
 			});
@@ -845,8 +847,8 @@ public abstract class Character extends Actor{
 		}
 		else if( powerupType == PowerupType.SUPERJUMP )
 		{
-			character.superJump();
-			removePowerup(PowerupType.SUPERJUMP);
+			if(character.superJump())
+				removePowerup(PowerupType.SUPERJUMP);
 		}
 		else if( powerupType == PowerupType.SUPERSPEED )
 		{

@@ -12,13 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class RepeatingParallaxBackground extends Actor{
 
-	float xFactor = 0;
-	float yFactor = 0;
-	Character player;
-	Vector2 mapSize;
-	Texture texture;
-	float x, y;
-	int xWrapCount;
+	private float xFactor = 0;
+	private float yFactor = 0;
+	private Character player;
+	private Vector2 mapSize;
+	private Texture texture;
+	private float x, y;
+	private int xWrapCount;
+	private float currentY;
 	
 	public RepeatingParallaxBackground(Texture texture, float xFactor, float yFactor, Vector2 mapSize, Character player, float x, float y){
 		this.texture = texture;
@@ -34,8 +35,9 @@ public class RepeatingParallaxBackground extends Actor{
 	
 	@Override
 	public void act(float delta){
+		currentY = y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor;
+		setPosition(player.getX()*xFactor, currentY);
 		
-        setPosition(player.getX()*xFactor, y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor);
         setWidth(texture.getWidth()/PPM * xWrapCount);
         setHeight(texture.getHeight()/PPM);
 	}

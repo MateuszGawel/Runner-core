@@ -20,6 +20,8 @@ public class UserData
 	public boolean active;
 	public boolean playSound;
 	
+	//swamp
+	public boolean touchSwamp;
 	
 	
 	

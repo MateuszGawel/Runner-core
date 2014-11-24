@@ -123,6 +123,7 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "swamp", "footSensor")){
 			if(player.character.isAlive() && !player.character.isImmortal()){
 				((UserData)player.character.getBody().getUserData()).slowPercent = 0.8f;
+				((UserData)player.character.getBody().getUserData()).touchSwamp = true;
 			}
 		}
 		
@@ -131,7 +132,7 @@ public class MyContactListener implements ContactListener
 			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");
 			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");		
 			if(player.character.isAlive()){	
-				player.character.jump();
+				player.character.jump(2);
 				mushroomFixture.setUserData( new UserData("mushroomWorking") );
 				float v0 = (float) sqrt( -world.getGravity().y * 16 );
 				footSensorFixture.getBody().setLinearVelocity( footSensorFixture.getBody().getLinearVelocity().x + 10, v0);
@@ -144,7 +145,7 @@ public class MyContactListener implements ContactListener
 			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");
 			if(player.character.isAlive())
 			{		
-				player.character.jump();
+				player.character.jump(2);
 				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
 				float v0 = (float) sqrt( -world.getGravity().y * 12 );
 				footSensorFixture.getBody().setLinearVelocity( catapultFixture.getBody().getLinearVelocity().x + 20, v0);
@@ -237,6 +238,7 @@ public class MyContactListener implements ContactListener
 			if(player.character.isAlive() && !gameWorld.player.character.isImmortal()){
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 				((UserData)fixture.getBody().getUserData()).slowPercent = 0;
+				((UserData)player.character.getBody().getUserData()).touchSwamp = false;
 			}
 		}
 	}

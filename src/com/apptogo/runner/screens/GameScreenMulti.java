@@ -155,7 +155,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 					@Override
 					public void perform() {
 						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
-						((Character)args[0]).jump();
+						((Character)args[0]).jump(1);
 					}
 				});
 			}

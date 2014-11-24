@@ -12,11 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class ParallaxBackground extends Image{
 
 	
-	float xFactor = 0;
-	float yFactor = 0;
-	Character player;
-	float x, y;
-	Vector2 mapSize;
+	private float xFactor = 0;
+	private float yFactor = 0;
+	private Character player;
+	private float x, y;
+	private Vector2 mapSize;
+	private float currentY;
 	
 	public ParallaxBackground(Texture texture, Character player, float x, float y){
 		super(texture);
@@ -49,7 +50,9 @@ public class ParallaxBackground extends Image{
 	
 	@Override
 	public void act(float delta){
-		if(xFactor != 0)
-			setPosition(player.getX()*xFactor, y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor);
+		if(xFactor != 0){
+			currentY = y + (player.getY() - (float)mapSize.y/2/PPM) * yFactor;
+			setPosition(player.getX()*xFactor, currentY);	
+		}
 	}
 }
