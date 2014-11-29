@@ -47,6 +47,7 @@ public class Powerup extends Obstacle{
 		
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.KinematicBody, Materials.obstacleGhostBody, "active");
+		getBody().getFixtureList().get(0).setSensor(true);
 		createFixture(Materials.obstacleSensor, userData);
 		setOffset(-40f/PPM, -35f/PPM);
         

@@ -32,8 +32,8 @@ public class Bush extends Obstacle{
 	public void act(float delta){
 		super.act(delta);
 		
-		if(getBody().getAngularVelocity() < 10)
-			getBody().applyTorque(10f, true);
+		if(getBody().getAngularVelocity() < 5)
+			getBody().applyTorque(5f, true);
 		
 		if(Math.abs(getBody().getLinearVelocity().x) > 15){
 			getBody().applyTorque(-10f, true);

@@ -175,7 +175,7 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
-		
+		//body.setTransform(body.getPosition().x, body.getPosition().y, -0.45f);
 		//wall sensor body
 		shape.setAsBox(6 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
@@ -203,7 +203,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
 		
 		//jump sensor
-		shape.setAsBox(40 / PPM, 40 / PPM, new Vector2(-20 / PPM, -80 / PPM), 0);
+		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, -80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
@@ -300,7 +300,7 @@ public abstract class Character extends Actor{
 	public void boostAfterLand(){
 		//Logger.log(this, "boost " + shouldLand + running + touchWall);
 		if(alive && !sliding && running && !touchWall){
-			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
+			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, body.getLinearVelocity().y);
 			//Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
 		}
 	}
@@ -630,8 +630,9 @@ public abstract class Character extends Actor{
 		//Logger.log(this, "player speed; " + speed);
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
-			if(!jumped)
+			if(!jumped){
 				body.applyForceToCenter(new Vector2(5000, 0), true);
+			}
 			else
 				body.applyForceToCenter(new Vector2(5000 - 30*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)

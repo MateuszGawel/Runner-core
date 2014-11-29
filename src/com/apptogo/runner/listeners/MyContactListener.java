@@ -96,8 +96,11 @@ public class MyContactListener implements ContactListener
 		
 		
 		//beczki (tu moze byc problem bo jesli blednie wbiegnie na beczki to rozwali)
-		if(checkFixturesTypes(fa, fb, "barrel", "player")){
+		if(checkFixturesTypes(fa, fb, "barrel", "player") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
+			
 			Fixture playerFixture = getFixtureByType(fa, fb, "player");
+			if(playerFixture == null)
+				playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
 			Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");
 			
 			
@@ -248,10 +251,19 @@ public class MyContactListener implements ContactListener
 	{	
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-
+		Player player = checkIfFixtureIsPlayer(fa, fb);		
 		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
 			Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 			((UserData)fixture.getBody().getUserData()).speedBeforeLand = fixture.getBody().getLinearVelocity().x;
+			float other_x = contact.getWorldManifold().getPoints()[0].x;
+			float other_y = contact.getWorldManifold().getPoints()[0].y;;
+			float playerXpos = player.character.getBody().getPosition().x;
+			float playerYpos = player.character.getBody().getPosition().y;
+			float damageAngle = (float)Math.atan2((other_y - playerYpos), (other_x - playerXpos));
+
+			damageAngle = (float) (damageAngle * (180d/Math.PI));
+			
+			Logger.log(this, "damageAngle: " + damageAngle);
 		}
 		
 		//dŸwiêk krzaczka
@@ -380,6 +392,10 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "jumpSensor")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "jumpSensor").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "wallSensorBody")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "wallSensorBody").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		return player;
