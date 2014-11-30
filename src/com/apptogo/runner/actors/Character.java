@@ -315,7 +315,7 @@ public abstract class Character extends Actor{
 		//Logger.log(this, "boost " + shouldLand + running + touchWall);
 		if((animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) &&
 			!boostedOnce && alive && !sliding && running && !touchWall){
-			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
+			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, getBody().getLinearVelocity().y);
 			Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
 			boostedOnce = true;
 		}

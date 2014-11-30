@@ -143,7 +143,7 @@ public class MyContactListener implements ContactListener
 			if(player.character.isAlive()){	
 				player.character.jump(2);
 				mushroomFixture.setUserData( new UserData("mushroomWorking") );
-				float v0 = (float) sqrt( -world.getGravity().y * 16 );
+				float v0 = (float) sqrt( -world.getGravity().y * 32 );
 				footSensorFixture.getBody().setLinearVelocity( footSensorFixture.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
@@ -156,8 +156,8 @@ public class MyContactListener implements ContactListener
 			{		
 				player.character.jump(2);
 				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
-				float v0 = (float) sqrt( -world.getGravity().y * 12 );
-				footSensorFixture.getBody().setLinearVelocity( catapultFixture.getBody().getLinearVelocity().x + 20, v0);
+				float v0 = (float) sqrt( -world.getGravity().y * 16 );
+				footSensorFixture.getBody().setLinearVelocity(50, v0);
 			}		
 		}
 		
