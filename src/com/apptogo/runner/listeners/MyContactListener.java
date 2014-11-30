@@ -86,6 +86,12 @@ public class MyContactListener implements ContactListener
 			player.character.incrementBarrelSensor();
 			//player.character.land();
 		}
+		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
+			player.character.incrementLeftRotationSensor();
+		}
+		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
+			player.character.incrementRightRotationSensor();
+		}
 		
 		//boost po l¹dowaniu
 		if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){
@@ -227,6 +233,12 @@ public class MyContactListener implements ContactListener
 		if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
 			player.character.decrementStandupSensor();
 		}
+		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
+			player.character.decrementLeftRotationSensor();
+		}
+		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
+			player.character.decrementRightRotationSensor();
+		}
 		
 		if(checkIsOneOfType(fa, fb, "liftField")){
 			Fixture fixture = getFixtureByType(fa, fb, "liftField");
@@ -251,19 +263,11 @@ public class MyContactListener implements ContactListener
 	{	
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		Player player = checkIfFixtureIsPlayer(fa, fb);		
+		Player player = checkIfFixtureIsPlayer(fa, fb);
+		
 		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
 			Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 			((UserData)fixture.getBody().getUserData()).speedBeforeLand = fixture.getBody().getLinearVelocity().x;
-			float other_x = contact.getWorldManifold().getPoints()[0].x;
-			float other_y = contact.getWorldManifold().getPoints()[0].y;;
-			float playerXpos = player.character.getBody().getPosition().x;
-			float playerYpos = player.character.getBody().getPosition().y;
-			float damageAngle = (float)Math.atan2((other_y - playerYpos), (other_x - playerXpos));
-
-			damageAngle = (float) (damageAngle * (180d/Math.PI));
-			
-			Logger.log(this, "damageAngle: " + damageAngle);
 		}
 		
 		//dŸwiêk krzaczka
@@ -396,6 +400,14 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "wallSensorBody")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "wallSensorBody").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "leftRotationSensor")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "leftRotationSensor").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "rightRotationSensor")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "rightRotationSensor").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		return player;

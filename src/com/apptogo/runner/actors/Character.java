@@ -67,19 +67,21 @@ public abstract class Character extends Actor{
 	protected boolean minimumSlidingTimePassed = false;
 	protected boolean slideButtonTouched = false;
 	protected boolean touchSwamp = false;
-	
+	protected boolean boostedOnce = false;
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
 	protected boolean stepSoundPlayed = false;
 	protected long stepSoundId = 0;
-	
+	protected boolean leftRotationSensorTouching, rightRotationSensorTouching;
 	protected boolean gameIsEnded = false;
+	protected boolean rotatingLeft, rotatingRight;
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
 	protected int standupSensor = 0;
 	protected int jumpSensor = 0;
 	protected int barrelSensor = 0;
+	protected int leftRotationSensor, rightRotationSensor;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
 	
@@ -175,7 +177,7 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
-		//body.setTransform(body.getPosition().x, body.getPosition().y, -0.45f);
+
 		//wall sensor body
 		shape.setAsBox(6 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
@@ -213,6 +215,18 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
+		
+		//Left sensor
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, -55/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("leftRotationSensor") );
+		
+		//Right sensor
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, -55/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
 	}
 	
 	public boolean start()
@@ -241,7 +255,7 @@ public abstract class Character extends Actor{
 		{
 //			if(sliding)
 //				speedPlayerBy(0.5f);
-			
+			boostedOnce = false;
 			if(sliding){
 				body.getFixtureList().get(0).setSensor(false);
 				body.getFixtureList().get(1).setSensor(false);
@@ -299,9 +313,11 @@ public abstract class Character extends Actor{
 	
 	public void boostAfterLand(){
 		//Logger.log(this, "boost " + shouldLand + running + touchWall);
-		if(alive && !sliding && running && !touchWall){
-			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, body.getLinearVelocity().y);
-			//Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
+		if((animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) &&
+			!boostedOnce && alive && !sliding && running && !touchWall){
+			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
+			Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
+			boostedOnce = true;
 		}
 	}
 	
@@ -482,6 +498,19 @@ public abstract class Character extends Actor{
 			barrelSensor--;
 	}
 	
+	public void incrementLeftRotationSensor(){
+		leftRotationSensor++;
+	}
+	public void decrementLeftRotationSensor(){
+		leftRotationSensor--;
+	}
+	public void incrementRightRotationSensor(){
+		rightRotationSensor++;
+	}
+	public void decrementRightRotationSensor(){
+		rightRotationSensor--;
+	}
+	
 	public boolean slowPlayerBy(float percent){
 		if(percent < 0 || percent > 1)
 			return false;
@@ -613,6 +642,15 @@ public abstract class Character extends Actor{
 		else
 			canJump = false;
 		
+		if(leftRotationSensor > 0)
+			leftRotationSensorTouching = true;
+		else
+			leftRotationSensorTouching = false;
+		if(rightRotationSensor > 0)
+			rightRotationSensorTouching = true;
+		else
+			rightRotationSensorTouching = false;
+		
 		touchSwamp = ((UserData)getBody().getUserData()).touchSwamp;
 	}
 	
@@ -692,6 +730,7 @@ public abstract class Character extends Actor{
 				public void perform() {
 					if(!canJump && !touchGround && !touchWall && !touchBarrel && alive && animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING){
 						animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
+						boostedOnce = false;
 						if(stepSoundPlayed){
 							sounds.get(CharacterSound.STEPS).stop();
 							stepSoundPlayed = false;
@@ -704,6 +743,62 @@ public abstract class Character extends Actor{
 			customActionManager.registerAction(action);
 			if(canJump || touchGround || touchWall || touchBarrel){
 				action.setFinished(true);
+			}
+		}
+	}
+	
+	private void rotateLeft(boolean toZero){
+		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
+			@Override
+			public void perform() {
+				Logger.log(this, "rotateLeft angle: " + getBody().getAngle());
+				if(leftRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() >= 0)){
+					rotatingLeft = false;
+					setFinished(true);
+				}
+				else
+					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() + 0.05f);
+			}
+		});
+	}
+	
+	private void rotateRight(boolean toZero){
+		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
+			@Override
+			public void perform() {
+				Logger.log(this, "rotateRight angle: " + getBody().getAngle());
+				if(rightRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() <= 0)){
+					rotatingRight = false;
+					setFinished(true);
+				}
+				else
+					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() - 0.05f);
+			}
+		});
+	}
+	
+
+	private void handleRotation(){
+		if(!touchWall){
+			if(!leftRotationSensorTouching && !rightRotationSensorTouching){
+				if(getBody().getAngle() <= 0.1){
+					if(!rotatingLeft)rotateLeft(true);
+					rotatingLeft = true;
+				}
+				else if(getBody().getAngle() >= 0.1){
+					if(!rotatingRight)rotateRight(true);
+					rotatingRight = true;
+				}
+			}
+			else if(!rightRotationSensorTouching){
+				if(!rotatingRight) rotateRight(false);
+				rotatingLeft = false;
+				rotatingRight = true;
+			}
+			else if(!leftRotationSensorTouching){
+				if(!rotatingLeft) rotateLeft(false);
+				rotatingLeft = true;
+				rotatingRight = false;
 			}
 		}
 	}
@@ -722,6 +817,7 @@ public abstract class Character extends Actor{
 		handleDying();
 		handleShouldLand();
 		handleFlying();
+		handleRotation();
 		
 		currentFrame = animationManager.animate(delta);
 		//Logger.log(this, "char wykonuje sie z takim delta: " + delta + " i statetime: " + animationManager.stateTime);

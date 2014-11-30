@@ -58,7 +58,7 @@ public class Bandit extends Character{
 		
 		createBodyMembers();
 		 
-        setOrigin(0, 0);
+        setOrigin(80/PPM, 60/PPM);
         addSounds();
 	}
 	
