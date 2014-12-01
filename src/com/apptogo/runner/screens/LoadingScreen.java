@@ -2,10 +2,12 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.TipManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
@@ -20,11 +22,8 @@ public class LoadingScreen extends BaseScreen
 	private ScreenType screenToLoad;
 	private ResourcesManager resourcesManager;
 	
-	private Button slider;
-	private Image sliderMask;
-	
 	private Label loadingLabel;
-	private Label smallLabel;
+	private Label tipLabel;
 	
 	private ObjectAnimation loadingAnimation;
 	
@@ -65,61 +64,55 @@ public class LoadingScreen extends BaseScreen
 	
 	public void prepare() 
 	{
+		int yOffset = 0;
+		String tip = "";
+		String loading = getLangString("loadingLabel");
+		
 		if( screenToLoad == ScreenType.SCREEN_GAME_SINGLE || screenToLoad == ScreenType.SCREEN_GAME_MULTI )
 		{
-			if( screenToLoad == ScreenType.SCREEN_GAME_SINGLE ) 
-			{
-				if( levelToLoad != null )
-				{
-					setBackground( CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) ) );
-				}
-			}
-			else if( screenToLoad == ScreenType.SCREEN_GAME_MULTI )
+			//jesli cos sie stanie z tlem przy ladowaniu to tu jest pewnie wina
+			if( levelToLoad != null )
 			{
 				setBackground( CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) ) );
 			}
-					
-			smallLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setCenterPosition(smallLabel, -245.0f);
 			
-			slider = new Button(skin, GameWorldType.convertToLoaderButtonName( levelToLoad.worldType ));
-			slider.setSize(475.0f, 50.0f);
-			slider.setPosition( -712.0f, -275.0f);
-			
-			sliderMask = createImage("gfx/menu/sliderMask.png", -640.0f, -275.0f);
-			
-			addToScreen(slider);
-			addToScreen(sliderMask);
-			addToScreen(smallLabel);
+			yOffset = 220;
+			tip = TipManager.getInstance().getTip( levelToLoad.worldType );
+			loading = "";
 		}
-		else
-		{
-			loadingLabel = new Label( getLangString("loadingLabel"), skin, "default");
-			setCenterPosition(loadingLabel, 10.0f);
-			loadingLabel.setVisible(false);
-			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f, false, true);
-			loadingAnimation.setVisible(false);
-			
-			addToScreen(loadingLabel);
-			addToScreen(loadingAnimation);
-		}
+		
+		loadingLabel = new Label( loading, skin, "default");
+		setCenterPosition(loadingLabel, 10.0f - yOffset);
+		loadingLabel.setVisible(false);
+		
+		tipLabel = createLabel(tip, FontType.SMALL);
+		setCenterPosition(tipLabel, -100.0f - yOffset);
+		tipLabel.setVisible(false);
+		
+		loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f - yOffset, false, true);
+		loadingAnimation.setVisible(false);
+		
+		
+		addToScreen(loadingLabel);
+		addToScreen(tipLabel);
+		addToScreen(loadingAnimation);
 	}
 	
 	public void step()
 	{	
-		if( screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI )
-		{
+		//if( screenToLoad != ScreenType.SCREEN_GAME_SINGLE && screenToLoad != ScreenType.SCREEN_GAME_MULTI )
+		//{
 			if( !loadingLabelIsAdded && ( (TimeUtils.millis() - timeStart) > 750 ) )
 			{
 				loadingLabel.setVisible(true);
+				tipLabel.setVisible(true);
 				
 				loadingAnimation.setVisible(true);
 				loadingAnimation.start();
 				
 				loadingLabelIsAdded = true;
 			}
-		}
+		//}
 		
 		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
 		{
@@ -141,13 +134,6 @@ public class LoadingScreen extends BaseScreen
 			{
 				ScreensManager.getInstance().createScreen(screenToLoad); //nie zapakowac tu loadinga kolejnego bo bd dziwnie
 			}
-		}
-		
-		if( slider != null)
-		{			
-			AssetManager assetManager = resourcesManager.getGameAssetManager();
-			float progress = assetManager.getProgress();
-			slider.setPosition(-712.0f + (progress * 475.0f), slider.getY());	
 		}
 	}
 	

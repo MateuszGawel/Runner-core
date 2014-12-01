@@ -7,11 +7,14 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class SplashScreen extends BaseScreen
 {			
@@ -149,7 +152,7 @@ public class SplashScreen extends BaseScreen
 			currentPhase = SplashPhase.LOGO_IN;
 		}
 		else if( currentPhase == SplashPhase.LOGO_IN && logo.getActions().size <= 0)
-		{
+		{			
 			dustAnimation.setVisible(true);
 			dustAnimation.start();
 			

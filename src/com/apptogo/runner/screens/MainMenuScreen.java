@@ -118,7 +118,7 @@ public class MainMenuScreen extends BaseScreen
 		createListeners();
 		setListeners();
         
-		newContent = createImage("temp/new.png", -450, 230);
+		newContent = createImage("gfx/menu/newIcon.png", -450, 230);
 		newContent.setVisible( NewsManager.getInstance().isNewContent() );
 		
 		chainsDecoration = createImage("gfx/menu/chainsDecoration.png", 100.0f, -290.0f);
@@ -158,7 +158,7 @@ public class MainMenuScreen extends BaseScreen
 		settingsWidget.addTabButton(1, "generalTab");
 		settingsWidget.addTabButton(2, "newsFeedTab");
 		
-		Image tabNewContent = createImage("temp/new.png", -100.0f, 1245.0f);
+		Image tabNewContent = createImage("gfx/menu/newIcon.png", -100.0f, 1245.0f);
 		tabNewContent.setVisible( NewsManager.getInstance().isNewContent() );
 		settingsWidget.addActor(tabNewContent);
 		//---
@@ -308,7 +308,7 @@ public class MainMenuScreen extends BaseScreen
 		
         //---Drugi tab
         
-        Image newsfeed = createImage("temp/newsfeed.png", -530.0f, 750.0f);
+        Image newsfeed = createImage("gfx/menu/newsfeed.png", -530.0f, 750.0f);
         
         Array<News> newsArray = NewsManager.getInstance().getNewsArray();
       

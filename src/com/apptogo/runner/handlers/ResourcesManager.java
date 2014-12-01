@@ -203,8 +203,39 @@ public class ResourcesManager
 		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 		
+		menuSpecialMeta.addTexture("gfx/menu/newIcon.png");
+		menuSpecialMeta.addTexture("gfx/menu/newsfeed.png");
 		menuSpecialMeta.addTexture("gfx/menu/chainsDecoration.png");
+		
+		menuSpecialMeta.addTexture("gfx/menu/logoMenu.png");
+		
+		menuSpecialMeta.addTexture("gfx/languageFlags/de_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/de.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/es_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/es.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/in_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/in.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/pl_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/pl.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/ru_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/ru.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/uk_chosen.png");
+		menuSpecialMeta.addTexture("gfx/languageFlags/uk.png");
+		
+		menuSpecialMeta.addTexture("gfx/game/characters/banditGround.png");
 				
+		//tempy totalnie do wyjebania
+		menuSpecialMeta.addTexture("temp/exampleFlag.png");
+		menuSpecialMeta.addTexture("temp/online.png");
+		menuSpecialMeta.addTexture("temp/offline.png");
+		menuSpecialMeta.addTexture("temp/find.png");
+		menuSpecialMeta.addTexture("temp/coin.png");
+		menuSpecialMeta.addTexture("temp/diamond.png");
+		menuSpecialMeta.addTexture("temp/settingsButton.png");
+		menuSpecialMeta.addTexture("temp/achievementsButton.png");
+		menuSpecialMeta.addTexture("temp/shopSign.png");
+		//
+		
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
 		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");

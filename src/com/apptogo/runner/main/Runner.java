@@ -8,6 +8,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.handlers.TipManager;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.news.NewsManager;
@@ -77,6 +78,7 @@ public class Runner extends Game
 		SaveManager.create();
 		FontManager.create();
 		NewsManager.create();
+		TipManager.create();
 	}
 	
 	private void destroyManagers()
@@ -90,5 +92,6 @@ public class Runner extends Game
 		SaveManager.destroy();
 		FontManager.destroy();
 		NewsManager.destroy();
+		TipManager.destroy();
 	}
 }

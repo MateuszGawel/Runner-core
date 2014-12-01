@@ -50,7 +50,7 @@ public class Bandit extends Character{
     }
     
 	public Bandit(World world, GameWorld gameWorld){
-		super(world, "gfx/game/characters/bandit-new.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
+		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;

@@ -46,8 +46,6 @@ public abstract class BaseScreen implements Screen
 	protected Image background;
 	protected Texture backgroundTexture;
 	
-	protected Array<Texture> textures;
-	
 	protected Settings settings;
 	
 	protected Stage menuStage;
@@ -92,10 +90,7 @@ public abstract class BaseScreen implements Screen
 		
 		//Logger.log(this, settings.getLanguage());
 		
-		this.languageManager.setCurrentLanguage( settings.getLanguage() );
-		
-		textures = new Array<Texture>();
-		
+		this.languageManager.setCurrentLanguage( settings.getLanguage() );		
 	}
 	
 	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
@@ -166,9 +161,7 @@ public abstract class BaseScreen implements Screen
 	
 	protected void setBackground(String path)
 	{
-		backgroundTexture = new Texture( Gdx.files.internal(path) );
-		
-		textures.add(backgroundTexture);
+		backgroundTexture = ResourcesManager.getInstance().getResource(this, path);
 		
 		background = new Image( backgroundTexture );
 		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
@@ -267,11 +260,8 @@ public abstract class BaseScreen implements Screen
 	}
 	protected Image createImage(String imagePath, float x, float y, TextureFilter minFilter, TextureFilter magFilter)
 	{
-		//to musi byc z resources managera. Tak jest bez sensu
-		Texture texture = new Texture( Gdx.files.internal(imagePath) );
+		Texture texture = ResourcesManager.getInstance().getResource(this, imagePath);
 		texture.setFilter(minFilter, magFilter);
-		
-		textures.add(texture);
 		
 		Image image = new Image(texture);
 		image.setPosition(x, y);
@@ -335,15 +325,7 @@ public abstract class BaseScreen implements Screen
 	
 	@Override
 	public void dispose() 
-	{
-		for(Texture texture: textures)
-		{
-			if( texture != null )
-			{
-				texture.dispose();
-			}
-		}
-		
+	{		
 		if( menuStage != null)
 		{
 			Logger.log(this, "dispose menuStage");
