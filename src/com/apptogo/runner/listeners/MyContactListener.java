@@ -136,28 +136,24 @@ public class MyContactListener implements ContactListener
 			}
 		}
 		
-		//trampolina
+		//trampolina grzyb
 		if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
-			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");
-			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");		
+			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
 			if(player.character.isAlive()){	
-				player.character.jump(2);
+				player.character.incrementFootSensor();
+				player.character.jump(1, 3, 10, 0);
 				mushroomFixture.setUserData( new UserData("mushroomWorking") );
-				float v0 = (float) sqrt( -world.getGravity().y * 32 );
-				footSensorFixture.getBody().setLinearVelocity( footSensorFixture.getBody().getLinearVelocity().x + 10, v0);
 			}
 		}
 		
 		//katapulta
 		if( checkFixturesTypes(fa, fb, "catapult", "footSensor")){
 			Fixture catapultFixture = getFixtureByType(fa, fb, "catapult");
-			Fixture footSensorFixture = getFixtureByType(fa, fb, "footSensor");
 			if(player.character.isAlive())
 			{		
-				player.character.jump(2);
+				player.character.incrementFootSensor();
+				player.character.jump(0, 2, 20, 0);
 				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
-				float v0 = (float) sqrt( -world.getGravity().y * 16 );
-				footSensorFixture.getBody().setLinearVelocity(50, v0);
 			}		
 		}
 		
@@ -255,6 +251,21 @@ public class MyContactListener implements ContactListener
 				((UserData)fixture.getBody().getUserData()).slowPercent = 0;
 				((UserData)player.character.getBody().getUserData()).touchSwamp = false;
 			}
+		}
+		
+		//trampolina grzyb
+		if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
+			if(player.character.isAlive()){	
+				player.character.decrementFootSensor();
+			}
+		}
+		
+		//katapulta
+		if( checkFixturesTypes(fa, fb, "catapult", "footSensor")){
+			if(player.character.isAlive())
+			{		
+				player.character.decrementFootSensor();
+			}		
 		}
 	}
 

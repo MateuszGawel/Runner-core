@@ -249,7 +249,8 @@ public abstract class Character extends Actor{
 		else return false;
 	}
 	
-	public boolean jump(float jumpModifier)
+	/** Defaults - 1, 1, 0, 0 - Jumps for jumpHeight set to character and current x speed **/
+	public boolean jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd)
 	{
 		if(/*started && */alive && canStandup && (doubleJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
 		{
@@ -266,14 +267,15 @@ public abstract class Character extends Actor{
 			if(speed < 0.1f) jumpedFromIdle = true;
 
 			if(!doubleJump){
-				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight * jumpModifier );
+				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
+				float x = body.getLinearVelocity().x;
+				body.setLinearVelocity(x*xMultiplier + xAdd, y*yMultiplier + yAdd);
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-				body.setLinearVelocity( body.getLinearVelocity().x, v0 );
 			}
 			else{
-				float v0 = (float) sqrt(-world.getGravity().y*2 * jumpHeight * 0.7f );
-				body.setLinearVelocity( body.getLinearVelocity().x/2, v0 );
-				//body.applyForceToCenter(new Vector2(body.getLinearVelocity().x, 10000f), true);
+				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
+				float x = body.getLinearVelocity().x;
+				body.setLinearVelocity(x * 0.5f, y * 0.7f );
 			}
 			
 			if(stepSoundPlayed){
@@ -528,7 +530,7 @@ public abstract class Character extends Actor{
 	
 	public boolean superJump()
 	{
-		return jump(2);
+		return jump(2, 2, 0, 0);
 	}
 	private void superRun()
 	{
@@ -817,7 +819,7 @@ public abstract class Character extends Actor{
 		handleDying();
 		handleShouldLand();
 		handleFlying();
-		handleRotation();
+		//handleRotation();
 		
 		currentFrame = animationManager.animate(delta);
 		//Logger.log(this, "char wykonuje sie z takim delta: " + delta + " i statetime: " + animationManager.stateTime);
@@ -874,7 +876,7 @@ public abstract class Character extends Actor{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
-				if( character.jump(1) )
+				if( character.jump(1, 1, 0, 0) )
 				{
 					NotificationManager.getInstance().notifyJump(getBody().getPosition());
 				}
