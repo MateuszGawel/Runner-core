@@ -141,7 +141,7 @@ public class MyContactListener implements ContactListener
 			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
 			if(player.character.isAlive()){	
 				player.character.incrementFootSensor();
-				player.character.jump(1, 3, 10, 0);
+				player.character.jump(1, 1.6f, 2, 0, true);
 				mushroomFixture.setUserData( new UserData("mushroomWorking") );
 			}
 		}
@@ -152,21 +152,15 @@ public class MyContactListener implements ContactListener
 			if(player.character.isAlive())
 			{		
 				player.character.incrementFootSensor();
-				player.character.jump(0, 2, 20, 0);
+				player.character.jump(0, 1.2f, 25, 0, true);
 				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
 			}		
 		}
 		
 		//coin
-		if( checkFixturesTypes(fa, fb, "coin", "wallSensor") ){
+		if( checkFixturesTypes(fa, fb, "coin", "standupSensor") ){
 			Fixture fixture = getFixtureByType(fa, fb, "coin");
 			fixture.getBody().setUserData(new UserData("inactive"));
-			//fixture.getBody().setType(BodyType.DynamicBody);
-			//fixture.setUserData( new UserData("gainedCoin") );
-			//fixture.getBody().setUserData( new UserData("gainedCoin") );
-
-			//gameWorld.addBodyToDestroy( fixture.getBody() );
-			//fixture.getBody().setUserData( new UserData("inactive") );
 		}
 		
 		//powerup

@@ -1,5 +1,7 @@
 package com.apptogo.runner.actors;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -10,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Coin extends Obstacle
 {	
+	private ParticleEffectActor effectActor;
+	
 	public enum CoinAnimationState
 	{
 		NORMAL
@@ -24,11 +28,15 @@ public class Coin extends Obstacle
 		createBody(BodyType.StaticBody, Materials.obstacleGhostBody, "active");
 
 		createFixture(Materials.obstacleSensor, "coin");
+		
+		effectActor = new ParticleEffectActor("powerup-wildwest.p");
+		effectActor.scaleBy(1/PPM);
+		gameWorld.getWorldStage().addActor(effectActor);
 	}
 	
 	private void gainCoinResult()
 	{
-		
+		effectActor.start();
 	}
 	
 	@Override
@@ -40,11 +48,12 @@ public class Coin extends Obstacle
 		{
 			gainCoinResult();
 			
-			//przenosze body poza mape(moge takze cos innego ale to dziala OK) i usuwam aktora z jego parenta.
 			getBody().setTransform(new Vector2(-100f, 0), 0);
 			getBody().setAwake(true);
 			getBody().setActive(false);
 			this.remove();
 		}
+		else
+			effectActor.setPosition(getX() + getWidth()/2, getY() + getHeight()/2);
 	}
 }

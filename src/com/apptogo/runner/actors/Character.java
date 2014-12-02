@@ -75,6 +75,7 @@ public abstract class Character extends Actor{
 	protected boolean leftRotationSensorTouching, rightRotationSensorTouching;
 	protected boolean gameIsEnded = false;
 	protected boolean rotatingLeft, rotatingRight;
+	protected boolean lockDoubleJump;
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
@@ -179,7 +180,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 
 		//wall sensor body
-		shape.setAsBox(6 / PPM, 55 / PPM, new Vector2(25 / PPM, 0), 0);
+		shape.setAsBox(6 / PPM, 54 / PPM, new Vector2(25 / PPM, 0), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
@@ -250,12 +251,14 @@ public abstract class Character extends Actor{
 	}
 	
 	/** Defaults - 1, 1, 0, 0 - Jumps for jumpHeight set to character and current x speed **/
-	public boolean jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd)
+	public boolean jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd, boolean forceJump)
 	{
-		if(/*started && */alive && canStandup && (doubleJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
+		if(forceJump){
+			land();
+			doubleJump = false;
+		}
+		if(/*started && */alive && canStandup && (doubleJump || forceJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
 		{
-//			if(sliding)
-//				speedPlayerBy(0.5f);
 			boostedOnce = false;
 			if(sliding){
 				body.getFixtureList().get(0).setSensor(false);
@@ -284,7 +287,7 @@ public abstract class Character extends Actor{
 			}
 			sounds.get(CharacterSound.JUMP).play();
 			
-			if(doubleJump)
+			if(doubleJump )
 				doubleJump = false;
 			else if(!touchWall)
 				doubleJump = true;
@@ -530,7 +533,7 @@ public abstract class Character extends Actor{
 	
 	public boolean superJump()
 	{
-		return jump(2, 2, 0, 0);
+		return jump(2, 2, 0, 0, true);
 	}
 	private void superRun()
 	{
@@ -667,7 +670,6 @@ public abstract class Character extends Actor{
 	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		//Logger.log(this, "player speed; " + speed);
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
 			if(!jumped){
@@ -876,7 +878,7 @@ public abstract class Character extends Actor{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
-				if( character.jump(1, 1, 0, 0) )
+				if( character.jump(1, 1, 0, 0, false))
 				{
 					NotificationManager.getInstance().notifyJump(getBody().getPosition());
 				}
