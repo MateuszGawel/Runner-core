@@ -75,7 +75,8 @@ public abstract class Character extends Actor{
 	protected boolean leftRotationSensorTouching, rightRotationSensorTouching;
 	protected boolean gameIsEnded = false;
 	protected boolean rotatingLeft, rotatingRight;
-	protected boolean lockDoubleJump;
+	protected boolean forceNormalJump;
+	protected boolean headTouch;
 	
 	protected int wallSensor = 0;
 	protected int footSensor = 0;
@@ -85,6 +86,7 @@ public abstract class Character extends Actor{
 	protected int leftRotationSensor, rightRotationSensor;
 	protected float speed = 0;
 	protected float jumpHeight = 4;
+	protected float headSensor;
 	
 	protected float playerSpeedLimit = 12;
 	protected float playerMinSpeed = 3;
@@ -180,7 +182,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 
 		//wall sensor body
-		shape.setAsBox(6 / PPM, 54 / PPM, new Vector2(25 / PPM, 0), 0);
+		shape.setAsBox(6 / PPM, 54 / PPM, new Vector2(25 / PPM, -1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
@@ -211,11 +213,17 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
 		
-		//slide sensor
+		//standup sensor
 		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, 8/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
+		
+		//head sensor
+		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, 60/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("headSensor") );
 		
 		//Left sensor
 		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, -55/PPM), 0);
@@ -257,7 +265,8 @@ public abstract class Character extends Actor{
 			land();
 			doubleJump = false;
 		}
-		if(/*started && */alive && canStandup && (doubleJump || forceJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
+		
+		if(/*started && */alive && canStandup && !headTouch && ((doubleJump || forceNormalJump) || forceJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
 		{
 			boostedOnce = false;
 			if(sliding){
@@ -269,16 +278,18 @@ public abstract class Character extends Actor{
 			jumped = true;
 			if(speed < 0.1f) jumpedFromIdle = true;
 
-			if(!doubleJump){
+			if(!doubleJump || forceNormalJump){
 				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
 				float x = body.getLinearVelocity().x;
 				body.setLinearVelocity(x*xMultiplier + xAdd, y*yMultiplier + yAdd);
 				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+				doubleJump = true;
 			}
 			else{
 				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
 				float x = body.getLinearVelocity().x;
 				body.setLinearVelocity(x * 0.5f, y * 0.7f );
+				doubleJump = false;
 			}
 			
 			if(stepSoundPlayed){
@@ -286,18 +297,12 @@ public abstract class Character extends Actor{
 				stepSoundPlayed = false;
 			}
 			sounds.get(CharacterSound.JUMP).play();
-			
-			if(doubleJump )
-				doubleJump = false;
-			else if(!touchWall)
-				doubleJump = true;
 			return true;
 		}
 		else return false;
 	}	
 	public void land()
 	{
-		
 		if(shouldLand && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
 		{
 			doubleJump = false;
@@ -491,10 +496,15 @@ public abstract class Character extends Actor{
 	public void decrementFootSensor(){
 		footSensor--;
 	}
+	public void incrementHeadSensor(){
+		headSensor++;
+	}
+	public void decrementHeadSensor(){
+		headSensor--;
+	}
 	public void incrementStandupSensor(){
 		standupSensor++;
 	}
-	
 	public void decrementStandupSensor(){
 		standupSensor--;
 	}
@@ -615,10 +625,12 @@ public abstract class Character extends Actor{
 	private void handleSensors(){
 		if(wallSensor > 0){
 			touchWall = true;
-			doubleJump = false;
+			forceNormalJump = true;
 		}
-		else
+		else{
 			touchWall = false;
+			forceNormalJump = false;
+		}
 		
 		if(footSensor > 0){
 			if(!touchGround && !touchBarrel)
@@ -632,6 +644,10 @@ public abstract class Character extends Actor{
 			canStandup = false;
 		else
 			canStandup = true;
+		if(headSensor > 0)
+			headTouch = true;
+		else
+			headTouch = false;
 		
 		if(barrelSensor > 0){
 			if(!touchGround && !touchBarrel)
@@ -702,7 +718,6 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleShouldLand(){
-		//Logger.log(this, "info z hanglera: " + alive +sliding + touchGround + touchBarrel);
 		if(alive && !sliding && !(touchGround || touchBarrel) && 
 				(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING 
 				|| animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING 
