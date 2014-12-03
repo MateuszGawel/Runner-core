@@ -20,6 +20,7 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -38,6 +39,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Ellipse;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -340,7 +342,7 @@ public class TiledMapLoader
 			}
 			else if( checkObjectType(object, "coins") )
 			{
-				Array<Body> coinBodies = createCoins(object);
+				Array<Body> coinBodies = createCoins((PolylineMapObject) object);
 				
 				for(Body coinBody: coinBodies)
 				{
@@ -467,42 +469,67 @@ public class TiledMapLoader
 		return rock.getBody();
 	}
 	
-	private Array<Body> createCoins(MapObject object)
+	private Array<Body> createCoins(PolylineMapObject object)
 	{
 		Array<Body> coinBodies = new Array<Body>();
-		
-		((EllipseMapObject)object).getEllipse().setSize(22.0f, 22.0f);
-		
-		int coinsInRow = 1;
-		int coinsInColumn = 1;
-		
-		if( object.getProperties().containsKey("coinsInRow") )
+
+		//converting Polyline to vertices array
+		float[] vertices_raw = ((PolylineMapObject)object).getPolyline().getTransformedVertices();
+		Vector2[] vertices_vector = new Vector2[vertices_raw.length / 2];
+
+		for (int i = 0; i < vertices_raw.length / 2; ++i) 
 		{
-			coinsInRow = new Integer( (String)object.getProperties().get("coinsInRow") );
+		    vertices_vector[i] = new Vector2();
+		    vertices_vector[i].x = vertices_raw[i * 2];
+		    vertices_vector[i].y = vertices_raw[i * 2 + 1];
 		}
 		
-		if( object.getProperties().containsKey("coinsInColumn") )
-		{
-			coinsInColumn = new Integer( (String)object.getProperties().get("coinsInColumn") );
+		Array<Vector2> vertices = new Array<Vector2>( vertices_vector );
+		
+		//getting polygon bounding box
+		Vector2 bottomLeft = new Vector2( vertices.get(0).x, vertices.get(0).y );
+		Vector2 topRight = new Vector2( vertices.get(0).x, vertices.get(0).y );
+		
+		for(Vector2 v : vertices_vector)
+		{   
+			if( v.x < bottomLeft.x ) bottomLeft.x = v.x;			
+			if( v.x > topRight.x   ) topRight.x = v.x;		
+			if( v.y < bottomLeft.y ) bottomLeft.y = v.y;			
+			if( v.y > topRight.y   ) topRight.y = v.y;
 		}
 		
-		float startY = ((EllipseMapObject)object).getEllipse().y;
+		//calculating coins amount
+		int coinsInRow = Math.abs( (int) (topRight.x - bottomLeft.x) ) / 32;
+		int coinsInColumn = Math.abs( (int) (topRight.y - bottomLeft.y) ) / 32;
+		
+		//creating coin template object - coins will be creating on its example
+		EllipseMapObject coinTemplate = new EllipseMapObject();
+		coinTemplate.getEllipse().setSize(22.0f, 22.0f);
+		coinTemplate.getEllipse().setPosition(bottomLeft);
 		
 		for(int i = 0; i < coinsInRow; i++)
 		{
-			((EllipseMapObject)object).getEllipse().x += 32.0f;
-			((EllipseMapObject)object).getEllipse().y = startY;
+			coinTemplate.getEllipse().x += 32.0f;
+			coinTemplate.getEllipse().y = bottomLeft.y;
 			
 			for(int k = 0; k < coinsInColumn; k++)
 			{
-				((EllipseMapObject)object).getEllipse().y += 32.0f;
+				coinTemplate.getEllipse().y += 32.0f;
 				
-				Coin coin = new Coin(object, world, gameWorld);
+				//checking if coin is in polygon (for now we only know that it is in polygon bounding box)
+				Vector2 coinTemplatePosition = new Vector2( coinTemplate.getEllipse().x, coinTemplate.getEllipse().y );
 				
-				coinBodies.add( coin.getBody() );
+				if ( Intersector.isPointInPolygon( vertices, coinTemplatePosition ) ) 
+				{
+					//it is in polygon so we are creating coin
+					Coin coin = new Coin(coinTemplate, world, gameWorld);
+					coinBodies.add( coin.getBody() );
+				}
+				else
+				{}
 			}
 		}
-		
+				
 		return coinBodies;
 	}
 	
