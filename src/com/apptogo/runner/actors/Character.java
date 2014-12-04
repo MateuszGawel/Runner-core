@@ -200,6 +200,12 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
+		//coin collector sensor
+		shape.setAsBox(60 / PPM, 70 / PPM, new Vector2(0, 0), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
+		
 
 		//foot sensor
 		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -75 / PPM), 0);

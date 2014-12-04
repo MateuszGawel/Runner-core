@@ -161,7 +161,7 @@ public class MyContactListener implements ContactListener
 		}
 		
 		//coin
-		if( checkFixturesTypes(fa, fb, "coin", "standupSensor") ){
+		if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
 			Fixture fixture = getFixtureByType(fa, fb, "coin");
 			fixture.getBody().setUserData(new UserData("inactive"));
 		}

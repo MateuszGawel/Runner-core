@@ -47,7 +47,7 @@ public class Obstacle extends Actor{
 	private float offsetY = 0;
 	
 	protected boolean updatePosition = true;
-	
+	protected Vector2 position;
 	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
 	protected GameWorld gameWorld;
@@ -127,7 +127,8 @@ public class Obstacle extends Actor{
 		float radius = ((ellipse.width < ellipse.height) ? ellipse.width : ellipse.height)/2f;
 		ellipseShape.setRadius(radius/PPM);
 		ellipseShape.setPosition(new Vector2(radius/PPM, radius/PPM));
-		bodyDef.position.set(new Vector2(ellipse.x/PPM, ellipse.y/PPM));
+		position = new Vector2(ellipse.x/PPM, ellipse.y/PPM);
+		bodyDef.position.set(position);
 
 		return ellipseShape;
 	}
@@ -135,10 +136,10 @@ public class Obstacle extends Actor{
 	private Shape getShape(RectangleMapObject obj){
 		Rectangle rectangle = obj.getRectangle();
 		PolygonShape polygonShape = new PolygonShape();
-		Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
+		position = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
 		                           (rectangle.y + rectangle.height * 0.5f ) / PPM);
 		polygonShape.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
-		bodyDef.position.set(size);
+		bodyDef.position.set(position);
 		return polygonShape;
 	}
 	
@@ -155,9 +156,14 @@ public class Obstacle extends Actor{
 		    else
 		    	worldVertices[i] = vertices[i] / PPM - vertices[1] / PPM;
 		}
-		bodyDef.position.set(new Vector2(vertices[0]/PPM, vertices[1]/PPM));
+		position = new Vector2(vertices[0]/PPM, vertices[1]/PPM);
+		bodyDef.position.set(position);
 		polygon.set(worldVertices);
 		return polygon;
+	}
+	
+	public void createShape(){
+		createShape(object);
 	}
 	
 	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData)
@@ -222,7 +228,7 @@ public class Obstacle extends Actor{
 			setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 		}
 		else if(updatePosition)
-			setPosition(offsetX, offsetY);  
+			setPosition(position.x + offsetX, position.y + offsetY);  
         
         if(animationManager != null && animate)
         	currentFrame = animationManager.animate(delta);
@@ -244,4 +250,8 @@ public class Obstacle extends Actor{
 	public Body getBody(){ return this.body; }
 	public void setSoundVolume(float soundVolume){ this.soundVolume = soundVolume; }
 	public float getSoundVolume(){ return this.soundVolume; }
+	public void setUpdatePosition(boolean updatePosition){
+		this.updatePosition = updatePosition;
+		setPosition(position.x + offsetX, position.y + offsetY); 
+	}
 }

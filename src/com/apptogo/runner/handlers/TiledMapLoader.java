@@ -13,6 +13,7 @@ import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.Mushroom;
@@ -20,7 +21,6 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -37,7 +37,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -53,7 +52,6 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Array;
-
 
 public class TiledMapLoader 
 {	
@@ -88,7 +86,7 @@ public class TiledMapLoader
 	
 	public static TiledMapLoader getInstance(){ return INSTANCE; }
 	
-	private OrthogonalTiledMapRenderer tiledMapRenderer;
+	private MyTiledMapRenderer tiledMapRenderer;
 	private World world;
 	private Array<Body> bodies = new Array<Body>();
 
@@ -103,7 +101,7 @@ public class TiledMapLoader
 	MapProperties mapProperties;
 	private RayHandler rayHandler;
 	
-	public void loadMap(String mapPath)
+	public void loadMap(String mapPath, Array<Character> playerLayer)
 	{
 		groundFixture = Materials.terrainBody;
 		objectFixture = Materials.worldObjectBody;
@@ -111,7 +109,7 @@ public class TiledMapLoader
 		obstacleSensorFixture = Materials.obstacleSensor;
 		
 		tiledMap = new TmxMapLoader().load( mapPath );
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/PPM);
+		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM, playerLayer);
 		
 		//initLights();
 		
@@ -748,7 +746,7 @@ public class TiledMapLoader
 	
 	public void setWorld(World world){ this.world = world; }
 	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
-	public OrthogonalTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
+	public MyTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
 	public RayHandler getRayHandler(){ return rayHandler; }
 	
 	public List<Vector2> getPlayersPosition() {
