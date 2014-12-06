@@ -16,6 +16,7 @@ import com.apptogo.runner.actors.Catapult;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Hedgehog;
+import com.apptogo.runner.actors.HedgehogStopper;
 import com.apptogo.runner.actors.Mushroom;
 import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
@@ -101,7 +102,7 @@ public class TiledMapLoader
 	MapProperties mapProperties;
 	private RayHandler rayHandler;
 	
-	public void loadMap(String mapPath, Array<Character> playerLayer)
+	public void loadMap(String mapPath)
 	{
 		groundFixture = Materials.terrainBody;
 		objectFixture = Materials.worldObjectBody;
@@ -109,7 +110,7 @@ public class TiledMapLoader
 		obstacleSensorFixture = Materials.obstacleSensor;
 		
 		tiledMap = new TmxMapLoader().load( mapPath );
-		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM, playerLayer);
+		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM);
 		
 		//initLights();
 		
@@ -326,6 +327,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "hedgehogStopper") )
+			{
+				body = createHedgehogStopper(object);
+								
+				bodies.add( body );
+			}
 			else if( checkObjectType(object, "swamp") )
 			{
 				body = createSwamp(object);
@@ -441,6 +448,12 @@ public class TiledMapLoader
 	{
 		Hedgehog hedgehog = new Hedgehog(object, world, gameWorld);
 		return hedgehog.getBody();
+	}
+	
+	private Body createHedgehogStopper(MapObject object)
+	{
+		HedgehogStopper hedgehogStopper = new HedgehogStopper(object, world, gameWorld);
+		return hedgehogStopper.getBody();
 	}
 	
 	private Body createSwamp(MapObject object)

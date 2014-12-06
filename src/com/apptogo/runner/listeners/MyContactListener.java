@@ -62,6 +62,14 @@ public class MyContactListener implements ContactListener
 				((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).dieBottom = true;
 			}
 		}
+		
+		
+		
+		//zmiana kierunku je¿a
+		if( checkFixturesTypes(fa, fb, "hedgehog", "hedgehogStopper")){
+			Fixture hedgeHogFixture = getFixtureByType(fa, fb, "hedgehog");
+			((UserData)hedgeHogFixture.getBody().getUserData()).changeDirection = true;
+		}
 
 
 		

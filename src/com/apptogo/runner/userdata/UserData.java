@@ -23,6 +23,8 @@ public class UserData
 	//swamp
 	public boolean touchSwamp;
 	
+	//hedgehog
+	public boolean changeDirection;
 	
 	
 	public UserData(Object key){

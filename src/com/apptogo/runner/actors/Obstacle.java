@@ -55,7 +55,7 @@ public class Obstacle extends Actor{
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
-	private Obstacle(MapObject object, World world){
+	public Obstacle(MapObject object, World world){
 		this.world = world;
 		this.object = object;
 	}

@@ -11,13 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 public class MyTiledMapRenderer extends OrthogonalTiledMapRenderer{
-
-	 Array<Character> playerLayer;
 	
-	public MyTiledMapRenderer(TiledMap map, float unitScale, Array<Character> playerLayer) {
+	public MyTiledMapRenderer(TiledMap map, float unitScale) {
 		super(map, unitScale);
-		this.playerLayer = playerLayer; 
 	}
+	
+	
+	
+	public void renderFrontLayer() {
+		beginRender();
+		for (MapLayer layer : map.getLayers()) {
+			if (layer.isVisible()) {
+				if (layer instanceof TiledMapTileLayer && layer.getName().equals("FrontLayer")) {
+					renderTileLayer((TiledMapTileLayer)layer);
+				}
+			}
+		}
+		endRender();
+	}
+	
 	
 	@Override
 	public void render () {
@@ -25,13 +37,9 @@ public class MyTiledMapRenderer extends OrthogonalTiledMapRenderer{
 		for (MapLayer layer : map.getLayers()) {
 			if (layer.isVisible()) {
 				if (layer instanceof TiledMapTileLayer) {
-					renderTileLayer((TiledMapTileLayer)layer);
+					if(!layer.getName().equals("FrontLayer"))
+						renderTileLayer((TiledMapTileLayer)layer);
 				} else {
-					if(layer.getName().equals("PlayerLayer")){
-						for(Character character : playerLayer){
-							character.draw(getSpriteBatch(), 1);
-						}
-					}
 					for (MapObject object : layer.getObjects()) {
 						renderObject(object);
 					}

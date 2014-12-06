@@ -2,6 +2,7 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.handlers.MyTiledMapRenderer;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
@@ -45,6 +46,8 @@ public class GameWorldRenderer
     	gameWorld.backgroundStage.draw();
     	tiledMapRenderer.render();
     	gameWorld.worldStage.draw();
+    	tiledMapRenderer.renderFrontLayer();
+    	
     	//debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci

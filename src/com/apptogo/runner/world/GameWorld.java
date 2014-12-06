@@ -57,8 +57,6 @@ public abstract class GameWorld
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
-	private Array<Character> playerLayer;
-	
 	public Music music;
 	
 	public GameWorld(String mapPath, Player player)
@@ -87,7 +85,6 @@ public abstract class GameWorld
 		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundStretchViewport);
 		backgroundStage.addActor(background);
-		playerLayer = new Array<Character>();
 		
 		createWorld(mapPath);
 		
@@ -105,7 +102,7 @@ public abstract class GameWorld
 	{	
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
-		TiledMapLoader.getInstance().loadMap(mapPath, playerLayer);
+		TiledMapLoader.getInstance().loadMap(mapPath);
 		
 		mapSize = TiledMapLoader.getInstance().getMapSize();
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
@@ -117,8 +114,7 @@ public abstract class GameWorld
 		((UserData)this.player.character.getBody().getUserData()).me = true;
 		this.player.character.setMe(true);
 		
-		//worldStage.addActor( this.player.character );
-		playerLayer.add(this.player.character);
+		worldStage.addActor( this.player.character );
 	}
 	
 	public void destroyWorld()
@@ -145,12 +141,9 @@ public abstract class GameWorld
     public void update(float delta) 
     {
         world.step(delta, 3, 3);
-
-		backgroundStage.act(delta);
         worldStage.act(delta);
-        for(Character character : playerLayer){
-        	character.act(delta);
-        }
+		backgroundStage.act(delta);
+		
         CustomActionManager.getInstance().act(delta);
         contactListener.postStep();
        // fpsLogger.log();
@@ -174,8 +167,7 @@ public abstract class GameWorld
 		((UserData)enemy.character.getBody().getUserData()).playerName = enemy.getName();
 		enemies.add( enemy );
 		
-		//worldStage.addActor( enemy.character );
-		playerLayer.add(enemy.character);
+		worldStage.addActor( enemy.character );
     }
     
     public Player getEnemy(String enemyName) throws PlayerDoesntExistException //tak naprawde tu tez ladniej by bylo przesylac calego playera ale to chyba troche kosztuje wiec zdecydowalem ze samo imie
