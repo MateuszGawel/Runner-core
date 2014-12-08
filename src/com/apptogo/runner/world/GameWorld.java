@@ -52,7 +52,7 @@ public abstract class GameWorld
 	public Player player;
 	public Array<Player> enemies;
 	public Group background;
-	protected Vector2 mapSize;
+	public Vector2 mapSize;
 	private MyContactListener contactListener;
 	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic

@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -17,6 +18,8 @@ import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
@@ -32,6 +35,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected Button jumpButton;
 	protected Button slideButton;
 	protected Button slowButton;
+	protected Actor gameProgressBar;
 	protected Array<Button> powerupButtons;
 	protected boolean multiplayer;
 	
@@ -105,6 +109,12 @@ public abstract class GameScreen extends BaseScreen{
 		}
 		
 		world.player.character.setPowerup(PowerupType.ABILITY1);
+		createGameProgressBar();
+	}
+	
+	protected void createGameProgressBar(){
+		gameProgressBar = new GameProgressBar("gfx/game/levels/gameProgressBar.png", world);
+		gameGuiStage.addActor(gameProgressBar);
 	}
 	
 	public void step() 

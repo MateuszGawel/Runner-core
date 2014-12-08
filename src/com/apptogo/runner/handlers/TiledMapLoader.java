@@ -13,8 +13,8 @@ import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
-import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Coin;
+import com.apptogo.runner.actors.Flag;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.HedgehogStopper;
 import com.apptogo.runner.actors.Mushroom;
@@ -320,6 +320,10 @@ public class TiledMapLoader
 				body = createBush(object);
 								
 				bodies.add( body );
+			}
+			else if( checkObjectType(object, "flag") )
+			{
+				new Flag(object, world, gameWorld);
 			}
 			else if( checkObjectType(object, "hedgehog") )
 			{
