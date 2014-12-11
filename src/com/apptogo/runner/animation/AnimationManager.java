@@ -20,7 +20,7 @@ public class AnimationManager {
 	public float stateTime = 0;
 	private TextureRegion currentFrame;
 	private float initStateTime = 0;
-	
+	private boolean animate = true;
 	
 	public AnimationManager(String atlasName){
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasName);
@@ -69,23 +69,29 @@ public class AnimationManager {
 	}
 	
 	public TextureRegion animate(float delta){
-		if(prevAnimationState == null || prevAnimationState != currentAnimationState){
-			//stateTime = initStateTime;
-			prevAnimationState = currentAnimationState;
-		}
-		
-		
-		for(MyAnimation animation : animations){
-			if(animation.getAnimationState() == currentAnimationState){
-				if(stateTime == 0){
-					animation.resetLoops();
+		if(animate){
+			if(prevAnimationState == null || prevAnimationState != currentAnimationState){
+				//stateTime = initStateTime;
+				prevAnimationState = currentAnimationState;
+			}
+			
+			
+			for(MyAnimation animation : animations){
+				if(animation.getAnimationState() == currentAnimationState){
+					if(stateTime == 0){
+						animation.resetLoops();
+					}
+					stateTime += delta;
+					currentFrame = animation.getKeyFrame(stateTime);
 				}
-				stateTime += delta;
-				currentFrame = animation.getKeyFrame(stateTime);
 			}
 		}
 		return currentFrame;
 	}
 	
 	public Object getCurrentAnimationState(){ return this.currentAnimationState; }
+	public void setAnimate(boolean animate) {
+		stateTime = 0;
+		this.animate = animate;
+	}
 }

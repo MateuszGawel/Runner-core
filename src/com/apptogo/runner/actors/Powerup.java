@@ -39,7 +39,7 @@ public class Powerup extends Obstacle{
 	public Powerup(MapObject object, World world, GameWorld gameWorld)
 	{
 		super(object, world, "gfx/game/levels/powerup.pack", "powerup", 36, 0.03f, PowerupAnimationState.NORMAL, gameWorld);
-		super.animate = false;
+		setAnimate(false);
 				
 		PowerupType powerup = PowerupType.getRandom();
 		UserData userData = new UserData("powerup");

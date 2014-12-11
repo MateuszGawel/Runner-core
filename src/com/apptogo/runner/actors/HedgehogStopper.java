@@ -10,7 +10,7 @@ public class HedgehogStopper extends Obstacle{
 	
 	public HedgehogStopper(MapObject object, World world, GameWorld gameWorld){
 		super(object, world);
-		super.animate = false;	
+		setAnimate(false);
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "hedgehogStopper");
 	}
 }

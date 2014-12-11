@@ -21,7 +21,7 @@ public class CatapultLeafs extends Obstacle{
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "catapultLeafs");
 		setOffset(-15f/PPM, -15f/PPM);
-		animate = false;
+		setAnimate(false);
 		setVisible(false);
 		animationManager.createAnimation(new MyAnimation(0.02f, LeafAnimationState.WORKING, animationManager.createFrames(16, "leaf"), false){
 			@Override
@@ -29,14 +29,14 @@ public class CatapultLeafs extends Obstacle{
 				setVisible(false);
 				animationManager.setCurrentAnimationState(LeafAnimationState.STATIC);
 				//currentFrame = animationManager.animate(0f);
-				animate = false;
+				setAnimate(false);
 			}
 		});
 	}
 	
 	public void init(){
 		setVisible(true);
-		animate = true;
+		setAnimate(true);
 		animationManager.setCurrentAnimationState(LeafAnimationState.WORKING);
 	}
 }

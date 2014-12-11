@@ -29,7 +29,7 @@ public class Coin extends Obstacle
 	public Coin(MapObject object, World world, GameWorld gameWorld)
 	{
 		super(object, world, "gfx/game/levels/coin.pack", "coin", 16, 0.03f, CoinAnimationState.NORMAL);
-		super.animate = true;
+		setAnimate(true);
 		
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.obstacleGhostBody, "active");

@@ -39,7 +39,7 @@ public class Countdown extends Obstacle{
 				animationManager.setCurrentAnimationState(CountdownAnimationState.STATIC);
 				//currentFrame = animationManager.animate(0f);
 
-				animate = false;
+				setAnimate(false);
 				
 				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
 				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
@@ -72,7 +72,7 @@ public class Countdown extends Obstacle{
 	
 	public void startCountdown(){
 		animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
-		animate = true;
+		setAnimate(true);
 	}
 	
 	public void act(float delta){

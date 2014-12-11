@@ -32,7 +32,7 @@ public class Catapult extends Obstacle{
 				setVisible(false);
 				animationManager.setCurrentAnimationState(CatapultAnimationState.STATIC);
 				//currentFrame = animationManager.animate(0f);
-				animate = false;
+				setAnimate(false);
 			}
 		});
 		leafs = new CatapultLeafs(object, world, gameWorld);
@@ -46,7 +46,7 @@ public class Catapult extends Obstacle{
 		if(((UserData)getBody().getUserData()).key.equals("catapultWorking"))
 		{
 			setVisible(true);
-			animate = true;
+			setAnimate(true);
 			animationManager.setCurrentAnimationState(CatapultAnimationState.WORKING); //(*)
 			getBody().setUserData( new UserData("catapult") );
 			leafs.init();
