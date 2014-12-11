@@ -23,9 +23,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 	public GameScreenMulti(Runner runner)
 	{
 		super(runner);	
-		
-		NotificationManager.getInstance().enableAppWarpNotifications(); //uwaga - to powoduje ze tak czy siak jest wywolywana funkcja z notifManagera w Character (i na starcie w gameWorld) - moze spowalniac program :<
-		WarpController.getInstance().setGameListener(this);
 	}
 		
 	public void prepare() 
@@ -33,6 +30,8 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 		super.prepare();	
 		super.multiplayer = true;
 		createGui();
+		NotificationManager.getInstance().enableAppWarpNotifications(); //uwaga - to powoduje ze tak czy siak jest wywolywana funkcja z notifManagera w Character (i na starcie w gameWorld) - moze spowalniac program :<
+		WarpController.getInstance().setGameListener(this);
 		NotificationManager.getInstance().notifyReadyToRun();
 		createLabels();
 	}
@@ -154,7 +153,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				CustomActionManager.getInstance().registerAction(new CustomAction(0, 1, sender.character, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
-						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
+						//((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
 						((Character)args[0]).jump(1, 1, 0, 0, false);
 					}
 				});

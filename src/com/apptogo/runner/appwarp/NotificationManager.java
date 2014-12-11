@@ -62,7 +62,7 @@ public class NotificationManager
 	}
 	*/
 	
-	public void notifyJump(Vector2 playerPosition)
+	public void notifyJump(Vector2 playerPosition, float parameter1, float parameter2, float parameter3, float parameter4, boolean flag)
 	{
 		//JSONObject data = getData(false, false, false, true, false, false, false, false, false, null);
 		JSONObject data = new JSONObject();

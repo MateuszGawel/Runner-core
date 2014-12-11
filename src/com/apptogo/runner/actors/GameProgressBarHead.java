@@ -30,13 +30,13 @@ public class GameProgressBarHead extends Image{
 		this.character = character;
 		this.parentWidth = parentWidth;
 		this.parentHeight = parentHeight;
-		setSize(60, 60);
+		setSize(texture.getWidth(), texture.getHeight());
 		setPosition(0, parentHeight/2 - getHeight()/2);
 	}
 	
 	@Override public void act(float delta){
-		percent = (character.getBody().getPosition().x - 10.5f) / (((gameWorld.mapSize.x)/PPM-10.5f-10));
-		if(character.getX() < gameWorld.mapSize.x/PPM-10) 
+		percent = (character.getBody().getPosition().x - 15.5f) / (((gameWorld.mapSize.x)/PPM-10.5f-20));
+		if(character.getX() < gameWorld.mapSize.x/PPM-20) 
 			setPosition((parentWidth) * percent - getWidth()/2, getY());
 	}
 }

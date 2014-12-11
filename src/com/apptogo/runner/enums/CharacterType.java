@@ -35,16 +35,16 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return new String[]{"gfx/game/characters/banditHead.png", "gfx/game/characters/banditTorso.png", "gfx/game/characters/banditArm.png", "gfx/game/characters/banditHand.png", "gfx/game/characters/banditLeg.png", "gfx/game/characters/banditFoot.png", "gfx/game/characters/banditBag.png", "gfx/game/characters/banditGround.png" };
+			return new String[]{"gfx/game/characters/banditHead.png", "gfx/game/characters/banditTorso.png", "gfx/game/characters/banditArm.png", "gfx/game/characters/banditHand.png", "gfx/game/characters/banditLeg.png", "gfx/game/characters/banditFoot.png", "gfx/game/characters/banditBag.png", "gfx/game/characters/banditGround.png", "gfx/game/characters/banditProgressBarHead.png" };
 		}
 		else if( characterType == ARCHER )
 		{
 			//to trzeba zapakowaæ w atlas
-			return new String[]{ "gfx/game/characters/arrow.png", "gfx/game/characters/archerHead.png", "gfx/game/characters/archerTorso.png", "gfx/game/characters/archerArm.png", "gfx/game/characters/archerHand.png", "gfx/game/characters/archerLeg.png", "gfx/game/characters/archerFoot.png", "gfx/game/characters/archerArrows.png", "gfx/game/characters/archerBow.png", "gfx/game/characters/archerGround.png" };
+			return new String[]{ "gfx/game/characters/arrow.png", "gfx/game/characters/archerHead.png", "gfx/game/characters/archerTorso.png", "gfx/game/characters/archerArm.png", "gfx/game/characters/archerHand.png", "gfx/game/characters/archerLeg.png", "gfx/game/characters/archerFoot.png", "gfx/game/characters/archerArrows.png", "gfx/game/characters/archerBow.png", "gfx/game/characters/archerGround.png", "gfx/game/characters/archerProgressBarHead.png" };
 		}
 		else if( characterType == ALIEN )
 		{
-			return new String[]{ "gfx/game/characters/alienGround.png" };
+			return new String[]{ "gfx/game/characters/alienGround.png", "gfx/game/characters/alienProgressBarHead.png" };
 		}
 		
 		return null;

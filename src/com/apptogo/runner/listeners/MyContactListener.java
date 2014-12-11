@@ -254,7 +254,7 @@ public class MyContactListener implements ContactListener
 		
 		//bagno
 		if( checkFixturesTypes(fa, fb, "swamp", "footSensor") ){
-			if(player.character.isAlive() && !gameWorld.player.character.isImmortal()){
+			if(player.character.isAlive() && !player.character.isImmortal()){
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 				((UserData)fixture.getBody().getUserData()).slowPercent = 0;
 				((UserData)player.character.getBody().getUserData()).touchSwamp = false;

@@ -113,7 +113,7 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	protected void createGameProgressBar(){
-		gameProgressBar = new GameProgressBar("gfx/game/levels/gameProgressBar.png", world);
+		gameProgressBar = new GameProgressBar(world);
 		gameGuiStage.addActor(gameProgressBar);
 	}
 	
