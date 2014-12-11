@@ -73,7 +73,7 @@ public abstract class GameScreen extends BaseScreen{
 		powerupButtons = new Array<Button>();
 		
 		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
-		
+		Logger.log(this, "twroze swait");
 		if(enemies != null)
 		{
 			for(int i = 0; i < enemies.size; i++)

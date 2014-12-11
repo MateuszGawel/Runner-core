@@ -23,7 +23,7 @@ public class Mushroom extends Obstacle{
 	
 	public Mushroom(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/mushroom.pack", "mushroom", 1, 0.05f, MushroomAnimationState.STATIC);
-		super.animate = false;
+		setAnimate(false);
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.worldObjectBody, "nonKilling");
 		
@@ -37,7 +37,7 @@ public class Mushroom extends Obstacle{
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(MushroomAnimationState.STATIC);
-				animate = false;
+				setAnimate(false);
 			}
 		});
 	}
@@ -49,7 +49,7 @@ public class Mushroom extends Obstacle{
 		
 		if(((UserData)mushroomFixture.getUserData()).key.equals("mushroomWorking") )
 		{
-			animate = true;
+			setAnimate(true);
 			animationManager.setCurrentAnimationState(MushroomAnimationState.WORKING);
 			mushroomFixture.setUserData( new UserData("mushroom") );
 		}

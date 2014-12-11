@@ -40,8 +40,6 @@ public class Obstacle extends Actor{
 	protected World world; 
 	private MapObject object;
 	private BodyDef bodyDef;
-
-	protected boolean animate;
 	
 	private float offsetX = 0;
 	private float offsetY = 0;
@@ -230,7 +228,7 @@ public class Obstacle extends Actor{
 		else if(updatePosition)
 			setPosition(position.x + offsetX, position.y + offsetY);  
         
-        if(animationManager != null && animate)
+        if(animationManager != null)
         	currentFrame = animationManager.animate(delta);
         
         setWidth(currentFrame.getRegionWidth() / PPM);
@@ -240,10 +238,15 @@ public class Obstacle extends Actor{
 		
 	}
 	
+	public void setAnimate(boolean animate){
+		animationManager.setAnimate(animate);
+	}
+	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		if(currentFrame != null)
+			batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 		//Logger.log(this, getX() + " " + getY());
 	}
 	

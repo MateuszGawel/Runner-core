@@ -13,7 +13,7 @@ public class Flag extends Obstacle{
 	
 	public Flag(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/flag.pack", "flag", 35, 0.03f, FlagAnimationState.NORMAL);
-		super.animate = true;
+		setAnimate(true);
 		gameWorld.getWorldStage().addActor(this);
 		createShape();
 		setUpdatePosition(true);
