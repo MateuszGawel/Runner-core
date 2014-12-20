@@ -2,7 +2,6 @@ package com.apptogo.runner.screens;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
@@ -34,7 +33,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -42,6 +42,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public abstract class BaseScreen implements Screen
 {	
 	protected Runner runner;
+	protected int currentWindowWidth, currentWindowHeight;
 	protected LanguageManager languageManager;
 	protected Image background;
 	protected Texture backgroundTexture;
@@ -49,11 +50,13 @@ public abstract class BaseScreen implements Screen
 	protected Settings settings;
 	
 	protected Stage menuStage;
-	protected Viewport viewport;
+	protected Stage menuBackgroundStage;
+	protected FitViewport viewport;
+	protected FillViewport backgroundViewport;
 	protected Skin skin;
 	
 	public Stage gameGuiStage;
-	public StretchViewport guiStretchViewport;
+	public Viewport guiViewport;
 	public OrthographicCamera guiCamera;
 	protected InputMultiplexer inputMultiplexer;
 	
@@ -105,8 +108,13 @@ public abstract class BaseScreen implements Screen
 		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI)  )
 		{
 			menuStage = new Stage();
-			viewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+			viewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			menuStage.setViewport(viewport);
+			
+			menuBackgroundStage = new Stage();
+			backgroundViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+			menuBackgroundStage.setViewport( backgroundViewport);
+			
 			skin = ResourcesManager.getInstance().getUiSkin();
 			initializeFadeOutButton();
 			
@@ -117,10 +125,8 @@ public abstract class BaseScreen implements Screen
 		else
 		{
 			gameGuiStage = new Stage();
-			guiCamera = (OrthographicCamera) gameGuiStage.getCamera();  
-			guiCamera.setToOrtho(false, Runner.SCREEN_WIDTH/PPM, Runner.SCREEN_HEIGHT/PPM);
-			guiStretchViewport = new StretchViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT, guiCamera);
-			gameGuiStage.setViewport(guiStretchViewport);
+			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+			gameGuiStage.setViewport(guiViewport);
 			
 			this.prepare();
 			
@@ -146,6 +152,11 @@ public abstract class BaseScreen implements Screen
 			handleFadingOutScreen();
 			handleFadingInScreen();
 			
+			backgroundViewport.update(currentWindowWidth, currentWindowHeight);
+			menuBackgroundStage.act();
+			menuBackgroundStage.draw();
+					
+			viewport.update(currentWindowWidth, currentWindowHeight);
 			menuStage.act();
 			menuStage.draw();
 		}
@@ -153,11 +164,17 @@ public abstract class BaseScreen implements Screen
 		{
 			this.step();
 			
+			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
-			guiCamera.update();
     		gameGuiStage.draw();
 		}
 	}	
+	
+	@Override
+	public void resize(int width, int height) {
+		currentWindowWidth = width;
+		currentWindowHeight = height;
+	}
 	
 	protected void setBackground(String path)
 	{
@@ -165,9 +182,14 @@ public abstract class BaseScreen implements Screen
 		
 		background = new Image( backgroundTexture );
 		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
-		menuStage.addActor( background );
+		menuBackgroundStage.addActor( background );
 	}
 
+	protected void addToBackground(Actor actor)
+	{
+		this.menuBackgroundStage.addActor(actor);
+	}
+	
 	protected void addToScreen(Actor actor)
 	{
 		this.menuStage.addActor(actor);
@@ -331,6 +353,12 @@ public abstract class BaseScreen implements Screen
 			Logger.log(this, "dispose menuStage");
 			menuStage.clear();
 			menuStage.dispose();
+		}
+		if( menuBackgroundStage != null)
+		{
+			Logger.log(this, "dispose menuBackgroundStage");
+			menuBackgroundStage.clear();
+			menuBackgroundStage.dispose();
 		}
 		
 		if(gameGuiStage != null){

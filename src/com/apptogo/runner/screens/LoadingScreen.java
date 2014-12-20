@@ -143,12 +143,6 @@ public class LoadingScreen extends BaseScreen
 		
 	}
 	
-	@Override
-	public void resize(int width, int height) {
-		//siedlisko bugow! wczesniej tego nie bylo i nic sie nie wyswietlalo - moze zrobic to w baseScreen?
-		viewport.update(width, height);
-		
-	}
 
 	@Override
 	public void hide() {

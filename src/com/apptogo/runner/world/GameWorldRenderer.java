@@ -15,7 +15,8 @@ public class GameWorldRenderer
     OrthographicCamera camera;  
     Box2DDebugRenderer debugRenderer;
     MyTiledMapRenderer tiledMapRenderer;
-
+	public int currentScreenWidth, currentScreenHeight;
+	
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
         this.gameWorld = gameWorld;  
@@ -29,6 +30,11 @@ public class GameWorldRenderer
         
     }  
     
+	public void resize(int width, int height){
+		currentScreenWidth = width;
+		currentScreenHeight = height;
+	}
+	
     public void render()
     {  	
 		tiledMapRenderer.setView(camera);
@@ -42,9 +48,11 @@ public class GameWorldRenderer
     	camera.update();
 		gameWorld.backgroundCamera.update();
 
-		
+		gameWorld.backgroundStage.getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.backgroundStage.draw();
     	tiledMapRenderer.render();
+    	
+    	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.worldStage.draw();
     	tiledMapRenderer.renderFrontLayer();
     	

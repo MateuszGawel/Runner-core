@@ -10,7 +10,6 @@ import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -24,7 +23,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public abstract class GameWorld 
 {
@@ -38,15 +38,17 @@ public abstract class GameWorld
 	Array<Body> bodiesToDestroy;
 	
 	public Stage worldStage;
-	public StretchViewport viewport;
+	public Viewport viewport;
 	public OrthographicCamera camera;
 	public float minCameraX;
 	public float maxCameraX;
 	public float minCameraY;
 	public float maxCameraY;
     
+
+	
 	public Stage backgroundStage;
-	public StretchViewport backgroundStretchViewport;
+	public Viewport backgroundViewport;
 	public OrthographicCamera backgroundCamera;
 	
 	public Player player;
@@ -70,7 +72,7 @@ public abstract class GameWorld
 		worldStage = new Stage();
 		camera = (OrthographicCamera)worldStage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-		viewport = new StretchViewport(WIDTH, HEIGHT, camera);
+		viewport = new FillViewport(WIDTH, HEIGHT, camera);
 		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
@@ -80,10 +82,10 @@ public abstract class GameWorld
 		
 		background = new Group();
 		backgroundStage = new Stage();
-		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera(); 
+		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
 		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
-		backgroundStretchViewport = new StretchViewport(WIDTH, HEIGHT, backgroundCamera);
-		backgroundStage.setViewport(backgroundStretchViewport);
+		backgroundViewport = new FillViewport(WIDTH, HEIGHT, backgroundCamera);
+		backgroundStage.setViewport(backgroundViewport);
 		backgroundStage.addActor(background);
 		
 		createWorld(mapPath);
@@ -137,6 +139,8 @@ public abstract class GameWorld
 			world.destroyJoint(joint);
 		}
 	}
+	
+
 	
     public void update(float delta) 
     {

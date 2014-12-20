@@ -119,8 +119,9 @@ public abstract class GameScreen extends BaseScreen{
 	
 	public void step() 
 	{
-		handleInput();
+		handleInput();	
 		world.update(delta);
+		worldRenderer.resize(currentWindowWidth, currentWindowHeight);
 		worldRenderer.render();
 		Input.update();
 	}
@@ -140,12 +141,6 @@ public abstract class GameScreen extends BaseScreen{
 		}
 	}
 	
-	@Override
-	public void resize(int width, int height) {
-		gameGuiStage.getViewport().update(width, height, true);
-		world.backgroundStage.getViewport().update(width, height, true);
-	}
-
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub

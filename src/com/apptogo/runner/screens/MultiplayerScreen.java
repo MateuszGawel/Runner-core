@@ -402,10 +402,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		}
 	}
 	
-	@Override
-	public void resize(int width, int height) {
-		viewport.update(width, height);
-	}
 
 	@Override
 	public void hide() {

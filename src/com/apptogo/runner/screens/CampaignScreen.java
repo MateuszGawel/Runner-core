@@ -42,6 +42,7 @@ public class CampaignScreen extends BaseScreen
 		
 	private Array<LevelWorld> worlds;
 	
+	private Group backgroundGroup;
 	private Group group;
 	private int worldsCount = 0;
 	
@@ -62,6 +63,9 @@ public class CampaignScreen extends BaseScreen
 	{
 		starWidth = ( (Texture) ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallEmpty.png") ).getWidth();
 		starHeight = ( (Texture) ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallEmpty.png") ).getHeight();
+		
+		backgroundGroup = new Group();
+		backgroundGroup.setPosition(0.0f, 0.0f);
 		
 		group = new Group();
 		group.setPosition(0.0f, 0.0f);
@@ -100,6 +104,7 @@ public class CampaignScreen extends BaseScreen
             }
          });
 		
+        addToBackground(backgroundGroup);
 		addToScreen(group);
 		addToScreen(backButton);
 	}
@@ -123,7 +128,8 @@ public class CampaignScreen extends BaseScreen
         
         star = createImage("gfx/menu/starSmallFull.png", label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - starHeight) / 2.0f ));
 		       
-        group.addActor(worldBackground);
+        backgroundGroup.addActor(worldBackground);
+        
         group.addActor(previousWorldButton);
         group.addActor(nextWorldButton);
         group.addActor(label);
@@ -144,16 +150,22 @@ public class CampaignScreen extends BaseScreen
 		{
 
 			MoveToAction action = new MoveToAction();
+			MoveToAction backgroundAction = new MoveToAction();
+			
 			action.setDuration(0.2f);
 			
 			if( direction < 0 )
 			{
 				action.setX( group.getX() - 1280.0f );
+				backgroundAction.setX( group.getX() - 1280.0f );
 			}
 			else
 			{
 				action.setX( group.getX() + 1280.0f );
+				backgroundAction.setX( group.getX() + 1280.0f );
 			}
+			
+			backgroundGroup.addAction(backgroundAction);
 			
 			group.addAction(action);
 		}
@@ -280,11 +292,6 @@ public class CampaignScreen extends BaseScreen
 		}
 	}
 	
-	@Override
-	public void resize(int width, int height) {
-		viewport.update(width, height);
-	}
-
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
