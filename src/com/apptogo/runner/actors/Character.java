@@ -182,7 +182,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("player") );
 
 		//wall sensor body
-		shape.setAsBox(6 / PPM, 54 / PPM, new Vector2(25 / PPM, -1/PPM), 0);
+		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, 1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
@@ -695,10 +695,11 @@ public abstract class Character extends Actor{
 		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
 			//body.setLinearVelocity(playerSpeedLimit, 0);
 			if(!jumped){
-				body.applyForceToCenter(new Vector2(5000, 0), true);
+				body.applyForceToCenter(new Vector2(3000, 0), true);
+				Logger.log(this, ((UserData)body.getUserData()).playerName + " predkosc: " + body.getLinearVelocity().x);
 			}
 			else
-				body.applyForceToCenter(new Vector2(5000 - 30*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
+				body.applyForceToCenter(new Vector2(3000 - 20*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
 		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}

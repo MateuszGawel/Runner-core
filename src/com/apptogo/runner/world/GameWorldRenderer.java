@@ -56,7 +56,7 @@ public class GameWorldRenderer
     	gameWorld.worldStage.draw();
     	tiledMapRenderer.renderFrontLayer();
     	
-//    	debugRenderer.render(gameWorld.world, camera.combined);
+    	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*
