@@ -41,8 +41,8 @@ public class Countdown extends Obstacle{
 
 				setAnimate(false);
 				
-				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
-				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
+				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
+				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
 				remove();
 			}
 			@Override

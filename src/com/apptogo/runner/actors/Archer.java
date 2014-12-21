@@ -182,17 +182,15 @@ public class Archer extends Character{
 	
 	public void shootArrows()
 	{
-		if(alive){
-			if(!touchGround){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
-			}
-			else{
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
-			}
-			Arrow arrow = arrowsPool.obtain();
-			arrow.init();
-	        activeArrows.add(arrow);
+		if(!!flags.isOnGround()){
+			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
 		}
+		else{
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+		}
+		Arrow arrow = arrowsPool.obtain();
+		arrow.init();
+        activeArrows.add(arrow);
 	}
 	
 	private void freePools(){

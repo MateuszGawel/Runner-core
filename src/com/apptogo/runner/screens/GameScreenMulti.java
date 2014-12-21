@@ -153,8 +153,8 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				CustomActionManager.getInstance().registerAction(new CustomAction(0, 1, sender.character, (float)data.getDouble("X"), (float)data.getDouble("Y")) {
 					@Override
 					public void perform() {
-						//((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
-						((Character)args[0]).jump(1, 1, 0, 0, false);
+						((Character)args[0]).getBody().setTransform(new Vector2((Float)args[1], (Float)args[2]), 0);
+						((Character)args[0]).jump(1, 1, 0, 0);
 					}
 				});
 			}

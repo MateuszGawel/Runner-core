@@ -188,15 +188,13 @@ public class Alien extends Character{
 	
 	public void lift()
 	{
-		if(alive){
-			if(!touchGround){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
-			}
-			else{
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
-			}
-			liftField.init();
+		if(!flags.isOnGround()){
+			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
 		}
+		else{
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+		}
+		liftField.init();
 	}
 
 	@Override

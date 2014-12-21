@@ -15,6 +15,7 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
@@ -40,116 +41,53 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
+	
+	public FlagsHandler flags;
+	
 	private World world;
 	private CustomActionManager customActionManager = CustomActionManager.getInstance();
-	
-	protected boolean me = false;
-	protected boolean alive = true;
-	protected boolean touchGround = false;
-	protected boolean canJump = true;
-	protected boolean touchBarrel = false;
-	protected boolean sliding = false;
-	protected boolean immortal = false;
-	protected boolean blinking = false;
-	protected boolean visible = true;
-	protected boolean running = false;
-	protected boolean stopped = false;
-	protected boolean touchWall = false;
-	protected boolean canStandup = true;
-	protected boolean jumped = false;
-	protected boolean doubleJump = false;
-	protected boolean started = false;
-	protected boolean dismemberment = false;
-	protected boolean actDismemberment = false; //zdarzenie smierci odpala sie z contact listenera podczas world.step() a wtedy nie mozna korzystac z poola lub tworzyc obiektow
-	protected boolean forceStandup = false;
-	protected boolean shouldLand = false;
-	protected boolean jumpedFromIdle = false;
-	protected boolean minimumSlidingTimePassed = false;
-	protected boolean slideButtonTouched = false;
-	protected boolean touchSwamp = false;
-	protected boolean boostedOnce = false;
-	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
-	protected HashMap<String, Boolean> soundInstances = new HashMap<String, Boolean>();
-	protected boolean stepSoundPlayed = false;
-	protected long stepSoundId = 0;
-	protected boolean leftRotationSensorTouching, rightRotationSensorTouching;
-	protected boolean gameIsEnded = false;
-	protected boolean rotatingLeft, rotatingRight;
-	protected boolean forceNormalJump;
-	protected boolean headTouch;
-	
-	protected int wallSensor = 0;
-	protected int footSensor = 0;
-	protected int standupSensor = 0;
-	protected int jumpSensor = 0;
-	protected int barrelSensor = 0;
-	protected int leftRotationSensor, rightRotationSensor;
-	protected float speed = 0;
-	protected float jumpHeight = 4;
-	protected float headSensor;
-	
-	protected float playerSpeedLimit = 12;
-	protected float playerMinSpeed = 3;
-	protected float playerSlowAmmount = 0;
-	
-	protected float playerSwampSlowAmmount = 0;
-	
 	protected Body body;
+	protected TextureRegion currentFrame;
+	protected Character character = this;
+	public AnimationManager animationManager;
+	protected ArrayList<BodyMember> bodyMembers;
+	
+	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
+	protected boolean stepSoundPlayed;
+	protected long stepSoundId;
+	
+	public float speed = 0;
+	public float playerSpeedLimit = 12;
+	public float playerMinSpeed = 3;
+	public float playerSlowAmmount = 0;
+	public float speedBeforeLand;
+	
 	protected Vector2 deathPosition;
 	
-	protected TextureRegion currentFrame;
-	
-	protected Character character = this;
-	
 	protected Skin guiSkin;
-	
 	protected String jumpButtonStyleName;
 	protected String slideButtonStyleName; 
 	protected String slowButtonStyleName;
-	
-	protected AnimationManager animationManager;
-		
-	protected ArrayList<BodyMember> bodyMembers;
-
 	protected Array<Button> powerupButtons;
 
-	private boolean isPowerupSet = false;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
 	{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		guiSkin = ResourcesManager.getInstance().getGuiSkin();
-		bodyMembers = new ArrayList<BodyMember>();
 		
+		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;
 		this.slowButtonStyleName = slowButtonStyleName;
-		
 		powerupButtons = new Array<Button>();
+		
 		addSounds();
+		
+		flags = new FlagsHandler();
+		flags.setCharacter(this);
 	}
-	
-//	
-//	private void playSound(CharacterSound sound, boolean loop){
-//		sounds.get(sound).play();
-//	}
-//
-//	private void stopSound(CharacterSound sound, boolean loop){
-//		sounds.get(sound).stop();
-//	}
-//	
-
-//	private void playSound(CharacterSound soundType){
-//		if(soundInstances.get(soundType) == null){
-//			soundInstances.put(soundType, sounds.get(soundType).play());
-//			sounds.get(soundType).setLooping(soundInstances.get(soundType), true);
-//		}
-//		else{
-//			sounds.get(soundType).resume();
-//		}
-//	}
 	
 	
     private void addSounds(){
@@ -162,6 +100,8 @@ public abstract class Character extends Actor{
     }
     
 	protected void createBody(){
+		bodyMembers = new ArrayList<BodyMember>();
+		
 		Vector2 bodySize = new Vector2(23 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -244,110 +184,110 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
 	}
 	
-	public boolean start()
+	public void start()
 	{
-		if(!running && alive && !gameIsEnded)
+		if(flags.isCanBegin())
 		{		
 			if(!stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
 			}
-			running = true;
-			started = true;
-			if(touchGround || touchBarrel){
+			flags.setBegan(true);
+			if(flags.isOnGround()){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
-			return true;
 		}
-		else return false;
 	}
 	
-	/** Defaults - 1, 1, 0, 0 - Jumps for jumpHeight set to character and current x speed **/
-	public boolean jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd, boolean forceJump)
+	public void jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd){
+		if(flags.isCanDoubleJump()){
+			doubleJump();
+		}
+		else if(flags.isCanJump()){
+			normalJump(xMultiplier, yMultiplier, xAdd, yAdd);	
+		}
+	}
+	
+	private void normalJump(float xMultiplier, float yMultiplier, float xAdd, float yAdd)
 	{
-		if(forceJump){
-			land();
-			doubleJump = false;
-		}
+		flags.setBoostedOnce(false);
+		flags.setSliding(false);
 		
-		if(/*started && */alive && canStandup && !headTouch && ((doubleJump || forceNormalJump) || forceJump || touchWall || canJump || touchBarrel || !me) && (!touchSwamp || (touchSwamp && touchWall)))
-		{
-			boostedOnce = false;
-			if(sliding){
-				body.getFixtureList().get(0).setSensor(false);
-				body.getFixtureList().get(1).setSensor(false);
-				body.getFixtureList().get(2).setSensor(true);
-				sliding = false;
-			}
-			jumped = true;
-			if(speed < 0.1f) jumpedFromIdle = true;
+		layFixtures(false);
 
-			if(!doubleJump || forceNormalJump){
-				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
-				float x = body.getLinearVelocity().x;
-				body.setLinearVelocity(x*xMultiplier + xAdd, y*yMultiplier + yAdd);
-				animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-				doubleJump = true;
-			}
-			else{
-				float y = (float) sqrt(-world.getGravity().y * 2 * jumpHeight);
-				float x = body.getLinearVelocity().x;
-				body.setLinearVelocity(x * 0.5f, y * 0.7f );
-				doubleJump = false;
-			}
-			
-			if(stepSoundPlayed){
-				sounds.get(CharacterSound.STEPS).stop();
-				stepSoundPlayed = false;
-			}
-			sounds.get(CharacterSound.JUMP).play();
-			return true;
+		float y = (float) sqrt(-world.getGravity().y * 8);
+		float x = body.getLinearVelocity().x;
+		body.setLinearVelocity(x*xMultiplier + xAdd, y*yMultiplier + yAdd);
+		animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+		
+		if(stepSoundPlayed){
+			sounds.get(CharacterSound.STEPS).stop();
+			stepSoundPlayed = false;
 		}
-		else return false;
+		sounds.get(CharacterSound.JUMP).play();
+		
+		NotificationManager.getInstance().notifyJump(getBody().getPosition(), 1, 1, 0, 0, false);
 	}	
+	
+	private void doubleJump(){
+		float y = (float) sqrt(-world.getGravity().y * 8);
+		float x = body.getLinearVelocity().x;
+		body.setLinearVelocity(x * 0.8f, y * 0.7f );
+		flags.setDoubleJumped(true);
+	}
+	
 	public void land()
 	{
-		if(shouldLand && animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING)
+		if(flags.isCanLand())
 		{
-			doubleJump = false;
-			jumpedFromIdle = false;
-			touchGround = true;
-			jumped = false;
-			if(speed > 0.05f)
+			flags.setDoubleJumped(false);
+			if(speed > 0.05f){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
+				if(!stepSoundPlayed){
+					stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+					stepSoundPlayed = true;
+				}
+			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 			sounds.get(CharacterSound.LAND).play(0.3f);
-			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
-				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
-				stepSoundPlayed = true;
-			}
 		}
 	}
 	
 	public void boostAfterLand(){
-		//Logger.log(this, "boost " + shouldLand + running + touchWall);
-		if((animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animationManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) &&
-			!boostedOnce && alive && !sliding && running && !touchWall){
-			body.setLinearVelocity(((UserData)getBody().getUserData()).speedBeforeLand, 0);
-			Logger.log(this, "boost do predkosci: " + ((UserData)getBody().getUserData()).speedBeforeLand);
-			boostedOnce = true;
+		if(flags.isCanBoost()){
+			body.setLinearVelocity(speedBeforeLand, 0);
+			flags.setBoostedOnce(true);
+			Logger.log(this, "BOOST!");
 		}
 	}
 	
-	public boolean slide()
-	{
-		if(/*started && */ alive && (touchGround || !me) && !sliding)
-		{
-			sliding = true;
-			minimumSlidingTimePassed = false;
+	private void layFixtures(boolean layFixture){
+		if(layFixture){
 			body.getFixtureList().get(0).setSensor(true); 
-			body.getFixtureList().get(1).setSensor(true);//wy³¹cz kolizje stoj¹cego body
-			body.getFixtureList().get(2).setSensor(false); //w³¹cz kolizjê le¿¹cego body
+			body.getFixtureList().get(1).setSensor(true);
+			body.getFixtureList().get(2).setSensor(false);
+		}
+		else{
+			body.getFixtureList().get(0).setSensor(false); 
+			body.getFixtureList().get(1).setSensor(false);
+			body.getFixtureList().get(2).setSensor(true);
+		}
+	}
+	
+	public void slide()
+	{
+		if(flags.isCanSlide())
+		{
+			flags.setSliding(true);
+			layFixtures(true);
+			flags.setMinimumSlidingTimePassed(false);
+			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.BEGINSLIDING);
-			//slowPlayerBy(0.5f);
+			slowPlayerBy(0.5f);
+			
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
@@ -355,106 +295,86 @@ public abstract class Character extends Actor{
 			sounds.get(CharacterSound.SLIDE).play();
 			
 			customActionManager.registerAction(new CustomAction(0.6f) {
-				
 				@Override
 				public void perform() {
-					minimumSlidingTimePassed = true;
-					if(!slideButtonTouched) standUp();
+					flags.setMinimumSlidingTimePassed(true);
+					if(!flags.isSlideButtonPressed()) standUp();
 				}
 			});
 			NotificationManager.getInstance().notifySlide(getBody().getPosition());
-			return true;
 		}
-		else if(!touchGround){
+		else if(!flags.isOnGround()){
 			body.setLinearVelocity( body.getLinearVelocity().x, -30f );
-			return true;
 		}
-		else return false;
 	}
 	
-	public boolean standUp()
+	public void standUp()
 	{
-		if(alive && sliding && canStandup && minimumSlidingTimePassed){
-			sliding = false;
-			body.getFixtureList().get(0).setSensor(false);
-			body.getFixtureList().get(1).setSensor(false);
-			body.getFixtureList().get(2).setSensor(true);
+		if(flags.isCanStandUp()){
+			flags.setSliding(false);
+			layFixtures(false);
 
 			animationManager.setCurrentAnimationState(CharacterAnimationState.STANDINGUP);
-			//speedPlayerBy(0.5f);
+			speedPlayerBy(0.5f);
 
-			if(body.getLinearVelocity().x > 0.01f && !stepSoundPlayed){
+			if(speed > 0.01f && !stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
 			}
 			NotificationManager.getInstance().notifyStandUp(getBody().getPosition());
-			return true;
 		}
-		else if(!canStandup){
-			forceStandup = true;
-			return false;
+		else{
+			flags.setForceStandUp(true);
 		}
-		else return false;
 	}
 
-	public boolean dieTop()
+	public void dieTop()
 	{
-		if(alive){
+		if(flags.isCanDie()){
 			sounds.get(CharacterSound.DEATH).play();
-			boolean success = die();
+			die();
 			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGTOP);
-			return success;
 		}
-		return false;
 	}
 
-	public boolean dieBottom()
+	public void dieBottom()
 	{
-		if(alive){
+		if(flags.isCanDie()){
 			sounds.get(CharacterSound.DEATH).play();
-			boolean success = die();
+			die();
 			animationManager.setCurrentAnimationState(CharacterAnimationState.DIEINGBOTTOM);
-			return success;
 		}
-		return false;
 	}
 
-	public boolean dieDismemberment()
+	public void dieDismemberment()
 	{
-		if(alive){
+		if(flags.isCanDie()){
 			getBody().setLinearVelocity(0,0);
 			sounds.get(CharacterSound.EXPLODE).play();
-			dismemberment = true;
-			visible = false;
-			actDismemberment = true;   
-			boolean success = die();
-				
-			return success;
+			for(BodyMember bodyMember : bodyMembers){
+				bodyMember.init();
+			}  
+			die();
 		}
-		return false;
 	}
 	
 	private boolean die()
 	{
 		playerSlowAmmount = 0;
-		if(alive)
+		if(flags.isAlive())
 		{
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
 			}
-			alive = false;
-			running = false;
-			sliding = false;
-			jumped = false;
+			flags.setAlive(false);
+			flags.setSliding(false);
 			
 			deathPosition = new Vector2(body.getPosition());
 			customActionManager.registerAction(new CustomAction(1f) {
-				
 				@Override
 				public void perform() {
-					dismemberment = false;
-					respawn();
+					respawn();	
 				}
 			});
 			return true;
@@ -463,94 +383,25 @@ public abstract class Character extends Actor{
 	}
 	public void respawn()
 	{
-		handleImmortality(2.0f);
-		
-		alive = true;
+		//handleImmortality(2.0f);
+		//do zrobienia mechanizm na akcjach
+		//ustawic mruganie i immortality, po 2s wylaczyc mruganie + immortal
+		flags.setAlive(true);
 		body.setTransform(deathPosition, 0);
-		
-		
 		start();
 	}
 	
 	abstract public void useAbility(CharacterAbilityType abilityType);
-		
-	public void incrementWallSensor(){
-		wallSensor++;
-	}
 	
-	public void incrementBarrelSensor(){
-		if(!touchBarrel)
-			barrelSensor++;
-	}
-	
-	public void decrementWallSensor(){
-		wallSensor--;
-	}
-	
-	public void incrementFootSensor(){
-		footSensor++;
-	}
-	
-	public void decrementJumpSensor(){
-		jumpSensor--;
-	}
-	
-	public void incrementJumpSensor(){
-		jumpSensor++;
-	}
-	
-	public void decrementFootSensor(){
-		footSensor--;
-	}
-	public void incrementHeadSensor(){
-		headSensor++;
-	}
-	public void decrementHeadSensor(){
-		headSensor--;
-	}
-	public void incrementStandupSensor(){
-		standupSensor++;
-	}
-	public void decrementStandupSensor(){
-		standupSensor--;
-	}
-	public void decrementBarrelSensor(){
-		if(touchBarrel)
-			barrelSensor--;
-	}
-	
-	public void incrementLeftRotationSensor(){
-		leftRotationSensor++;
-	}
-	public void decrementLeftRotationSensor(){
-		leftRotationSensor--;
-	}
-	public void incrementRightRotationSensor(){
-		rightRotationSensor++;
-	}
-	public void decrementRightRotationSensor(){
-		rightRotationSensor--;
-	}
-	
-	public boolean slowPlayerBy(float percent){
-		if(percent < 0 || percent > 1)
-			return false;
-		else
+	public void slowPlayerBy(float percent){
+		if(!(percent < 0 || percent > 1))
 			playerSlowAmmount += playerSpeedLimit * percent;
-		return true;
 	}
-	public boolean speedPlayerBy(float percent){
-		if(percent < 0 || percent > 1)
-			return false;
-		else
+	public void speedPlayerBy(float percent){
+		if(!(percent < 0 || percent > 1))
 			playerSlowAmmount -= playerSpeedLimit * percent;
-		return true;
 	}
 	
-	public boolean superJump()
-	{
-		return jump(2, 2, 0, 0, true);
-	}
 	private void superRun()
 	{
 		speedPlayerBy(0.7f);
@@ -565,326 +416,195 @@ public abstract class Character extends Actor{
 	
 	
 	/*--- HANDLERS ---*/
-	public void handleImmortality(float immortalityLenght)
-	{
-		immortal = true;
-		blinking = true;
-		customActionManager.registerAction(new CustomAction(immortalityLenght) {
-			
-			@Override
-			public void perform() {
-				immortal = false;
-				blinking = false;
-			}
-		});
-	}
-	
-	private void handleBlinking()
-	{
-		setVisible(visible);
+	private void handleQueuedActions(){
+		if(flags.isQueuedJump()){
+			character.jump(1, 1, 0, 0);
+			flags.setQueuedJump(false);
+		}
 		
-		if(!dismemberment){
-			if(blinking && visible){
-				customActionManager.registerAction(new CustomAction(0.08f) {
-					@Override
-					public void perform() {
-						visible = false;
-					}
-				});
-			}
-			else if(blinking && !visible){
-				customActionManager.registerAction(new CustomAction(0.08f) {
-					@Override
-					public void perform() {
-						visible = true;
-					}
-				});
-			}
-			else if(!blinking){
-				visible = true;
-			}
+		if(flags.isQueuedBoost()){
+			boostAfterLand();
+			flags.setQueuedBoost(false);
 		}
 	}
 	
+	private void handleActions(){
+		land();
+	}
+	
 	private void handleStopping(){
-		if(alive && Math.abs(speed) < 0.5f && !stopped && touchGround && !sliding){			
+		if(flags.isShouldStop()){		
+			flags.setStopped(true);
+			
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
 			}
-			stopped = true;
 			if(animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 			}
 		}
-		else if(alive && Math.abs(speed) > 0.5f && stopped && !sliding){
-			if(touchGround){
-				if(!stepSoundPlayed){
-					stepSoundId = sounds.get(CharacterSound.STEPS).loop();
-					stepSoundPlayed = true;
-				}
+		else if(flags.isShouldStart()){
+			if(flags.isOnGround() && !stepSoundPlayed){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
 			}
-			stopped = false;
+			flags.setStopped(false);
 		}
 	}
 
-	private void handleSensors(){
-		if(wallSensor > 0){
-			touchWall = true;
-			forceNormalJump = true;
-		}
-		else{
-			touchWall = false;
-			forceNormalJump = false;
-		}
-		
-		if(footSensor > 0){
-			if(!touchGround && !touchBarrel)
-				land();
-			touchGround = true;
-		}
-		else
-			touchGround = false;
-		
-		if(standupSensor > 0)
-			canStandup = false;
-		else
-			canStandup = true;
-		if(headSensor > 0)
-			headTouch = true;
-		else
-			headTouch = false;
-		
-		if(barrelSensor > 0){
-			if(!touchGround && !touchBarrel)
-				land();
-			touchBarrel = true;
-		}
-		else
-			touchBarrel = false;
-		
-		if(jumpSensor > 0){
-			canJump = true;
-		}
-		else
-			canJump = false;
-		
-		if(leftRotationSensor > 0)
-			leftRotationSensorTouching = true;
-		else
-			leftRotationSensorTouching = false;
-		if(rightRotationSensor > 0)
-			rightRotationSensorTouching = true;
-		else
-			rightRotationSensorTouching = false;
-		
-		touchSwamp = ((UserData)getBody().getUserData()).touchSwamp;
-	}
-	
-
-	
-	/**metoda obslugujaca slowy z ContactListnera*/
-	private void handleSlowing(){
-		playerSwampSlowAmmount = playerSpeedLimit * ((UserData)body.getUserData()).slowPercent;
-	}
-	
-
-	
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(running && (speed < playerSpeedLimit - playerSlowAmmount - playerSwampSlowAmmount || speed <= playerMinSpeed))
-			//body.setLinearVelocity(playerSpeedLimit, 0);
-			if(!jumped){
+		if(flags.isCanRun()){
+			if(flags.isOnGround())
 				body.applyForceToCenter(new Vector2(3000, 0), true);
-				Logger.log(this, ((UserData)body.getUserData()).playerName + " predkosc: " + body.getLinearVelocity().x);
-			}
-			else
-				body.applyForceToCenter(new Vector2(3000 - 20*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
-		if((touchGround || touchBarrel) && speed > 1f && animationManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
+			else if(this.getBody().getLinearVelocity().x <= 0.01)
+					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
+//					body.applyForceToCenter(new Vector2(3000 - 20*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
+		}
+		if(flags.isShouldChangeToRunningState())
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING); //czy to potrzebne?
 	}
 	
 	private void handleStepSoundSpeed(){
 		if(stepSoundId != 0)
 			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/12);
 	}
-	
-	private void handleDismemberment(){
-		if(actDismemberment){
-			actDismemberment = false;
-			for(BodyMember bodyMember : bodyMembers){
-				bodyMember.init();
-			}
-		}
-	}
+
 	private void handleStandingUp(){
-		if(forceStandup && canStandup && sliding){
+		if(flags.isForceStandUp() && flags.isCanStandUp()){
 			standUp();
-			forceStandup = false;
-		}
-	}
-	
-	private void handleShouldLand(){
-		if(alive && !sliding && !(touchGround || touchBarrel) && 
-				(animationManager.getCurrentAnimationState() == CharacterAnimationState.JUMPING 
-				|| animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYING 
-				|| animationManager.getCurrentAnimationState() == CharacterAnimationState.FLYBOMB) &&
-				animationManager.getCurrentAnimationState() != CharacterAnimationState.LANDING
-			){
-				shouldLand = true;
-		}
-		else{
-			shouldLand = false;
+			flags.setForceStandUp(false);
 		}
 	}
 	
 	private void handleDying(){
-		if(((UserData)body.getUserData()).dieBottom){
+		if(flags.isDieBottom()){
 			dieBottom();
-			((UserData)body.getUserData()).dieBottom = false;
+			flags.setDieBottom(false);
 		}
-		else if(((UserData)body.getUserData()).dieTop){
+		else if(flags.isDieTop()){
 			dieTop();
-			((UserData)body.getUserData()).dieTop = false;
+			flags.setDieTop(false);
+		}
+		else if(flags.isDieDismemberment()){
+			dieTop();
+			flags.setDieTop(false);
 		}
 	}
 	
 	private void handleFlying(){
-		if(!canJump && !touchGround && !touchWall && !touchBarrel){
+		if(flags.isShouldFly()){
 			CustomAction action = new CustomAction(0.1f, 1, this) {
 				@Override
 				public void perform() {
-					if(!canJump && !touchGround && !touchWall && !touchBarrel && alive && animationManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING){
+					if(flags.isShouldFly()){
 						animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
-						boostedOnce = false;
+						flags.setBoostedOnce(false);
 						if(stepSoundPlayed){
 							sounds.get(CharacterSound.STEPS).stop();
 							stepSoundPlayed = false;
 						}
 					}
-						
 				}
 			};
 			
 			customActionManager.registerAction(action);
-			if(canJump || touchGround || touchWall || touchBarrel){
+			if(flags.isStopFlyingAction()){
 				action.setFinished(true);
 			}
 		}
 	}
 	
-	private void rotateLeft(boolean toZero){
-		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
-			@Override
-			public void perform() {
-				Logger.log(this, "rotateLeft angle: " + getBody().getAngle());
-				if(leftRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() >= 0)){
-					rotatingLeft = false;
-					setFinished(true);
-				}
-				else
-					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() + 0.05f);
-			}
-		});
-	}
-	
-	private void rotateRight(boolean toZero){
-		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
-			@Override
-			public void perform() {
-				Logger.log(this, "rotateRight angle: " + getBody().getAngle());
-				if(rightRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() <= 0)){
-					rotatingRight = false;
-					setFinished(true);
-				}
-				else
-					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() - 0.05f);
-			}
-		});
-	}
-	
-
-	private void handleRotation(){
-		if(!touchWall){
-			if(!leftRotationSensorTouching && !rightRotationSensorTouching){
-				if(getBody().getAngle() <= 0.1){
-					if(!rotatingLeft)rotateLeft(true);
-					rotatingLeft = true;
-				}
-				else if(getBody().getAngle() >= 0.1){
-					if(!rotatingRight)rotateRight(true);
-					rotatingRight = true;
-				}
-			}
-			else if(!rightRotationSensorTouching){
-				if(!rotatingRight) rotateRight(false);
-				rotatingLeft = false;
-				rotatingRight = true;
-			}
-			else if(!leftRotationSensorTouching){
-				if(!rotatingLeft) rotateLeft(false);
-				rotatingLeft = true;
-				rotatingRight = false;
-			}
-		}
-	}
+//	private void rotateLeft(boolean toZero){
+//		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
+//			@Override
+//			public void perform() {
+//				if(leftRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() >= 0)){
+//					rotatingLeft = false;
+//					setFinished(true);
+//				}
+//				else
+//					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() + 0.05f);
+//			}
+//		});
+//	}
+//	
+//	private void rotateRight(boolean toZero){
+//		customActionManager.registerAction(new CustomAction(0.00001f, 0, toZero) {	
+//			@Override
+//			public void perform() {
+//				if(rightRotationSensorTouching || ((Boolean)args[0] && getBody().getAngle() <= 0)){
+//					rotatingRight = false;
+//					setFinished(true);
+//				}
+//				else
+//					getBody().setTransform(getBody().getPosition().x, getBody().getPosition().y, getBody().getAngle() - 0.05f);
+//			}
+//		});
+//	}
+//	
+//
+//	private void handleRotation(){
+//		if(!touchWall){
+//			if(!leftRotationSensorTouching && !rightRotationSensorTouching){
+//				if(getBody().getAngle() <= 0.1){
+//					if(!rotatingLeft)rotateLeft(true);
+//					rotatingLeft = true;
+//				}
+//				else if(getBody().getAngle() >= 0.1){
+//					if(!rotatingRight)rotateRight(true);
+//					rotatingRight = true;
+//				}
+//			}
+//			else if(!rightRotationSensorTouching){
+//				if(!rotatingRight) rotateRight(false);
+//				rotatingLeft = false;
+//				rotatingRight = true;
+//			}
+//			else if(!leftRotationSensorTouching){
+//				if(!rotatingLeft) rotateLeft(false);
+//				rotatingLeft = true;
+//				rotatingRight = false;
+//			}
+//		}
+//	}
 
 	@Override
 	public void act(float delta) 
 	{
-		handleBlinking();
-		handleSensors();
-		handleSlowing();
+		flags.update();
+		handleQueuedActions();
+		handleActions();
 		handleRunning();
 		handleStopping();
-		handleDismemberment();
 		handleStandingUp();
 		handleStepSoundSpeed();
 		handleDying();
-		handleShouldLand();
 		handleFlying();
 		//handleRotation();
 		
 		currentFrame = animationManager.animate(delta);
-		//Logger.log(this, "char wykonuje sie z takim delta: " + delta + " i statetime: " + animationManager.stateTime);
+
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         
-	}
-	
-	public boolean isAlive(){ return this.alive; }
-	public boolean setRunning(boolean running)
-	{ 
-		if( !gameIsEnded )
-		{
-			this.running = running; 
-			return true;
-		}
-		else
-		{
-			this.running = false;
-			return false;
-		}
-	} 
+	}	
+//	public void handleGameFinished()
+//	{
+//		sounds.get(CharacterSound.VICTORY).play(0.4f);
+//		gameIsEnded = true;
+//	}
+//	
 	public Body getBody(){ return this.body; }
-	public boolean isImmortal(){ return this.immortal; }
 	public float getSpeed(){ return this.speed; }
-	public boolean isStarted(){ return this.started; }
-	
-	public void endGame()
-	{
-		sounds.get(CharacterSound.VICTORY).play(0.4f);
-		gameIsEnded = true;
-	}
-	
+
 	public abstract CharacterType getCharacterType();	
 
-	/* do zaimplementowania potem przy umiejetnosciach klasowych
-	public abstract Button getAbilityButton();
-	*/
 	
+	//POWERUPS
 	public Button getJumpButton()
 	{
 		Button jumpButton = new Button(guiSkin, this.jumpButtonStyleName);
@@ -900,11 +620,7 @@ public abstract class Character extends Actor{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
-				if( character.jump(1, 1, 0, 0, false))
-				{
-					NotificationManager.getInstance().notifyJump(getBody().getPosition(), 1, 1, 0, 0, false);
-				}
-				
+				flags.setQueuedJump(true);
 		        return true;
 		    }
 		});
@@ -925,14 +641,14 @@ public abstract class Character extends Actor{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 			{
-				slideButtonTouched = true;
+				flags.setSlideButtonPressed(true);
 				character.slide();
 		        return true;
 		    }
 			@Override
 		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
 			{
-				slideButtonTouched = false;
+				flags.setSlideButtonPressed(false);
 				character.standUp();
 		    }
 		});
@@ -951,7 +667,8 @@ public abstract class Character extends Actor{
 				@Override
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 				{
-					if(started && alive) character.usePowerup( powerupType );
+					if(flags.isCanUseAbility()) 
+						character.usePowerup( powerupType );
 			        return true;
 			    }
 			});
@@ -967,11 +684,6 @@ public abstract class Character extends Actor{
 		if( powerupType == PowerupType.NONE )
 		{
 			//pass
-		}
-		else if( powerupType == PowerupType.SUPERJUMP )
-		{
-			if(character.superJump())
-				removePowerup(PowerupType.SUPERJUMP);
 		}
 		else if( powerupType == PowerupType.SUPERSPEED )
 		{
@@ -990,7 +702,7 @@ public abstract class Character extends Actor{
 			removePowerup(PowerupType.ABILITY1);
 		}
 		
-		this.isPowerupSet  = false;
+		flags.setPowerupSet(false);
 	}
 
 	public void setPowerup(PowerupType powerupType) 
@@ -1000,7 +712,7 @@ public abstract class Character extends Actor{
 				button.setVisible(true);
 			}
 		}
-		this.isPowerupSet  = true;
+		flags.setPowerupSet(true);
 	}
 	
 	public void removePowerup(PowerupType powerupType) 
@@ -1010,13 +722,6 @@ public abstract class Character extends Actor{
 				button.setVisible(false);
 			}
 		}
-		this.isPowerupSet  = false;
+		flags.setPowerupSet(false);
 	}
-
-	public boolean isPowerupSet() 
-	{
-		return this.isPowerupSet;
-	}
-	public void setMe(boolean me){ this.me = me; }
-
 }

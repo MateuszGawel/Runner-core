@@ -1,10 +1,7 @@
 package com.apptogo.runner.listeners;
 
-import static java.lang.Math.sqrt;
-
-import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.enums.PowerupType;
-import com.apptogo.runner.exception.PlayerDoesntExistException;
+import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -20,11 +17,9 @@ import com.badlogic.gdx.physics.box2d.World;
 public class MyContactListener implements ContactListener
 {
 	private GameWorld gameWorld;
-	private World world;
 	
-	public MyContactListener(GameWorld gameWorld, World world)
+	public MyContactListener(GameWorld gameWorld)
 	{
-		this.world = world;
 		this.gameWorld = gameWorld;
 	}
 
@@ -34,32 +29,146 @@ public class MyContactListener implements ContactListener
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);		
-		
-		//smierc TOP
-		if(checkFixturesTypes(fa, fb, "killingTop", "player")){	
-			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
-				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieTop = true;
+
+		if(player != null){
+			FlagsHandler flags = player.character.flags;
+			
+			//smierc TOP
+			if(checkFixturesTypes(fa, fb, "killingTop", "player")){	
+				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+					flags.setDieTop(true);
+				}
 			}
-		}
-		
-		//smierc BOTTOM
-		if( checkFixturesTypes(fa, fb, "killingBottom", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
-				((UserData)getFixtureByType(fa, fb, "player").getBody().getUserData()).dieBottom = true;
+			
+			//smierc BOTTOM
+			if( checkFixturesTypes(fa, fb, "killingBottom", "player")){
+				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+					flags.setDieBottom(true);
+				}
 			}
-		}
-		
-		//smierc od ogniska
-		if( checkFixturesTypes(fa, fb, "bonfire", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
-				player.character.dieDismemberment();
+			
+			//smierc od ogniska
+			if( checkFixturesTypes(fa, fb, "bonfire", "player")){
+				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+					flags.setDieDismemberment(true);
+				}
+			}	
+	
+			//sensory playera
+			if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
+				flags.incrementFootSensor();
+			}		
+			if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
+				flags.incrementJumpSensor();
+			}	
+			if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
+				flags.incrementWallSensor();
 			}
-		}
-		
-		//smierc od krzaczka (troche workaround i ginie sie na standup sensor)
-		if( checkFixturesTypes(fa, fb, "bush", "standupSensor")){
-			if(player.character.isAlive() && !player.character.isImmortal() && !getFixtureByType(fa, fb, "player").isSensor()){
-				((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).dieBottom = true;
+			if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
+				flags.incrementStandupSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "headSensor", "nonkilling")){
+				flags.incrementHeadSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
+				flags.incrementBarrelSensor();
+			}
+	//		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
+	//			player.character.incrementLeftRotationSensor();
+	//		}
+	//		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
+	//			player.character.incrementRightRotationSensor();
+	//		}
+			
+			//boost po l¹dowaniu
+			if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){
+				flags.setQueuedBoost(true);
+			}	
+			
+			//beczki
+			if(checkFixturesTypes(fa, fb, "barrel", "player") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
+				
+				Fixture playerFixture = getFixtureByType(fa, fb, "player");
+				if(playerFixture == null)
+					playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
+				Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");			
+				
+				if(!((UserData)barrelFixture.getBody().getUserData()).active){
+					((UserData)barrelFixture.getBody().getUserData()).active = true;
+					((UserData)barrelFixture.getBody().getUserData()).playSound = true;
+				}
+					
+				if(flags.isCanDie() &&
+						(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f 
+								|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
+				{
+					flags.setDieBottom(true);
+					((UserData)barrelFixture.getBody().getUserData()).playSound = true;
+				}
+			}
+	
+			//bagno
+			if(checkFixturesTypes(fa, fb, "swamp", "footSensor")){
+				if(flags.isCanDie())
+					flags.incrementSwampSensor();
+			}
+			
+			//trampolina grzyb
+			if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
+				Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
+				if(flags.isAlive()){	
+					flags.incrementMushroomSensor();
+					mushroomFixture.setUserData( new UserData("mushroomWorking") );
+				}
+			}
+			
+			//katapulta
+			if( checkFixturesTypes(fa, fb, "catapult", "footSensor")){
+				Fixture catapultFixture = getFixtureByType(fa, fb, "catapult");
+				if(flags.isAlive())
+				{		
+					flags.incrementCatapultSensor();
+					catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
+				}		
+			}
+			
+			//coin
+			if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
+				Fixture fixture = getFixtureByType(fa, fb, "coin");
+				fixture.getBody().setUserData(new UserData("inactive"));
+			}
+			
+			//powerup
+			if(checkFixturesTypes(fa, fb, "powerup", "player")){
+				if(!flags.isPowerupSet())
+				{
+					Fixture fixture = getFixtureByType(fa, fb, "powerup");
+					
+					String powerupKey = ((UserData)fixture.getUserData()).powerup;
+					player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
+	
+					fixture.getBody().setUserData(new UserData("inactive"));
+				}
+			}
+			
+			//podnoszenie aliena dziala tylko w singlu - do zrobienia
+//			if(checkIsOneOfType(fa, fb, "liftField") && ((Alien)gameWorld.player.character).liftField.isActive()){
+//				Fixture fixture = getFixtureByType(fa, fb, "liftField");
+//				fixture = ( fixture == fb )?fa:fb; //bo chcemy fixture tego drugiego a nie liftField
+//				
+//				String fixtureType = ((UserData)fb.getUserData()).key;
+//				
+//				if( !( fixtureType.equals("player") || fixtureType.equa)ls("wallSensor") || fixtureType.equals("footSensor") ) )
+//				{
+//					((Alien)gameWorld.player.character).liftField.addBodyToLift( fixture.getBody() );
+//					
+//					fixture.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
+//				}
+//			}
+			
+			//meta - koniec gry
+			if(checkFixturesTypes(fa, fb, "player", "finishingLine")){
+				flags.setFinished(true);
 			}
 		}
 		
@@ -70,144 +179,9 @@ public class MyContactListener implements ContactListener
 			Fixture hedgeHogFixture = getFixtureByType(fa, fb, "hedgehog");
 			((UserData)hedgeHogFixture.getBody().getUserData()).changeDirection = true;
 		}
-
-
-		
-		//sensory playera
-		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
-			player.character.incrementFootSensor();
-			//player.character.land();
-		}
-		
-		if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
-			player.character.incrementJumpSensor();
-		}
-		
-		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
-			player.character.incrementWallSensor();
-		}
-		
-		if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
-			player.character.incrementStandupSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "headSensor", "nonkilling")){
-			player.character.incrementHeadSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
-			player.character.incrementBarrelSensor();
-			//player.character.land();
-		}
-		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
-			player.character.incrementLeftRotationSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
-			player.character.incrementRightRotationSensor();
-		}
-		
-		//boost po l¹dowaniu
-		if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
-				player.character.boostAfterLand();
-			}
-		}
-		
-		
-		//beczki (tu moze byc problem bo jesli blednie wbiegnie na beczki to rozwali)
-		if(checkFixturesTypes(fa, fb, "barrel", "player") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
-			
-			Fixture playerFixture = getFixtureByType(fa, fb, "player");
-			if(playerFixture == null)
-				playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
-			Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");
-			
-			
-			if(!((UserData)barrelFixture.getBody().getUserData()).active){
-				((UserData)barrelFixture.getBody().getUserData()).active = true;
-				((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-			}
-				
-			if(player.character.isAlive() && !player.character.isImmortal() && 
-					(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f 
-							|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
-			{
-				((UserData)playerFixture.getBody().getUserData()).dieBottom = true;
-				((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-			}
-		}
 		if(checkFixturesTypes(fa, fb, "barrel", "barrel")){
 			((UserData)fa.getBody().getUserData()).active = true;
 			((UserData)fb.getBody().getUserData()).active = true;
-		}
-
-		//bagno
-		if(checkFixturesTypes(fa, fb, "swamp", "footSensor")){
-			if(player.character.isAlive() && !player.character.isImmortal()){
-				((UserData)player.character.getBody().getUserData()).slowPercent = 0.8f;
-				((UserData)player.character.getBody().getUserData()).touchSwamp = true;
-			}
-		}
-		
-		//trampolina grzyb
-		if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
-			Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
-			if(player.character.isAlive()){	
-				player.character.incrementFootSensor();
-				player.character.jump(1, 1.6f, 2, 0, true);
-				mushroomFixture.setUserData( new UserData("mushroomWorking") );
-			}
-		}
-		
-		//katapulta
-		if( checkFixturesTypes(fa, fb, "catapult", "footSensor")){
-			Fixture catapultFixture = getFixtureByType(fa, fb, "catapult");
-			if(player.character.isAlive())
-			{		
-				player.character.incrementFootSensor();
-				player.character.jump(0, 1.2f, 25, 0, true);
-				catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
-			}		
-		}
-		
-		//coin
-		if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
-			Fixture fixture = getFixtureByType(fa, fb, "coin");
-			fixture.getBody().setUserData(new UserData("inactive"));
-		}
-		
-		//powerup
-		if(checkFixturesTypes(fa, fb, "powerup", "player")){
-			//dzia³a tylko na samego siebie. Inni nie podnosza moich powerupow
-			if(((UserData)getFixtureByType(fa, fb, "standupSensor").getBody().getUserData()).me){
-				if(!gameWorld.player.character.isPowerupSet() )
-				{
-					Fixture fixture = getFixtureByType(fa, fb, "powerup");
-					
-					String powerupKey = ((UserData)fixture.getUserData()).powerup;
-					gameWorld.player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
-	
-					fixture.getBody().setUserData(new UserData("inactive"));
-				}
-			}
-		}
-		
-		//podnoszenie aliena dziala tylko w singlu - do zrobienia
-		if(checkIsOneOfType(fa, fb, "liftField") && ((Alien)gameWorld.player.character).liftField.isActive()){
-			Fixture fixture = getFixtureByType(fa, fb, "liftField");
-			fixture = ( fixture == fb )?fa:fb; //bo chcemy fixture tego drugiego a nie liftField
-			
-			String fixtureType = ((UserData)fb.getUserData()).key;
-			
-			if( !( fixtureType.equals("player") || fixtureType.equals("wallSensor") || fixtureType.equals("footSensor") ) )
-			{
-				((Alien)gameWorld.player.character).liftField.addBodyToLift( fixture.getBody() );
-				
-				fixture.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
-			}
-		}
-		//meta - koniec gry
-		if(checkFixturesTypes(fa, fb, "player", "finishingLine")){
-			player.character.endGame();
-			player.character.setRunning(false);
 		}
 	}
 
@@ -218,62 +192,50 @@ public class MyContactListener implements ContactListener
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);
 		
-		if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
-			player.character.decrementFootSensor();
-			//Logger.log(this, "endcontact: " + ((UserData)fa.getUserData()).key + ((UserData)fb.getUserData()).key );
-		}
-		
-		if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
-			player.character.decrementWallSensor();
-		}
-		
-		if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
-			player.character.decrementJumpSensor();
-		}
-		
-		if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
-			player.character.decrementStandupSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "headSensor", "nonkilling")){
-			player.character.decrementHeadSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
-			player.character.decrementLeftRotationSensor();
-		}
-		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
-			player.character.decrementRightRotationSensor();
-		}
-		
-		if(checkIsOneOfType(fa, fb, "liftField")){
-			Fixture fixture = getFixtureByType(fa, fb, "liftField");
-			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
-		}
-		if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
-			player.character.decrementBarrelSensor();
-		}
-		
-		//bagno
-		if( checkFixturesTypes(fa, fb, "swamp", "footSensor") ){
-			if(player.character.isAlive() && !player.character.isImmortal()){
-				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-				((UserData)fixture.getBody().getUserData()).slowPercent = 0;
-				((UserData)player.character.getBody().getUserData()).touchSwamp = false;
+		if(player != null){
+			FlagsHandler flags = player.character.flags;
+			
+			if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
+				flags.decrementFootSensor();
 			}
-		}
-		
-		//trampolina grzyb
-		if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
-			if(player.character.isAlive()){	
-				player.character.decrementFootSensor();
+			if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
+				flags.decrementWallSensor();
 			}
-		}
-		
-		//katapulta
-		if( checkFixturesTypes(fa, fb, "catapult", "footSensor")){
-			if(player.character.isAlive())
-			{		
-				player.character.decrementFootSensor();
-			}		
+			if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){
+				flags.decrementJumpSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
+				flags.decrementStandupSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "headSensor", "nonkilling")){
+				flags.decrementHeadSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "footSensor", "mushroom")){
+				flags.decrementMushroomSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "footSensor", "swamp")){
+				flags.decrementSwampSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "footSensor", "catapult")){
+				flags.decrementCatapultSensor();
+			}
+	//		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
+	//			player.character.decrementLeftRotationSensor();
+	//		}
+	//		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
+	//			player.character.decrementRightRotationSensor();
+	//		}
+			
+			//liftField
+	//		if(checkIsOneOfType(fa, fb, "liftField")){
+	//			Fixture fixture = getFixtureByType(fa, fb, "liftField");
+	//			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
+	//		}
+			
+			//barrel
+			if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
+				flags.decrementBarrelSensor();
+			}
 		}
 	}
 
@@ -284,9 +246,12 @@ public class MyContactListener implements ContactListener
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);
 		
-		if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
-			Fixture fixture = getFixtureByType(fa, fb, "footSensor");
-			((UserData)fixture.getBody().getUserData()).speedBeforeLand = fixture.getBody().getLinearVelocity().x;
+		if(player != null)
+		{			
+			if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
+				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
+				if(player != null) player.character.speedBeforeLand = fixture.getBody().getLinearVelocity().x;
+			}
 		}
 		
 		//dŸwiêk krzaczka
@@ -385,13 +350,13 @@ public class MyContactListener implements ContactListener
 		if(((UserData)gameWorld.player.character.getBody().getUserData()).playerName.equals(playerName)){
 			player = gameWorld.player;
 		}
-		else{
-			try {
-				player = gameWorld.getEnemy(playerName);
-			} catch (PlayerDoesntExistException e) {
-				Logger.log(this, "There is no player with name: " + playerName);
-			}
-		}
+//		else{
+//			try {
+//				player = gameWorld.getEnemy(playerName);
+//			} catch (PlayerDoesntExistException e) {
+//				Logger.log(this, "There is no player with name: " + playerName);
+//			}
+//		}
 		return player;
 	}
 	

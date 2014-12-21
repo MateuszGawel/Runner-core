@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 
 public enum PowerupType
 {
-	NONE, SUPERJUMP, SUPERSPEED, ABILITY1;
+	NONE, SUPERSPEED, ABILITY1;
 	
 	public static Array<PowerupType> values;
 	
@@ -22,10 +22,6 @@ public enum PowerupType
 		if( key.equals( PowerupType.NONE.toString() ) )
 		{
 			return PowerupType.NONE;
-		}
-		else if( key.equals( PowerupType.SUPERJUMP.toString() ) )
-		{
-			return PowerupType.SUPERJUMP;
 		}
 		else if( key.equals( PowerupType.SUPERSPEED.toString() ) )
 		{
@@ -58,21 +54,6 @@ public enum PowerupType
 			else if(characterType == CharacterType.ALIEN)
 			{
 				button = new Button(skin, "alienBlankButton");
-			}
-		}
-		else if(powerupType == PowerupType.SUPERJUMP)
-		{
-			if(characterType == CharacterType.BANDIT)
-			{
-				button = new Button(skin, "banditSuperJumpButton");
-			}
-			else if(characterType == CharacterType.ARCHER)
-			{
-				button = new Button(skin, "archerSuperJumpButton");
-			}
-			else if(characterType == CharacterType.ALIEN)
-			{
-				button = new Button(skin, "alienSuperJumpButton");
 			}
 		}
 		else if(powerupType == PowerupType.SUPERSPEED)

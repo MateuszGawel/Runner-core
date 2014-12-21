@@ -176,17 +176,15 @@ public class Bandit extends Character{
 	
 	public void throwBombs()
 	{
-		if(started && alive){
-			if(!touchGround){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
-			}
-			else{
-				animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
-			}
-			Bomb bomb = bombsPool.obtain();
-			bomb.init();
-	        activeBombs.add(bomb);
+		if(!flags.isOnGround()){
+			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
 		}
+		else{
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
+		}
+		Bomb bomb = bombsPool.obtain();
+		bomb.init();
+        activeBombs.add(bomb);
 	}
 	
 	public void createBodyMembers(){
