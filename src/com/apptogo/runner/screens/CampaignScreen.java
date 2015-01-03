@@ -14,6 +14,7 @@ import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -45,6 +46,10 @@ public class CampaignScreen extends BaseScreen
 	private Group backgroundGroup;
 	private Group group;
 	private int worldsCount = 0;
+	
+	private Array<Actor> arrows;
+	
+	private int currentGroupId;
 	
 	private ClickListener moveGroupLeftListener;
 	private ClickListener moveGroupRightListener;
@@ -87,13 +92,24 @@ public class CampaignScreen extends BaseScreen
 		};
 		
 		worlds = levelManager.getCampaignLevelWorlds();	
+		
+		arrows = new Array<Actor>();
 				
+		currentGroupId = 0;
+		
 		for(int w = 0; w < worlds.size; w++)
         {
         	LevelWorld levelWorld = worlds.get(w);
 
         	addNewWorldToGroup( levelWorld );
         }
+		
+		for(int i = 2; i < arrows.size; i++) 
+		{
+			arrows.get(i).setVisible(false);
+		}
+		
+		hideLastAndFirstArrow();
 		
         backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -103,28 +119,31 @@ public class CampaignScreen extends BaseScreen
             	loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
             }
          });
-		
+		        
         addToBackground(backgroundGroup);
-		addToScreen(group);
+        addToScreen(group);
 		addToScreen(backButton);
 	}
 	
 	private void addNewWorldToGroup(LevelWorld levelWorld)
 	{
-		Image worldBackground = createImage(GameWorldType.convertToWorldBackgroundPath( levelWorld.getWorldType(), this.getSceneType() ), (-640.0f) + 1280.0f * worldsCount, -400.0f);
+		Image worldBackground = createImage(GameWorldType.convertToWorldBackgroundPath( levelWorld.getWorldType(), this.getSceneType() ), (-Runner.SCREEN_WIDTH/2.0f) + Runner.SCREEN_WIDTH * worldsCount, -400.0f);
 		
 		previousWorldButton = new Button(skin, "campaignArrowLeft");
-        previousWorldButton.setPosition( -570.0f + (worldsCount * 1280.0f), -100.0f );
+        previousWorldButton.setPosition( -570.0f + (worldsCount * Runner.SCREEN_WIDTH), -100.0f );
         previousWorldButton.addListener( moveGroupRightListener );
         
         nextWorldButton = new Button(skin, "campaignArrowRight");
-        nextWorldButton.setPosition( 470.0f + (worldsCount * 1280.0f), -100.0f );
+        nextWorldButton.setPosition( 470.0f + (worldsCount * Runner.SCREEN_WIDTH), -100.0f );
         nextWorldButton.addListener( moveGroupLeftListener );
+        
+        arrows.add(previousWorldButton);
+        arrows.add(nextWorldButton);
         
         int achievedStarsCount = player.statistics.getWorldStars(levelWorld);
         
         label = createLabel(levelWorld.label + "   " + String.valueOf( achievedStarsCount ) + "/36" , FontType.BIG);
-        label.setPosition((Runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * 1280.0f), 250.0f);
+        label.setPosition((Runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * Runner.SCREEN_WIDTH), 250.0f);
         
         star = createImage("gfx/menu/starSmallFull.png", label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - starHeight) / 2.0f ));
 		       
@@ -135,40 +154,58 @@ public class CampaignScreen extends BaseScreen
         group.addActor(label);
         group.addActor(star);
 		
-        drawButtons( levelWorld, (worldsCount * 1280.0f) );
+        drawButtons( levelWorld, (worldsCount * Runner.SCREEN_WIDTH) );
         
 		worldsCount++;		
 	}
 	
 	private void moveGroup(float direction)
 	{
-		if( (group.getX() == 0.0f && direction >= 0) || (-group.getX() == ((worldsCount - 1) * 1280.0f) && direction < 0) )
+		if( (group.getX() == 0.0f && direction >= 0) || (-group.getX() == ((worldsCount - 1) * Runner.SCREEN_WIDTH) && direction < 0) )
 		{
 			return;
 		}
 		else
 		{
-
 			MoveToAction action = new MoveToAction();
 			MoveToAction backgroundAction = new MoveToAction();
-			
+															
 			action.setDuration(0.2f);
+			backgroundAction.setDuration(0.2f);
+			
+			arrows.get(currentGroupId * 2).setVisible(false);
+			arrows.get((currentGroupId * 2) + 1).setVisible(false);
 			
 			if( direction < 0 )
 			{
-				action.setX( group.getX() - 1280.0f );
-				backgroundAction.setX( group.getX() - 1280.0f );
+				action.setX( group.getX() - Runner.SCREEN_WIDTH );
+				backgroundAction.setX( group.getX() - Runner.SCREEN_WIDTH );
+				
+				currentGroupId++;
 			}
 			else
 			{
-				action.setX( group.getX() + 1280.0f );
-				backgroundAction.setX( group.getX() + 1280.0f );
+				action.setX( group.getX() + Runner.SCREEN_WIDTH );
+				backgroundAction.setX( group.getX() + Runner.SCREEN_WIDTH );
+				
+				currentGroupId--;
 			}
+			
+			arrows.get(currentGroupId * 2).setVisible(true);
+			arrows.get((currentGroupId * 2) + 1).setVisible(true);
+			
+			hideLastAndFirstArrow();
 			
 			backgroundGroup.addAction(backgroundAction);
 			
 			group.addAction(action);
 		}
+	}
+	
+	private void hideLastAndFirstArrow()
+	{
+		arrows.first().setVisible(false);
+		arrows.get( arrows.size - 1 ).setVisible(false);
 	}
 	
 	public void step()

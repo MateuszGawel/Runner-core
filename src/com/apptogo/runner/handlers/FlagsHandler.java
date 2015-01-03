@@ -72,45 +72,98 @@ public class FlagsHandler {
 	}
 	
 	public void update(){
-		if(alive && !finished && !began)
-			canBegin = true;
-		else
-			canBegin = false;
 		
-		if((footSensor>0 || barrelSensor>0) && !onGround && character.getBody().getLinearVelocity().y <= 5) //5 mo¿e byæ z³¹ wartoœci¹
-			canLand = true;
-		else
-			canLand = false;
+		if(!stopped)
+		{
 			
-		if(footSensor>0 || barrelSensor>0)
-			onGround = true;
+			if(alive && !finished && !began)
+				canBegin = true;
+			else
+				canBegin = false;
+			
+			if((footSensor>0 || barrelSensor>0) && alive && !onGround && character.getBody().getLinearVelocity().y <= 5) //5 mo¿e byæ z³¹ wartoœci¹
+				canLand = true;
+			else
+				canLand = false;
+				
+			if(footSensor>0 || barrelSensor>0)
+				onGround = true;
+			else
+				onGround = false;
+			
+			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount)
+				canRun = true;
+			else
+				canRun = false;
+			
+			if(alive && !finished && began && onGround && character.speed>1 && ( animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE || animManager.getCurrentAnimationState() == CharacterAnimationState.DIEINGBOTTOM || animManager.getCurrentAnimationState() == CharacterAnimationState.DIEINGTOP ) )
+				shouldChangeToRunningState = true;
+			else
+				shouldChangeToRunningState = false;
+			
+			if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0)
+				canJump = true;
+			else
+				canJump = false;
+			
+			if(!canJump && !doubleJumped)
+				canDoubleJump = true;
+			else
+				canDoubleJump = false;
+			
+			if((animManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) && !boostedOnce && alive && !sliding && began && !finished && wallSensor <= 0 && canRun)
+				canBoost = true;
+			else
+				canBoost = false;
+			
+			if(began && !finished && alive && !immortal)
+				canDie = true;
+			else
+				canDie = false;
+			
+			if(onGround && alive && !finished && began && !stopped)
+				canSlide = true;
+			else
+				canSlide = false;
+			
+			if(sliding && alive && onGround && !finished && began && !slideButtonPressed && minimumSlidingTimePassed && standupSensor <= 0)
+				canStandUp = true;
+			else
+				canStandUp = false;
+			
+			if(finished)
+				shouldStop = true;
+			else
+				shouldStop = false;
+		}
 		else
-			onGround = false;
-		
-		if(alive && began && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount)
-			canRun = true;
-		else
-			canRun = false;
-		
-		if(onGround && character.speed>1 && animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
-			shouldChangeToRunningState = true;
-		else
+		{
+			canBegin = false;                  
+			onGround = false;                  
+			canJump = false;                   
+			canDoubleJump = false;             
+			canLand = false;                   
+			queuedBoost = false;               
+			canBoost = false;                  
+			canSlide = false;                  
+			slideButtonPressed = false;        
+			canStandUp = false;                
+			forceStandUp = false;              
+			canDie = false;	                   
+			alive = false;              
+			powerupSet = false;                
+			finished = false;                  
+			shouldStop = false;                
+			shouldStart = false;               
 			shouldChangeToRunningState = false;
-		
-		if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0)
-			canJump = true;
-		else
-			canJump = false;
-		
-		if(!canJump && !doubleJumped)
-			canDoubleJump = true;
-		else
-			canDoubleJump = false;
-		
-		if((animManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) && !boostedOnce && alive && !sliding && began && !finished && wallSensor <= 0 && canRun)
-			canBoost = true;
-		else
-			canBoost = false;
+			dieBottom = false;                 
+			dieTop = false;                    
+			canRun = false;                    
+			dieDismemberment = false;          
+			shouldFly = false;                 
+			stopFlyingAction = false;          
+			canUseAbility = false;             
+		}
 	}
 	
 	public boolean isQueuedJump() {

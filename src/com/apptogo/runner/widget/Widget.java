@@ -2,7 +2,6 @@ package com.apptogo.runner.widget;
 
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -21,7 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
 public class Widget
-{	
+{	private static int CTR = 0;
+	private String name = "";
+
 	public enum WidgetFadingType
 	{
 		NONE,
@@ -65,6 +66,11 @@ public class Widget
 	
 	public boolean getToFrontOnClick = false;
 	
+	public Widget(String name, float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
+	{
+		this(x,y,hiddenPartWidth,widgetType,fadeInType,blackOut);
+		this.name = name;
+	}
 	/** @param hiddenPartWidth Jesli fading nie porusza widgetem to powinien byc ustawiony na 0 
 	 *  @param x Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie
 	 *  @param y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w poziomie*/
@@ -116,8 +122,11 @@ public class Widget
 	private void initializeBlackOutButton()
 	{
 		blackOutButton = new Button(skin, "blackOut");
-		blackOutButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		blackOutButton.setPosition( -(Runner.SCREEN_WIDTH / 2f), -(Runner.SCREEN_HEIGHT / 2f));
+		//blackOutButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		//chcemy miec pewnosc ze pokryje caly ekran, a takiej rozdzielczosci nikt nie przebije chyba
+		blackOutButton.setSize(4096.0f, 4096.0f);
+		//blackOutButton.setPosition( -(Runner.SCREEN_WIDTH / 2f), -(Runner.SCREEN_HEIGHT / 2f));
+		blackOutButton.setPosition( -2048.0f, -2048.0f);
 		
 		blackOutButton.addListener( hideWidgetListener );
 		
@@ -310,6 +319,7 @@ public class Widget
 			action.setDuration(0);
 		}
 		
+		this.window.clearActions();
 		this.window.addAction(action);
 	}
 	//---

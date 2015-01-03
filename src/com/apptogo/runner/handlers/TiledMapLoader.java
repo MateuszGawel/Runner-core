@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import box2dLight.RayHandler;
-
 import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
@@ -100,7 +98,7 @@ public class TiledMapLoader
 
 	private TiledMap tiledMap;
 	MapProperties mapProperties;
-	private RayHandler rayHandler;
+//	private RayHandler rayHandler;
 	
 	public void loadMap(String mapPath)
 	{
@@ -135,11 +133,11 @@ public class TiledMapLoader
 	
 	private void initLights()
 	{
-		if( isPropertyTrue(tiledMap, "LightsEnabled") )
-		{
-			rayHandler = new RayHandler(world);		
-		}
-		else rayHandler = null;
+//		if( isPropertyTrue(tiledMap, "LightsEnabled") )
+//		{
+//			rayHandler = new RayHandler(world);		
+//		}
+//		else rayHandler = null;
 	}
 	
 	private void createPhysics(TiledMap map) 
@@ -171,12 +169,12 @@ public class TiledMapLoader
 				
 				createJoints(jointHandles, jointObjects);
 				
-				if( rayHandler != null )
-				{
+//				if( rayHandler != null )
+//				{
 					//objectIt.remove();
 					//objectIt = objects.iterator(); - to i powyzsze zeby go "przewinac" na poczatek
 					//createLights(layerm objectIt); - tego na razie nie obslugujemy
-				}
+//				}
 			}
 		}
 	}
@@ -764,7 +762,7 @@ public class TiledMapLoader
 	public void setWorld(World world){ this.world = world; }
 	public void setGameWorld(GameWorld gameWorld){ this.gameWorld = gameWorld; }
 	public MyTiledMapRenderer getMapRenderer(){ return tiledMapRenderer; }
-	public RayHandler getRayHandler(){ return rayHandler; }
+//	public RayHandler getRayHandler(){ return rayHandler; }
 	
 	public List<Vector2> getPlayersPosition() {
 		return playersPosition;

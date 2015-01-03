@@ -1,10 +1,9 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.controller.InputHandler;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
@@ -33,9 +32,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
@@ -51,8 +50,10 @@ public abstract class BaseScreen implements Screen
 	
 	protected Stage menuStage;
 	protected Stage menuBackgroundStage;
-	protected FitViewport viewport;
+	protected Stage menuFadeStage;
+	protected ExtendViewport viewport;
 	protected FillViewport backgroundViewport;
+	protected FillViewport fadeViewport;
 	protected Skin skin;
 	
 	public Stage gameGuiStage;
@@ -108,19 +109,23 @@ public abstract class BaseScreen implements Screen
 		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI)  )
 		{
 			menuStage = new Stage();
-			viewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-			menuStage.setViewport(viewport);
+			viewport = new ExtendViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+			menuStage.setViewport( viewport );
 			
 			menuBackgroundStage = new Stage();
 			backgroundViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-			menuBackgroundStage.setViewport( backgroundViewport);
+			menuBackgroundStage.setViewport( backgroundViewport );
+			
+			menuFadeStage = new Stage();
+			fadeViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+			menuFadeStage.setViewport( fadeViewport );
 			
 			skin = ResourcesManager.getInstance().getUiSkin();
 			initializeFadeOutButton();
 			
-			this.prepare();
-			
 			Gdx.input.setInputProcessor(menuStage);
+			
+			this.prepare();
 		}
 		else
 		{
@@ -159,6 +164,10 @@ public abstract class BaseScreen implements Screen
 			viewport.update(currentWindowWidth, currentWindowHeight);
 			menuStage.act();
 			menuStage.draw();
+			
+			fadeViewport.update(currentWindowWidth, currentWindowHeight);
+			menuFadeStage.act();
+			menuFadeStage.draw();
 		}
 		else
 		{
@@ -168,6 +177,8 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage.act(delta);
     		gameGuiStage.draw();
 		}
+		
+		CustomActionManager.getInstance().act(delta);
 	}	
 	
 	@Override
@@ -195,6 +206,11 @@ public abstract class BaseScreen implements Screen
 		this.menuStage.addActor(actor);
 	}
 	
+	protected void addToFade(Actor actor)
+	{
+		this.menuFadeStage.addActor(actor);
+	}
+	
 	protected void initializeFadeOutButton()
 	{
 		fadeButton = new Button(skin, "fadeOut");
@@ -208,7 +224,7 @@ public abstract class BaseScreen implements Screen
 		
 		isFadedOut = false;
 		
-		menuStage.addActor(fadeButton);
+	    menuFadeStage.addActor(fadeButton);
 	}
 		
 	public void handleFadingOutScreen()
@@ -359,6 +375,12 @@ public abstract class BaseScreen implements Screen
 			Logger.log(this, "dispose menuBackgroundStage");
 			menuBackgroundStage.clear();
 			menuBackgroundStage.dispose();
+		}
+		if( menuFadeStage != null)
+		{
+			Logger.log(this, "dispose menuFadeStage");
+			menuFadeStage.clear();
+			menuFadeStage.dispose();
 		}
 		
 		if(gameGuiStage != null){

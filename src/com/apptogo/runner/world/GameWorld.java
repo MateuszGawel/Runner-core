@@ -1,7 +1,6 @@
 package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
-import box2dLight.RayHandler;
 
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
@@ -56,7 +55,7 @@ public abstract class GameWorld
 	public Group background;
 	public Vector2 mapSize;
 	private MyContactListener contactListener;
-	public RayHandler rayHandler;
+//	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
 	public Music music;
@@ -109,7 +108,7 @@ public abstract class GameWorld
 		mapSize = TiledMapLoader.getInstance().getMapSize();
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
-		rayHandler = TiledMapLoader.getInstance().getRayHandler();
+//		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 		
 		this.player.character = createCharacter( this.player.getCharacterType() );
 		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
@@ -146,7 +145,6 @@ public abstract class GameWorld
         worldStage.act(delta);
 		backgroundStage.act(delta);
 		
-        CustomActionManager.getInstance().act(delta);
         contactListener.postStep();
        // fpsLogger.log();
     }  

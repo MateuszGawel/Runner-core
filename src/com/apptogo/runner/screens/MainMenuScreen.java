@@ -151,7 +151,7 @@ public class MainMenuScreen extends BaseScreen
 	
 	private void createSettingsWidget()
 	{
-		settingsWidget = new Widget(Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
+		settingsWidget = new Widget("settings", Align.center, 600.0f, 950.0f, WidgetType.BIG, WidgetFadingType.TOP_TO_BOTTOM, true);
 		settingsWidget.setEasing( Interpolation.elasticOut );
 
 		//---Obrazki tabow        

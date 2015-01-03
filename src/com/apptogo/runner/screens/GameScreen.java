@@ -47,7 +47,6 @@ public abstract class GameScreen extends BaseScreen{
 		loadPlayer();
 		
 		ResourcesManager.getInstance().unloadMenuResources(); //czy to na pewno dobre miejsce na ta funkcje? tu sie fajnie wpasowuje ale tak naprawde to powinno byc zrobione na etapie loadingu
-		CustomActionManager.create();
 	}
 	
 	protected void createLabels()

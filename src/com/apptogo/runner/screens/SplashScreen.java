@@ -1,20 +1,23 @@
 package com.apptogo.runner.screens;
 
+import java.util.Random;
+
 import com.apptogo.runner.animation.ObjectAnimation;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public class SplashScreen extends BaseScreen
 {			
@@ -51,6 +54,13 @@ public class SplashScreen extends BaseScreen
 	private MoveToAction logoInAction;
 	private AlphaAction backgroundInAction;
 	private AlphaAction logoWaitingAction;
+	
+	Camera camera;
+	
+	private int cameraShakeCounter;
+	
+	private CustomAction cameraShakeAction;
+	private CustomAction cameraStopShakeAction;
 	
 	private Label loadingLabel;
 	
@@ -105,6 +115,31 @@ public class SplashScreen extends BaseScreen
 		logoWaitingAction = new AlphaAction();
 		logoWaitingAction.setDuration(0.1f);
 		logoWaitingAction.setAlpha(1.0f);
+		
+		final Camera camera = menuStage.getCamera();
+		
+		cameraShakeCounter = 0;
+		
+		cameraShakeAction = new CustomAction(0f, 0){
+			@Override
+			public void perform() 
+			{
+				cameraShakeCounter++;
+			
+				float randomX = (( new Random() ).nextFloat() - 0.5f) * 15 * 1/cameraShakeCounter;
+				float randomY = (( new Random() ).nextFloat() - 0.5f) * 15 * 1/cameraShakeCounter;
+				camera.position.set(-randomX, -randomY, 0);
+			}
+		};
+		
+		cameraStopShakeAction = new CustomAction(0.4f){
+			@Override
+			public void perform() 
+			{
+				cameraShakeAction.setFinished(true);
+				camera.position.set(0,0,0);
+			}
+		};
 	}
 	
 	public void step()
@@ -153,6 +188,10 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.LOGO_IN && logo.getActions().size <= 0)
 		{			
+			if(CustomActionManager.getInstance() == null) Logger.log(this, "DUPA");
+			CustomActionManager.getInstance().registerAction(cameraShakeAction);
+			CustomActionManager.getInstance().registerAction(cameraStopShakeAction);
+			
 			dustAnimation.setVisible(true);
 			dustAnimation.start();
 			
