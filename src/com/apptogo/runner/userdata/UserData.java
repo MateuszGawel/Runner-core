@@ -7,6 +7,7 @@ public class UserData
 	
 	//player
 	public String playerName;
+	public boolean isMainBody;
 
 	//powerup
 	public String powerup;

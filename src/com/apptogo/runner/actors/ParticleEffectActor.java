@@ -9,6 +9,7 @@ public class ParticleEffectActor extends Image {
 
 	private ParticleEffect effect;
 	private boolean started; 
+	public boolean removeAfterComplete;
 	
 	public ParticleEffectActor(String particleName) {
 		super();
@@ -41,6 +42,10 @@ public class ParticleEffectActor extends Image {
 		super.act(delta);
 		if(started)
 			effect.update(delta);
+		if(effect.isComplete() && removeAfterComplete){
+			effect.dispose();
+			this.remove();
+		}
 	}
 
 	@Override

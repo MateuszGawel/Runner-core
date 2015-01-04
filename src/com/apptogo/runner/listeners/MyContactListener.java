@@ -81,8 +81,11 @@ public class MyContactListener implements ContactListener
 	//		}
 			
 			//boost po l¹dowaniu
-			if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){
-				flags.setQueuedBoost(true);
+			if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){		
+				if(flags.getQueuedBoost() == 0 && ((UserData)getFixtureByType(fa, fb, "player").getUserData()).isMainBody){
+					flags.setQueuedBoost(player.character.getBody().getLinearVelocity().x);
+					Logger.log(this, "kolejkuje z predkoscia: " + player.character.getBody().getLinearVelocity().x);
+				}
 			}	
 			
 			//beczki
@@ -136,6 +139,7 @@ public class MyContactListener implements ContactListener
 			if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
 				Fixture fixture = getFixtureByType(fa, fb, "coin");
 				fixture.getBody().setUserData(new UserData("inactive"));
+				player.character.incrementCoinCounter();
 			}
 			
 			//powerup
@@ -396,6 +400,10 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "headSensor")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "headSensor").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "coinCollectorSensor")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "coinCollectorSensor").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		return player;

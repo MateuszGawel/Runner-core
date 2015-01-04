@@ -1,6 +1,9 @@
 package com.apptogo.runner.screens;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import com.apptogo.runner.actors.GameProgressBar;
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -39,8 +42,9 @@ public abstract class GameScreen extends BaseScreen{
 	protected Array<Button> powerupButtons;
 	protected boolean multiplayer;
 	
-	protected Label label;
-	
+	protected Label startLabel;
+	public Label coinLabel;
+
 	public GameScreen(Runner runner)
 	{
 		super(runner);		
@@ -51,9 +55,14 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createLabels()
 	{
-		label = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
-		label.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (label.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
-		//gameGuiStage.addActor(label);
+		startLabel = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
+		startLabel.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (startLabel.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
+		//gameGuiStage.addActor(startLabel);
+		
+		coinLabel = createLabel("0", FontType.COINFONT);
+		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
+		gameGuiStage.addActor(coinLabel);
+
 	}
 	
 	public void setLevel(Level level)
@@ -119,10 +128,25 @@ public abstract class GameScreen extends BaseScreen{
 	public void step() 
 	{
 		handleInput();	
+		handleCoinLabel();
 		world.update(delta);
 		worldRenderer.resize(currentWindowWidth, currentWindowHeight);
 		worldRenderer.render();
 		Input.update();
+	}
+	
+	private void handleCoinLabel(){
+		if(Integer.valueOf(coinLabel.getText().toString()) < world.player.character.getCoinCounter()){
+			coinLabel.setText(String.valueOf(world.player.character.getCoinCounter()));
+			
+			ParticleEffectActor coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
+			coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
+			coinCounterEffectActor.start();
+			coinCounterEffectActor.removeAfterComplete = true;
+			coinLabel.remove();
+			gameGuiStage.addActor(coinCounterEffectActor);
+			gameGuiStage.addActor(coinLabel);
+		}
 	}
 	
 	@Override

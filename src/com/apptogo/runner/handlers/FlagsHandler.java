@@ -20,7 +20,7 @@ public class FlagsHandler {
 	private boolean canJump;
 	private boolean canDoubleJump;
 	private boolean canLand;
-	private boolean queuedBoost;
+	private float queuedBoost;
 	private boolean canBoost;
 	private boolean canSlide;
 	private boolean slideButtonPressed;
@@ -49,7 +49,7 @@ public class FlagsHandler {
 	private boolean minimumSlidingTimePassed;
 	private boolean swampSlowedOnce;
 	private boolean immortal;
-	private boolean stopped;
+	private boolean stopped; //do zastopowania animacji running
 	private boolean flying;
 	
 	//SENSORY
@@ -73,9 +73,6 @@ public class FlagsHandler {
 	
 	public void update(){
 		
-		if(!stopped)
-		{
-			
 			if(alive && !finished && !began)
 				canBegin = true;
 			else
@@ -106,7 +103,7 @@ public class FlagsHandler {
 			else
 				canJump = false;
 			
-			if(!canJump && !doubleJumped)
+			if(!canJump && !doubleJumped && alive && began && !finished)
 				canDoubleJump = true;
 			else
 				canDoubleJump = false;
@@ -121,7 +118,7 @@ public class FlagsHandler {
 			else
 				canDie = false;
 			
-			if(onGround && alive && !finished && began && !stopped)
+			if(onGround && alive && !finished && began)
 				canSlide = true;
 			else
 				canSlide = false;
@@ -131,39 +128,53 @@ public class FlagsHandler {
 			else
 				canStandUp = false;
 			
-			if(finished)
+			if(began && character.speed<0.1f && alive && !stopped && onGround && animManager.getCurrentAnimationState() != CharacterAnimationState.LANDINGIDLE)
 				shouldStop = true;
 			else
-				shouldStop = false;
-		}
-		else
-		{
-			canBegin = false;                  
-			onGround = false;                  
-			canJump = false;                   
-			canDoubleJump = false;             
-			canLand = false;                   
-			queuedBoost = false;               
-			canBoost = false;                  
-			canSlide = false;                  
-			slideButtonPressed = false;        
-			canStandUp = false;                
-			forceStandUp = false;              
-			canDie = false;	                   
-			alive = false;              
-			powerupSet = false;                
-			finished = false;                  
-			shouldStop = false;                
-			shouldStart = false;               
-			shouldChangeToRunningState = false;
-			dieBottom = false;                 
-			dieTop = false;                    
-			canRun = false;                    
-			dieDismemberment = false;          
-			shouldFly = false;                 
-			stopFlyingAction = false;          
-			canUseAbility = false;             
-		}
+				shouldStop = false;	
+			
+			if(began && !finished && character.speed>0.1f && alive && stopped)
+				shouldStart = true;
+			else
+				shouldStart = false;	
+			
+			if(began && alive && character.speed>0.1f && !stopped && animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
+				shouldChangeToRunningState = true;
+			else
+				shouldChangeToRunningState = false;
+			
+			if(alive && began && !finished && !onGround && animManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)
+				shouldFly = true;
+			else 
+				shouldFly = false;
+//		else
+//		{
+//			canBegin = false;                  
+//			onGround = false;                  
+//			canJump = false;                   
+//			canDoubleJump = false;             
+//			canLand = false;                   
+//			queuedBoost = false;               
+//			canBoost = false;                  
+//			canSlide = false;                  
+//			slideButtonPressed = false;        
+//			canStandUp = false;                
+//			forceStandUp = false;              
+//			canDie = false;	                   
+//			alive = false;              
+//			powerupSet = false;                
+//			finished = false;                  
+//			shouldStop = false;                
+//			shouldStart = false;               
+//			shouldChangeToRunningState = false;
+//			dieBottom = false;                 
+//			dieTop = false;                    
+//			canRun = false;                    
+//			dieDismemberment = false;          
+//			shouldFly = false;                 
+//			stopFlyingAction = false;          
+//			canUseAbility = false;             
+//		}
 	}
 	
 	public boolean isQueuedJump() {
@@ -209,11 +220,11 @@ public class FlagsHandler {
 		this.canLand = canLand;
 		
 	}
-	public boolean isQueuedBoost() {
+	public float getQueuedBoost() {
 		return queuedBoost;
 	}
-	public void setQueuedBoost(boolean canBoost) {
-		this.queuedBoost = canBoost;
+	public void setQueuedBoost(float queuedBoost) {
+		this.queuedBoost = queuedBoost;
 		
 	}
 	public boolean isCanBoost() {

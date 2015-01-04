@@ -17,7 +17,8 @@ public enum FontType
 	WOODFONTSMALL,
 	LEAFFONT,
 	ROCKFONT,
-	GAMEWORLDFONT;
+	GAMEWORLDFONT,
+	COINFONT;
 	
 	public static BitmapFont convertToFont(FontType fontType)
 	{
@@ -68,6 +69,10 @@ public enum FontType
 		else if( fontType == FontType.GAMEWORLDFONT )
 		{
 			return FontManager.getInstance().gameWorldFont;
+		}
+		else if( fontType == FontType.COINFONT )
+		{
+			return FontManager.getInstance().mediumFont;
 		}
 		else 
 			return null;
@@ -122,6 +127,10 @@ public enum FontType
 		else if( fontType == FontType.GAMEWORLDFONT )
 		{
 			return new Color(0.31f, 0.22f, 0.16f, 1);
+		}
+		else if( fontType == FontType.COINFONT )
+		{
+			return new Color(1f, 0.75f, 0.14f, 1);
 		}
 		else 
 			return null;

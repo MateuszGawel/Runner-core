@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -69,6 +70,7 @@ public abstract class Character extends Actor{
 	protected String slideButtonStyleName; 
 	protected String slowButtonStyleName;
 	protected Array<Button> powerupButtons;
+	private int coinCounter;
 	
 	protected boolean blinkShow = false;
 	
@@ -116,12 +118,15 @@ public abstract class Character extends Actor{
 		body = world.createBody(bodyDef);
 		body.setUserData( new UserData("player") );
 		
+		
 		//main fixture
 		shape.setAsBox(bodySize.x, bodySize.y);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("player") );
-
+		Fixture fix = body.createFixture(fixtureDef);
+		fix.setUserData( new UserData("player") );
+		((UserData)fix.getUserData()).isMainBody = true;
+		
 		//wall sensor body
 		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, 1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
@@ -186,12 +191,9 @@ public abstract class Character extends Actor{
 	}
 	
 	public void start()
-	{Logger.log(this, flags.isBegan() );
-	Logger.log(this, flags.isAlive() );
-	Logger.log(this, flags.isFinished() );
-	
+	{
 		if(flags.isCanBegin())
-		{		Logger.log(this, "START");
+		{		
 			if(!stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
@@ -218,7 +220,7 @@ public abstract class Character extends Actor{
 	{
 		flags.setBoostedOnce(false);
 		flags.setSliding(false);
-		
+		flags.setQueuedBoost(0);
 		layFixtures(false);
 
 		float y = (float) sqrt(-world.getGravity().y * 8);
@@ -238,8 +240,10 @@ public abstract class Character extends Actor{
 	private void doubleJump(){
 		float y = (float) sqrt(-world.getGravity().y * 8);
 		float x = body.getLinearVelocity().x;
+		flags.setQueuedBoost(0);
 		body.setLinearVelocity(x * 0.8f, y * 0.7f );
 		flags.setDoubleJumped(true);
+		Logger.log(this, "double jump");
 	}
 	
 	public void land()
@@ -258,10 +262,14 @@ public abstract class Character extends Actor{
 			else
 			{
 				if(speed > 0.05f){
+					Logger.log(this, "L¹dowanie zwyk³e");
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
 				}
-				else
+				else{
+					Logger.log(this, "L¹dowanie idle");
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
+					flags.update();
+				}
 			}
 			sounds.get(CharacterSound.LAND).play(0.3f);
 		}
@@ -269,9 +277,10 @@ public abstract class Character extends Actor{
 	
 	public void boostAfterLand(){
 		if(flags.isCanBoost()){
-			body.setLinearVelocity(speedBeforeLand, 0);
+			body.setLinearVelocity(flags.getQueuedBoost(), 0);
 			flags.setBoostedOnce(true);
-			Logger.log(this, "BOOST! " + String.valueOf(speedBeforeLand));
+			Logger.log(this, "BOOST! " + String.valueOf(flags.getQueuedBoost()));
+			flags.setQueuedBoost(0);
 		}
 	}
 	
@@ -375,7 +384,7 @@ public abstract class Character extends Actor{
 	}
 	
 	private void die()
-	{Logger.log(this, "DIE");
+	{
 		playerSlowAmmount = 0;
 		if(flags.isAlive())
 		{
@@ -387,7 +396,7 @@ public abstract class Character extends Actor{
 			flags.setSliding(false);
 			flags.setFlying(false);
 			
-			flags.setBegan(false);
+			//flags.setBegan(false);
 			
 			deathPosition = new Vector2(body.getPosition());
 			customActionManager.registerAction(new CustomAction(1f) {
@@ -402,8 +411,16 @@ public abstract class Character extends Actor{
 	public void respawn()
 	{
 		setVisible(true);
+		flags.setImmortal(true);
+		flags.setAlive(true);
+		flags.update();
+		if(flags.isOnGround())
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 		
-		final CustomAction blinkAction = new CustomAction(0.3f, 0) {
+		body.setTransform(deathPosition, 0);
+		start();
+		
+		final CustomAction blinkAction = new CustomAction(0.1f, 0) {
 			@Override
 			public void perform()
 			{
@@ -431,14 +448,6 @@ public abstract class Character extends Actor{
 				setVisible(true);				
 			}
 		});
-		
-		flags.setImmortal(true);
-		flags.setAlive(true);
-		flags.update();
-		
-		body.setTransform(deathPosition, 0);
-		start();
-		
 	}
 	
 	abstract public void useAbility(CharacterAbilityType abilityType);
@@ -467,14 +476,14 @@ public abstract class Character extends Actor{
 	
 	/*--- HANDLERS ---*/
 	private void handleQueuedActions(){
+		//Logger.log(this, "PREDKOSC: " + character.getBody().getLinearVelocity().x);
 		if(flags.isQueuedJump()){
 			character.jump(1, 1, 0, 0);
 			flags.setQueuedJump(false);
 		}
 		
-		if(flags.isQueuedBoost()){
+		if(flags.getQueuedBoost() > 0){
 			boostAfterLand();
-			flags.setQueuedBoost(false);
 		}
 	}
 	
@@ -483,31 +492,34 @@ public abstract class Character extends Actor{
 	}
 	
 	private void handleStopping(){
-		if(flags.isShouldStop()){		
+		if(flags.isShouldStop()){	
+			Logger.log(this,  "stopuje");
 			flags.setStopped(true);
-			
-			this.slowPlayerBy(1.0f);
 			
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
 			}
-			
 			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+		}
+		if(flags.isShouldStart()){
+			flags.setStopped(false);
 		}
 	}
 
 	private void handleRunning(){
 		speed = body.getLinearVelocity().x;
-		if(flags.isCanRun()){ Logger.log(this, "CAN RUN");
+		if(flags.isCanRun()){
 			if(flags.isOnGround()){
-				body.applyForceToCenter(new Vector2(3000, 0), true); Logger.log(this, "ON GROUND"); }
-			else if(this.getBody().getLinearVelocity().x <= 0.01){
-					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y); Logger.log(this, "DUPA"); }
-//					body.applyForceToCenter(new Vector2(3000 - 20*getBody().getLinearVelocity().x*getBody().getLinearVelocity().x, 0), true);
+				body.applyForceToCenter(new Vector2(3000, 0), true); 
+			}
+			else if(this.getBody().getLinearVelocity().x <= 1){
+					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
+			}
 		}
+		//Logger.log(this, flags.isShouldChangeToRunningState());
 		if(flags.isShouldChangeToRunningState())
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING); //czy to potrzebne?
+			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 	}
 	
 	private void handleStepSoundSpeed(){
@@ -716,4 +728,9 @@ public abstract class Character extends Actor{
 		}
 		flags.setPowerupSet(false);
 	}
+	
+	public void incrementCoinCounter(){ 
+		coinCounter++;
+	}
+	public int getCoinCounter(){ return coinCounter; }
 }

@@ -89,7 +89,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				return;
 		}
 		
-		label.remove();
+		startLabel.remove();
 		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
 		Countdown countdown = new Countdown(world);
 		countdown.startCountdown();

@@ -44,7 +44,7 @@ public class GameScreenSingle extends GameScreen
 	{
 		if( Input.isPressed() ) 
 		{
-			label.remove();
+			startLabel.remove();
 		}
 		super.handleInput();
 	}
