@@ -34,22 +34,22 @@ public class MyContactListener implements ContactListener
 			FlagsHandler flags = player.character.flags;
 			
 			//smierc TOP
-			if(checkFixturesTypes(fa, fb, "killingTop", "player")){	
-				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	
+				if(flags.isCanDie()){
 					flags.setDieTop(true);
 				}
 			}
 			
 			//smierc BOTTOM
-			if( checkFixturesTypes(fa, fb, "killingBottom", "player")){
-				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){
+				if(flags.isCanDie()){
 					flags.setDieBottom(true);
 				}
 			}
 			
 			//smierc od ogniska
-			if( checkFixturesTypes(fa, fb, "bonfire", "player")){
-				if(flags.isCanDie() && !getFixtureByType(fa, fb, "player").isSensor()){
+			if( checkFixturesTypes(fa, fb, "bonfire", "mainBody")){
+				if(flags.isCanDie()){
 					flags.setDieDismemberment(true);
 				}
 			}	
@@ -81,17 +81,17 @@ public class MyContactListener implements ContactListener
 	//		}
 			
 			//boost po l¹dowaniu
-			if( checkFixturesTypes(fa, fb, "nonkilling", "player") || checkFixturesTypes(fa, fb, "barrel", "player")){		
-				if(flags.getQueuedBoost() == 0 && ((UserData)getFixtureByType(fa, fb, "player").getUserData()).isMainBody){
+			if( checkFixturesTypes(fa, fb, "nonkilling", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "mainBody")){		
+				if(flags.getQueuedBoost() == 0){
 					flags.setQueuedBoost(player.character.getBody().getLinearVelocity().x);
 					Logger.log(this, "kolejkuje z predkoscia: " + player.character.getBody().getLinearVelocity().x);
 				}
 			}	
 			
 			//beczki
-			if(checkFixturesTypes(fa, fb, "barrel", "player") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
+			if(checkFixturesTypes(fa, fb, "barrel", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
 				
-				Fixture playerFixture = getFixtureByType(fa, fb, "player");
+				Fixture playerFixture = getFixtureByType(fa, fb, "mainBody");
 				if(playerFixture == null)
 					playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
 				Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");			
@@ -143,7 +143,7 @@ public class MyContactListener implements ContactListener
 			}
 			
 			//powerup
-			if(checkFixturesTypes(fa, fb, "powerup", "player")){
+			if(checkFixturesTypes(fa, fb, "powerup", "mainBody")){
 				if(!flags.isPowerupSet())
 				{
 					Fixture fixture = getFixtureByType(fa, fb, "powerup");
@@ -171,7 +171,7 @@ public class MyContactListener implements ContactListener
 //			}
 			
 			//meta - koniec gry
-			if(checkFixturesTypes(fa, fb, "player", "finishingLine")){
+			if(checkFixturesTypes(fa, fb, "mainBody", "finishingLine")){
 				flags.setFinished(true);
 			}
 		}
@@ -252,7 +252,7 @@ public class MyContactListener implements ContactListener
 		
 		if(player != null)
 		{			
-			if(checkFixturesTypes(fa, fb, "player", "nonkilling") || checkFixturesTypes(fa, fb, "player", "barrel")){
+			if(checkFixturesTypes(fa, fb, "mainBody", "nonkilling") || checkFixturesTypes(fa, fb, "mainBody", "barrel")){
 				Fixture fixture = getFixtureByType(fa, fb, "footSensor");
 				if(player != null) player.character.speedBeforeLand = fixture.getBody().getLinearVelocity().x;
 			}
@@ -404,6 +404,10 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "coinCollectorSensor")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "coinCollectorSensor").getBody().getUserData()).playerName;
+			player = findPlayerByName(playerName);
+		}
+		else if(checkIsOneOfType(fa, fb, "mainBody")){
+			String playerName = ((UserData)getFixtureByType(fa, fb, "mainBody").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		return player;

@@ -40,7 +40,18 @@ public class FlagsHandler {
 	private boolean shouldFly;
 	private boolean stopFlyingAction;
 	private boolean canUseAbility;
+	private boolean jumped;
+	
+	//TEMP
+	private boolean tempRunFlag;
+	public boolean isTempRunFlag() {
+		return tempRunFlag;
+	}
 
+	public void setTempRunFlag(boolean tempRunFlag) {
+		this.tempRunFlag = tempRunFlag;
+	}
+	
 	//SK£ADOWE
 	private boolean began;
 	private boolean boostedOnce;
@@ -88,7 +99,7 @@ public class FlagsHandler {
 			else
 				onGround = false;
 			
-			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount)
+			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag)
 				canRun = true;
 			else
 				canRun = false;
@@ -108,7 +119,7 @@ public class FlagsHandler {
 			else
 				canDoubleJump = false;
 			
-			if((animManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) && !boostedOnce && alive && !sliding && began && !finished && wallSensor <= 0 && canRun)
+			if((animManager.getCurrentAnimationState() == CharacterAnimationState.FLYING || animManager.getCurrentAnimationState() == CharacterAnimationState.LANDING) && !boostedOnce && alive && !sliding && began && !finished && wallSensor <= 0)
 				canBoost = true;
 			else
 				canBoost = false;
@@ -118,17 +129,17 @@ public class FlagsHandler {
 			else
 				canDie = false;
 			
-			if(onGround && alive && !finished && began)
+			if(onGround && alive && !finished && began && !sliding && !jumped)
 				canSlide = true;
 			else
 				canSlide = false;
 			
-			if(sliding && alive && onGround && !finished && began && !slideButtonPressed && minimumSlidingTimePassed && standupSensor <= 0)
+			if(sliding && alive && !finished && began && !slideButtonPressed && minimumSlidingTimePassed && standupSensor <= 0)
 				canStandUp = true;
 			else
 				canStandUp = false;
 			
-			if(began && character.speed<0.1f && alive && !stopped && onGround && animManager.getCurrentAnimationState() != CharacterAnimationState.LANDINGIDLE)
+			if(began && character.speed<0.1f && alive && !stopped && onGround && !sliding && animManager.getCurrentAnimationState() != CharacterAnimationState.LANDINGIDLE && animManager.getCurrentAnimationState() != CharacterAnimationState.STANDINGUP)
 				shouldStop = true;
 			else
 				shouldStop = false;	
@@ -346,6 +357,14 @@ public class FlagsHandler {
 		this.stopFlyingAction = stopFlyingAction;
 		
 	}
+	public boolean isJumped() {
+		return jumped;
+	}
+
+	public void setJumped(boolean jumped) {
+		this.jumped = jumped;
+	}
+
 	public boolean isCanRun() {
 		return canRun;
 	}

@@ -271,7 +271,6 @@ public class ResourcesManager
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/coin.pack" );
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
-		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/flag.pack" );
 
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
 		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );

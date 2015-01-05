@@ -124,8 +124,8 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		Fixture fix = body.createFixture(fixtureDef);
-		fix.setUserData( new UserData("player") );
-		((UserData)fix.getUserData()).isMainBody = true;
+		fix.setUserData( new UserData("mainBody") );
+		//((UserData)fix.getUserData()).isMainBody = true;
 		
 		//wall sensor body
 		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, 1/PPM), 0);
@@ -137,7 +137,7 @@ public abstract class Character extends Actor{
 		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x, -32/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("player") );
+		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
 		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor
@@ -219,8 +219,11 @@ public abstract class Character extends Actor{
 	private void normalJump(float xMultiplier, float yMultiplier, float xAdd, float yAdd)
 	{
 		flags.setBoostedOnce(false);
+		if(flags.isSliding())
+			speedPlayerBy(0.2f);
 		flags.setSliding(false);
 		flags.setQueuedBoost(0);
+		flags.setJumped(true);
 		layFixtures(false);
 
 		float y = (float) sqrt(-world.getGravity().y * 8);
@@ -251,7 +254,7 @@ public abstract class Character extends Actor{
 		if(flags.isCanLand())
 		{
 			flags.setDoubleJumped(false);
-			
+			flags.setJumped(false);
 			if(!stepSoundPlayed){
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
@@ -271,7 +274,8 @@ public abstract class Character extends Actor{
 					flags.update();
 				}
 			}
-			sounds.get(CharacterSound.LAND).play(0.3f);
+			if(!flags.isSliding())
+				sounds.get(CharacterSound.LAND).play(0.3f);
 		}
 	}
 	
@@ -314,7 +318,7 @@ public abstract class Character extends Actor{
 			}
 			sounds.get(CharacterSound.SLIDE).play();
 			
-			customActionManager.registerAction(new CustomAction(0.3f) {
+			customActionManager.registerAction(new CustomAction(0.5f) {
 				@Override
 				public void perform() {
 					flags.setMinimumSlidingTimePassed(true);
@@ -631,6 +635,32 @@ public abstract class Character extends Actor{
 		
 		return jumpButton;
 	}
+	public Button getTempButton()
+	{
+		Button tempButton = new Button(guiSkin, this.jumpButtonStyleName);
+		
+		tempButton.setPosition(Runner.SCREEN_WIDTH - tempButton.getWidth() - 20, Runner.SCREEN_HEIGHT - 200);
+		tempButton.setSize(tempButton.getWidth(), tempButton.getHeight());
+		tempButton.setBounds(tempButton.getX(), tempButton.getY(), tempButton.getWidth(), tempButton.getHeight());
+		tempButton.setOrigin(tempButton.getWidth()/2, tempButton.getHeight()/2);
+		tempButton.setScaleX(5f);
+		tempButton.setScaleY(2f);
+		tempButton.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				if(!flags.isTempRunFlag())
+					flags.setTempRunFlag(true);
+				else
+					flags.setTempRunFlag(false);
+				
+		        return true;
+		    }
+		});
+		
+		return tempButton;
+	}
 	public Button getSlideButton()
 	{
 		Button slideButton = new Button(guiSkin, this.slideButtonStyleName);
@@ -683,7 +713,7 @@ public abstract class Character extends Actor{
 		return this.powerupButtons;
 	}
 	
-	protected void usePowerup(PowerupType powerupType) 
+	public void usePowerup(PowerupType powerupType) 
 	{
 		if( powerupType == PowerupType.NONE )
 		{
@@ -709,8 +739,10 @@ public abstract class Character extends Actor{
 		flags.setPowerupSet(false);
 	}
 
+	public PowerupType currentPowerupSet; //zmienna pomocnicza do sterowania klawiatura
 	public void setPowerup(PowerupType powerupType) 
 	{
+		currentPowerupSet = powerupType;
 		for(Button button: powerupButtons){
 			if( ( (PowerupType)button.getUserObject() ) == powerupType ){
 				button.setVisible(true);

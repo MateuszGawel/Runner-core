@@ -26,11 +26,11 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class SpaceWorld extends GameWorld{
-	public static final Vector2 GRAVITY = new Vector2(0f, -40f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -60f);
 
 	public Image space, planet2, planet3, asteroid1, asteroid2, asteroid3, asteroid4, asteroid5;
 	public ConstantParallaxBackground planet1;
-	
+	private CustomAction asteroidSpawnAction;
 	private final Array<Asteroid> activeAsteroids = new Array<Asteroid>();
     private Pool<Asteroid> asteroidsPool = new Pool<Asteroid>() {
 	    @Override
@@ -66,7 +66,7 @@ public class SpaceWorld extends GameWorld{
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/spaceMusic.ogg");
 		music.setVolume(0.2f);
 		
-		CustomActionManager.getInstance().registerAction(new CustomAction(0.5f, 0) {
+		asteroidSpawnAction = new CustomAction(0.5f, 0) {
 			@Override
 			public void perform() {
 				Asteroid asteroid = asteroidsPool.obtain();
@@ -74,7 +74,8 @@ public class SpaceWorld extends GameWorld{
 				activeAsteroids.add(asteroid);
 				freePools();
 			}
-		});
+		};
+		CustomActionManager.getInstance().registerAction(asteroidSpawnAction);
 		
 		Random random = new Random();
 		
@@ -117,6 +118,7 @@ public class SpaceWorld extends GameWorld{
 	public void dispose(){
 		super.dispose();
 		Logger.log(this, "dispose space");
+		asteroidSpawnAction.setFinished(true);
 	}
 
 }

@@ -110,6 +110,8 @@ public abstract class GameScreen extends BaseScreen{
 		
 		gameGuiStage.addActor(slideButton);
 		gameGuiStage.addActor(jumpButton);		
+		//TEMP
+		gameGuiStage.addActor(world.player.character.getTempButton());
 		
 		for(Button powerupButton: powerupButtons)
 		{
@@ -148,7 +150,10 @@ public abstract class GameScreen extends BaseScreen{
 			gameGuiStage.addActor(coinLabel);
 		}
 	}
-	
+	private boolean slidePressed; //pomocnicza
+	private boolean jumpPressed; //pomocnicza
+	private boolean tempPressed; //pomocnicza
+	private boolean abilityPressed; //pomocnicza
 	@Override
 	public void handleInput() 
 	{
@@ -162,6 +167,49 @@ public abstract class GameScreen extends BaseScreen{
 				this.player.character.start();
 				//NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
 		}
+		
+		//sterowanie klawiatura
+		if( Gdx.input.isKeyPressed(Keys.Z) && !slidePressed)
+		{
+			player.character.flags.setSlideButtonPressed(true);
+			player.character.slide();
+			slidePressed = true;
+		}
+		else if(!Gdx.input.isKeyPressed(Keys.Z) && slidePressed){
+			player.character.flags.setSlideButtonPressed(false);
+			player.character.standUp();
+			slidePressed = false;
+	    }
+		
+		if( Gdx.input.isKeyPressed(Keys.M) && !jumpPressed)
+		{
+			player.character.flags.setQueuedJump(true);
+			jumpPressed = true;
+		}
+		else if(!Gdx.input.isKeyPressed(Keys.M) && jumpPressed)
+			jumpPressed = false;
+		
+		if( Gdx.input.isKeyPressed(Keys.A) && !abilityPressed)
+		{
+			if(player.character.flags.isCanUseAbility()) 
+				player.character.usePowerup( player.character.currentPowerupSet );
+			abilityPressed = true;
+		}
+		else if(!Gdx.input.isKeyPressed(Keys.A) && abilityPressed)
+			abilityPressed = false;
+		
+		if( Gdx.input.isKeyPressed(Keys.K) && !tempPressed)
+		{
+			if(!player.character.flags.isTempRunFlag())
+				player.character.flags.setTempRunFlag(true);
+			else
+				player.character.flags.setTempRunFlag(false);
+			tempPressed = true;
+		}
+		else if( !Gdx.input.isKeyPressed(Keys.K) && tempPressed)
+			tempPressed = false;
+		
+
 	}
 	
 	@Override

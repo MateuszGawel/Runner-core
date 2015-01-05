@@ -362,7 +362,7 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
-			else if( checkObjectType(object, "player1") )
+			else if( checkObjectType(object, "rockSmall") )
 			{
 				body = createRockSmall(object);
 								
