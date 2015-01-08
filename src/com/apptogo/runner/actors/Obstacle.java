@@ -6,6 +6,7 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.ForestWorld;
@@ -231,9 +232,11 @@ public class Obstacle extends Actor{
         if(animationManager != null)
         	currentFrame = animationManager.animate(delta);
         
-        setWidth(currentFrame.getRegionWidth() / PPM);
-        setHeight(currentFrame.getRegionHeight() / PPM);
-		setOrigin(-offsetX, -offsetY);
+        if(currentFrame != null){
+	        setWidth(currentFrame.getRegionWidth() / PPM);
+	        setHeight(currentFrame.getRegionHeight() / PPM);
+			setOrigin(-offsetX, -offsetY);
+        }
 		handleSoundVolume();
 		
 	}

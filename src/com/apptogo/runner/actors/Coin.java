@@ -2,10 +2,9 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.handlers.CustomAction;
-import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -62,8 +61,9 @@ public class Coin extends Obstacle
 			getBody().setActive(false);
 			this.remove();
 		}
-		else
+		else{
 			effectActor.setPosition(getX() + getWidth()/2, getY() + getHeight()/2);
+		}
 	}
 	
 	@Override

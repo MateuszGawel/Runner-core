@@ -13,6 +13,7 @@ import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.Flag;
+import com.apptogo.runner.actors.GravityField;
 import com.apptogo.runner.actors.Hedgehog;
 import com.apptogo.runner.actors.HedgehogStopper;
 import com.apptogo.runner.actors.Mushroom;
@@ -368,6 +369,12 @@ public class TiledMapLoader
 								
 				bodies.add( body );
 			}
+			else if( checkObjectType(object, "gravityField") )
+			{
+				body = createGravityField(object);
+								
+				bodies.add( body );
+			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
@@ -480,6 +487,12 @@ public class TiledMapLoader
 	{
 		RockSmall rock = new RockSmall(object, world, gameWorld);
 		return rock.getBody();
+	}
+	
+	private Body createGravityField(MapObject object)
+	{
+		GravityField gravityField = new GravityField(object, world, gameWorld);
+		return gravityField.getBody();
 	}
 	
 	private Array<Body> createCoins(PolylineMapObject object)

@@ -7,7 +7,7 @@ public class UserData
 	
 	//player
 	public String playerName;
-	public boolean isMainBody;
+	public boolean ignoreContact;
 
 	//powerup
 	public String powerup;

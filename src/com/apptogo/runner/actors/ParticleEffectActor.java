@@ -1,5 +1,6 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;

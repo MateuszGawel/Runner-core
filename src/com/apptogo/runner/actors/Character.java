@@ -33,6 +33,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -52,6 +53,7 @@ public abstract class Character extends Actor{
 	protected Character character = this;
 	public AnimationManager animationManager;
 	protected ArrayList<BodyMember> bodyMembers;
+	protected boolean flipX, flipY;
 	
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected boolean stepSoundPlayed;
@@ -62,6 +64,7 @@ public abstract class Character extends Actor{
 	public float playerMinSpeed = 3;
 	public float playerSlowAmmount = 0;
 	public float speedBeforeLand;
+	private int gravityModificator = 1;
 	
 	protected Vector2 deathPosition;
 	
@@ -90,6 +93,8 @@ public abstract class Character extends Actor{
 		
 		flags = new FlagsHandler();
 		flags.setCharacter(this);
+
+		this.setOrigin(90/PPM, 90/PPM);
 	}
 	
 	
@@ -104,7 +109,6 @@ public abstract class Character extends Actor{
     
 	protected void createBody(){
 		bodyMembers = new ArrayList<BodyMember>();
-		
 		Vector2 bodySize = new Vector2(23 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -118,15 +122,19 @@ public abstract class Character extends Actor{
 		body = world.createBody(bodyDef);
 		body.setUserData( new UserData("player") );
 		
-		
 		//main fixture
 		shape.setAsBox(bodySize.x, bodySize.y);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		Fixture fix = body.createFixture(fixtureDef);
 		fix.setUserData( new UserData("mainBody") );
-		//((UserData)fix.getUserData()).isMainBody = true;
 		
+		createNormalFixtures(fixtureDef, bodySize, shape);
+		createMirrorFixtures(fixtureDef, bodySize, shape);
+
+	}
+	
+	private void createNormalFixtures(FixtureDef fixtureDef, Vector2 bodySize, PolygonShape shape){
 		//wall sensor body
 		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, 1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
@@ -134,7 +142,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
 		
 		//sliding fixture
-		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x, -32/PPM), 0);
+		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -4/PPM, -32/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
@@ -152,7 +160,6 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
 		
-
 		//foot sensor
 		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -75 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
@@ -188,6 +195,76 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
+	}
+	
+	private void createMirrorFixtures(FixtureDef fixtureDef, Vector2 bodySize, PolygonShape shape){
+		
+		//wall sensor body
+		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, -1/PPM), 0);
+		fixtureDef = Materials.wallSensorBody;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
+		
+		//sliding fixture
+		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -4/PPM, 32/PPM), 0);
+		fixtureDef = Materials.characterBody;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
+		body.getFixtureList().get(2).setSensor(true);
+		
+		//wall sensor
+		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
+		
+		//coin collector sensor
+		shape.setAsBox(60 / PPM, 70 / PPM, new Vector2(0, 0), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
+	
+		//foot sensor
+		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 75 / PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
+		
+		//jump sensor
+		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, 80 / PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
+		
+		//standup sensor
+		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, -8/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
+		
+		//head sensor
+		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, -60/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("headSensor") );
+		
+		//Left sensor
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, 55/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("leftRotationSensor") );
+		
+		//Right sensor
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, 55/PPM), 0);
+		fixtureDef = Materials.characterSensor;
+		fixtureDef.shape = shape;
+		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
+		
+		body.getFixtureList().get(11).setSensor(true);
+		body.getFixtureList().get(12).setSensor(true);
+		for(int i = 11; i<=20; i++){
+			((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
+		}
 	}
 	
 	public void start()
@@ -228,7 +305,7 @@ public abstract class Character extends Actor{
 
 		float y = (float) sqrt(-world.getGravity().y * 8);
 		float x = body.getLinearVelocity().x;
-		body.setLinearVelocity(x*xMultiplier + xAdd, y*yMultiplier + yAdd);
+		body.setLinearVelocity(x*xMultiplier + xAdd, (y*yMultiplier + yAdd) * gravityModificator);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 		
 		if(stepSoundPlayed){
@@ -244,7 +321,7 @@ public abstract class Character extends Actor{
 		float y = (float) sqrt(-world.getGravity().y * 8);
 		float x = body.getLinearVelocity().x;
 		flags.setQueuedBoost(0);
-		body.setLinearVelocity(x * 0.8f, y * 0.7f );
+		body.setLinearVelocity(x * 0.8f, gravityModificator * y * 0.7f );
 		flags.setDoubleJumped(true);
 		Logger.log(this, "double jump");
 	}
@@ -576,6 +653,106 @@ public abstract class Character extends Actor{
 		}
 	}
 	
+	private void handleInversedGravity(){
+
+		if(flags.isGravityInversed()){
+			body.applyForceToCenter(new Vector2(0, body.getMass()*120f), true);
+			Logger.log(this, "nadaje sile");
+		}
+		
+		if(flags.isGravityInversed() && flags.isGravityRotationSwitch()){
+			Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
+			
+			//normal na nie-sensory
+			body.getFixtureList().get(1).setSensor(false);
+			body.getFixtureList().get(2).setSensor(false);
+
+			//mirror na sensory
+			body.getFixtureList().get(11).setSensor(true);
+			body.getFixtureList().get(12).setSensor(true);
+			
+			for(int i = 1; i<=10; i++){
+				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = false;
+			}
+			for(int i = 11; i<=20; i++){
+				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
+			}
+			
+			flags.setGravityRotationSwitch(false);
+			flags.setGravityInversed(false);
+			gravityModificator = 1;
+			
+			customActionManager.registerAction(new CustomAction(0.0001f, 0, this) {
+				@Override
+				public void perform() {
+					if(((Character)args[0]).getRotation() > 0)
+						((Character)args[0]).setRotation(((Character)args[0]).getRotation()-20f);
+					else
+						this.setFinished(true);
+				}
+			});
+			
+			if(flags.getFootSensor() > 0)
+				flags.decrementFootSensor();
+			if(flags.getJumpSensor() > 0)
+				flags.decrementJumpSensor();
+			if(flags.getStandupSensor() < 0)
+				flags.incrementStandupSensor();
+			if(flags.getHeadSensor() < 0)
+				flags.incrementHeadSensor();
+		}
+		else if(!flags.isGravityInversed() && flags.isGravityRotationSwitch()){
+			Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
+			
+			//normal na sensory
+			body.getFixtureList().get(1).setSensor(true);
+			body.getFixtureList().get(2).setSensor(true);
+
+			//mirror na nie-sensory
+			body.getFixtureList().get(11).setSensor(false);
+			body.getFixtureList().get(12).setSensor(false);
+
+			for(int i = 1; i<=10; i++){
+				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
+			}
+			for(int i = 11; i<=20; i++){
+				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = false;
+			}
+			
+			flags.setGravityRotationSwitch(false);
+			flags.setGravityInversed(true);
+			gravityModificator = -1;
+			
+			customActionManager.registerAction(new CustomAction(0.0001f, 0, this) {
+				@Override
+				public void perform() {
+					if(((Character)args[0]).getRotation() < 180)
+						((Character)args[0]).setRotation(((Character)args[0]).getRotation()+20f);
+					else
+						this.setFinished(true);
+				}
+			});
+			
+			if(flags.getFootSensor() > 0)
+				flags.decrementFootSensor();
+			if(flags.getJumpSensor() > 0)
+				flags.decrementJumpSensor();
+			if(flags.getStandupSensor() < 0)
+				flags.incrementStandupSensor();
+			if(flags.getHeadSensor() < 0)
+				flags.incrementHeadSensor();
+		}
+		
+		if(!flags.isGravityInversed() && flags.isOnGround()){
+			//this.setRotation(0);
+			flipX = false;
+		}
+		else if(flags.isGravityInversed() && flags.isOnGround()){
+			//this.setRotation(180);
+			flipX = true;
+		}
+	}
+	
 	@Override
 	public void act(float delta) 
 	{
@@ -588,6 +765,7 @@ public abstract class Character extends Actor{
 		handleStepSoundSpeed();
 		handleDying();
 		handleFlying();
+		handleInversedGravity();
 		//handleRotation();
 		
 		currentFrame = animationManager.animate(delta);
@@ -595,7 +773,7 @@ public abstract class Character extends Actor{
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
-        setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        //setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         
         
         //Logger.log(this,  "SPEED = " + String.valueOf(body.getLinearVelocity().x));

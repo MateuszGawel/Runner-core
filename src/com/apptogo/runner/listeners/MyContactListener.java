@@ -6,13 +6,13 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class MyContactListener implements ContactListener
 {
@@ -30,7 +30,7 @@ public class MyContactListener implements ContactListener
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);		
 
-		if(player != null){
+		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
 			
 			//smierc TOP
@@ -53,7 +53,43 @@ public class MyContactListener implements ContactListener
 					flags.setDieDismemberment(true);
 				}
 			}	
+			
+			//powerup
+			if(checkFixturesTypes(fa, fb, "powerup", "mainBody")){
+				if(!flags.isPowerupSet())
+				{
+					Fixture fixture = getFixtureByType(fa, fb, "powerup");
+					
+					String powerupKey = ((UserData)fixture.getUserData()).powerup;
+					player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
 	
+					fixture.getBody().setUserData(new UserData("inactive"));
+				}
+			}
+			
+			//boost po l¹dowaniu
+			if( checkFixturesTypes(fa, fb, "nonkilling", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "mainBody")){		
+				if(flags.getQueuedBoost() == 0){
+					flags.setQueuedBoost(player.character.getBody().getLinearVelocity().x);
+					Logger.log(this, "kolejkuje z predkoscia: " + player.character.getBody().getLinearVelocity().x);
+				}
+			}	
+	
+			//meta - koniec gry
+			if(checkFixturesTypes(fa, fb, "mainBody", "finishingLine")){
+				flags.setFinished(true);
+			}
+			
+			//gravity field
+			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){
+					Fixture bodyFixture = getFixtureByType(fa, fb, "gravityField");
+					player.character.flags.setGravityRotationSwitch(true);
+					Logger.log(this, "pocz¹tek gravityfield");
+			}
+			
+			
+			//INNE NI¯ MAINBODY
+			
 			//sensory playera
 			if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
 				flags.incrementFootSensor();
@@ -79,14 +115,6 @@ public class MyContactListener implements ContactListener
 	//		if(checkFixturesTypes(fa, fb, "rightRotationSensor", "nonkilling")){
 	//			player.character.incrementRightRotationSensor();
 	//		}
-			
-			//boost po l¹dowaniu
-			if( checkFixturesTypes(fa, fb, "nonkilling", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "mainBody")){		
-				if(flags.getQueuedBoost() == 0){
-					flags.setQueuedBoost(player.character.getBody().getLinearVelocity().x);
-					Logger.log(this, "kolejkuje z predkoscia: " + player.character.getBody().getLinearVelocity().x);
-				}
-			}	
 			
 			//beczki
 			if(checkFixturesTypes(fa, fb, "barrel", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
@@ -142,18 +170,7 @@ public class MyContactListener implements ContactListener
 				player.character.incrementCoinCounter();
 			}
 			
-			//powerup
-			if(checkFixturesTypes(fa, fb, "powerup", "mainBody")){
-				if(!flags.isPowerupSet())
-				{
-					Fixture fixture = getFixtureByType(fa, fb, "powerup");
-					
-					String powerupKey = ((UserData)fixture.getUserData()).powerup;
-					player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
-	
-					fixture.getBody().setUserData(new UserData("inactive"));
-				}
-			}
+
 			
 			//podnoszenie aliena dziala tylko w singlu - do zrobienia
 //			if(checkIsOneOfType(fa, fb, "liftField") && ((Alien)gameWorld.player.character).liftField.isActive()){
@@ -169,11 +186,6 @@ public class MyContactListener implements ContactListener
 //					fixture.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
 //				}
 //			}
-			
-			//meta - koniec gry
-			if(checkFixturesTypes(fa, fb, "mainBody", "finishingLine")){
-				flags.setFinished(true);
-			}
 		}
 		
 		
@@ -196,7 +208,7 @@ public class MyContactListener implements ContactListener
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);
 		
-		if(player != null){
+		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
 			
 			if(checkFixturesTypes(fa, fb, "footSensor", "nonkilling")){
@@ -239,6 +251,12 @@ public class MyContactListener implements ContactListener
 			//barrel
 			if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
 				flags.decrementBarrelSensor();
+			}
+			//gravity field
+			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){
+					Fixture bodyFixture = getFixtureByType(fa, fb, "gravityField");
+					player.character.flags.setGravityRotationSwitch(true);
+					Logger.log(this, "koniec gravityfield");
 			}
 		}
 	}
@@ -335,6 +353,23 @@ public class MyContactListener implements ContactListener
 					((UserData)fixtureA.getUserData()).key.equals( type ) 
 					||
 					((UserData)fixtureB.getUserData()).key.equals( type ) 
+			)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean checkIsIgnored(Fixture fixtureA, Fixture fixtureB)
+	{
+		if(fixtureA.getUserData() != null && fixtureB.getUserData() != null){
+			if
+			(
+					((UserData)fixtureA.getUserData()).ignoreContact == true
+					||
+					((UserData)fixtureB.getUserData()).ignoreContact == true 
 			)
 			{
 				return true;

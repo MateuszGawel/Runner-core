@@ -43,7 +43,6 @@ public class Archer extends Character{
 		initAnimations();
 		this.world = world;
 		createBody();
-        setOrigin(0, 0);
         
         createBodyMembers();
         addSounds();
@@ -216,7 +215,7 @@ public class Archer extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
+		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 		
 	public Button getAbilityButton()

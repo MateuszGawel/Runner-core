@@ -41,6 +41,8 @@ public class FlagsHandler {
 	private boolean stopFlyingAction;
 	private boolean canUseAbility;
 	private boolean jumped;
+	private boolean gravityInversed;
+	private boolean gravityRotationSwitch;
 	
 	//TEMP
 	private boolean tempRunFlag;
@@ -76,6 +78,7 @@ public class FlagsHandler {
 //	private int leftRotationSensor;
 //	private int rightRotationSensor;
 
+
 	
 	public void setCharacter(Character character){
 		this.character = character;
@@ -89,7 +92,7 @@ public class FlagsHandler {
 			else
 				canBegin = false;
 			
-			if((footSensor>0 || barrelSensor>0) && alive && !onGround && character.getBody().getLinearVelocity().y <= 5) //5 mo¿e byæ z³¹ wartoœci¹
+			if((footSensor>0 || barrelSensor>0) && alive && !onGround && (character.getBody().getLinearVelocity().y <= 5 || character.getBody().getLinearVelocity().y >= -5)) //5 mo¿e byæ z³¹ wartoœci¹
 				canLand = true;
 			else
 				canLand = false;
@@ -365,6 +368,22 @@ public class FlagsHandler {
 		this.jumped = jumped;
 	}
 
+	public boolean isGravityInversed() {
+		return gravityInversed;
+	}
+
+	public void setGravityInversed(boolean gravityInversed) {
+		this.gravityInversed = gravityInversed;
+	}
+
+	public boolean isGravityRotationSwitch() {
+		return gravityRotationSwitch;
+	}
+
+	public void setGravityRotationSwitch(boolean gravityRotationSwitch) {
+		this.gravityRotationSwitch = gravityRotationSwitch;
+	}
+
 	public boolean isCanRun() {
 		return canRun;
 	}
@@ -498,5 +517,81 @@ public class FlagsHandler {
 	}
 	public void decrementMushroomSensor(){
 		mushroomSensor--;
+	}
+
+	public int getWallSensor() {
+		return wallSensor;
+	}
+
+	public void setWallSensor(int wallSensor) {
+		this.wallSensor = wallSensor;
+	}
+
+	public int getFootSensor() {
+		return footSensor;
+	}
+
+	public void setFootSensor(int footSensor) {
+		this.footSensor = footSensor;
+	}
+
+	public int getStandupSensor() {
+		return standupSensor;
+	}
+
+	public void setStandupSensor(int standupSensor) {
+		this.standupSensor = standupSensor;
+	}
+
+	public int getJumpSensor() {
+		return jumpSensor;
+	}
+
+	public void setJumpSensor(int jumpSensor) {
+		this.jumpSensor = jumpSensor;
+	}
+
+	public int getBarrelSensor() {
+		return barrelSensor;
+	}
+
+	public void setBarrelSensor(int barrelSensor) {
+		this.barrelSensor = barrelSensor;
+	}
+
+	public int getHeadSensor() {
+		return headSensor;
+	}
+
+	public void setHeadSensor(int headSensor) {
+		this.headSensor = headSensor;
+	}
+
+	public int getSwampSensor() {
+		return swampSensor;
+	}
+
+	public void setSwampSensor(int swampSensor) {
+		this.swampSensor = swampSensor;
+	}
+
+	public int getCatapultSensor() {
+		return catapultSensor;
+	}
+
+	public void setCatapultSensor(int catapultSensor) {
+		this.catapultSensor = catapultSensor;
+	}
+
+	public int getMushroomSensor() {
+		return mushroomSensor;
+	}
+
+	public void setMushroomSensor(int mushroomSensor) {
+		this.mushroomSensor = mushroomSensor;
+	}
+
+	public Character getCharacter() {
+		return character;
 	}
 }
