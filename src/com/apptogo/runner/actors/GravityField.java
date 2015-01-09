@@ -2,6 +2,7 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -33,15 +35,15 @@ public class GravityField extends Obstacle
 	private void createGravityEffects(MapObject mapObject)
 	{
 		
-		ChainShape shape = (ChainShape)body.getFixtureList().get(0).getShape();
+		PolygonShape shape = (PolygonShape)body.getFixtureList().get(0).getShape();
 		worldVertices = new Vector2[shape.getVertexCount()];
 		
 		for(int i=0; i<shape.getVertexCount(); i++){
 			worldVertices[i] = new Vector2();
 			shape.getVertex(i, worldVertices[i]);
 			
-			worldVertices[i].x = (worldVertices[i].x + ((PolylineMapObject)mapObject).getPolyline().getTransformedVertices()[0]/PPM -0.5f);
-			worldVertices[i].y = (worldVertices[i].y + ((PolylineMapObject)mapObject).getPolyline().getTransformedVertices()[1]/PPM - 1.5f);
+			worldVertices[i].x = (worldVertices[i].x + body.getPosition().x -0.5f);
+			worldVertices[i].y = (worldVertices[i].y + body.getPosition().y -1.5f);
 		}
 		
 		//getting polygon bounding box
@@ -67,7 +69,7 @@ public class GravityField extends Obstacle
 					ParticleEffectActor effectActor = new ParticleEffectActor("gravityField.p");
 					effectActor.scaleBy(1/PPM);
 					effectActor.setPosition(bottomLeft.x+i, bottomLeft.y+j);
-					gameWorld.getWorldStage().addActor(effectActor);
+					gameWorld.worldBackgroundGroup.addActor(effectActor);
 					effectActor.start();
 				}
 			}

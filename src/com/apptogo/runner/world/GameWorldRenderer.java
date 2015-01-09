@@ -2,11 +2,12 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.handlers.MyTiledMapRenderer;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 public class GameWorldRenderer 
@@ -46,19 +47,24 @@ public class GameWorldRenderer
 	    
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
     	camera.update();
-    	
-    	
+
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
     	
+    	tiledMapRenderer.renderFrontLayer();
+		Batch batch = gameWorld.getWorldStage().getBatch();
+		if (batch != null) {
+			batch.begin();
+			gameWorld.worldBackgroundGroup.draw(batch, 1);
+			batch.end();
+		}
     	tiledMapRenderer.render();
     	
     	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.worldStage.draw();
     	
-    	tiledMapRenderer.renderFrontLayer();
-    	
-    	debugRenderer.render(gameWorld.world, camera.combined);
+
+    	//debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

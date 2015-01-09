@@ -37,6 +37,7 @@ public abstract class GameWorld
 	Array<Body> bodiesToDestroy;
 	
 	public Stage worldStage;
+	public Group worldBackgroundGroup;
 	public Viewport viewport;
 	public OrthographicCamera camera;
 	public float minCameraX;
@@ -73,6 +74,7 @@ public abstract class GameWorld
 		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
+	    worldBackgroundGroup = new Group();
 		
 		this.enemies = new Array<Player>();
 		this.player = player;
@@ -141,6 +143,7 @@ public abstract class GameWorld
     {
         world.step(delta, 3, 3);
         
+        worldBackgroundGroup.act(delta);
         worldStage.act(delta);
 		backgroundStage.act(delta);
         contactListener.postStep();

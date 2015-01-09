@@ -660,7 +660,7 @@ public abstract class Character extends Actor{
 		}
 		
 		if(flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
+			//Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
 			
 			//normal na nie-sensory
 			body.getFixtureList().get(1).setSensor(false);
@@ -686,8 +686,10 @@ public abstract class Character extends Actor{
 				public void perform() {
 					if(((Character)args[0]).getRotation() > 0)
 						((Character)args[0]).setRotation(((Character)args[0]).getRotation()-20f);
-					else
+					else{
 						this.setFinished(true);
+						flipX = false;
+					}
 				}
 			});
 			
@@ -701,7 +703,7 @@ public abstract class Character extends Actor{
 				flags.incrementHeadSensor();
 		}
 		else if(!flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
+			//Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
 			
 			//normal na sensory
 			body.getFixtureList().get(1).setSensor(true);
@@ -727,8 +729,10 @@ public abstract class Character extends Actor{
 				public void perform() {
 					if(((Character)args[0]).getRotation() < 180)
 						((Character)args[0]).setRotation(((Character)args[0]).getRotation()+20f);
-					else
+					else{
 						this.setFinished(true);
+						flipX = true;
+					}
 				}
 			});
 			
