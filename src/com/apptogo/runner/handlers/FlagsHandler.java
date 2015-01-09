@@ -44,6 +44,7 @@ public class FlagsHandler {
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
 	
+
 	//TEMP
 	private boolean tempRunFlag;
 	public boolean isTempRunFlag() {
@@ -76,7 +77,10 @@ public class FlagsHandler {
 	private int catapultSensor;
 	private int mushroomSensor;
 //	private int leftRotationSensor;
-//	private int rightRotationSensor;
+//	private int rightRotationSensor;	
+	public void printSensors(){
+		Logger.log(this, "oto sensory: " + footSensor + " " + jumpSensor + " " + standupSensor + " " + headSensor);
+	}
 
 
 	
@@ -468,55 +472,55 @@ public class FlagsHandler {
 		wallSensor++;
 	}
 	public void decrementWallSensor(){
-		wallSensor--;
+		if(wallSensor>0) wallSensor--;
 	}
 	public void incrementFootSensor(){
 		footSensor++;
 	}
 	public void decrementFootSensor(){
-		footSensor--;
+		if(footSensor>0) footSensor--;
 	}
 	public void incrementStandupSensor(){
 		standupSensor++;
 	}
 	public void decrementStandupSensor(){
-		standupSensor--;
+		if(standupSensor>0) standupSensor--;
 	}
 	public void incrementJumpSensor(){
 		jumpSensor++;
 	}
 	public void decrementJumpSensor(){
-		jumpSensor--;
+		if(jumpSensor>0) jumpSensor--;
 	}
 	public void incrementBarrelSensor(){
 		barrelSensor++;
 	}
 	public void decrementBarrelSensor(){
-		barrelSensor--;
+		if(barrelSensor>0) barrelSensor--;
 	}
 	public void incrementHeadSensor(){
 		headSensor++;
 	}
 	public void decrementHeadSensor(){
-		headSensor--;
+		if(headSensor>0) headSensor--;
 	}
 	public void incrementSwampSensor(){
 		swampSensor++;
 	}
 	public void decrementSwampSensor(){
-		swampSensor--;
+		if(swampSensor>0)swampSensor--;
 	}
 	public void incrementCatapultSensor(){
 		catapultSensor++;
 	}
 	public void decrementCatapultSensor(){
-		catapultSensor--;
+		if(catapultSensor>0)catapultSensor--;
 	}
 	public void incrementMushroomSensor(){
 		mushroomSensor++;
 	}
 	public void decrementMushroomSensor(){
-		mushroomSensor--;
+		if(mushroomSensor>0)mushroomSensor--;
 	}
 
 	public int getWallSensor() {

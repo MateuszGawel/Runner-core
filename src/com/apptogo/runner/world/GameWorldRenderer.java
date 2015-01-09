@@ -64,7 +64,7 @@ public class GameWorldRenderer
     	gameWorld.worldStage.draw();
     	
 
-    	//debugRenderer.render(gameWorld.world, camera.combined);
+    	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

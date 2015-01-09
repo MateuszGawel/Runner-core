@@ -161,7 +161,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
 		
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -75 / PPM), 0);
+		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
@@ -225,7 +225,7 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
 	
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 75 / PPM), 0);
+		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
@@ -405,7 +405,7 @@ public abstract class Character extends Actor{
 			NotificationManager.getInstance().notifySlide(getBody().getPosition());
 		}
 		else if(!flags.isOnGround()){
-			body.setLinearVelocity( body.getLinearVelocity().x, -30f );
+			body.setLinearVelocity( body.getLinearVelocity().x, -30f * gravityModificator );
 		}
 	}
 	
@@ -660,7 +660,7 @@ public abstract class Character extends Actor{
 		}
 		
 		if(flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			//Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
+			Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
 			
 			//normal na nie-sensory
 			body.getFixtureList().get(1).setSensor(false);
@@ -693,17 +693,25 @@ public abstract class Character extends Actor{
 				}
 			});
 			
-			if(flags.getFootSensor() > 0)
+			if(flags.getFootSensor() > 0){
+				Logger.log(this, "footsensor: " + flags.getFootSensor() + " przy zmianie na normal wiêc zmniejszam");
 				flags.decrementFootSensor();
-			if(flags.getJumpSensor() > 0)
+			}
+			if(flags.getJumpSensor() > 0){
+				Logger.log(this, "jumpsensor: " + flags.getJumpSensor() + " przy zmianie na normal wiêc zmniejszam");
 				flags.decrementJumpSensor();
-			if(flags.getStandupSensor() < 0)
+			}
+			if(flags.getStandupSensor() < 0){
+				Logger.log(this, "standupsensor: " + flags.getStandupSensor() + " przy zmianie na normal wiêc zwiêkszam");
 				flags.incrementStandupSensor();
-			if(flags.getHeadSensor() < 0)
+			}
+			if(flags.getHeadSensor() < 0){
+				Logger.log(this, "headsensor: " + flags.getHeadSensor() + " przy zmianie na normal wiêc zwiêkszam");
 				flags.incrementHeadSensor();
+			}
 		}
 		else if(!flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			//Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
+			Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
 			
 			//normal na sensory
 			body.getFixtureList().get(1).setSensor(true);
@@ -736,14 +744,22 @@ public abstract class Character extends Actor{
 				}
 			});
 			
-			if(flags.getFootSensor() > 0)
+			if(flags.getFootSensor() > 0){
+				Logger.log(this, "footsensor: " + flags.getFootSensor() + " przy zmianie na inwerted wiêc zmniejszam");
 				flags.decrementFootSensor();
-			if(flags.getJumpSensor() > 0)
+			}
+			if(flags.getJumpSensor() > 0){
+				Logger.log(this, "jumpsensor: " + flags.getJumpSensor() + " przy zmianie na inwerted wiêc zmniejszam");
 				flags.decrementJumpSensor();
-			if(flags.getStandupSensor() < 0)
+			}
+			if(flags.getStandupSensor() < 0){
+				Logger.log(this, "standupsensor: " + flags.getStandupSensor() + " przy zmianie na inwerted wiêc zwiêkszam");
 				flags.incrementStandupSensor();
-			if(flags.getHeadSensor() < 0)
+			}
+			if(flags.getHeadSensor() < 0){
+				Logger.log(this, "headsensor: " + flags.getHeadSensor() + " przy zmianie na inwerted wiêc zwiêkszam");
 				flags.incrementHeadSensor();
+			}
 		}
 		
 		if(!flags.isGravityInversed() && flags.isOnGround()){
@@ -759,6 +775,7 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
+		flags.printSensors();
 		flags.update();
 		handleQueuedActions();
 		handleActions();
