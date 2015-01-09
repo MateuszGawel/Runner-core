@@ -657,7 +657,6 @@ public abstract class Character extends Actor{
 
 		if(flags.isGravityInversed()){
 			body.applyForceToCenter(new Vector2(0, body.getMass()*120f), true);
-			Logger.log(this, "nadaje sile");
 		}
 		
 		if(flags.isGravityInversed() && flags.isGravityRotationSwitch()){

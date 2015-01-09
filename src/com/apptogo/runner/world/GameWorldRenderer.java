@@ -43,17 +43,19 @@ public class GameWorldRenderer
 	            Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
 	            Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
 	            0);
+	    
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
-		
     	camera.update();
-		gameWorld.backgroundCamera.update();
-
-		gameWorld.backgroundStage.getViewport().update(currentScreenWidth, currentScreenHeight);
-    	gameWorld.backgroundStage.draw();
+    	
+    	
+		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
+    	gameWorld.getBackgroundStage().draw();
+    	
     	tiledMapRenderer.render();
     	
     	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.worldStage.draw();
+    	
     	tiledMapRenderer.renderFrontLayer();
     	
     	debugRenderer.render(gameWorld.world, camera.combined);

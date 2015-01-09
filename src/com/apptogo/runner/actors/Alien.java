@@ -35,7 +35,7 @@ public class Alien extends Character{
 		createBody();
 
         liftField = new LiftField(this, world);
-        gameWorld.backgroundStage.addActor(liftField);
+        gameWorld.getBackgroundStage().addActor(liftField);
         addSounds();
 	}
 	

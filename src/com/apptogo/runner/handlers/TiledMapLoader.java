@@ -11,7 +11,7 @@ import com.apptogo.runner.actors.Barrel;
 import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Bush;
 import com.apptogo.runner.actors.Catapult;
-import com.apptogo.runner.actors.Coin;
+import com.apptogo.runner.actors.CoinField;
 import com.apptogo.runner.actors.Flag;
 import com.apptogo.runner.actors.GravityField;
 import com.apptogo.runner.actors.Hedgehog;
@@ -21,6 +21,7 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -38,7 +39,6 @@ import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Ellipse;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -350,12 +350,9 @@ public class TiledMapLoader
 			}
 			else if( checkObjectType(object, "coins") )
 			{
-				Array<Body> coinBodies = createCoins((PolylineMapObject) object);
-				
-				for(Body coinBody: coinBodies)
-				{
-					bodies.add( coinBody );
-				}
+				body = createCoinField(object);
+					
+				bodies.add( body );
 			}
 			else if( checkObjectType(object, "rockBig") )
 			{
@@ -489,75 +486,19 @@ public class TiledMapLoader
 		return rock.getBody();
 	}
 	
+	private Body createCoinField(MapObject object)
+	{
+		CoinField coinField = new CoinField(object, world, gameWorld);
+		return coinField.getBody();
+	}
+	
 	private Body createGravityField(MapObject object)
 	{
 		GravityField gravityField = new GravityField(object, world, gameWorld);
 		return gravityField.getBody();
 	}
 	
-	private Array<Body> createCoins(PolylineMapObject object)
-	{
-		Array<Body> coinBodies = new Array<Body>();
-
-		//converting Polyline to vertices array
-		float[] vertices_raw = ((PolylineMapObject)object).getPolyline().getTransformedVertices();
-		Vector2[] vertices_vector = new Vector2[vertices_raw.length / 2];
-
-		for (int i = 0; i < vertices_raw.length / 2; ++i) 
-		{
-		    vertices_vector[i] = new Vector2();
-		    vertices_vector[i].x = vertices_raw[i * 2];
-		    vertices_vector[i].y = vertices_raw[i * 2 + 1];
-		}
-		
-		Array<Vector2> vertices = new Array<Vector2>( vertices_vector );
-		
-		//getting polygon bounding box
-		Vector2 bottomLeft = new Vector2( vertices.get(0).x, vertices.get(0).y );
-		Vector2 topRight = new Vector2( vertices.get(0).x, vertices.get(0).y );
-		
-		for(Vector2 v : vertices_vector)
-		{   
-			if( v.x < bottomLeft.x ) bottomLeft.x = v.x;			
-			if( v.x > topRight.x   ) topRight.x = v.x;		
-			if( v.y < bottomLeft.y ) bottomLeft.y = v.y;			
-			if( v.y > topRight.y   ) topRight.y = v.y;
-		}
-		
-		//calculating coins amount
-		int coinsInRow = Math.abs( (int) (topRight.x - bottomLeft.x) ) / 32;
-		int coinsInColumn = Math.abs( (int) (topRight.y - bottomLeft.y) ) / 32;
-		
-		//creating coin template object - coins will be creating on its example
-		EllipseMapObject coinTemplate = new EllipseMapObject();
-		coinTemplate.getEllipse().setSize(22.0f, 22.0f);
-		coinTemplate.getEllipse().setPosition(bottomLeft);
-		
-		for(int i = 0; i < coinsInRow; i++)
-		{
-			coinTemplate.getEllipse().x += 32.0f;
-			coinTemplate.getEllipse().y = bottomLeft.y;
-			
-			for(int k = 0; k < coinsInColumn; k++)
-			{
-				coinTemplate.getEllipse().y += 32.0f;
-				
-				//checking if coin is in polygon (for now we only know that it is in polygon bounding box)
-				Vector2 coinTemplatePosition = new Vector2( coinTemplate.getEllipse().x, coinTemplate.getEllipse().y );
-				
-				if ( Intersector.isPointInPolygon( vertices, coinTemplatePosition ) ) 
-				{
-					//it is in polygon so we are creating coin
-					Coin coin = new Coin(coinTemplate, world, gameWorld);
-					coinBodies.add( coin.getBody() );
-				}
-				else
-				{}
-			}
-		}
-				
-		return coinBodies;
-	}
+	
 	
 	private void addObjectToJointHandles(MapObject object, Body body)
 	{

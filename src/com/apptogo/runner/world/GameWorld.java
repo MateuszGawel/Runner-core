@@ -43,10 +43,8 @@ public abstract class GameWorld
 	public float maxCameraX;
 	public float minCameraY;
 	public float maxCameraY;
-    
-
 	
-	public Stage backgroundStage;
+	private Stage backgroundStage;
 	public Viewport backgroundViewport;
 	public OrthographicCamera backgroundCamera;
 	
@@ -71,7 +69,7 @@ public abstract class GameWorld
 		worldStage = new Stage();
 		camera = (OrthographicCamera)worldStage.getCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
-		viewport = new FillViewport(WIDTH, HEIGHT, camera);
+		viewport = new FillViewport(WIDTH, HEIGHT);
 		worldStage.setViewport(viewport);
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
@@ -142,14 +140,15 @@ public abstract class GameWorld
     public void update(float delta) 
     {
         world.step(delta, 3, 3);
+        
         worldStage.act(delta);
 		backgroundStage.act(delta);
-		
         contactListener.postStep();
        // fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }
+    public Stage getBackgroundStage(){ return this.backgroundStage; }
     
     /** ta i metode getEnemy() nalezy obstawic wyjatkami 
      * @throws PlayerExistsException */

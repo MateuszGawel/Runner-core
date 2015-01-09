@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -34,6 +36,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 
 public class Obstacle extends Actor{
 
@@ -105,7 +108,7 @@ public class Obstacle extends Actor{
 	{
 		Shape shape = null;
 		if (object instanceof PolygonMapObject)   shape = getShape( (PolygonMapObject)object );
-		//if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
+		if (object instanceof PolylineMapObject)  shape = getShape( (PolylineMapObject)object );
 		else if (object instanceof EllipseMapObject)   shape = getShape( (EllipseMapObject)object );
 		else
 		{                                           
@@ -126,20 +129,46 @@ public class Obstacle extends Actor{
 		float radius = ((ellipse.width < ellipse.height) ? ellipse.width : ellipse.height)/2f;
 		ellipseShape.setRadius(radius/PPM);
 		ellipseShape.setPosition(new Vector2(radius/PPM, radius/PPM));
+		
 		position = new Vector2(ellipse.x/PPM, ellipse.y/PPM);
-		bodyDef.position.set(position);
-
+		if(bodyDef != null){
+			bodyDef.position.set(position);
+		}
 		return ellipseShape;
 	}
 	
 	private Shape getShape(RectangleMapObject obj){
 		Rectangle rectangle = obj.getRectangle();
 		PolygonShape polygonShape = new PolygonShape();
-		position = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,
-		                           (rectangle.y + rectangle.height * 0.5f ) / PPM);
 		polygonShape.setAsBox(rectangle.width * 0.5f / PPM, rectangle.height * 0.5f / PPM);
-		bodyDef.position.set(position);
+		
+		position = new Vector2((rectangle.x + rectangle.width * 0.5f) / PPM,(rectangle.y + rectangle.height * 0.5f ) / PPM);
+		if(bodyDef != null){
+			bodyDef.position.set(position);
+		}
 		return polygonShape;
+	}
+	
+	
+	private Shape getShape(PolylineMapObject obj)
+	{
+		ChainShape chain = new ChainShape(); 
+		float[] vertices = obj.getPolyline().getTransformedVertices();
+		
+		Vector2[] worldVertices = new Vector2[vertices.length / 2];
+
+		for (int i = 0; i < vertices.length / 2; ++i) {
+		    worldVertices[i] = new Vector2();
+		    worldVertices[i].x = vertices[i * 2]/PPM - vertices[0]/PPM;
+		    worldVertices[i].y = vertices[i * 2 + 1]/PPM - vertices[1]/PPM;
+		}
+		
+		position = new Vector2(vertices[0]/PPM, vertices[1]/PPM);
+		if(bodyDef != null){
+			bodyDef.position.set(position);
+		}
+		chain.createChain(worldVertices);
+		return chain;
 	}
 	
 	private Shape getShape(PolygonMapObject obj)
@@ -155,14 +184,17 @@ public class Obstacle extends Actor{
 		    else
 		    	worldVertices[i] = vertices[i] / PPM - vertices[1] / PPM;
 		}
+		
 		position = new Vector2(vertices[0]/PPM, vertices[1]/PPM);
-		bodyDef.position.set(position);
+		if(bodyDef != null){
+			bodyDef.position.set(position);
+		}
 		polygon.set(worldVertices);
 		return polygon;
 	}
 	
-	public void createShape(){
-		createShape(object);
+	public Shape createShape(){
+		return createShape(object);
 	}
 	
 	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData)
