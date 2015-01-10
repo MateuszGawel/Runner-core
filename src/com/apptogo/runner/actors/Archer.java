@@ -37,12 +37,12 @@ public class Archer extends Character{
 	    }
     };
 	
-	public Archer(World world, GameWorld gameWorld){
-		super(world, "gfx/game/characters/archer.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton");
+	public Archer(World world, GameWorld gameWorld, int startingPosition, String playerName){
+		super(world, "gfx/game/characters/archer.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
-		createBody();
+		createBody(startingPosition);
         
         createBodyMembers();
         addSounds();
@@ -111,7 +111,7 @@ public class Archer extends Character{
 				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 10){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
@@ -215,7 +215,7 @@ public class Archer extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 		
 	public Button getAbilityButton()

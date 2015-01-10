@@ -27,14 +27,14 @@ public class Alien extends Character{
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.LIFT;
 	public LiftField liftField;
 	
-	public Alien(World world, GameWorld gameWorld){
-		super(world, "gfx/game/characters/alien.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton");
+	public Alien(World world, GameWorld gameWorld, int startingPosition, String playerName){
+		super(world, "gfx/game/characters/alien.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton", playerName);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
-		createBody();
+		createBody(startingPosition);
 
-        liftField = new LiftField(this, world);
+        liftField = new LiftField(this, world, playerName, gameWorld);
         gameWorld.getBackgroundStage().addActor(liftField);
         addSounds();
 	}
@@ -114,7 +114,7 @@ public class Alien extends Character{
 				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 10){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
@@ -183,10 +183,10 @@ public class Alien extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.LIFT ) ((Alien)character).lift();
+		if( abilityType == CharacterAbilityType.LIFT ) ((Alien)character).useLift();
 	}
 	
-	public void lift()
+	public void useLift()
 	{
 		if(!flags.isOnGround()){
 			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
@@ -205,7 +205,7 @@ public class Alien extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (105 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 		
 	public Button getAbilityButton()

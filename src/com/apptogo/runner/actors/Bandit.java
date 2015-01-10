@@ -49,12 +49,12 @@ public class Bandit extends Character{
     	sounds.put(CharacterSound.VICTORY, (Sound)rm.getResource(cs, "mfx/game/characters/banditVictory.ogg"));
     }
     
-	public Bandit(World world, GameWorld gameWorld){
-		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton");
+	public Bandit(World world, GameWorld gameWorld, int startingPosition, String playerName){
+		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton", playerName);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
-		createBody();
+		createBody(startingPosition);
 		
 		createBodyMembers();
 		 
@@ -126,7 +126,7 @@ public class Bandit extends Character{
 				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 10){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);

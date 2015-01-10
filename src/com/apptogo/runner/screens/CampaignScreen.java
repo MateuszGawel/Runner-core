@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
@@ -10,10 +11,12 @@ import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.levels.LevelWorld;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -244,7 +247,16 @@ public class CampaignScreen extends BaseScreen
     	            {
     	            	player.setCharacterType( GameWorldType.convertToCharacterType( level.worldType ) );
     	            	
-    	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
+    	            	//ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null ); - odpalenie singla, wykomentowane do testow
+    	            	
+    	            	Array<Player> players = new Array<Player>();
+    	            	Player enemyPlayer1 = new Player("dupek", CharacterType.ARCHER);
+    	            	Player enemyPlayer2 = new Player("cipek", CharacterType.BANDIT);
+    	            	Player enemyPlayer3 = new Player("siurek", CharacterType.ARCHER);
+    	            	players.add(enemyPlayer1);
+    	            	players.add(enemyPlayer2);
+    	            	players.add(enemyPlayer3);
+    	            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, players );
     	            }
     	         });
         	}

@@ -1,12 +1,13 @@
 package com.apptogo.runner.listeners;
 
+import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -172,20 +173,16 @@ public class MyContactListener implements ContactListener
 			
 
 			
-			//podnoszenie aliena dziala tylko w singlu - do zrobienia
-//			if(checkIsOneOfType(fa, fb, "liftField") && ((Alien)gameWorld.player.character).liftField.isActive()){
-//				Fixture fixture = getFixtureByType(fa, fb, "liftField");
-//				fixture = ( fixture == fb )?fa:fb; //bo chcemy fixture tego drugiego a nie liftField
-//				
-//				String fixtureType = ((UserData)fb.getUserData()).key;
-//				
-//				if( !( fixtureType.equals("player") || fixtureType.equa)ls("wallSensor") || fixtureType.equals("footSensor") ) )
-//				{
-//					((Alien)gameWorld.player.character).liftField.addBodyToLift( fixture.getBody() );
-//					
-//					fixture.getBody().applyLinearImpulse(0, ((Alien)gameWorld.player.character).liftField.initialBoost, 0, 0, true);
-//				}
-//			}
+			//podnoszenie aliena
+			if(checkFixturesTypes(fa, fb, "mainBody", "liftField")){
+				Fixture liftFixture = getFixtureByType(fa, fb, "coin");
+				String liftFieldOwner = ((UserData)liftFixture.getUserData()).playerName;
+				Logger.log(this, "Jestem: " + player.getName() + " dotknalem liftfielda od: " + liftFieldOwner);
+				//tylko na mnie ma sie wykonac umiejetnosc
+				//moja umiejetnosc na mnie ma sie nie wykonac
+				if(/*player.character.flags.isMe() &&*/ liftFieldOwner!=player.getName())
+					player.character.flags.setQueuedLift(true);
+			}
 		}
 		
 		
@@ -389,13 +386,14 @@ public class MyContactListener implements ContactListener
 		if(((UserData)gameWorld.player.character.getBody().getUserData()).playerName.equals(playerName)){
 			player = gameWorld.player;
 		}
-//		else{
-//			try {
-//				player = gameWorld.getEnemy(playerName);
-//			} catch (PlayerDoesntExistException e) {
-//				Logger.log(this, "There is no player with name: " + playerName);
-//			}
-//		}
+		
+		else{
+			try {
+				player = gameWorld.getEnemy(playerName);
+			} catch (PlayerDoesntExistException e) {
+				Logger.log(this, "There is no player with name: " + playerName);
+			}
+		}
 		return player;
 	}
 	

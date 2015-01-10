@@ -5,6 +5,7 @@ import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.appwarp.NotificationManager;
@@ -26,14 +27,12 @@ import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -44,6 +43,7 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
 	
+	public String playerName;
 	public FlagsHandler flags;
 	
 	private World world;
@@ -54,6 +54,8 @@ public abstract class Character extends Actor{
 	public AnimationManager animationManager;
 	protected ArrayList<BodyMember> bodyMembers;
 	protected boolean flipX, flipY;
+	
+	protected Random randonGenerator = new Random();
 	
 	protected HashMap<CharacterSound, Sound> sounds = new HashMap<CharacterSound, Sound>();
 	protected boolean stepSoundPlayed;
@@ -77,7 +79,7 @@ public abstract class Character extends Actor{
 	
 	protected boolean blinkShow = false;
 	
-	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName)
+	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
@@ -107,13 +109,13 @@ public abstract class Character extends Actor{
     	sounds.put(CharacterSound.SLIDE, (Sound)rm.getResource(cs, "mfx/game/characters/slide.ogg"));
     }
     
-	protected void createBody(){
+	protected void createBody(int startingPosition){
 		bodyMembers = new ArrayList<BodyMember>();
 		Vector2 bodySize = new Vector2(23 / PPM, 55 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		
-		bodyDef.position.set(TiledMapLoader.getInstance().getPlayersPosition().get(0));
+		bodyDef.position.set(TiledMapLoader.getInstance().getPlayersPosition().get(startingPosition));
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
@@ -324,6 +326,32 @@ public abstract class Character extends Actor{
 		body.setLinearVelocity(x * 0.8f, gravityModificator * y * 0.7f );
 		flags.setDoubleJumped(true);
 		Logger.log(this, "double jump");
+	}
+	
+	private void lift(){
+		if(flags.isCanBeLifted()){
+			flags.setBoostedOnce(false);
+			if(flags.isSliding())
+				speedPlayerBy(0.2f);
+			flags.setSliding(false);
+			flags.setJumped(true);
+			layFixtures(false);
+	
+			float y = (float) sqrt(-world.getGravity().y * 8);
+			float x = body.getLinearVelocity().x;
+			body.setLinearVelocity(-10, y * gravityModificator);
+			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+			
+			if(stepSoundPlayed){
+				sounds.get(CharacterSound.STEPS).stop();
+				stepSoundPlayed = false;
+			}
+			//sounds.get(CharacterSound.JUMP).play();
+			
+			flags.setQueuedBoost(0);
+			flags.setDoubleJumped(true);
+			Logger.log(this, "lifted");
+		}
 	}
 	
 	public void land()
@@ -557,7 +585,6 @@ public abstract class Character extends Actor{
 	
 	/*--- HANDLERS ---*/
 	private void handleQueuedActions(){
-		//Logger.log(this, "PREDKOSC: " + character.getBody().getLinearVelocity().x);
 		if(flags.isQueuedJump()){
 			character.jump(1, 1, 0, 0);
 			flags.setQueuedJump(false);
@@ -565,6 +592,11 @@ public abstract class Character extends Actor{
 		
 		if(flags.getQueuedBoost() > 0){
 			boostAfterLand();
+		}
+		
+		if(flags.isQueuedLift()){
+			lift();
+			flags.setQueuedLift(false);
 		}
 	}
 	
@@ -775,7 +807,6 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
-		flags.printSensors();
 		flags.update();
 		handleQueuedActions();
 		handleActions();
@@ -900,7 +931,9 @@ public abstract class Character extends Actor{
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 				{
 					if(flags.isCanUseAbility()) 
+						Logger.log(this, "odpalam umiejetnosc");
 						character.usePowerup( powerupType );
+						//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
 			    }
 			});
@@ -931,7 +964,7 @@ public abstract class Character extends Actor{
 			else if(getCharacterType() == CharacterType.ALIEN)
 				character.useAbility(CharacterAbilityType.LIFT);
 			
-			removePowerup(PowerupType.ABILITY1);
+			//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
 		}
 		
 		flags.setPowerupSet(false);

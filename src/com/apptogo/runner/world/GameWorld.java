@@ -2,11 +2,12 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.Random;
+
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
-import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.main.Runner;
@@ -33,7 +34,6 @@ public abstract class GameWorld
 	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0f, -60f);
 	
 	public World world;
-	
 	Array<Body> bodiesToDestroy;
 	
 	public Stage worldStage;
@@ -58,6 +58,9 @@ public abstract class GameWorld
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
 	
 	public Music music;
+	
+	private Array<Integer> availablePosition; //UWAGA TEN MECHANIZM MUSI BYC PRZEROBIONY NA MULTI> MUSI KORZYSTAC Z NOTYFIKACJI
+	private Random randomGenerator = new Random();
 	
 	public GameWorld(String mapPath, Player player)
 	{
@@ -86,11 +89,17 @@ public abstract class GameWorld
 		backgroundViewport = new FillViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundViewport);
 		backgroundStage.addActor(background);
+
+		availablePosition = new Array<Integer>();
+		availablePosition.add(0);
+		availablePosition.add(1);
+		availablePosition.add(2);
+		availablePosition.add(3);
 		
 		createWorld(mapPath);
-		
 		fpsLogger = new FPSLogger();
 	}
+	
 	
 	public void dispose(){
 		TiledMapLoader.getInstance().getPlayersPosition().clear();
@@ -110,8 +119,13 @@ public abstract class GameWorld
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
 //		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 		
-		this.player.character = createCharacter( this.player.getCharacterType() );
+		int index = randomGenerator.nextInt(availablePosition.size);
+		int randomPosition = availablePosition.get(index);
+		availablePosition.removeIndex(index);
+		
+		this.player.character = createCharacter( this.player.getCharacterType(), randomPosition, this.player.getName());
 		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
+		this.player.character.flags.setMe(true);
 		
 		worldStage.addActor( this.player.character );
 	}
@@ -165,7 +179,11 @@ public abstract class GameWorld
     		}
     	}
     	
-		enemy.character = createCharacter( enemy.getCharacterType() );
+		int index = randomGenerator.nextInt(availablePosition.size);
+		int randomPosition = availablePosition.get(index);
+		availablePosition.removeIndex(index);
+		enemy.character = createCharacter( enemy.getCharacterType(), randomPosition, enemy.getName());
+		
 		((UserData)enemy.character.getBody().getUserData()).playerName = enemy.getName();
 		enemies.add( enemy );
 		
@@ -185,8 +203,12 @@ public abstract class GameWorld
     	throw new PlayerDoesntExistException();
     }
     
-    private Character createCharacter(CharacterType characterType)
+    public Player getEnemyNumber(int index){
+    	return this.enemies.get(index);
+    }
+    
+    private Character createCharacter(CharacterType characterType, int startingPosition, String playerName)
     {
-    	return CharacterType.convertToCharacter(characterType, world, this);
+    	return CharacterType.convertToCharacter(characterType, world, this, startingPosition, playerName);
     }
 }

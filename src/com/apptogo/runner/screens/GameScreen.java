@@ -150,10 +150,9 @@ public abstract class GameScreen extends BaseScreen{
 			gameGuiStage.addActor(coinLabel);
 		}
 	}
-	private boolean slidePressed; //pomocnicza
-	private boolean jumpPressed; //pomocnicza
-	private boolean tempPressed; //pomocnicza
-	private boolean abilityPressed; //pomocnicza
+	
+	private Player currentPlayerInput = this.player;
+
 	@Override
 	public void handleInput() 
 	{
@@ -161,54 +160,76 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		}
-		else if( Input.isPressed() ) 
-		{
-			if(!multiplayer) 
-				this.player.character.start();
-				//NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
-		}
+//		else if( Input.isPressed() ) 
+//		{
+//			if(!multiplayer) 
+//				this.currentPlayerInput.character.start();
+//				//NotificationManager.getInstance().notifyStartRunning(this.player.character.getBody().getPosition());
+//		}
 		
-		//sterowanie klawiatura
-		if( Gdx.input.isKeyPressed(Keys.Z) && !slidePressed)
-		{
-			player.character.flags.setSlideButtonPressed(true);
-			player.character.slide();
-			slidePressed = true;
+		if(currentPlayerInput != null){
+			//sterowanie klawiatura
+			if( Gdx.input.isKeyPressed(Keys.Z) && !currentPlayerInput.slidePressed)
+			{
+				currentPlayerInput.character.flags.setSlideButtonPressed(true);
+				currentPlayerInput.character.slide();
+				currentPlayerInput.slidePressed = true;
+			}
+			else if(!Gdx.input.isKeyPressed(Keys.Z) && currentPlayerInput.slidePressed){
+				currentPlayerInput.character.flags.setSlideButtonPressed(false);
+				currentPlayerInput.character.standUp();
+				currentPlayerInput.slidePressed = false;
+		    }
+			
+			if( Gdx.input.isKeyPressed(Keys.M) && !currentPlayerInput.jumpPressed)
+			{
+				currentPlayerInput.character.flags.setQueuedJump(true);
+				currentPlayerInput.jumpPressed = true;
+			}
+			else if(!Gdx.input.isKeyPressed(Keys.M) && currentPlayerInput.jumpPressed)
+				currentPlayerInput.jumpPressed = false;
+			
+			if( Gdx.input.isKeyPressed(Keys.A) && !currentPlayerInput.abilityPressed)
+			{
+				if(currentPlayerInput.character.flags.isCanUseAbility()) 
+					currentPlayerInput.character.usePowerup( currentPlayerInput.character.currentPowerupSet );
+				currentPlayerInput.abilityPressed = true;
+			}
+			else if(!Gdx.input.isKeyPressed(Keys.A) && currentPlayerInput.abilityPressed)
+				currentPlayerInput.abilityPressed = false;
+			
+			if( Gdx.input.isKeyPressed(Keys.K) && !currentPlayerInput.tempPressed)
+			{
+				if(!currentPlayerInput.character.flags.isTempRunFlag())
+					currentPlayerInput.character.flags.setTempRunFlag(true);
+				else
+					currentPlayerInput.character.flags.setTempRunFlag(false);
+				currentPlayerInput.tempPressed = true;
+			}
+			else if( !Gdx.input.isKeyPressed(Keys.K) && currentPlayerInput.tempPressed)
+				currentPlayerInput.tempPressed = false;
+			
+			//zmiana numeru gracza
+			if( Gdx.input.isKeyPressed(Keys.NUM_1))
+			{
+				currentPlayerInput = this.player;
+			}
+			else if( Gdx.input.isKeyPressed(Keys.NUM_2))
+			{
+				Logger.log(this, "zmieniam na: " + world.getEnemyNumber(1).getName());
+				currentPlayerInput = world.getEnemyNumber(0);
+			}
+			else if( Gdx.input.isKeyPressed(Keys.NUM_3))
+			{
+				currentPlayerInput = world.getEnemyNumber(1);
+			}
+			else if( Gdx.input.isKeyPressed(Keys.NUM_4))
+			{
+				currentPlayerInput = world.getEnemyNumber(2);
+			}
 		}
-		else if(!Gdx.input.isKeyPressed(Keys.Z) && slidePressed){
-			player.character.flags.setSlideButtonPressed(false);
-			player.character.standUp();
-			slidePressed = false;
-	    }
-		
-		if( Gdx.input.isKeyPressed(Keys.M) && !jumpPressed)
-		{
-			player.character.flags.setQueuedJump(true);
-			jumpPressed = true;
-		}
-		else if(!Gdx.input.isKeyPressed(Keys.M) && jumpPressed)
-			jumpPressed = false;
-		
-		if( Gdx.input.isKeyPressed(Keys.A) && !abilityPressed)
-		{
-			if(player.character.flags.isCanUseAbility()) 
-				player.character.usePowerup( player.character.currentPowerupSet );
-			abilityPressed = true;
-		}
-		else if(!Gdx.input.isKeyPressed(Keys.A) && abilityPressed)
-			abilityPressed = false;
-		
-		if( Gdx.input.isKeyPressed(Keys.K) && !tempPressed)
-		{
-			if(!player.character.flags.isTempRunFlag())
-				player.character.flags.setTempRunFlag(true);
-			else
-				player.character.flags.setTempRunFlag(false);
-			tempPressed = true;
-		}
-		else if( !Gdx.input.isKeyPressed(Keys.K) && tempPressed)
-			tempPressed = false;
-		
+		else
+			currentPlayerInput = this.player;
 
 	}
 	

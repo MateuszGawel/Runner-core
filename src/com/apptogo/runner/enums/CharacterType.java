@@ -68,19 +68,19 @@ public enum CharacterType
 		return null;
 	}
 	
-	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld)
+	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld, int startingPosition, String playerName)
 	{
 		if( characterType == BANDIT )
 		{
-			return new Bandit(world, gameWorld);
+			return new Bandit(world, gameWorld, startingPosition, playerName);
 		}
 		else if( characterType == ARCHER )
 		{
-			return new Archer(world, gameWorld);
+			return new Archer(world, gameWorld, startingPosition, playerName);
 		}
 		else if( characterType == ALIEN )
 		{
-			return new Alien(world, gameWorld);
+			return new Alien(world, gameWorld, startingPosition, playerName);
 		}
 		
 		return null;

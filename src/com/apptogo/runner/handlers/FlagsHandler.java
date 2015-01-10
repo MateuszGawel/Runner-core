@@ -7,8 +7,11 @@ import com.apptogo.runner.logger.Logger;
 
 public class FlagsHandler {
 	
+	private boolean isMe;
+	
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
+	private boolean queuedLift;
 
 	//ZMIENNE
 	private Character character;
@@ -43,6 +46,9 @@ public class FlagsHandler {
 	private boolean jumped;
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
+	
+	//UMIEJETNOSCI
+	private boolean canBeLifted;
 	
 
 	//TEMP
@@ -165,6 +171,16 @@ public class FlagsHandler {
 				shouldFly = true;
 			else 
 				shouldFly = false;
+			
+			if(/*began && */ alive && !sliding && powerupSet && !finished)
+				canUseAbility = true;
+			else 
+				canUseAbility = false;
+			
+			if(alive && !immortal)
+				canBeLifted = true;
+			else 
+				canBeLifted = false;
 //		else
 //		{
 //			canBegin = false;                  
@@ -195,6 +211,14 @@ public class FlagsHandler {
 //		}
 	}
 	
+	public boolean isMe() {
+		return isMe;
+	}
+
+	public void setMe(boolean isMe) {
+		this.isMe = isMe;
+	}
+
 	public boolean isQueuedJump() {
 		return queuedJump;
 	}
@@ -386,6 +410,22 @@ public class FlagsHandler {
 
 	public void setGravityRotationSwitch(boolean gravityRotationSwitch) {
 		this.gravityRotationSwitch = gravityRotationSwitch;
+	}
+
+	public boolean isQueuedLift() {
+		return queuedLift;
+	}
+
+	public void setQueuedLift(boolean queuedLift) {
+		this.queuedLift = queuedLift;
+	}
+
+	public boolean isCanBeLifted() {
+		return canBeLifted;
+	}
+
+	public void setCanBeLifted(boolean canBeLifted) {
+		this.canBeLifted = canBeLifted;
 	}
 
 	public boolean isCanRun() {

@@ -26,4 +26,9 @@ public class UserData
 	public UserData(Object key){
 		this.key = key.toString();
 	}
+	
+	public UserData(Object key, String playerName){
+		this.key = key.toString();
+		this.playerName = playerName;
+	}
 }

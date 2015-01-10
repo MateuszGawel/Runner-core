@@ -5,6 +5,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Music;
@@ -43,6 +44,10 @@ public class Countdown extends Obstacle{
 				
 				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
 				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
+				for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.enemies){
+					enemy.character.start();
+				}
+				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.player.character.start();
 				remove();
 			}
 			@Override

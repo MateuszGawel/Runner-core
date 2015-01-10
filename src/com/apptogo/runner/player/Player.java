@@ -8,6 +8,12 @@ import com.apptogo.runner.levels.LevelWorld;
 
 public class Player 
 {
+	
+	public boolean slidePressed; //pomocnicza
+	public boolean jumpPressed; //pomocnicza
+	public boolean tempPressed; //pomocnicza
+	public boolean abilityPressed; //pomocnicza
+	
 	private String name;
 	private String password;
 	
