@@ -112,9 +112,11 @@ public class TiledMapLoader
 		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM);
 		
 		//initLights();
-		
+		CoinsManager.getInstance().setWorlds(world, gameWorld);
 		
 		createPhysics(tiledMap);
+		
+		CoinsManager.getInstance().copyToList();
 	}
 	
 	public Vector2 getMapSize()
@@ -350,9 +352,9 @@ public class TiledMapLoader
 			}
 			else if( checkObjectType(object, "coins") )
 			{
-				body = createCoinField(object);
+				createCoinField(object);
 					
-				bodies.add( body );
+				//bodies.add( body );
 			}
 			else if( checkObjectType(object, "rockBig") )
 			{
@@ -486,10 +488,11 @@ public class TiledMapLoader
 		return rock.getBody();
 	}
 	
-	private Body createCoinField(MapObject object)
+	private void createCoinField(MapObject object)
 	{
-		CoinField coinField = new CoinField(object, world, gameWorld);
-		return coinField.getBody();
+		CoinsManager.getInstance().addCoinField((PolylineMapObject) object);
+		//CoinField coinField = new CoinField(object, world, gameWorld);
+		//return coinField.getBody();
 	}
 	
 	private Body createGravityField(MapObject object)

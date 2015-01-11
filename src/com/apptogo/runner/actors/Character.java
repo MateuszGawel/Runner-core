@@ -14,6 +14,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.FlagsHandler;
@@ -807,6 +808,8 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
+		CoinsManager.getInstance().update();
+		
 		flags.update();
 		handleQueuedActions();
 		handleActions();
