@@ -12,6 +12,9 @@ public class UserData
 	//powerup
 	public String powerup;
 	
+	//coin
+	public boolean collected;
+	
 	//obstacle
 	public boolean active;
 	public boolean playSound;

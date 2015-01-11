@@ -167,8 +167,14 @@ public class MyContactListener implements ContactListener
 			//coin
 			if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
 				Fixture fixture = getFixtureByType(fa, fb, "coin");
-				fixture.getBody().setUserData(new UserData("inactive"));
+				((UserData)fixture.getBody().getUserData()).collected = true;
 				player.character.incrementCoinCounter();
+			}
+			//coinField
+			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
+				Fixture fixture = getFixtureByType(fa, fb, "coinField");
+				((UserData)fixture.getBody().getUserData()).active = true;
+				Logger.log(this, "poczatek kolizji z coinField");
 			}
 			
 
@@ -254,6 +260,12 @@ public class MyContactListener implements ContactListener
 					Fixture bodyFixture = getFixtureByType(fa, fb, "gravityField");
 					player.character.flags.setGravityRotationSwitch(true);
 					Logger.log(this, "koniec gravityfield");
+			}
+			//coinField
+			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
+				Fixture fixture = getFixtureByType(fa, fb, "coinField");
+				((UserData)fixture.getBody().getUserData()).active = false;
+				Logger.log(this, "koniec kolizji z coinField");
 			}
 		}
 	}

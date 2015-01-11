@@ -808,7 +808,7 @@ public abstract class Character extends Actor{
 	@Override
 	public void act(float delta) 
 	{
-		CoinsManager.getInstance().update();
+		if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
 		
 		flags.update();
 		handleQueuedActions();

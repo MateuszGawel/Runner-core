@@ -286,6 +286,7 @@ public class Obstacle extends Actor{
 	}
 	
 	public Body getBody(){ return this.body; }
+	public void setBody(Body body) { this.body = body; }
 	public void setSoundVolume(float soundVolume){ this.soundVolume = soundVolume; }
 	public float getSoundVolume(){ return this.soundVolume; }
 	public void setUpdatePosition(boolean updatePosition){
