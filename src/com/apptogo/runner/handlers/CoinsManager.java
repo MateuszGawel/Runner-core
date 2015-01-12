@@ -6,12 +6,11 @@ import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.CoinField;
 import com.apptogo.runner.actors.PoolableBody;
 import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -42,6 +41,8 @@ public class CoinsManager
 	private int coinCounter;
 	private Array<CoinField> coinFields = new Array<CoinField>();
 	//private HashMap<Vector2, Boolean> coinPositions = new HashMap<Vector2, Boolean>();
+	
+	FPSLogger fps = new FPSLogger();
 	
 	public final Pool<Coin> coinsPool = new Pool<Coin>() 
 	{
@@ -100,7 +101,12 @@ public class CoinsManager
 	}
 	
 	public void update(){
+		
+		fps.log();
+		
 		//Logger.log(this,"W poolu mam jeszcze: " + CoinsManager.getInstance().coinsPool.getFree());
+		//Logger.log(this,"pBodies mam jeszcze: " + CoinsManager.getInstance().coinBodiesPool.getFree());
+		
 		for(CoinField coinField : coinFields){
 			for(Vector2 coinPosition : coinField.coinPositions.keySet()){
 				if( coinField.coinPositions.size() > 0 && !coinField.coinPositions.get(coinPosition) && 
@@ -108,7 +114,9 @@ public class CoinsManager
 					Coin coin = coinsPool.obtain();
 					coin.initEmpty(coinPosition);
 					coinField.coinPositions.put(coinPosition, true);
+					
 					coinField.usedCoins.add(coin);
+					coin.setContainingCoinField(coinField);
 				}
 			}
 		}

@@ -43,11 +43,11 @@ public class CoinField extends Obstacle {
 		if(((UserData)getBody().getUserData()).active){
 			for(Coin coin : usedCoins){
 				coin.attachBody();
-				coin.setContainingCoinField(this);
+				//coin.setContainingCoinField(this);
 			}
 		}
 		else{
-			for(Coin coin : usedCoins){
+			for(Coin coin : usedCoins){// if(coin.myId == 999) Logger.log(this, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				coin.freeBody();
 			}
 		}
