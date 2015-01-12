@@ -807,9 +807,7 @@ public abstract class Character extends Actor{
 	
 	@Override
 	public void act(float delta) 
-	{
-		//if( flags.isMe() ) Logger.log( this, "MOJA PRAWDZIWA POZYCJA: " + this.getBody().getPosition() + " || " + this.getX() );
-		
+	{		
 		if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
 		
 		flags.update();
@@ -830,9 +828,6 @@ public abstract class Character extends Actor{
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         //setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-        
-        
-        //Logger.log(this,  "SPEED = " + String.valueOf(body.getLinearVelocity().x));
 	}	
 //	public void handleGameFinished()
 //	{

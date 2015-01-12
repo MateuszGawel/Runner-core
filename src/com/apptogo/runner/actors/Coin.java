@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Coin extends Obstacle implements Poolable
 {	
-	private ParticleEffectActor effectActor;
-	private PoolableBody poolableBody;
+
+	private Body body;
 	
 	private Sound sound;
 	public Vector2 coinPosition;
@@ -26,6 +26,7 @@ public class Coin extends Obstacle implements Poolable
 	private CoinField containingCoinField;
 	private static int counter = 0;
 	public int myId = counter++;
+	private CoinsManager coinsManager = CoinsManager.getInstance();
 	
 	public enum CoinAnimationState
 	{
@@ -41,32 +42,34 @@ public class Coin extends Obstacle implements Poolable
 		this.gameWorld = gameWorld;
 		
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
-		
-		effectActor = new ParticleEffectActor("coins.p", 1, 5);
-		gameWorld.getWorldStage().addActor(effectActor);
 	}
 	
 	private void gainCoinResult()
 	{
-		effectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2, 1/PPM);
-		sound.play(0.3f);
+		long startTime = System.nanoTime();
+		
+		long endTime = System.nanoTime();
+		Logger.log(this, "1 linia: " + (endTime - startTime));	
+		
+//		startTime = System.nanoTime();
+//		//sound.play(0.3f);
+//		endTime = System.nanoTime();
+//		Logger.log(this, "2 linia: " + (endTime - startTime));	
 	}
 	
-	//int ctr222 = 0; int ctr111 = 0;
-	public void attachBody(){//ctr111++;
-		if(getBody() == null){//ctr222++;
-			poolableBody = CoinsManager.getInstance().coinBodiesPool.obtain();
-			Body body = getPoolableBody().body;
+
+	public void attachBody(){
+		if(getBody() == null){
+			body = CoinsManager.getInstance().coinBodiesPool.obtain();
 			body.setTransform(new Vector2(coinPosition.x/PPM - 16/PPM, coinPosition.y/PPM - 16/PPM), 0);
 			setBody(body);
 			log("ZAATACHOWANO BODY!");
 		}
-		//else
-			//if(myId == 999 ) Logger.log(this, "BODY PODPIETE " + getBody().getPosition().x);
 	}
-	public void freeBody(){log("FREE BODY");
+	public void freeBody(){
 		if(getBody()!=null){
-			CoinsManager.getInstance().coinBodiesPool.free(getPoolableBody());
+			CoinsManager.getInstance().coinBodiesPool.free(body);
+			body.setAwake(true);
 			setBody(null);
 		}
 		
@@ -79,7 +82,8 @@ public class Coin extends Obstacle implements Poolable
 		
 		if(active)
 		{
-			if(coinPosition.x/PPM < gameWorld.player.character.getBody().getPosition().x - 5)
+			
+			if(coinPosition.x/PPM < gameWorld.player.character.getBody().getPosition().x - 11)
 			{
 				CoinsManager.getInstance().coinsPool.free(this);
 				containingCoinField.usedCoins.removeValue(this, true);
@@ -90,7 +94,8 @@ public class Coin extends Obstacle implements Poolable
 			}
 			else if( getBody() != null && ((UserData)getBody().getUserData()).collected )				
 			{
-				gainCoinResult();
+				coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
+				sound.play(0.3f);	
 				getBody().setTransform(new Vector2(-100f, 0), 0);
 				this.remove();
 				((UserData)getBody().getUserData()).collected = false;
@@ -100,10 +105,6 @@ public class Coin extends Obstacle implements Poolable
 				active = false;
 				containingCoinField = null;
 				freeBody();
-			}
-			else
-			{
-				effectActor.setPosition(getX() + getWidth()/2, getY() + getHeight()/2);
 			}
 		}
 	}
@@ -137,14 +138,6 @@ public class Coin extends Obstacle implements Poolable
 
 	public void setActive(boolean active) {
 		this.active = active;
-	}
-
-	public PoolableBody getPoolableBody() {
-		return poolableBody;
-	}
-
-	public void setPoolableBody(PoolableBody poolableBody) {
-		this.poolableBody = poolableBody;
 	}
 
 	public CoinField getContainingCoinField() {

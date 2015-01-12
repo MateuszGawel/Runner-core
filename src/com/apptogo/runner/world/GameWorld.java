@@ -161,7 +161,7 @@ public abstract class GameWorld
         worldStage.act(delta);
 		backgroundStage.act(delta);
         contactListener.postStep();
-       // fpsLogger.log();
+        fpsLogger.log();
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }

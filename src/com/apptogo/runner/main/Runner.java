@@ -47,7 +47,10 @@ public class Runner extends Game
 		
 		try
 		{
+			long startTime = System.nanoTime();
 			super.render();	
+			long endTime = System.nanoTime();
+			Logger.log(this, "ca³y RUNNER: " + (endTime - startTime));
 		}
 		catch(Exception e)
 		{ 

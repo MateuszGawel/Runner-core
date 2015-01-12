@@ -168,7 +168,7 @@ public class MyContactListener implements ContactListener
 			if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
 				Fixture fixture = getFixtureByType(fa, fb, "coin");
 				((UserData)fixture.getBody().getUserData()).collected = true;
-				player.character.incrementCoinCounter();
+				//player.character.incrementCoinCounter();
 			}
 			//coinField
 			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
@@ -181,7 +181,7 @@ public class MyContactListener implements ContactListener
 			
 			//podnoszenie aliena
 			if(checkFixturesTypes(fa, fb, "mainBody", "liftField")){
-				Fixture liftFixture = getFixtureByType(fa, fb, "coin");
+				Fixture liftFixture = getFixtureByType(fa, fb, "liftField");
 				String liftFieldOwner = ((UserData)liftFixture.getUserData()).playerName;
 				Logger.log(this, "Jestem: " + player.getName() + " dotknalem liftfielda od: " + liftFieldOwner);
 				//tylko na mnie ma sie wykonac umiejetnosc

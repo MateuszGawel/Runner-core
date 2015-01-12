@@ -47,7 +47,7 @@ public class GameWorldRenderer
 	    
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
     	camera.update();
-    	camera.zoom = 2f;
+    	//camera.zoom = 2f;
 
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
@@ -65,7 +65,7 @@ public class GameWorldRenderer
     	gameWorld.worldStage.draw();
     	
 
-    	debugRenderer.render(gameWorld.world, camera.combined);
+    	//debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

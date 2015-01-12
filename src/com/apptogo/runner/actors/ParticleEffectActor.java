@@ -22,22 +22,30 @@ public class ParticleEffectActor extends Image {
 	public ParticleEffectActor(String particleName) {
 		super();
 		effect = new ParticleEffect();
-		effect.load(Gdx.files.internal("gfx/game/particles/" + particleName), Gdx.files.internal("gfx/game/particles"));
+		effect.load(Gdx.files.internal("gfx/game/particles/" + particleName), Gdx.files.internal("gfx/game/particles"));	
+	}
+	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool, int initialValue, float effectScale){
+		ParticleEffect tempEffect = new ParticleEffect();	
+		tempEffect.load(Gdx.files.internal("gfx/game/particles/" + particleName), Gdx.files.internal("gfx/game/particles"));
+		tempEffect.scaleEffect(effectScale);
+		particleEffectPool = new ParticleEffectPool(tempEffect, initialPoolCapacity, maxPool);
+		pooled = true;
+		int ctr = 0;
+		Array<PooledEffect> tempArray = new Array<PooledEffect>();
+		for (int i=0; i<initialValue; i++){
+			PooledEffect effect = particleEffectPool.obtain();
+			tempArray.add(effect);
+			Logger.log(this, "tworze: " + ctr++);
+		}
+		particleEffectPool.freeAll(tempArray);
 		
 	}
-	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool){
-		this(particleName);
-		particleEffectPool = new ParticleEffectPool(effect, 1, 2);
-		pooled = true;
-	}
 
-	public void obtainAndStart(float posX, float posY, float scale){
+	public void obtainAndStart(float posX, float posY){
 		PooledEffect pooledEffect = particleEffectPool.obtain();
 		pooledEffect.setPosition(posX, posY);
 		super.setPosition(posX, posY);
-		pooledEffect.scaleEffect(scale);
 		pooledEffects.add(pooledEffect);
-		pooledEffect.start();
 	}
 	
 	@Override
@@ -65,7 +73,7 @@ public class ParticleEffectActor extends Image {
 		super.act(delta);
 		if(started && !pooled)
 			effect.update(delta);
-		if(effect.isComplete() && removeAfterComplete){
+		if(!pooled && effect.isComplete() && removeAfterComplete){
 			effect.dispose();
 			this.remove();
 		}
@@ -74,10 +82,6 @@ public class ParticleEffectActor extends Image {
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
-		    if (effect.isComplete()) {
-		        effect.free();
-		        pooledEffects.removeIndex(i);
-		    }
 		}
 	}
 

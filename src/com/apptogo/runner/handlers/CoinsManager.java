@@ -4,13 +4,15 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.CoinField;
-import com.apptogo.runner.actors.PoolableBody;
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -39,6 +41,8 @@ public class CoinsManager
 	private World world;
 	private GameWorld gameWorld;
 	private int coinCounter;
+	private int bodyCounter;
+	public ParticleEffectActor pooledEffectActor;
 	private Array<CoinField> coinFields = new Array<CoinField>();
 	//private HashMap<Vector2, Boolean> coinPositions = new HashMap<Vector2, Boolean>();
 	
@@ -51,30 +55,33 @@ public class CoinsManager
 	    {
 	    	EllipseMapObject coinTemplate = new EllipseMapObject();
 			coinTemplate.getEllipse().setSize(32.0f, 32.0f);
-	    	
+			Logger.log(this, "tworze coin numer: " + coinCounter++);
 	    	Coin coin = new Coin(coinTemplate, world, gameWorld);
 	    	
 	    	return coin;
 	    }
     };
     
-	public final Pool<PoolableBody> coinBodiesPool = new Pool<PoolableBody>() 
+	public final Pool<Body> coinBodiesPool = new Pool<Body>() 
 	{
 	    @Override
-	    protected PoolableBody newObject() 
+	    protected Body newObject() 
 	    {
 	    	CircleShape circleShape = new CircleShape();
 	    	circleShape.setRadius(16/PPM);
 	  
-	    	Logger.log(this, "tworze body numer: " + coinCounter++);
+	    	Logger.log(this, "tworze body numer: " + bodyCounter++);
 			FixtureDef fixtureDef = Materials.obstacleSensor;
 			BodyDef bodyDef = new BodyDef();
 			bodyDef.type = BodyType.StaticBody;
 
 			fixtureDef.shape = circleShape;
-			
-			PoolableBody body = new PoolableBody(bodyDef, fixtureDef, "coin", world);
-			
+		
+			Body body = world.createBody(bodyDef);
+			body.createFixture(fixtureDef).setUserData( new UserData("coin") );
+			body.setUserData( new UserData("coin") );
+			body.setAwake(true);
+			Logger.log(this, "na stosie mam: " + coinBodiesPool.getFree());
 	    	return body;
 	    }
     };
@@ -85,9 +92,12 @@ public class CoinsManager
 			coins.add(coinsPool.obtain());		
 		}
 		coinsPool.freeAll(coins);
+		
+		pooledEffectActor = new ParticleEffectActor("coins.p", 40, 50, 40, 1/PPM);
+		gameWorld.getWorldStage().addActor(pooledEffectActor);
 	}
 	public void createBodiesToPool(int numberOfBodies){
-		Array<PoolableBody> bodies = new Array<PoolableBody>();
+		Array<Body> bodies = new Array<Body>();
 		for(int i=0; i<numberOfBodies; i++){
 			bodies.add(coinBodiesPool.obtain());		
 		}
@@ -104,13 +114,13 @@ public class CoinsManager
 		
 		fps.log();
 		
-		//Logger.log(this,"W poolu mam jeszcze: " + CoinsManager.getInstance().coinsPool.getFree());
-		//Logger.log(this,"pBodies mam jeszcze: " + CoinsManager.getInstance().coinBodiesPool.getFree());
+//		Logger.log(this,"w COINS mam jeszcze: " + CoinsManager.getInstance().coinsPool.getFree());
+//		Logger.log(this,"w BODIES mam jeszcze: " + CoinsManager.getInstance().coinBodiesPool.getFree());
 		
 		for(CoinField coinField : coinFields){
 			for(Vector2 coinPosition : coinField.coinPositions.keySet()){
 				if( coinField.coinPositions.size() > 0 && !coinField.coinPositions.get(coinPosition) && 
-						coinPosition.x / PPM - gameWorld.player.character.getBody().getPosition().x <= 6 && coinPosition.x / PPM - gameWorld.player.character.getBody().getPosition().x > 2 ){
+						coinPosition.x / PPM - gameWorld.player.character.getBody().getPosition().x <= 12 && coinPosition.x / PPM - gameWorld.player.character.getBody().getPosition().x > -10 ){
 					Coin coin = coinsPool.obtain();
 					coin.initEmpty(coinPosition);
 					coinField.coinPositions.put(coinPosition, true);

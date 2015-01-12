@@ -25,6 +25,7 @@ public class CoinField extends Obstacle {
 	private Shape shape;
 	public HashMap<Vector2, Boolean> coinPositions; //pozycja:wype³niona?
 	public Array<Coin> usedCoins;
+	public int counter = 0;
 	
 	public CoinField(MapObject object, World world, GameWorld gameWorld) {
 		super(object, world);
