@@ -14,13 +14,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.googlecode.gwt.crypto.util.Sys;
 
 public class Coin extends Obstacle implements Poolable
 {	
 
 	private Body body;
 	
-	private Sound sound;
 	public Vector2 coinPosition;
 	private boolean active;
 	private CoinField containingCoinField;
@@ -41,7 +41,6 @@ public class Coin extends Obstacle implements Poolable
 		this.updatePosition = false;
 		this.gameWorld = gameWorld;
 		
-		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
 	}
 	
 	private void gainCoinResult()
@@ -60,7 +59,7 @@ public class Coin extends Obstacle implements Poolable
 
 	public void attachBody(){
 		if(getBody() == null){
-			body = CoinsManager.getInstance().coinBodiesPool.obtain();
+			body = coinsManager.coinBodiesPool.obtain();
 			body.setTransform(new Vector2(coinPosition.x/PPM - 16/PPM, coinPosition.y/PPM - 16/PPM), 0);
 			setBody(body);
 			log("ZAATACHOWANO BODY!");
@@ -68,7 +67,7 @@ public class Coin extends Obstacle implements Poolable
 	}
 	public void freeBody(){
 		if(getBody()!=null){
-			CoinsManager.getInstance().coinBodiesPool.free(body);
+			coinsManager.coinBodiesPool.free(body);
 			body.setAwake(true);
 			setBody(null);
 		}
@@ -85,7 +84,7 @@ public class Coin extends Obstacle implements Poolable
 			
 			if(coinPosition.x/PPM < gameWorld.player.character.getBody().getPosition().x - 11)
 			{
-				CoinsManager.getInstance().coinsPool.free(this);
+				coinsManager.coinsPool.free(this);
 				containingCoinField.usedCoins.removeValue(this, true);
 				log("DEAKTYWACJA!");
 				active = false;
@@ -95,11 +94,17 @@ public class Coin extends Obstacle implements Poolable
 			else if( getBody() != null && ((UserData)getBody().getUserData()).collected )				
 			{
 				coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
-				sound.play(0.3f);	
+				
+				if(System.nanoTime() - coinsManager.lastTimePlayed > 50000000){
+					coinsManager.sound.stop();
+					coinsManager.soundId = coinsManager.sound.play(0.3f);	
+					coinsManager.lastTimePlayed = System.nanoTime();
+				}
+				
 				getBody().setTransform(new Vector2(-100f, 0), 0);
 				this.remove();
 				((UserData)getBody().getUserData()).collected = false;
-				CoinsManager.getInstance().coinsPool.free(this);
+				coinsManager.coinsPool.free(this);
 				containingCoinField.usedCoins.removeValue(this, true);
 				containingCoinField.coinPositions.remove(this.position);
 				active = false;
@@ -108,7 +113,7 @@ public class Coin extends Obstacle implements Poolable
 			}
 		}
 	}
-		
+
 	public void initEmpty(Vector2 nextPosition){
 
 		gameWorld.getWorldStage().addActor(this);

@@ -9,6 +9,7 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
@@ -44,6 +45,10 @@ public class CoinsManager
 	private int bodyCounter;
 	public ParticleEffectActor pooledEffectActor;
 	private Array<CoinField> coinFields = new Array<CoinField>();
+	public Sound sound;
+	public double soundId;
+	public long lastTimePlayed = System.nanoTime();
+	
 	//private HashMap<Vector2, Boolean> coinPositions = new HashMap<Vector2, Boolean>();
 	
 	FPSLogger fps = new FPSLogger();
@@ -95,6 +100,8 @@ public class CoinsManager
 		
 		pooledEffectActor = new ParticleEffectActor("coins.p", 40, 50, 40, 1/PPM);
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
+		
+		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
 	}
 	public void createBodiesToPool(int numberOfBodies){
 		Array<Body> bodies = new Array<Body>();
