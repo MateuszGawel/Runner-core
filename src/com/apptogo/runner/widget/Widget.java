@@ -159,11 +159,16 @@ public class Widget
 		win.setSize(width, height);
 		win.setPosition(x, y);
 		win.clearListeners();
-				
-		widgetBackgroundTexture = new Texture( Gdx.files.internal( WidgetType.getWidgetBackgroundPath( this.widgetType ) ) );
-		widgetBackgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		widgetBackground = new Image( widgetBackgroundTexture );
-		widgetBackground.setPosition(0f, 0f);
+		
+		String texturePath = WidgetType.getWidgetBackgroundPath( this.widgetType );
+		
+		if(texturePath != null)
+		{		
+			widgetBackgroundTexture = new Texture( Gdx.files.internal( texturePath ) );
+			widgetBackgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			widgetBackground = new Image( widgetBackgroundTexture );
+			widgetBackground.setPosition(0f, 0f);
+		}
 		
 		closeWidgetButton = new Button(skin, "closeWidget");
 		closeWidgetButton.setPosition(win.getWidth() - 100.0f, win.getHeight() - 100.0f);
@@ -174,7 +179,11 @@ public class Widget
 			closeWidgetButton.setVisible(false);
 		}
 		
-		win.addActor(widgetBackground);
+		if(widgetBackground != null)
+		{
+			win.addActor(widgetBackground);
+		}
+		
 		win.addActor(closeWidgetButton);
 		
 		return win;
@@ -418,6 +427,10 @@ public class Widget
 	public void dispose()
 	{
 		this.widget = null;
-		this.widgetBackgroundTexture.dispose();
+		
+		if( widgetBackgroundTexture != null)
+		{
+			this.widgetBackgroundTexture.dispose();
+		}
 	}
 }

@@ -4,7 +4,8 @@ public enum WidgetType
 {
 	SMALL,
 	MEDIUM,
-	BIG;
+	BIG,
+	FINISH;
 	
 	public static float getWidth(WidgetType widgetType)
 	{
@@ -17,6 +18,10 @@ public enum WidgetType
 			return 800.0f;
 		}
 		else if(widgetType == WidgetType.BIG)
+		{
+			return 1180.0f;
+		}
+		else if(widgetType == WidgetType.FINISH)
 		{
 			return 1180.0f;
 		}
@@ -40,6 +45,10 @@ public enum WidgetType
 		{
 			return 700.0f;
 		}
+		else if(widgetType == WidgetType.FINISH)
+		{
+			return 700.0f;
+		}
 		else
 		{
 			return 0.0f;
@@ -60,6 +69,10 @@ public enum WidgetType
 		{
 			return "gfx/menu/paperBig.png";
 		}
+		else if(widgetType == WidgetType.FINISH)
+		{
+			return null;
+		}
 		else
 		{
 			return null;
@@ -79,6 +92,10 @@ public enum WidgetType
 		else if(widgetType == WidgetType.BIG)
 		{
 			return true;
+		}
+		else if(widgetType == WidgetType.FINISH)
+		{
+			return false;
 		}
 		else
 		{
