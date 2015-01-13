@@ -18,49 +18,57 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class CoinField extends Obstacle {
+public class CoinField extends Obstacle 
+{
+	public int id = -1;
+	private boolean isActive = false;
 	
-	private Vector2[] worldVertices;
-	private GameWorld gameWorld;
-	private Shape shape;
-	public HashMap<Vector2, Boolean> coinPositions; //pozycja:wype³niona?
-	public Array<Coin> usedCoins;
+	public HashMap<Vector2, Coin> coinPositions;
 	public int counter = 0;
 	
-	public CoinField(MapObject object, World world, GameWorld gameWorld) {
+	public CoinField(MapObject object, World world, GameWorld gameWorld) 
+	{
 		super(object, world);
-		this.gameWorld = gameWorld;
 		
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "coinField");	
 		gameWorld.getWorldStage().addActor(this);
-		coinPositions = new HashMap<Vector2, Boolean>();
-		usedCoins = new Array<Coin>();
+		
+		coinPositions = new HashMap<Vector2, Coin>();
+		
 		createCoinsPosition(object);
 	}
 
-	public void act(float delta){
+	public void act(float delta)
+	{
 		super.act(delta);
 		
-		if(((UserData)getBody().getUserData()).active){
-			for(Coin coin : usedCoins){
-				coin.attachBody();
-				//coin.setContainingCoinField(this);
+		if( this.getBodyUserData().active )
+		{
+			if( !isActive )
+			{
+				isActive = true;
+				CoinsManager.getInstance().activeCoinFields.add(this);
 			}
 		}
-		else{
-			for(Coin coin : usedCoins){// if(coin.myId == 999) Logger.log(this, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				coin.freeBody();
+		else
+		{
+			if( isActive )
+			{
+				isActive = false;
+				CoinsManager.getInstance().activeCoinFields.removeValue(this, true);
 			}
 		}
 	}
 	
-	private void createCoinsPosition(MapObject mapObject) {
-		// converting Polyline to vertices array
+	private void createCoinsPosition(MapObject mapObject) 
+	{
+		// converting Polygon to vertices array
 		float[] vertices_raw = ((PolygonMapObject) mapObject).getPolygon().getTransformedVertices();
 		
 		Vector2[] vertices_vector = new Vector2[vertices_raw.length / 2];
 
-		for (int i = 0; i < vertices_raw.length / 2; ++i) {
+		for (int i = 0; i < vertices_raw.length / 2; ++i) 
+		{
 			vertices_vector[i] = new Vector2();
 			vertices_vector[i].x = vertices_raw[i * 2];
 			vertices_vector[i].y = vertices_raw[i * 2 + 1];
@@ -72,7 +80,8 @@ public class CoinField extends Obstacle {
 		Vector2 bottomLeft = new Vector2(vertices.get(0).x, vertices.get(0).y);
 		Vector2 topRight = new Vector2(vertices.get(0).x, vertices.get(0).y);
 
-		for (Vector2 v : vertices_vector) {
+		for (Vector2 v : vertices_vector) 
+		{
 			if (v.x < bottomLeft.x)
 				bottomLeft.x = v.x;
 			if (v.x > topRight.x)
@@ -99,7 +108,7 @@ public class CoinField extends Obstacle {
 				coinPosition.y += 32.0f;
 
 				if (Intersector.isPointInPolygon(vertices, coinPosition)) {
-					coinPositions.put(new Vector2(coinPosition.x, coinPosition.y), false);
+					coinPositions.put(new Vector2(coinPosition.x, coinPosition.y), null);
 				}
 			}
 		}

@@ -112,7 +112,7 @@ public class TiledMapLoader
 		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM);
 		
 		//initLights();
-		CoinsManager.getInstance().setWorlds(world, gameWorld);
+		CoinsManager.getInstance().setGameWorld(gameWorld);
 		
 		createPhysics(tiledMap);
 	}
@@ -488,10 +488,8 @@ public class TiledMapLoader
 	
 	private Body createCoinField(MapObject object)
 	{
-		CoinField coinField = new CoinField(object, world, gameWorld);
-		CoinsManager.getInstance().addCoinField(coinField);
+		CoinField coinField = CoinsManager.getInstance().createCoinField(object, world, gameWorld);
 		CoinsManager.getInstance().createCoinsToPool(120);
-		CoinsManager.getInstance().createBodiesToPool(120);
 		return coinField.getBody();
 	}
 	

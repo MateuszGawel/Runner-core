@@ -46,6 +46,8 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
 	
+	public static final float coinFixtureRadius = 64;
+	
 	public String playerName;
 	public FlagsHandler flags;
 	
@@ -161,7 +163,7 @@ public abstract class Character extends Actor{
 		
 		//coin collector sensor
 		CircleShape circleShape = new CircleShape();
-    	circleShape.setRadius(64/PPM);
+    	circleShape.setRadius( this.coinFixtureRadius /PPM);
 		fixtureDef.shape = circleShape;
 		fixtureDef = Materials.characterSensor;
 		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );

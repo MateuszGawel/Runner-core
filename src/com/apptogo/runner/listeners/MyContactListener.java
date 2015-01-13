@@ -165,13 +165,14 @@ public class MyContactListener implements ContactListener
 			}
 			
 			//coin
-			if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
-				Fixture fixture = getFixtureByType(fa, fb, "coin");
-				((UserData)fixture.getBody().getUserData()).collected = true;
-				//player.character.incrementCoinCounter();
-			}
+			//if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
+			//	Fixture fixture = getFixtureByType(fa, fb, "coin");
+			//	((UserData)fixture.getBody().getUserData()).collected = true;
+			//	//player.character.incrementCoinCounter();
+			//}
 			//coinField
-			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
+			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") )
+			{
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = true;
 				Logger.log(this, "poczatek kolizji z coinField");
