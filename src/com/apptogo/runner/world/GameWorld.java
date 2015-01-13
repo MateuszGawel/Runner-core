@@ -130,7 +130,7 @@ public abstract class GameWorld
 		
 		worldStage.addActor( this.player.character );
 		
-		CoinsManager.getInstance().createCoinsToPool(120);
+		CoinsManager.getInstance().createCoinsToPool(1);
 	}
 	
 	public void destroyWorld()

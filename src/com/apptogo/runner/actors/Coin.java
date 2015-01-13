@@ -68,8 +68,8 @@ public class Coin extends Obstacle implements Poolable
 			}
 			else if( this.collected )				
 			{		
-				Logger.log(this, "ZEBRA£EM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
+				//Logger.log(this, "ZEBRA£EM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				//coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
 				//long endTime = System.nanoTime();
 				//Logger.log(this, "ACT COINA TRWA£: " + (endTime - startTime));
 				

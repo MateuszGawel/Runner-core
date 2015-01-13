@@ -40,16 +40,12 @@ public class Runner extends Game
 	@Override
 	public void render() 
 	{
-		int error = Gdx.gl.glGetError();
-		if (error != GL20.GL_NO_ERROR) {
-			Logger.log(this, "DEBUG Z DASHANDSMASH: " + Gdx.gl.glGetError());
-		}
 		
 		try
 		{
-			long startTime = System.nanoTime();
+			//long startTime = System.nanoTime();
 			super.render();	
-			long endTime = System.nanoTime();
+			//long endTime = System.nanoTime();
 			//Logger.log(this, "ca³y RUNNER: " + (endTime - startTime));
 		}
 		catch(Exception e)
