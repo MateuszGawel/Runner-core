@@ -67,15 +67,18 @@ public class Coin extends Obstacle implements Poolable
 				coinFieldId = -1;
 			}
 			else if( this.collected )				
-			{
-				//coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
+			{		
+				Logger.log(this, "ZEBRA£EM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
+				//long endTime = System.nanoTime();
+				//Logger.log(this, "ACT COINA TRWA£: " + (endTime - startTime));
 				
-				/*if(System.nanoTime() - coinsManager.lastTimePlayed > 50000000){
+				if(System.nanoTime() - coinsManager.lastTimePlayed > 50000000){
 					coinsManager.sound.stop();
 					coinsManager.soundId = coinsManager.sound.play(0.3f);	
 					coinsManager.lastTimePlayed = System.nanoTime();
-				}*/
-				
+				}
+
 				this.remove();
 
 				coinsManager.coinsPool.free(this);
@@ -83,9 +86,11 @@ public class Coin extends Obstacle implements Poolable
 				
 				this.collected = false;
 				this.active = false;
-				
 				this.coinFieldId = -1;
 			}
+
+
+
 		}
 	}
 

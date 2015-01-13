@@ -8,6 +8,7 @@ import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
+import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.main.Runner;
@@ -128,6 +129,8 @@ public abstract class GameWorld
 		this.player.character.flags.setMe(true);
 		
 		worldStage.addActor( this.player.character );
+		
+		CoinsManager.getInstance().createCoinsToPool(120);
 	}
 	
 	public void destroyWorld()

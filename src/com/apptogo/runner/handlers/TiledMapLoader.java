@@ -489,7 +489,6 @@ public class TiledMapLoader
 	private Body createCoinField(MapObject object)
 	{
 		CoinField coinField = CoinsManager.getInstance().createCoinField(object, world, gameWorld);
-		CoinsManager.getInstance().createCoinsToPool(120);
 		return coinField.getBody();
 	}
 	

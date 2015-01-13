@@ -46,7 +46,7 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
 	
-	public static final float coinFixtureRadius = 64;
+	public final float coinFixtureRadius = 64;
 	
 	public String playerName;
 	public FlagsHandler flags;

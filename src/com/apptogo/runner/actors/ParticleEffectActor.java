@@ -79,10 +79,13 @@ public class ParticleEffectActor extends Image {
 		}
 		
 		//dla poola
+		long startTime = System.nanoTime();
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
 		}
+		long endTime = System.nanoTime();
+		Logger.log(this, "ACT PARTICLI: " + (endTime - startTime));
 	}
 
 	@Override
@@ -92,6 +95,7 @@ public class ParticleEffectActor extends Image {
 			effect.draw(batch);
 		
 		//dla poola
+		long startTime = System.nanoTime();
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.draw(batch);
@@ -100,6 +104,8 @@ public class ParticleEffectActor extends Image {
 		        pooledEffects.removeIndex(i);
 		    }
 		}
+		long endTime = System.nanoTime();
+		Logger.log(this, "draw PARTICLI: " + (endTime - startTime));
 	}
 	
 	public ParticleEffect getEffect(){ return this.effect; }
