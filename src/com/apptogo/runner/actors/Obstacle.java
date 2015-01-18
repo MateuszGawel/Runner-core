@@ -293,4 +293,8 @@ public class Obstacle extends Actor{
 		this.updatePosition = updatePosition;
 		setPosition(position.x + offsetX, position.y + offsetY); 
 	}
+	
+	public Vector2 getPosition() { return position; }
+	
+	public UserData getBodyUserData() { return ( (UserData) ( this.getBody().getUserData() ) ); }
 }
