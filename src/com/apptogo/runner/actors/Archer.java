@@ -192,24 +192,23 @@ public class Archer extends Character{
         activeArrows.add(arrow);
 	}
 	
-	private void freePools(){
-		Arrow item;
+	private void freePools()
+	{
         int len = activeArrows.size;
-        for (int i = len; --i >= 0;) {
-            item = activeArrows.get(i);
-            if (item.alive == false) {
+        for (int i = len; --i >= 0;) 
+        {
+            if (activeArrows.get(i).alive == false) {
             	activeArrows.removeIndex(i);
-                arrowsPool.free(item);
+                arrowsPool.free(activeArrows.get(i));
             }
         }
 	}
 	
 	@Override
-	public void act(float delta) {
+	public void act(float delta) 
+	{
 		super.act(delta);
 		freePools();
-		
-
 	}
 	
 	@Override

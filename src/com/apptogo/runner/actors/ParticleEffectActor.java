@@ -67,6 +67,17 @@ public class ParticleEffectActor extends Image {
 	public void stop() {
 		started = false;
 	}
+	
+	public void reset()
+	{
+		stop();
+		effect.reset();
+	}
+	
+	public boolean isComplete()
+	{
+		return (!effect.isComplete() && !started) || (effect.isComplete() && started);
+	}
 
 	@Override
 	public void act(float delta) {

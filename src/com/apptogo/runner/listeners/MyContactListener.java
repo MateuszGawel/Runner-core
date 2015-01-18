@@ -1,6 +1,5 @@
 package com.apptogo.runner.listeners;
 
-import com.apptogo.runner.actors.Alien;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
@@ -64,7 +63,7 @@ public class MyContactListener implements ContactListener
 					String powerupKey = ((UserData)fixture.getUserData()).powerup;
 					player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
 	
-					fixture.getBody().setUserData(new UserData("inactive"));
+					( (UserData) (fixture.getBody().getUserData()) ).key = "inactive";
 				}
 			}
 			
@@ -150,7 +149,7 @@ public class MyContactListener implements ContactListener
 				Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
 				if(flags.isAlive()){	
 					flags.incrementMushroomSensor();
-					mushroomFixture.setUserData( new UserData("mushroomWorking") );
+					( (UserData) (mushroomFixture.getUserData()) ).key = "mushroomWorking";
 				}
 			}
 			
@@ -160,7 +159,7 @@ public class MyContactListener implements ContactListener
 				if(flags.isAlive())
 				{		
 					flags.incrementCatapultSensor();
-					catapultFixture.getBody().setUserData( new UserData("catapultWorking") );
+					( (UserData) (catapultFixture.getBody().getUserData()) ).key = "catapultWorking";
 				}		
 			}
 			

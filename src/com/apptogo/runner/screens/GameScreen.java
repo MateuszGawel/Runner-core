@@ -1,7 +1,5 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
@@ -11,18 +9,17 @@ import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
-import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.logger.Logger.LogLevel;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -36,23 +33,27 @@ public abstract class GameScreen extends BaseScreen{
 	protected Level level;
 	protected Array<Player> enemies;
 	
+	protected Array<Button> powerupButtons;
 	protected Button jumpButton;
 	protected Button slideButton;
 	protected Button slowButton;
-	protected Actor gameProgressBar;
-	protected Array<Button> powerupButtons;
-	protected boolean multiplayer;
 	
-	protected Label startLabel;
+	protected Actor gameProgressBar;
+	
+	ParticleEffectActor coinCounterEffectActor;
+	
+	public Label startLabel;
 	public Label coinLabel;
+	
+	private int coinLabelCounter;
 
 	public GameScreen(Runner runner)
 	{
-		super(runner);		
+		super(runner);
+
 		loadPlayer();
 		
-		ResourcesManager.getInstance().unloadMenuResources(); //czy to na pewno dobre miejsce na ta funkcje? tu sie fajnie wpasowuje ale tak naprawde to powinno byc zrobione na etapie loadingu
-	
+		ResourcesManager.getInstance().unloadMenuResources();
 		CoinsManager.create();
 	}
 	
@@ -60,12 +61,10 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		startLabel = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
 		startLabel.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (startLabel.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
-		//gameGuiStage.addActor(startLabel);
 		
 		coinLabel = createLabel("0", FontType.COINFONT);
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
 		gameGuiStage.addActor(coinLabel);
-
 	}
 	
 	public void setLevel(Level level)
@@ -80,11 +79,13 @@ public abstract class GameScreen extends BaseScreen{
 	
 	public void prepare()
 	{
-		Logger.log(this, "prepare z gamescreen");
+		coinLabelCounter = -1;
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
+		
 		powerupButtons = new Array<Button>();
 		
 		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
-		Logger.log(this, "twroze swait");
+
 		if(enemies != null)
 		{
 			for(int i = 0; i < enemies.size; i++)
@@ -95,7 +96,7 @@ public abstract class GameScreen extends BaseScreen{
 				}
 				catch(PlayerExistsException e)
 				{
-					Logger.log(this, "Player " + enemies.get(i).getName() + " is created already!");
+					Logger.log(this, "Player " + enemies.get(i).getName() + " is created already!", LogLevel.HIGH);
 				}
 			}
 		}
@@ -113,6 +114,7 @@ public abstract class GameScreen extends BaseScreen{
 		
 		gameGuiStage.addActor(slideButton);
 		gameGuiStage.addActor(jumpButton);		
+		
 		//TEMP
 		gameGuiStage.addActor(world.player.character.getTempButton());
 		
@@ -125,7 +127,8 @@ public abstract class GameScreen extends BaseScreen{
 		createGameProgressBar();
 	}
 	
-	protected void createGameProgressBar(){
+	protected void createGameProgressBar()
+	{
 		gameProgressBar = new GameProgressBar(world);
 		gameGuiStage.addActor(gameProgressBar);
 	}
@@ -140,17 +143,24 @@ public abstract class GameScreen extends BaseScreen{
 		Input.update();
 	}
 	
-	private void handleCoinLabel(){
-		if(Integer.valueOf(coinLabel.getText().toString()) < world.player.character.getCoinCounter()){
-			coinLabel.setText(String.valueOf(world.player.character.getCoinCounter()));
+	private void handleCoinLabel()
+	{
+		if(coinLabelCounter < world.player.character.getCoinCounter())
+		{
+			coinLabelCounter = world.player.character.getCoinCounter();
 			
-			ParticleEffectActor coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
-			coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
-			coinCounterEffectActor.start();
-			coinCounterEffectActor.removeAfterComplete = true;
 			coinLabel.remove();
-			gameGuiStage.addActor(coinCounterEffectActor);
+			coinLabel.setText( String.valueOf(coinLabelCounter) );
 			gameGuiStage.addActor(coinLabel);
+			
+			if( coinCounterEffectActor.isComplete() )
+			{
+				coinCounterEffectActor.reset();
+				coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
+				coinCounterEffectActor.start();
+			}
+			
+			gameGuiStage.addActor(coinCounterEffectActor);
 		}
 	}
 	

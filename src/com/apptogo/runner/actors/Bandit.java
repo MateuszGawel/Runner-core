@@ -212,13 +212,11 @@ public class Bandit extends Character{
 	}
 	
 	private void freePools(){
-		Bomb item;
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
-            item = activeBombs.get(i);
-            if (item.alive == false) {
+            if (activeBombs.get(i).alive == false) {
             	activeBombs.removeIndex(i);
-                bombsPool.free(item);
+                bombsPool.free(activeBombs.get(i));
             }
         }
 	}
@@ -232,7 +230,6 @@ public class Bandit extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-//		batch.draw(currentFrame, getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());	
 		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 			

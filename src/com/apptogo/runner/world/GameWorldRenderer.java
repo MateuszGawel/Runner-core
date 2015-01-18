@@ -82,11 +82,9 @@ public class GameWorldRenderer
 
     	gameWorld.worldStage.getRoot().setCullingArea(cullingArea);
     	gameWorld.worldStage.draw();
-    	
-    	//Logger.log(this, "worldStage rendercalls: " + ((SpriteBatch)gameWorld.worldStage.getBatch()).renderCalls); // -37
-    	
 
     	//debugRenderer.render(gameWorld.world, camera.combined);
+
     	
     	//œwiat³a powoduja spadek wydajnosci
     	/*

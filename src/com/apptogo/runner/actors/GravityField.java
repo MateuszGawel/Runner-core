@@ -34,7 +34,6 @@ public class GravityField extends Obstacle
 	
 	private void createGravityEffects(MapObject mapObject)
 	{
-		
 		PolygonShape shape = (PolygonShape)body.getFixtureList().get(0).getShape();
 		worldVertices = new Vector2[shape.getVertexCount()];
 		
