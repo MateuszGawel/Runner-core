@@ -160,9 +160,11 @@ public abstract class GameWorld
     {
         world.step(delta, 3, 3);
         
+        
+        backgroundStage.act(delta);
         worldBackgroundGroup.act(delta);
         worldStage.act(delta);
-		backgroundStage.act(delta);
+		
         contactListener.postStep();
         fpsLogger.log();
     }  

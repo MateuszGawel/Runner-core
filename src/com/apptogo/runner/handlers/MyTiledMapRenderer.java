@@ -17,7 +17,6 @@ public class MyTiledMapRenderer extends OrthogonalTiledMapRenderer{
 	}
 	
 	
-	
 	public void renderFrontLayer() {
 		beginRender();
 		for (MapLayer layer : map.getLayers()) {
@@ -29,7 +28,7 @@ public class MyTiledMapRenderer extends OrthogonalTiledMapRenderer{
 		}
 		endRender();
 	}
-	
+	//sprobowac to wrzycic do render()
 	
 	@Override
 	public void render () {
@@ -38,6 +37,7 @@ public class MyTiledMapRenderer extends OrthogonalTiledMapRenderer{
 			if (layer.isVisible()) {
 				if (layer instanceof TiledMapTileLayer) {
 					if(!layer.getName().equals("FrontLayer"))
+						//Logger.log(this, "szerokosc " + layer.getName() + " wynosi: " + ((TiledMapTileLayer)layer).getTileWidth() * getUnitScale());
 						renderTileLayer((TiledMapTileLayer)layer);
 				} else {
 					for (MapObject object : layer.getObjects()) {

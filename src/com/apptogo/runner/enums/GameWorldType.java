@@ -34,7 +34,7 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/mountains.png","gfx/game/levels/rocks.png","gfx/game/levels/skyBlue.png","gfx/game/levels/sand.png", "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png", "gfx/game/levels/wildwestProgressBarBegin.png", "gfx/game/levels/wildwestProgressBarMiddle.png", "gfx/game/levels/wildwestProgressBarEnd.png" };
+			return new String[]{ "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png", "gfx/game/levels/wildwestProgressBarBegin.png", "gfx/game/levels/wildwestProgressBarMiddle.png", "gfx/game/levels/wildwestProgressBarEnd.png" };
 		}
 		else if( gameWorldType == FOREST )
 		{
@@ -53,7 +53,7 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/bonfire.pack"};
+			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/bonfire.pack"};
 		}
 		else if( gameWorldType == FOREST )
 		{

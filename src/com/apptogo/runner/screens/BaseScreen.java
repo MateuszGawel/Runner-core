@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
@@ -176,6 +177,7 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
     		gameGuiStage.draw();
+    		//Logger.log(this, "gameGui rendercalls: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls); //-10
 		}
 		
 		CustomActionManager.getInstance().act(delta);

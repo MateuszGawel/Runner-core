@@ -72,8 +72,8 @@ public class CoinsManager
 		}
 		coinsPool.freeAll(coins);
 		
-		//pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM);
-		//gameWorld.getWorldStage().addActor(pooledEffectActor);
+		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM);
+		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
 	}
