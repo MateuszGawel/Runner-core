@@ -115,7 +115,8 @@ public class Arrow extends Actor implements Poolable{
 	}
 	
 	@Override
-	public void act(float delta){
+	public void act(float delta)
+	{
 		pointingDirection = arrowBody.getWorldVector(new Vector2(1/PPM, 0));
 		arrowTailPosition = arrowBody.getWorldPoint(new Vector2(-25/PPM, 0));
 		flightDirection = arrowBody.getLinearVelocity();

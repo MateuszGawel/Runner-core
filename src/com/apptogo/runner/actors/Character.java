@@ -807,9 +807,7 @@ public abstract class Character extends Actor{
 	
 	@Override
 	public void act(float delta) 
-	{
-		//if( flags.isMe() ) Logger.log( this, "MOJA PRAWDZIWA POZYCJA: " + this.getBody().getPosition() + " || " + this.getX() );
-		
+	{	
 		if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
 		
 		flags.update();

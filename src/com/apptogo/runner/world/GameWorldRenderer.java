@@ -18,6 +18,8 @@ public class GameWorldRenderer
     MyTiledMapRenderer tiledMapRenderer;
 	public int currentScreenWidth, currentScreenHeight;
 	
+	Batch batch;
+	
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
         this.gameWorld = gameWorld;  
@@ -53,18 +55,21 @@ public class GameWorldRenderer
     	gameWorld.getBackgroundStage().draw();
     	
     	tiledMapRenderer.renderFrontLayer();
-		Batch batch = gameWorld.getWorldStage().getBatch();
-		if (batch != null) {
+		
+    	batch = gameWorld.getWorldStage().getBatch();
+		
+		if ( batch != null ) 
+		{
 			batch.begin();
 			gameWorld.worldBackgroundGroup.draw(batch, 1);
 			batch.end();
 		}
+		
     	tiledMapRenderer.render();
     	
     	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.worldStage.draw();
     	
-
     	debugRenderer.render(gameWorld.world, camera.combined);
     	
     	//œwiat³a powoduja spadek wydajnosci
