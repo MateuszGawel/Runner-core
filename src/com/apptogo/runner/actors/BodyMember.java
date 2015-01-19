@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
@@ -66,12 +67,18 @@ public class BodyMember extends Actor{
 	}
 	
 	@Override
-	public void act(float delta){
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
         setPosition(body.getPosition().x - currentFrame.getRegionWidth()/2/PPM, body.getPosition().y - currentFrame.getRegionHeight()/2/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-        
+
+    	long endTime = System.nanoTime();
+    	if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
+    	if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bodyMemberArray != null)
+    		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bodyMemberArray.add(endTime - startTime);
+		
 	}
 	
 	@Override

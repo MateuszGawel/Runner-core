@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.utils.Array;
 
 public class Alien extends Character{
 
@@ -199,7 +200,11 @@ public class Alien extends Character{
 
 	@Override
 	public void act(float delta) {
-		super.act(delta);
+    	long startTime = System.nanoTime();
+    	super.act(delta);
+    	long endTime = System.nanoTime();
+    	if(gameWorld.alienArray!=null) gameWorld.alienArray.add(endTime - startTime);
+		
 	}
 	
 	@Override

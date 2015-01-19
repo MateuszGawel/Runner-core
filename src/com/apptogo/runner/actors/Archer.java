@@ -205,10 +205,13 @@ public class Archer extends Character{
 	}
 	
 	@Override
-	public void act(float delta) 
-	{
-		super.act(delta);
-		freePools();
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+    	super.act(delta);
+    	freePools();
+    	long endTime = System.nanoTime();
+    	if(gameWorld.archerArray!=null) gameWorld.archerArray.add(endTime - startTime);
+		
 	}
 	
 	@Override

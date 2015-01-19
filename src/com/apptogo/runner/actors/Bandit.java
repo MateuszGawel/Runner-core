@@ -26,7 +26,7 @@ public class Bandit extends Character{
 
 	private World world;
 
-	private GameWorld gameWorld;
+	public GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
 
     private final Array<Bomb> activeBombs = new Array<Bomb>();
@@ -223,8 +223,12 @@ public class Bandit extends Character{
 	
 	@Override
 	public void act(float delta) {
-		super.act(delta);
-		freePools();
+    	long startTime = System.nanoTime();
+    	super.act(delta);
+    	freePools();
+    	long endTime = System.nanoTime();
+    	if(gameWorld.banditArray!=null) gameWorld.banditArray.add(endTime - startTime);
+		
 	}
 	
 	@Override

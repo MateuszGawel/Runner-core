@@ -1,6 +1,7 @@
 package com.apptogo.runner.actors;
 
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -10,6 +11,7 @@ import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Array;
 
 public class Countdown extends Obstacle{
 
@@ -80,10 +82,20 @@ public class Countdown extends Obstacle{
 		setAnimate(true);
 	}
 	
-	public void act(float delta){
+
+	@Override
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+		
 		super.act(delta);
         setWidth(currentFrame.getRegionWidth());
         setHeight(currentFrame.getRegionHeight());
 		setPosition(Runner.SCREEN_WIDTH/2 - currentFrame.getRegionWidth()/2, Runner.SCREEN_HEIGHT/2 - currentFrame.getRegionHeight()/2);
+    	
+        long endTime = System.nanoTime();
+        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
+        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.countdown != null)
+        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.countdown.add(endTime - startTime);
+		
 	}
 }

@@ -811,30 +811,107 @@ public abstract class Character extends Actor{
 		}
 	}
 	
+	long coinsManager = 0;
+	long flagsUpdate = 0;
+	long queuedActions = 0;
+	long actions = 0;
+	long running = 0;
+	long stopping = 0;
+	long standingUp = 0;
+	long stepSoundSpeed = 0;
+	long dying = 0;
+	long flying = 0;
+	long inversedGravity = 0;
+	long animationManagerr = 0;
+	long size = 0;
+	
 	@Override
-	public void act(float delta) 
-	{	
-		if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
+	public void act(float delta) {
 		
+		long startTime = System.nanoTime();
+    	if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
+    	long endTime = System.nanoTime();
+    	coinsManager += endTime - startTime;
+    	
+    	startTime = System.nanoTime();
 		flags.update();
+    	endTime = System.nanoTime();
+    	flagsUpdate += endTime - startTime;
+    	
+    	startTime = System.nanoTime();
 		handleQueuedActions();
+    	endTime = System.nanoTime();
+    	queuedActions += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleActions();
+    	endTime = System.nanoTime();
+    	actions += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleRunning();
+    	endTime = System.nanoTime();
+    	running += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleStopping();
+    	endTime = System.nanoTime();
+    	stopping += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleStandingUp();
+    	endTime = System.nanoTime();
+    	standingUp += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleStepSoundSpeed();
+    	endTime = System.nanoTime();
+    	stepSoundSpeed += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleDying();
+    	endTime = System.nanoTime();
+    	dying += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleFlying();
+    	endTime = System.nanoTime();
+    	flying += endTime - startTime;
+		
+		startTime = System.nanoTime();
 		handleInversedGravity();
+    	endTime = System.nanoTime();
+    	inversedGravity += endTime - startTime;
 		//handleRotation();
 		
+		startTime = System.nanoTime();
 		currentFrame = animationManager.animate(delta);
+    	endTime = System.nanoTime();
+    	animationManagerr += endTime - startTime;
 
+		startTime = System.nanoTime();
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
+    	endTime = System.nanoTime();
+    	size += endTime - startTime;
         //setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-	}	
+
+    	Logger.log(this, "coinsManager: " +  coinsManager);         
+    	Logger.log(this, "flagsUpdate: " +  flagsUpdate);          
+    	Logger.log(this, "queuedActions: " +  queuedActions);        
+    	Logger.log(this, "actions: " +  actions);                
+    	Logger.log(this, "running: " +  running);              
+    	Logger.log(this, "stopping: " +  stopping);            
+    	Logger.log(this, "standingUp: " +  standingUp);            
+    	Logger.log(this, "stepSoundSpeed: " +  stepSoundSpeed);        
+    	Logger.log(this, "dying: " +  dying);                
+    	Logger.log(this, "flying: " +  flying);              
+    	Logger.log(this, "inversedGravity: " +  inversedGravity);        
+    	Logger.log(this, "animationManagerr: " +  animationManagerr);      
+    	Logger.log(this, "size:  " +  size);                 
+	}
+	
 //	public void handleGameFinished()
 //	{
 //		sounds.get(CharacterSound.VICTORY).play(0.4f);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class Barrel extends Obstacle{
 
@@ -24,8 +25,10 @@ public class Barrel extends Obstacle{
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/barrel.ogg");
 	}
 	
-	public void act(float delta){
-		super.act(delta);
+	@Override
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+    	super.act(delta);
 		if(((UserData)getBody().getUserData()).active && getBody().getType() != BodyType.DynamicBody)
 			getBody().setType(BodyType.DynamicBody);
 		
@@ -33,5 +36,8 @@ public class Barrel extends Obstacle{
 			userData.playSound = false;
 			sound.play(getSoundVolume());
 		}
+    	long endTime = System.nanoTime();
+    	if(gameWorld!=null) gameWorld.barrelArray.add(endTime - startTime);
+		
 	}
 }

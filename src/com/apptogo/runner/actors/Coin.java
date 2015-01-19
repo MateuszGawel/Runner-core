@@ -3,10 +3,13 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.CoinsManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Coin extends Obstacle implements Poolable
@@ -48,10 +51,12 @@ public class Coin extends Obstacle implements Poolable
 //		Logger.log(this, "2 linia: " + (endTime - startTime));	
 	}
 		
+
 	@Override
-	public void act(float delta)
-	{
-		super.act(delta);
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+		
+    	super.act(delta);
 		
 		if(active)
 		{
@@ -92,6 +97,12 @@ public class Coin extends Obstacle implements Poolable
 
 
 		}
+    	
+        long endTime = System.nanoTime();
+        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
+        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinArray != null)
+        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinArray.add(endTime - startTime);
+		
 	}
 
 	public void initEmpty(Vector2 nextPosition, int coinFieldId )

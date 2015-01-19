@@ -55,7 +55,7 @@ public class WildWestWorld extends GameWorld{
 		
 		//background.addActor(skyBlue);
 
-		mountains = new ParallaxBackground(mountainsRegion, mapSize, 0, -79/mapSize.y, player.character, 0, 270/PPM);
+		mountains = new ParallaxBackground(mountainsRegion, mapSize, 0, -79/mapSize.y, player.character, 0, 300/PPM);
 		background.addActor(mountains);
 		
 		rocks = new ParallaxBackground(rocksRegion, mapSize, 0, -156/mapSize.y, player.character, 0, 260/PPM);
@@ -75,11 +75,12 @@ public class WildWestWorld extends GameWorld{
 	
 	@Override
 	public void update(float delta){
-		//to jest na zlym viewporcie
+		Gdx.gl.glClearColor(0.855f, 0.639f, 0.321f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		shapeRenderer.begin(ShapeType.Filled);
-			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*2/3-100, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100+1, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
-			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*1/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100+1, brown, brown, brown, brown);
-			shapeRenderer.rect(0, 0, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3-200+1, lightBrown, lightBrown, lightBrown, lightBrown);
+			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*2/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
+			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*1/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100, brown, brown, brown, brown);
+			shapeRenderer.rect(0, 0, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3-200, lightBrown, lightBrown, lightBrown, lightBrown);
 		shapeRenderer.end();
 		super.update(delta);
 

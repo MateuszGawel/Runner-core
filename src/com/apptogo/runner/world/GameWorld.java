@@ -4,13 +4,26 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import java.util.Random;
 
+import com.apptogo.runner.actors.Alien;
+import com.apptogo.runner.actors.Archer;
+import com.apptogo.runner.actors.Bandit;
+import com.apptogo.runner.actors.Barrel;
+import com.apptogo.runner.actors.BodyMember;
+import com.apptogo.runner.actors.Bomb;
+import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.Coin;
+import com.apptogo.runner.actors.CoinField;
+import com.apptogo.runner.actors.Countdown;
+import com.apptogo.runner.actors.GameProgressBarHead;
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -21,6 +34,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -107,6 +121,7 @@ public abstract class GameWorld
 		music.stop();
 		music.dispose();
 		music = null;
+		printAverages();
 	}
 	
 	private void createWorld(String mapPath)
@@ -155,18 +170,127 @@ public abstract class GameWorld
 	}
 	
 
+	private Array<Long> actWorldStep = new Array<Long>();
+	private Array<Long> actBackground = new Array<Long>();
+	private Array<Long> actBackgroundGroup = new Array<Long>();
+	private Array<Long> actWorldStage = new Array<Long>();
+	public Array<Long> drawCamera = new Array<Long>();
+	public Array<Long> drawBackground = new Array<Long>();
+	public Array<Long> drawTiled = new Array<Long>();
+	public Array<Long> drawWorldStage = new Array<Long>();
+	
+	public Array<Long> alienArray = new Array<Long>();
+	public Array<Long> archerArray = new Array<Long>();
+	public Array<Long> banditArray = new Array<Long>();
+	public Array<Long> barrelArray = new Array<Long>();
+	public Array<Long> bodyMemberArray = new Array<Long>();
+	public Array<Long> bombArray = new Array<Long>();
+	public Array<Long> bonfireArray = new Array<Long>();
+	public Array<Long> coinArray = new Array<Long>();
+	public Array<Long> coinFieldArray = new Array<Long>();
+	public Array<Long> countdown = new Array<Long>();
+	public Array<Long> gameProgressBarHead = new Array<Long>();
+	public Array<Long> particleEffectActorArray = new Array<Long>();
+	
+	private long countAverage(Array<Long> array){
+		long sum = 0;
+		for(long value : array){
+			sum+=value;
+		}
+		if(array.size != 0)
+			return (sum/array.size);
+		else
+			return -1;
+	}
+	private long countSum(Array<Long> array){
+		long sum = 0;
+		for(long value : array){
+			sum+=value;
+		}
+		return sum;
+	}
+	
+	public void printAverages(){
+		Logger.log(this, "ACT WORLD STEP: " + countSum(actWorldStep));
+		Logger.log(this, "ACT BACKGROUND STAGE: " + countSum(actBackground));
+		Logger.log(this, "ACT BACKGROUND GROUP: " + countSum(actBackgroundGroup));
+		Logger.log(this, "ACT WORLD STAGE: " + countSum(actWorldStage));
+		
+		Logger.log(this, "DRAW CAMERA: " + countSum(drawCamera));
+		Logger.log(this, "DRAW BACKGROUND: " + countSum(drawBackground));
+		Logger.log(this, "DRAW TILED MAP: " + countSum(drawTiled));
+		Logger.log(this, "DRAW WORLD STAGE: " + countSum(drawWorldStage));	
+				
+		Logger.log(this, "ACTOR Alien: " + countSum(alienArray));
+		Logger.log(this, "ACTOR Archer: " + countSum(archerArray));
+		Logger.log(this, "ACTOR Bandit: " + countSum(banditArray));
+		Logger.log(this, "ACTOR Barrel: " + countSum(barrelArray));
+		Logger.log(this, "ACTOR BodyMember: " + countSum(bodyMemberArray));
+		Logger.log(this, "ACTOR Bomb: " + countSum(bombArray));
+		Logger.log(this, "ACTOR Bonfire: " + countSum(bonfireArray));
+		Logger.log(this, "ACTOR Coin: " + countSum(coinArray));
+		Logger.log(this, "ACTOR CoinField: " + countSum(coinFieldArray));
+		Logger.log(this, "ACTOR Countdown: " + countSum(countdown));
+		Logger.log(this, "ACTOR GameProgressBarHead: " + countSum(gameProgressBarHead));
+		Logger.log(this, "ACTOR ParticleEffectActor: " + countSum(particleEffectActorArray));
+
+		int otherActor = 0;
+        for(Actor actor : worldStage.getActors()){
+        	if(actor instanceof Alien)
+        		continue;
+        	else if(actor instanceof Archer)
+        		continue;
+        	else if(actor instanceof Bandit)
+        		continue;
+        	else if(actor instanceof Barrel)
+        		continue;
+        	else if(actor instanceof BodyMember)
+        		continue;
+        	else if(actor instanceof Bomb)
+        		continue;
+        	else if(actor instanceof Bonfire)
+        		continue;
+        	else if(actor instanceof Coin)
+        		continue;
+        	else if(actor instanceof CoinField)
+        		continue;
+        	else if(actor instanceof Countdown)
+        		continue;
+        	else if(actor instanceof GameProgressBarHead)
+        		continue;
+        	else if(actor instanceof ParticleEffectActor)
+        		continue;
+        	else 
+        		otherActor++;
+        }
+        Logger.log(this, "other actors: " + otherActor);
+	}
 	
     public void update(float delta) 
     {
+    	long startTime = System.nanoTime();
         world.step(delta, 3, 3);
-        
-        
+    	long endTime = System.nanoTime();
+    	actWorldStep.add(endTime - startTime);
+    	
+    	startTime = System.nanoTime();
         backgroundStage.act(delta);
+    	endTime = System.nanoTime();
+    	actBackground.add(endTime - startTime);
+    	
+    	startTime = System.nanoTime();
         worldBackgroundGroup.act(delta);
+    	endTime = System.nanoTime();
+    	actBackgroundGroup.add(endTime - startTime);
+    	
+    	startTime = System.nanoTime();
         worldStage.act(delta);
+    	endTime = System.nanoTime();
+    	actWorldStage.add(endTime - startTime);
 		
         contactListener.postStep();
         fpsLogger.log();
+        
     }  
     
     public Stage getWorldStage(){ return this.worldStage; }

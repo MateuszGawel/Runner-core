@@ -39,13 +39,13 @@ public class ForestWorld extends GameWorld{
 		background.addActor(tree4);
 		
 		//tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -38/mapSize.y, mapSize, player.character, 0, 200/PPM);
-		background.addActor(tree3);
+		//background.addActor(tree3);
 		
 		//tree2 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree2.png"), -0.5f, -89/mapSize.y, mapSize, player.character, 0, 130/PPM);
-		background.addActor(tree2);
+		//background.addActor(tree2);
 		
 		//tree1 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree1.png"), -0.8f, -192/mapSize.y, mapSize, player.character, 0, -150/PPM);
-		background.addActor(tree1);
+		//mbackground.addActor(tree1);
 	}
 	
 	@Override

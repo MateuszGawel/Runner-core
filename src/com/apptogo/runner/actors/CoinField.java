@@ -1,9 +1,13 @@
 package com.apptogo.runner.actors;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import java.util.HashMap;
 
 import com.apptogo.runner.handlers.CoinsManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -12,6 +16,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -38,9 +43,11 @@ public class CoinField extends Obstacle
 		createCoinsPosition(object);
 	}
 
-	public void act(float delta)
-	{
-		super.act(delta);
+	@Override
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+		
+    	super.act(delta);
 		
 		if( this.getBodyUserData().active )
 		{
@@ -58,6 +65,12 @@ public class CoinField extends Obstacle
 				CoinsManager.getInstance().activeCoinFields.removeValue(this, true);
 			}
 		}
+    	
+        long endTime = System.nanoTime();
+        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
+        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinFieldArray != null)
+        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinFieldArray.add(endTime - startTime);
+		
 	}
 	
 	private void createCoinsPosition(MapObject mapObject) 

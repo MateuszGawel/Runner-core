@@ -7,6 +7,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
@@ -34,9 +35,20 @@ public class GameProgressBarHead extends Image{
 		setPosition(0, parentHeight/2 - getHeight()/2);
 	}
 	
-	@Override public void act(float delta){
+
+	@Override
+	public void act(float delta) {
+    	long startTime = System.nanoTime();
+		
 		percent = (character.getBody().getPosition().x - 15.5f) / (((gameWorld.mapSize.x)/PPM-10.5f-20));
 		if(character.getX() < gameWorld.mapSize.x/PPM-20) 
 			setPosition((parentWidth) * percent - getWidth()/2, getY());
+    	
+        long endTime = System.nanoTime();
+        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
+        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.gameProgressBarHead != null)
+        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.gameProgressBarHead.add(endTime - startTime);
+		
 	}
+
 }
