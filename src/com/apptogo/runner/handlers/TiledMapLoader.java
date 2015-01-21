@@ -205,6 +205,7 @@ public class TiledMapLoader
 				Body body = world.createBody(bodyDef);
 				body.createFixture(groundFixture).setUserData( new UserData("nonkilling") );
 				body.setUserData( new UserData("nonkilling") );
+				gameWorld.groundBody = body;
 				bodies.add(body);
 			}
 			

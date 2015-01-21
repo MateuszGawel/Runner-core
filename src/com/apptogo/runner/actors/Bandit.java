@@ -56,7 +56,7 @@ public class Bandit extends Character{
 		this.world = world;
 		createBody(startingPosition);
 		
-		createBodyMembers();
+		//createBodyMembers();
 		 
         addSounds();
 	}

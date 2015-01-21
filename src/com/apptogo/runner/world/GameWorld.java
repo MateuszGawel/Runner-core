@@ -265,13 +265,41 @@ public abstract class GameWorld
         }
         Logger.log(this, "other actors: " + otherActor);
 	}
-	
+	boolean bdsA = false;
+	public Body groundBody;
     public void update(float delta) 
     {
     	long startTime = System.nanoTime();
         world.step(delta, 3, 3);
     	long endTime = System.nanoTime();
     	actWorldStep.add(endTime - startTime);
+    	
+    	Logger.log(this, "BODYCOUNT = " + world.getBodyCount() );
+    	if(!bdsA || bdsA)
+    	{
+    		bdsA = true;
+    		Array<Body> bs = new Array<Body>();
+    		world.getBodies(bs);
+    		
+    		Body tempB = this.player.character.getBody();
+    		int ciala = 0; int ciali = 0;
+    		for(Body b : bs) 
+    		{
+    			if( Math.abs( tempB.getPosition().x - b.getPosition().x ) < 5 )
+				{ciala++;
+					b.setActive(true);
+				}
+    			else
+    			{ciali++;
+    				b.setActive(false);
+    			}
+    		}
+    		//tu sie okazalo ze na 55 az 53 sa aktywowane za kazdym praktycznie razem | edit : ok bo bralem dalsze niz X a nie blizsze niz X... xD
+    		Logger.log(this, "TYLE AKTYWOWANO: " + ciala + " | A TYLE INAKTYWOWANO: " + ciali);
+    		
+    		this.player.character.getBody().setActive(true);
+    		groundBody.setActive(true);
+    	}
     	
     	startTime = System.nanoTime();
         backgroundStage.act(delta);

@@ -827,9 +827,9 @@ public abstract class Character extends Actor{
 	
 	@Override
 	public void act(float delta) {
-		
+		if(flags.isMe()) Logger.log(this,  "MAMO TO JA");
 		long startTime = System.nanoTime();
-    	if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
+    	//kif(flags.isMe()) if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
     	long endTime = System.nanoTime();
     	coinsManager += endTime - startTime;
     	
