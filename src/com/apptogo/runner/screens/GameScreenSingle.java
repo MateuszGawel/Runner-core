@@ -40,7 +40,6 @@ public class GameScreenSingle extends GameScreen
 	
 	public void prepare() 
 	{
-		Logger.log(this, "prepare z gamescreensingle");
 		player.setCharacterType( GameWorldType.convertToCharacterType( level.worldType ) );
 		
 		super.prepare();	

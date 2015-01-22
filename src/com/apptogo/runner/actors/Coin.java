@@ -3,20 +3,18 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.CoinsManager;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Coin extends Obstacle implements Poolable
 {		
 	private boolean active;
 	public boolean collected = false;
-	
 	private int coinFieldId;
 	private CoinsManager coinsManager = CoinsManager.getInstance();
 	
@@ -36,26 +34,12 @@ public class Coin extends Obstacle implements Poolable
 		this.gameWorld = gameWorld;
 		
 		this.coinFieldId = -1;
+		this.handleSoundVolume = false;
 	}
 	
-	private void gainCoinResult()
-	{
-		long startTime = System.nanoTime();
-		
-		long endTime = System.nanoTime();
-		Logger.log(this, "1 linia: " + (endTime - startTime));	
-		
-//		startTime = System.nanoTime();
-//		//sound.play(0.3f);
-//		endTime = System.nanoTime();
-//		Logger.log(this, "2 linia: " + (endTime - startTime));	
-	}
-		
 
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
     	super.act(delta);
 		
 		if(active)
@@ -72,16 +56,12 @@ public class Coin extends Obstacle implements Poolable
 				coinFieldId = -1;
 			}
 			else if( this.collected )				
-			{		
-				//Logger.log(this, "ZEBRA£EM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				//coinsManager.pooledEffectActor.obtainAndStart(getX() + getWidth()/2, getY() + getHeight()/2);
-				//long endTime = System.nanoTime();
-				//Logger.log(this, "ACT COINA TRWA£: " + (endTime - startTime));
-				
+			{					
 				if(System.nanoTime() - coinsManager.lastTimePlayed > 50000000){
 					coinsManager.sound.stop();
 					coinsManager.soundId = coinsManager.sound.play(0.3f);	
 					coinsManager.lastTimePlayed = System.nanoTime();
+					coinsManager.pooledEffectActor.obtainAndStart(getX(), getY());
 				}
 
 				this.remove();
@@ -93,16 +73,7 @@ public class Coin extends Obstacle implements Poolable
 				this.active = false;
 				this.coinFieldId = -1;
 			}
-
-
-
-		}
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinArray != null)
-        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinArray.add(endTime - startTime);
-		
+		}	
 	}
 
 	public void initEmpty(Vector2 nextPosition, int coinFieldId )
@@ -118,8 +89,6 @@ public class Coin extends Obstacle implements Poolable
 		active = true;	
 		
 		this.coinFieldId = coinFieldId;
-		
-		Logger.log(this, "USTAWILEM MONETE NA POLU NR " + coinFieldId );
 	}
 
 	@Override

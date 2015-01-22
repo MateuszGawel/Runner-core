@@ -45,8 +45,6 @@ public class CoinField extends Obstacle
 
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
     	super.act(delta);
 		
 		if( this.getBodyUserData().active )
@@ -65,11 +63,6 @@ public class CoinField extends Obstacle
 				CoinsManager.getInstance().activeCoinFields.removeValue(this, true);
 			}
 		}
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinFieldArray != null)
-        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.coinFieldArray.add(endTime - startTime);
 		
 	}
 	

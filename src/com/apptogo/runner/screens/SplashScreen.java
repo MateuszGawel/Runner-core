@@ -188,7 +188,6 @@ public class SplashScreen extends BaseScreen
 		}
 		else if( currentPhase == SplashPhase.LOGO_IN && logo.getActions().size <= 0)
 		{			
-			if(CustomActionManager.getInstance() == null) Logger.log(this, "DUPA");
 			CustomActionManager.getInstance().registerAction(cameraShakeAction);
 			CustomActionManager.getInstance().registerAction(cameraStopShakeAction);
 			

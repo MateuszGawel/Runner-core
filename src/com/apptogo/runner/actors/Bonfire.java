@@ -33,19 +33,12 @@ public class Bonfire extends Obstacle{
 		
 	}
 	@Override
-	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
+	public void act(float delta) {		
 		if(soundId == 0)
 			soundId = sound.loop(getSoundVolume());
 		
 		super.act(delta);
 		sound.setVolume(soundId, getSoundVolume());
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bonfireArray != null)
-        	((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bonfireArray.add(endTime - startTime);
 		
 	}
 }

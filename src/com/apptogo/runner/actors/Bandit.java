@@ -111,7 +111,6 @@ public class Bandit extends Character{
 				if(getSpeed() < 0.001f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
@@ -153,7 +152,6 @@ public class Bandit extends Character{
 				else{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
@@ -223,11 +221,8 @@ public class Bandit extends Character{
 	
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
     	super.act(delta);
     	freePools();
-    	long endTime = System.nanoTime();
-    	if(gameWorld.banditArray!=null) gameWorld.banditArray.add(endTime - startTime);
 		
 	}
 	

@@ -34,12 +34,10 @@ public class ParticleEffectActor extends Image {
 		tempEffect.scaleEffect(effectScale);
 		particleEffectPool = new ParticleEffectPool(tempEffect, initialPoolCapacity, maxPool);
 		pooled = true;
-		int ctr = 0;
 		Array<PooledEffect> tempArray = new Array<PooledEffect>();
 		for (int i=0; i<initialValue; i++){
 			PooledEffect effect = particleEffectPool.obtain();
 			tempArray.add(effect);
-			Logger.log(this, "tworze: " + ctr++);
 		}
 		particleEffectPool.freeAll(tempArray);
 		
@@ -84,9 +82,7 @@ public class ParticleEffectActor extends Image {
 	}
 
 	@Override
-	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
+	public void act(float delta) {	
     	super.act(delta);
 		if(started && !pooled)
 			effect.update(delta);
@@ -96,19 +92,10 @@ public class ParticleEffectActor extends Image {
 		}
 		
 		//dla poola
-		//long startTime = System.nanoTime();
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
 		}
-		//long endTime = System.nanoTime();
-		//Logger.log(this, "ACT PARTICLI: " + (endTime - startTime));
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.particleEffectActorArray != null)
-        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.particleEffectActorArray.add(endTime - startTime);
-		
 	}
 
 	@Override

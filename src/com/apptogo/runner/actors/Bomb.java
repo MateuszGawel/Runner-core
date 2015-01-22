@@ -95,19 +95,12 @@ public class Bomb extends Actor implements Poolable{
 
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
     	currentFrame = animationManager.animate(delta);
         setPosition(bombBody.getPosition().x - currentFrame.getRegionWidth()/2/PPM, bombBody.getPosition().y - currentFrame.getRegionHeight()/2/PPM + 7/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(bombBody.getAngle() * MathUtils.radiansToDegrees);
         setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bombArray != null)
-        	((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bombArray.add(endTime - startTime);
 		
 	}
 	

@@ -117,7 +117,6 @@ public class SpaceWorld extends GameWorld{
 	@Override
 	public void dispose(){
 		super.dispose();
-		Logger.log(this, "dispose space");
 		asteroidSpawnAction.setFinished(true);
 	}
 

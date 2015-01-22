@@ -68,16 +68,10 @@ public class BodyMember extends Actor{
 	
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
         setPosition(body.getPosition().x - currentFrame.getRegionWidth()/2/PPM, body.getPosition().y - currentFrame.getRegionHeight()/2/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-
-    	long endTime = System.nanoTime();
-    	if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-    	if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bodyMemberArray != null)
-    		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.bodyMemberArray.add(endTime - startTime);
 		
 	}
 	

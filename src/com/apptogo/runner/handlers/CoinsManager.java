@@ -36,7 +36,6 @@ public class CoinsManager
 	}
 	
 	private GameWorld gameWorld;
-	private int coinCounter;
 	public ParticleEffectActor pooledEffectActor;
 		
 	private Array<CoinField> coinFields = new Array<CoinField>();
@@ -57,7 +56,6 @@ public class CoinsManager
 	    {
 	    	EllipseMapObject coinTemplate = new EllipseMapObject();
 			coinTemplate.getEllipse().setSize(32.0f, 32.0f);
-			Logger.log(this, "tworze coin numer: " + coinCounter++);
 	    	Coin coin = new Coin(coinTemplate, gameWorld);
 	    	
 	    	return coin;
@@ -73,7 +71,7 @@ public class CoinsManager
 		coinsPool.freeAll(coins);
 		
 		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM);
-		//gameWorld.getWorldStage().addActor(pooledEffectActor);
+		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
 	}

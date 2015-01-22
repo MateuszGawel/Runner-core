@@ -54,6 +54,7 @@ public class Obstacle extends Actor{
 	protected AnimationManager animationManager;
 	protected GameWorld gameWorld;
 	private float soundVolume = 1;
+	protected boolean handleSoundVolume = true;
 
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
@@ -269,6 +270,8 @@ public class Obstacle extends Actor{
 	        setHeight(currentFrame.getRegionHeight() / PPM);
 			setOrigin(-offsetX, -offsetY);
         }
+
+        if(handleSoundVolume)
 		handleSoundVolume();
 		
 	}

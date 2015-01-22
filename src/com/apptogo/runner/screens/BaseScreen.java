@@ -133,7 +133,7 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage = new Stage();
 			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			gameGuiStage.setViewport(guiViewport);
-			
+			gameGuiStage.setDebugAll(false);
 			this.prepare();
 			
 			inputMultiplexer = new InputMultiplexer(); 
@@ -176,8 +176,7 @@ public abstract class BaseScreen implements Screen
 			
 			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
-    		gameGuiStage.draw();
-    		//Logger.log(this, "gameGui rendercalls: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls); //-10
+    		gameGuiStage.draw(); //w chuj render calli bo nie ma atlasu
 		}
 		
 		CustomActionManager.getInstance().act(delta);
@@ -368,25 +367,21 @@ public abstract class BaseScreen implements Screen
 	{		
 		if( menuStage != null)
 		{
-			Logger.log(this, "dispose menuStage");
 			menuStage.clear();
 			menuStage.dispose();
 		}
 		if( menuBackgroundStage != null)
 		{
-			Logger.log(this, "dispose menuBackgroundStage");
 			menuBackgroundStage.clear();
 			menuBackgroundStage.dispose();
 		}
 		if( menuFadeStage != null)
 		{
-			Logger.log(this, "dispose menuFadeStage");
 			menuFadeStage.clear();
 			menuFadeStage.dispose();
 		}
 		
 		if(gameGuiStage != null){
-			Logger.log(this, "dispose gameGuiStage");
 			gameGuiStage.clear();
 			gameGuiStage.dispose();
 		}

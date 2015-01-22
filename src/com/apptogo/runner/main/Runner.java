@@ -57,9 +57,7 @@ public class Runner extends Game
 	
 	@Override
 	public void dispose() 
-	{
-		Logger.log(this, "THE APPLICATION IS DISPOSING NOW");
-		
+	{	
 		super.dispose();
 		ResourcesManager.getInstance().unloadAllApplicationResources();
 		

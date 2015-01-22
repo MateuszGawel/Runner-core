@@ -84,10 +84,6 @@ public class FlagsHandler {
 	private int mushroomSensor;
 //	private int leftRotationSensor;
 //	private int rightRotationSensor;	
-	public void printSensors(){
-		Logger.log(this, "oto sensory: " + footSensor + " " + jumpSensor + " " + standupSensor + " " + headSensor);
-	}
-
 
 	
 	public void setCharacter(Character character){

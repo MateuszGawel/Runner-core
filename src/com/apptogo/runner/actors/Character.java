@@ -332,7 +332,6 @@ public abstract class Character extends Actor{
 		flags.setQueuedBoost(0);
 		body.setLinearVelocity(x * 0.8f, gravityModificator * y * 0.7f );
 		flags.setDoubleJumped(true);
-		Logger.log(this, "double jump");
 	}
 	
 	private void lift(){
@@ -357,7 +356,6 @@ public abstract class Character extends Actor{
 			
 			flags.setQueuedBoost(0);
 			flags.setDoubleJumped(true);
-			Logger.log(this, "lifted");
 		}
 	}
 	
@@ -377,11 +375,9 @@ public abstract class Character extends Actor{
 			else
 			{
 				if(speed > 0.05f){
-					Logger.log(this, "L¹dowanie zwyk³e");
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDING);
 				}
 				else{
-					Logger.log(this, "L¹dowanie idle");
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 					flags.update();
 				}
@@ -395,7 +391,6 @@ public abstract class Character extends Actor{
 		if(flags.isCanBoost()){
 			body.setLinearVelocity(flags.getQueuedBoost(), 0);
 			flags.setBoostedOnce(true);
-			Logger.log(this, "BOOST! " + String.valueOf(flags.getQueuedBoost()));
 			flags.setQueuedBoost(0);
 		}
 	}
@@ -613,7 +608,6 @@ public abstract class Character extends Actor{
 	
 	private void handleStopping(){
 		if(flags.isShouldStop()){	
-			Logger.log(this,  "stopuje");
 			flags.setStopped(true);
 			
 			if(stepSoundPlayed){
@@ -699,7 +693,6 @@ public abstract class Character extends Actor{
 		}
 		
 		if(flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			Logger.log(this, "jestem w polu grawitacyjnym i mam zmienic");
 			
 			//normal na nie-sensory
 			body.getFixtureList().get(1).setSensor(false);
@@ -733,24 +726,19 @@ public abstract class Character extends Actor{
 			});
 			
 			if(flags.getFootSensor() > 0){
-				Logger.log(this, "footsensor: " + flags.getFootSensor() + " przy zmianie na normal wiêc zmniejszam");
 				flags.decrementFootSensor();
 			}
 			if(flags.getJumpSensor() > 0){
-				Logger.log(this, "jumpsensor: " + flags.getJumpSensor() + " przy zmianie na normal wiêc zmniejszam");
 				flags.decrementJumpSensor();
 			}
 			if(flags.getStandupSensor() < 0){
-				Logger.log(this, "standupsensor: " + flags.getStandupSensor() + " przy zmianie na normal wiêc zwiêkszam");
 				flags.incrementStandupSensor();
 			}
 			if(flags.getHeadSensor() < 0){
-				Logger.log(this, "headsensor: " + flags.getHeadSensor() + " przy zmianie na normal wiêc zwiêkszam");
 				flags.incrementHeadSensor();
 			}
 		}
 		else if(!flags.isGravityInversed() && flags.isGravityRotationSwitch()){
-			Logger.log(this, "jestem NIE w polu grawitacyjnym i mam zmienic");
 			
 			//normal na sensory
 			body.getFixtureList().get(1).setSensor(true);
@@ -784,19 +772,15 @@ public abstract class Character extends Actor{
 			});
 			
 			if(flags.getFootSensor() > 0){
-				Logger.log(this, "footsensor: " + flags.getFootSensor() + " przy zmianie na inwerted wiêc zmniejszam");
 				flags.decrementFootSensor();
 			}
 			if(flags.getJumpSensor() > 0){
-				Logger.log(this, "jumpsensor: " + flags.getJumpSensor() + " przy zmianie na inwerted wiêc zmniejszam");
 				flags.decrementJumpSensor();
 			}
 			if(flags.getStandupSensor() < 0){
-				Logger.log(this, "standupsensor: " + flags.getStandupSensor() + " przy zmianie na inwerted wiêc zwiêkszam");
 				flags.incrementStandupSensor();
 			}
 			if(flags.getHeadSensor() < 0){
-				Logger.log(this, "headsensor: " + flags.getHeadSensor() + " przy zmianie na inwerted wiêc zwiêkszam");
 				flags.incrementHeadSensor();
 			}
 		}
@@ -827,89 +811,25 @@ public abstract class Character extends Actor{
 	
 	@Override
 	public void act(float delta) {
-		if(flags.isMe()) Logger.log(this,  "MAMO TO JA");
-		long startTime = System.nanoTime();
-    	//kif(flags.isMe()) if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
-    	long endTime = System.nanoTime();
-    	coinsManager += endTime - startTime;
-    	
-    	startTime = System.nanoTime();
-		flags.update();
-    	endTime = System.nanoTime();
-    	flagsUpdate += endTime - startTime;
-    	
-    	startTime = System.nanoTime();
-		handleQueuedActions();
-    	endTime = System.nanoTime();
-    	queuedActions += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleActions();
-    	endTime = System.nanoTime();
-    	actions += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleRunning();
-    	endTime = System.nanoTime();
-    	running += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleStopping();
-    	endTime = System.nanoTime();
-    	stopping += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleStandingUp();
-    	endTime = System.nanoTime();
-    	standingUp += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleStepSoundSpeed();
-    	endTime = System.nanoTime();
-    	stepSoundSpeed += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleDying();
-    	endTime = System.nanoTime();
-    	dying += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleFlying();
-    	endTime = System.nanoTime();
-    	flying += endTime - startTime;
-		
-		startTime = System.nanoTime();
-		handleInversedGravity();
-    	endTime = System.nanoTime();
-    	inversedGravity += endTime - startTime;
-		//handleRotation();
-		
-		startTime = System.nanoTime();
-		currentFrame = animationManager.animate(delta);
-    	endTime = System.nanoTime();
-    	animationManagerr += endTime - startTime;
+    	if(flags.isMe()) if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
 
-		startTime = System.nanoTime();
+		flags.update();
+		handleQueuedActions();
+		handleActions();
+		handleRunning();
+		handleStopping();
+		handleStandingUp();
+		handleStepSoundSpeed();
+		handleDying();
+		handleFlying();
+		handleInversedGravity();
+
+		currentFrame = animationManager.animate(delta);
+		
         setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
-    	endTime = System.nanoTime();
-    	size += endTime - startTime;
-        //setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-
-    	Logger.log(this, "coinsManager: " +  coinsManager);         
-    	Logger.log(this, "flagsUpdate: " +  flagsUpdate);          
-    	Logger.log(this, "queuedActions: " +  queuedActions);        
-    	Logger.log(this, "actions: " +  actions);                
-    	Logger.log(this, "running: " +  running);              
-    	Logger.log(this, "stopping: " +  stopping);            
-    	Logger.log(this, "standingUp: " +  standingUp);            
-    	Logger.log(this, "stepSoundSpeed: " +  stepSoundSpeed);        
-    	Logger.log(this, "dying: " +  dying);                
-    	Logger.log(this, "flying: " +  flying);              
-    	Logger.log(this, "inversedGravity: " +  inversedGravity);        
-    	Logger.log(this, "animationManagerr: " +  animationManagerr);      
-    	Logger.log(this, "size:  " +  size);                 
+        //setRotation(body.getAngle() * MathUtils.radiansToDegrees);            
 	}
 	
 //	public void handleGameFinished()
@@ -1014,7 +934,6 @@ public abstract class Character extends Actor{
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
 				{
 					if(flags.isCanUseAbility()) 
-						Logger.log(this, "odpalam umiejetnosc");
 						character.usePowerup( powerupType );
 						//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;

@@ -85,17 +85,10 @@ public class Countdown extends Obstacle{
 
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
 		super.act(delta);
         setWidth(currentFrame.getRegionWidth());
         setHeight(currentFrame.getRegionHeight());
 		setPosition(Runner.SCREEN_WIDTH/2 - currentFrame.getRegionWidth()/2, Runner.SCREEN_HEIGHT/2 - currentFrame.getRegionHeight()/2);
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.countdown != null)
-        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.countdown.add(endTime - startTime);
 		
 	}
 }

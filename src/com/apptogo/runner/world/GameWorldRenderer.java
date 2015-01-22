@@ -45,7 +45,6 @@ public class GameWorldRenderer
 	
     public void render()
     {  	
-    	long startTime = System.nanoTime();
     	//ustawienia kamery
 	    camera.position.set(
 	            Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
@@ -56,41 +55,26 @@ public class GameWorldRenderer
     	camera.update();
     	cullingArea.set(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom); 	
     	tiledMapRenderer.setView(camera);
-    	long endTime = System.nanoTime();
-    	gameWorld.drawCamera.add(endTime-startTime);
-    	
-    	startTime = System.nanoTime();
+
     	//backgroundStage
     	//gameWorld.getBackgroundStage().getRoot().setCullingArea(cullingArea);
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
-    	endTime = System.nanoTime();
-    	gameWorld.drawBackground.add(endTime-startTime);
-    	
     	
     	//tiledmap
-    	startTime = System.nanoTime();
-    	tiledMapRenderer.renderFrontLayer();
-		Batch batch = gameWorld.getWorldStage().getBatch();
-		if (batch != null) {
-			batch.begin();
-			gameWorld.worldBackgroundGroup.draw(batch, 1);
-			batch.end();
-		}
-    	tiledMapRenderer.render();
-    	endTime = System.nanoTime();
-    	gameWorld.drawTiled.add(endTime-startTime);
-    	
+//    	tiledMapRenderer.renderFrontLayer();
+//		Batch batch = gameWorld.getWorldStage().getBatch();
+//		if (batch != null) {
+//			batch.begin();
+//			gameWorld.worldBackgroundGroup.draw(batch, 1);
+//			batch.end();
+//		}
+    	tiledMapRenderer.render();    	
     	
     	//worldStage
-    	startTime = System.nanoTime();
     	gameWorld.worldStage.getRoot().setCullingArea(cullingArea);
     	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);	
-    	gameWorld.worldStage.draw();
-    	endTime = System.nanoTime();
-    	gameWorld.drawWorldStage.add(endTime-startTime);
-
-    	
+    	gameWorld.worldStage.draw();    	
     	
     	
     	//debugRenderer.render(gameWorld.world, camera.combined);

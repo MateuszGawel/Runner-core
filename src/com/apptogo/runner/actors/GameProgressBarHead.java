@@ -37,18 +37,10 @@ public class GameProgressBarHead extends Image{
 	
 
 	@Override
-	public void act(float delta) {
-    	long startTime = System.nanoTime();
-		
+	public void act(float delta) {		
 		percent = (character.getBody().getPosition().x - 15.5f) / (((gameWorld.mapSize.x)/PPM-10.5f-20));
 		if(character.getX() < gameWorld.mapSize.x/PPM-20) 
 			setPosition((parentWidth) * percent - getWidth()/2, getY());
-    	
-        long endTime = System.nanoTime();
-        if(ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen)
-        if(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.gameProgressBarHead != null)
-        ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.gameProgressBarHead.add(endTime - startTime);
-		
 	}
 
 }

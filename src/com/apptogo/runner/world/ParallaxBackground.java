@@ -29,7 +29,6 @@ public class ParallaxBackground extends Actor{
 		this.y = y;
 		this.initialRegionWidth = textureRegion.getRegionWidth();
 		this.textureRegion = textureRegion;
-		Logger.log(this, "dane: " + textureRegion.getRegionX() + " " + textureRegion.getRegionWidth());
 		setPosition(x/PPM, y/PPM);
 		setWidth(getWidth()/PPM);
 		setHeight(getHeight()/PPM);

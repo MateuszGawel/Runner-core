@@ -71,7 +71,6 @@ public class MyContactListener implements ContactListener
 			if( checkFixturesTypes(fa, fb, "nonkilling", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "mainBody")){		
 				if(flags.getQueuedBoost() == 0){
 					flags.setQueuedBoost(player.character.getBody().getLinearVelocity().x);
-					Logger.log(this, "kolejkuje z predkoscia: " + player.character.getBody().getLinearVelocity().x);
 				}
 			}	
 	
@@ -84,7 +83,6 @@ public class MyContactListener implements ContactListener
 			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){
 					Fixture bodyFixture = getFixtureByType(fa, fb, "gravityField");
 					player.character.flags.setGravityRotationSwitch(true);
-					Logger.log(this, "pocz¹tek gravityfield");
 			}
 			
 			
@@ -174,7 +172,6 @@ public class MyContactListener implements ContactListener
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = true;
-				Logger.log(this, "poczatek kolizji z coinField");
 			}
 			
 
@@ -183,7 +180,6 @@ public class MyContactListener implements ContactListener
 			if(checkFixturesTypes(fa, fb, "mainBody", "liftField")){
 				Fixture liftFixture = getFixtureByType(fa, fb, "liftField");
 				String liftFieldOwner = ((UserData)liftFixture.getUserData()).playerName;
-				Logger.log(this, "Jestem: " + player.getName() + " dotknalem liftfielda od: " + liftFieldOwner);
 				//tylko na mnie ma sie wykonac umiejetnosc
 				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ liftFieldOwner!=player.getName())
@@ -259,13 +255,11 @@ public class MyContactListener implements ContactListener
 			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){
 					Fixture bodyFixture = getFixtureByType(fa, fb, "gravityField");
 					player.character.flags.setGravityRotationSwitch(true);
-					Logger.log(this, "koniec gravityfield");
 			}
 			//coinField
 			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = false;
-				Logger.log(this, "koniec kolizji z coinField");
 			}
 		}
 	}
@@ -318,7 +312,6 @@ public class MyContactListener implements ContactListener
 			
 			if(impulses[0] > 3000)
 			{
-				Logger.log(this, impulses[0]);
 				((UserData)body.getUserData()).playSound = true;
 			}
 		}
@@ -403,7 +396,6 @@ public class MyContactListener implements ContactListener
 			try {
 				player = gameWorld.getEnemy(playerName);
 			} catch (PlayerDoesntExistException e) {
-				Logger.log(this, "There is no player with name: " + playerName);
 			}
 		}
 		return player;

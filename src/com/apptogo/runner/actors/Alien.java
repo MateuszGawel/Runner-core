@@ -63,7 +63,6 @@ public class Alien extends Character{
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
@@ -99,7 +98,6 @@ public class Alien extends Character{
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
@@ -141,7 +139,6 @@ public class Alien extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 				else{
 					if(stepSoundPlayed){
-						Logger.log(this, "stopuje");
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
 					}
@@ -200,11 +197,7 @@ public class Alien extends Character{
 
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
     	super.act(delta);
-    	long endTime = System.nanoTime();
-    	if(gameWorld.alienArray!=null) gameWorld.alienArray.add(endTime - startTime);
-		
 	}
 	
 	@Override

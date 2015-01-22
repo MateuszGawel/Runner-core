@@ -109,7 +109,7 @@ public class TiledMapLoader
 		obstacleSensorFixture = Materials.obstacleSensor;
 		
 		tiledMap = new TmxMapLoader().load( mapPath );
-		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM);
+		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM, gameWorld.worldStage.getBatch());
 		
 		//initLights();
 		CoinsManager.getInstance().setGameWorld(gameWorld);

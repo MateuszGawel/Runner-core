@@ -229,7 +229,6 @@ public abstract class GameScreen extends BaseScreen{
 			}
 			else if( Gdx.input.isKeyPressed(Keys.NUM_2))
 			{
-				Logger.log(this, "zmieniam na: " + world.getEnemyNumber(1).getName());
 				currentPlayerInput = world.getEnemyNumber(0);
 			}
 			else if( Gdx.input.isKeyPressed(Keys.NUM_3))

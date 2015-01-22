@@ -27,8 +27,7 @@ public class Barrel extends Obstacle{
 	
 	@Override
 	public void act(float delta) {
-    	long startTime = System.nanoTime();
-    	super.act(delta);
+		super.act(delta);
 		if(((UserData)getBody().getUserData()).active && getBody().getType() != BodyType.DynamicBody)
 			getBody().setType(BodyType.DynamicBody);
 		
@@ -36,8 +35,6 @@ public class Barrel extends Obstacle{
 			userData.playSound = false;
 			sound.play(getSoundVolume());
 		}
-    	long endTime = System.nanoTime();
-    	if(gameWorld!=null) gameWorld.barrelArray.add(endTime - startTime);
 		
 	}
 }
