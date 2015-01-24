@@ -26,14 +26,13 @@ public class GameWorldRenderer
     {  
         this.gameWorld = gameWorld;  
         this.debugRenderer = new Box2DDebugRenderer();  
-        this.camera = (OrthographicCamera) gameWorld.worldStage.getCamera();  
+        this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();  
        
         camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
         camera.position.y = gameWorld.player.character.getBody().getPosition().y;  
         
         tiledMapRenderer = TiledMapLoader.getInstance().getMapRenderer();
         cullingArea = new Rectangle(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom);
-        
     }  
     
 	public void resize(int width, int height){
@@ -72,9 +71,9 @@ public class GameWorldRenderer
     	tiledMapRenderer.render();    	
     	
     	//worldStage
-    	gameWorld.worldStage.getRoot().setCullingArea(cullingArea);
-    	gameWorld.worldStage.getViewport().update(currentScreenWidth, currentScreenHeight);	
-    	gameWorld.worldStage.draw();    	
+    	gameWorld.getWorldStage().getRoot().setCullingArea(cullingArea);
+    	gameWorld.getWorldStage().getViewport().update(currentScreenWidth, currentScreenHeight);	
+    	gameWorld.getWorldStage().draw();  
     	
     	
     	//debugRenderer.render(gameWorld.world, camera.combined);

@@ -844,18 +844,10 @@ public abstract class Character extends Actor{
 	public abstract CharacterType getCharacterType();	
 
 	
-	//POWERUPS
-	public Button getJumpButton()
-	{
-		Button jumpButton = new Button(guiSkin, this.jumpButtonStyleName);
-		
-		jumpButton.setPosition(Runner.SCREEN_WIDTH - jumpButton.getWidth() - 20, 20);
-		jumpButton.setSize(jumpButton.getWidth(), jumpButton.getHeight());
-		jumpButton.setBounds(jumpButton.getX(), jumpButton.getY(), jumpButton.getWidth(), jumpButton.getHeight());
-		jumpButton.setOrigin(jumpButton.getWidth()/2, jumpButton.getHeight()/2);
-		jumpButton.setScaleX(5f);
-		jumpButton.setScaleY(2f);
-		jumpButton.addListener(new InputListener() 
+	//BUTTONS
+	protected void createJumpButton(String buttonName){	
+		CharacterButton button = new CharacterButton(buttonName, Runner.SCREEN_WIDTH - 20, 20);	
+		button.addListener(new InputListener() 
 		{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
@@ -864,20 +856,28 @@ public abstract class Character extends Actor{
 		        return true;
 		    }
 		});
-		
-		return jumpButton;
+		button.setPosition(button.getX() - button.getWidth(), button.getY());
+		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
 	}
-	public Button getTempButton()
-	{
-		Button tempButton = new Button(guiSkin, this.jumpButtonStyleName);
-		
-		tempButton.setPosition(Runner.SCREEN_WIDTH - tempButton.getWidth() - 20, Runner.SCREEN_HEIGHT - 200);
-		tempButton.setSize(tempButton.getWidth(), tempButton.getHeight());
-		tempButton.setBounds(tempButton.getX(), tempButton.getY(), tempButton.getWidth(), tempButton.getHeight());
-		tempButton.setOrigin(tempButton.getWidth()/2, tempButton.getHeight()/2);
-		tempButton.setScaleX(5f);
-		tempButton.setScaleY(2f);
-		tempButton.addListener(new InputListener() 
+	
+	protected void createSlideButton(String buttonName){	
+		CharacterButton button = new CharacterButton(buttonName, 20, 20);	
+		button.addListener(new InputListener() 
+		{
+			@Override
+		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				flags.setSlideButtonPressed(true);
+				character.slide();
+		        return true;
+		    }
+		});
+		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
+	}
+	
+	protected void createTempButton(String buttonName){	
+		CharacterButton button = new CharacterButton(buttonName, Runner.SCREEN_WIDTH - 20, Runner.SCREEN_HEIGHT - 200);	
+		button.addListener(new InputListener() 
 		{
 			@Override
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
@@ -890,39 +890,11 @@ public abstract class Character extends Actor{
 		        return true;
 		    }
 		});
-		
-		return tempButton;
+		button.setPosition(button.getX() - button.getWidth(), button.getY());
+		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
 	}
-	public Button getSlideButton()
-	{
-		Button slideButton = new Button(guiSkin, this.slideButtonStyleName);
-		
-		slideButton.setPosition(20, 20);
-		slideButton.setSize(slideButton.getWidth(), slideButton.getHeight());
-		slideButton.setBounds(slideButton.getX(), slideButton.getY(), slideButton.getWidth(), slideButton.getHeight());
-		slideButton.setOrigin(slideButton.getWidth()/2, slideButton.getHeight()/2);
-		slideButton.setScaleX(5f);
-		slideButton.setScaleY(2f);
-		slideButton.addListener(new InputListener() {
-			@Override
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
-			{
-				flags.setSlideButtonPressed(true);
-				character.slide();
-		        return true;
-		    }
-			@Override
-		    public void touchUp (InputEvent event, float x, float y, int pointer, int button) 
-			{
-				flags.setSlideButtonPressed(false);
-				character.standUp();
-		    }
-		});
-		
-		return slideButton;
-	}
-
-	public Array<Button> initializePowerupButtons()
+	
+	private Array<Button> initializePowerupButtons()
 	{
 		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) )
 		{

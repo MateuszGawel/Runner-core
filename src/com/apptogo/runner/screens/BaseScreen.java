@@ -133,7 +133,6 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage = new Stage();
 			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			gameGuiStage.setViewport(guiViewport);
-			gameGuiStage.setDebugAll(false);
 			this.prepare();
 			
 			inputMultiplexer = new InputMultiplexer(); 
@@ -173,10 +172,9 @@ public abstract class BaseScreen implements Screen
 		else
 		{
 			this.step();
-			
 			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
-    		gameGuiStage.draw(); //w chuj render calli bo nie ma atlasu
+    		gameGuiStage.draw();
 		}
 		
 		CustomActionManager.getInstance().act(delta);

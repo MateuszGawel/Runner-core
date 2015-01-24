@@ -64,7 +64,7 @@ public abstract class GameScreen extends BaseScreen{
 		
 		coinLabel = createLabel("0", FontType.COINFONT);
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
-		gameGuiStage.addActor(coinLabel);
+		//gameGuiStage.addActor(coinLabel);
 	}
 	
 	public void setLevel(Level level)
@@ -107,21 +107,21 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createGui()
 	{		
-		jumpButton = world.player.character.getJumpButton();
-		slideButton = world.player.character.getSlideButton();
+		//jumpButton = world.player.character.getJumpButton();
+		//slideButton = world.player.character.getSlideButton();
 
-		powerupButtons = world.player.character.initializePowerupButtons();
+		//powerupButtons = world.player.character.initializePowerupButtons();
 		
-		gameGuiStage.addActor(slideButton);
-		gameGuiStage.addActor(jumpButton);		
+		//gameGuiStage.addActor(slideButton);
+		//gameGuiStage.addActor(jumpButton);		
 		
 		//TEMP
-		gameGuiStage.addActor(world.player.character.getTempButton());
+		//gameGuiStage.addActor(world.player.character.getTempButton());
 		
-		for(Button powerupButton: powerupButtons)
-		{
-			gameGuiStage.addActor(powerupButton);
-		}
+		//for(Button powerupButton: powerupButtons)
+		//{
+		//	gameGuiStage.addActor(powerupButton);
+		//}
 		
 		world.player.character.setPowerup(PowerupType.ABILITY1);
 		createGameProgressBar();
@@ -151,7 +151,7 @@ public abstract class GameScreen extends BaseScreen{
 			
 			coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
-			gameGuiStage.addActor(coinLabel);
+			//gameGuiStage.addActor(coinLabel);
 			
 			if( coinCounterEffectActor.isComplete() )
 			{
@@ -160,7 +160,7 @@ public abstract class GameScreen extends BaseScreen{
 				coinCounterEffectActor.start();
 			}
 			
-			gameGuiStage.addActor(coinCounterEffectActor);
+			//gameGuiStage.addActor(coinCounterEffectActor);
 		}
 	}
 	

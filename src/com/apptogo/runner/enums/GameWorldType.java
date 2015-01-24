@@ -34,15 +34,15 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png", "gfx/game/levels/wildwestProgressBarBegin.png", "gfx/game/levels/wildwestProgressBarMiddle.png", "gfx/game/levels/wildwestProgressBarEnd.png" };
+			return new String[]{ "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png"};
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{ "gfx/game/levels/tree1.png", "gfx/game/levels/tree2.png", "gfx/game/levels/tree3.png", "gfx/game/levels/tree4.png", "gfx/game/levels/forestProgressBarBegin.png", "gfx/game/levels/forestProgressBarMiddle.png", "gfx/game/levels/forestProgressBarEnd.png"};
+			return new String[]{ "gfx/game/levels/tree1.png", "gfx/game/levels/tree2.png", "gfx/game/levels/tree3.png", "gfx/game/levels/tree4.png"};
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new String[]{ "gfx/game/levels/space.jpg", "gfx/game/levels/planet1.png" , "gfx/game/levels/planet2.png" , "gfx/game/levels/planet3.png", "gfx/game/levels/asteroid1.png", "gfx/game/levels/asteroid2.png", "gfx/game/levels/asteroid3.png", "gfx/game/levels/asteroid4.png", "gfx/game/levels/asteroid5.png", "gfx/game/levels/rockBig.png", "gfx/game/levels/rockSmall.png", "gfx/game/levels/planetProgressBarBegin.png", "gfx/game/levels/planetProgressBarMiddle.png", "gfx/game/levels/planetProgressBarEnd.png" };
+			return new String[]{ "gfx/game/levels/space.jpg", "gfx/game/levels/planet1.png" , "gfx/game/levels/planet2.png" , "gfx/game/levels/planet3.png", "gfx/game/levels/asteroid1.png", "gfx/game/levels/asteroid2.png", "gfx/game/levels/asteroid3.png", "gfx/game/levels/asteroid4.png", "gfx/game/levels/asteroid5.png", "gfx/game/levels/rockBig.png", "gfx/game/levels/rockSmall.png"};
 		}
 		
 		return null;
