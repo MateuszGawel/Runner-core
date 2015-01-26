@@ -18,7 +18,7 @@ public class GameWorldRenderer
     GameWorld gameWorld;  
     OrthographicCamera camera;  
     Box2DDebugRenderer debugRenderer;
-    MyTiledMapRenderer tiledMapRenderer;
+    
 	public int currentScreenWidth, currentScreenHeight;
 	private Rectangle cullingArea;
 	
@@ -31,7 +31,6 @@ public class GameWorldRenderer
         camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
         camera.position.y = gameWorld.player.character.getBody().getPosition().y;  
         
-        tiledMapRenderer = TiledMapLoader.getInstance().getMapRenderer();
         cullingArea = new Rectangle(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom);
     }  
     
@@ -53,22 +52,12 @@ public class GameWorldRenderer
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
     	camera.update();
     	cullingArea.set(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom); 	
-    	tiledMapRenderer.setView(camera);
 
     	//backgroundStage
     	//gameWorld.getBackgroundStage().getRoot().setCullingArea(cullingArea);
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
-    	
-    	//tiledmap
-//    	tiledMapRenderer.renderFrontLayer();
-//		Batch batch = gameWorld.getWorldStage().getBatch();
-//		if (batch != null) {
-//			batch.begin();
-//			gameWorld.worldBackgroundGroup.draw(batch, 1);
-//			batch.end();
-//		}
-    	tiledMapRenderer.render();    	
+
     	
     	//worldStage
     	gameWorld.getWorldStage().getRoot().setCullingArea(cullingArea);

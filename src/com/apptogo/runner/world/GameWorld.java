@@ -4,23 +4,13 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import java.util.Random;
 
-import com.apptogo.runner.actors.Alien;
-import com.apptogo.runner.actors.Archer;
-import com.apptogo.runner.actors.Bandit;
-import com.apptogo.runner.actors.Barrel;
-import com.apptogo.runner.actors.BodyMember;
-import com.apptogo.runner.actors.Bomb;
-import com.apptogo.runner.actors.Bonfire;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Coin;
-import com.apptogo.runner.actors.CoinField;
-import com.apptogo.runner.actors.Countdown;
-import com.apptogo.runner.actors.GameProgressBarHead;
-import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
+import com.apptogo.runner.handlers.MyTiledMapRendererActor;
+import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.logger.Logger;
@@ -34,7 +24,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -71,7 +60,8 @@ public abstract class GameWorld
 	private MyContactListener contactListener;
 //	public RayHandler rayHandler;
 	public FPSLogger fpsLogger; //odkomentuj linijke w update() aby uruchomic
-	
+	private MyTiledMapRendererActor tiledMapRendererActor;
+	private MyTiledMapRendererActorFrontLayer tiledMapRendererActorFrontLayer;
 	public Music music;
 	
 	private Array<Integer> availablePosition; //UWAGA TEN MECHANIZM MUSI BYC PRZEROBIONY NA MULTI> MUSI KORZYSTAC Z NOTYFIKACJI
@@ -130,11 +120,15 @@ public abstract class GameWorld
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
 		TiledMapLoader.getInstance().loadMap(mapPath);
+		tiledMapRendererActor = new MyTiledMapRendererActor(TiledMapLoader.getInstance().getMapRenderer(), (OrthographicCamera)worldStage.getCamera());
+		worldStage.addActor(tiledMapRendererActor);
+		tiledMapRendererActor.setZIndex(0);
+		tiledMapRendererActorFrontLayer = new MyTiledMapRendererActorFrontLayer(TiledMapLoader.getInstance().getMapRenderer());
+		worldStage.addActor(tiledMapRendererActorFrontLayer);
 		
 		mapSize = TiledMapLoader.getInstance().getMapSize();
 		maxCameraX = (mapSize.x - minCameraX)/PPM - camera.viewportWidth/2;
 		maxCameraY = (mapSize.y - minCameraY)/PPM - camera.viewportWidth/2;
-//		rayHandler = TiledMapLoader.getInstance().getRayHandler();
 		
 		int index = randomGenerator.nextInt(availablePosition.size);
 		int randomPosition = availablePosition.get(index);
@@ -147,6 +141,7 @@ public abstract class GameWorld
 		worldStage.addActor( this.player.character );
 		
 		CoinsManager.getInstance().createCoinsToPool(100);
+		tiledMapRendererActorFrontLayer.setZIndex(1000000);
 	}
 	
 	public void destroyWorld()
