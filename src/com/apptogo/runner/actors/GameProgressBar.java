@@ -76,7 +76,6 @@ public class GameProgressBar extends Group{
 		bar.setPosition(0, 0);
 		addActor(bar);
 		
-		
 		for(Character character : characters){
 			switch(character.getCharacterType()){
 			case BANDIT:

@@ -133,6 +133,7 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage = new Stage();
 			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			gameGuiStage.setViewport(guiViewport);
+			gameGuiStage.getRoot().setTransform(false);
 			this.prepare();
 			
 			inputMultiplexer = new InputMultiplexer(); 

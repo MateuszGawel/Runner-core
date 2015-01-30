@@ -49,13 +49,13 @@ public abstract class GameWorld
 	public float minCameraY;
 	public float maxCameraY;
 	
-	private Stage backgroundStage;
+	protected Stage backgroundStage;
 	public Viewport backgroundViewport;
 	public OrthographicCamera backgroundCamera;
 	
 	public Player player;
 	public Array<Player> enemies;
-	public Group background;
+
 	public Vector2 mapSize;
 	private MyContactListener contactListener;
 //	public RayHandler rayHandler;
@@ -81,6 +81,7 @@ public abstract class GameWorld
 		viewport = new FillViewport(WIDTH, HEIGHT);
 		worldStage.setViewport(viewport);
 		worldStage.setDebugAll(false);
+		worldStage.getRoot().setTransform(false);
 		
 		minCameraX = camera.zoom * (camera.viewportWidth / 2); 
 	    minCameraY = camera.zoom * (camera.viewportHeight / 2);
@@ -89,13 +90,12 @@ public abstract class GameWorld
 		this.enemies = new Array<Player>();
 		this.player = player;
 		
-		background = new Group();
 		backgroundStage = new Stage();
 		backgroundCamera = (OrthographicCamera) backgroundStage.getCamera();  
 		backgroundCamera.setToOrtho(false, WIDTH, HEIGHT);
 		backgroundViewport = new FillViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundViewport);
-		backgroundStage.addActor(background);
+		backgroundStage.getRoot().setTransform(false);
 
 		availablePosition = new Array<Integer>();
 		availablePosition.add(0);

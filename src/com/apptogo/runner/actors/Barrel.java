@@ -1,11 +1,13 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.actors.Bonfire.BonfireAnimationState;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,6 +21,8 @@ public class Barrel extends Obstacle{
 	public Barrel(MapObject object, World world, GameWorld gameWorld){
 		super(object, world, "gfx/game/levels/barrelSmall.png");
 		gameWorld.getWorldStage().addActor(this);
+
+		
 		createBody(BodyType.StaticBody, Materials.obstacleBody, "barrel");
 		
 		userData = ((UserData)getBody().getUserData());

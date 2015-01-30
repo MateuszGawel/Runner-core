@@ -34,7 +34,7 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/barrelSmall.png", "gfx/game/levels/barrelBig.png", "gfx/game/levels/bush.png"};
+			return new String[]{};
 		}
 		else if( gameWorldType == FOREST )
 		{
@@ -53,7 +53,7 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/bonfire.pack"};
+			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/wildWestAtlas.pack"};
 		}
 		else if( gameWorldType == FOREST )
 		{

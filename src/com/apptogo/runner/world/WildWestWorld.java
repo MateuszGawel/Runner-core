@@ -56,14 +56,14 @@ public class WildWestWorld extends GameWorld{
 		//background.addActor(skyBlue);
 
 		mountains = new ParallaxBackground(mountainsRegion, mapSize, 0, -79/mapSize.y, player.character, 0, 300/PPM);
-		background.addActor(mountains);
+		backgroundStage.addActor(mountains);
 		
 		rocks = new ParallaxBackground(rocksRegion, mapSize, 0, -156/mapSize.y, player.character, 0, 260/PPM);
-		background.addActor(rocks);
+		backgroundStage.addActor(rocks);
 		
 		sand = new ParallaxBackground(sandRegion, mapSize, 0.4f, -484/mapSize.y, player.character, 0, 40/PPM);
 
-		background.addActor(sand);
+		backgroundStage.addActor(sand);
 		
 	}
 

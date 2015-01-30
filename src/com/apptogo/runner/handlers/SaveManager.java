@@ -44,6 +44,7 @@ public class SaveManager
 	
 	public SaveManager()
 	{
+		
 		preferences = Gdx.app.getPreferences("gamePreferences");
 		save = Gdx.app.getPreferences("save");
 		
@@ -55,7 +56,7 @@ public class SaveManager
 		Settings settings = new Settings();
 
 		Json json = new Json();
-		
+
 		if( preferences.getString("PREFERENCES", "").equals("") )
 		{
 			save( settings );

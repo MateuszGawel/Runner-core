@@ -36,7 +36,7 @@ public class SpaceWorld extends GameWorld{
 	    @Override
 	    protected Asteroid newObject() {
 	    	Asteroid asteroid = new Asteroid();
-	    	background.addActor(asteroid);
+	    	backgroundStage.addActor(asteroid);
 	    	return asteroid;
 	    }
     };
@@ -98,7 +98,7 @@ public class SpaceWorld extends GameWorld{
 		image.setPosition(posX/PPM, posY/PPM);
 		image.setWidth(image.getWidth()/PPM);
 		image.setHeight(image.getHeight()/PPM);
-		background.addActor(image);
+		backgroundStage.addActor(image);
 		return image;
 	}
 	

@@ -15,6 +15,7 @@ import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -74,9 +75,13 @@ public class Obstacle extends Actor{
 			animationManager = new AnimationManager(atlasPath);	
 	}
 	
-	public Obstacle(MapObject object, World world, String texturePath){	
+	public Obstacle(MapObject object, World world, String regionName){	
 		this(object, world);
-		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), texturePath));
+		switch(ScreensManager.getInstance().getCurrentScreenType()){
+		
+		}
+
+		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildWestAtlas.pack")).findRegion("barrelSmall");
 	}
 	
 	public Obstacle(String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
