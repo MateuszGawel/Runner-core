@@ -53,11 +53,11 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/wildWestAtlas.pack"};
+			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/wildWestAtlas.pack" };
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{ "gfx/game/levels/mushroom.pack", "gfx/game/levels/catapult.pack", "gfx/game/levels/leaf.pack", "gfx/game/levels/hedgehog.pack", "gfx/game/levels/swamp.pack"};
+			return new String[]{ "gfx/game/levels/forestAtlas.pack" };
 		}
 		else if( gameWorldType == SPACE )
 		{
@@ -141,19 +141,19 @@ public enum GameWorldType
 		return null;
 	}
 	
-	public static GameWorld convertToGameWorld( GameWorldType gameWorldType, String mapPath, Player player)
+	public static GameWorld convertToGameWorld(String mapPath, GameWorldType gameWorldType, Player player)
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new WildWestWorld( mapPath, player );
+			return new WildWestWorld(mapPath, player );
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new ForestWorld( mapPath, player );
+			return new ForestWorld(mapPath, player );
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new SpaceWorld( mapPath, player );
+			return new SpaceWorld(mapPath, player );
 		}
 		
 		return null;

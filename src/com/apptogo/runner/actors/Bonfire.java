@@ -24,9 +24,10 @@ public class Bonfire extends Obstacle{
 	private long soundId;
 	
 	public Bonfire(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/wildWestAtlas.pack", "bonfire", 33, 0.05f, BonfireAnimationState.NORMAL);
+		super(object, world, "bonfire", 33, 0.05f, BonfireAnimationState.NORMAL);
 		setAnimate(true);
 		gameWorld.getWorldStage().addActor(this);
+		this.setZIndex(1000);
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "bonfire");
 		setOffset(-15f/PPM, -15f/PPM);
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/bonfire.ogg");

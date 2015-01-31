@@ -27,7 +27,7 @@ public class Countdown extends Obstacle{
 	
 	private int frameCounter = 0;
 	public Countdown(GameWorld world){
-		super("gfx/game/levels/countdown.pack", "countdown", 1, 0.05f, CountdownAnimationState.STATIC);
+		super("countdown", 1, 0.05f, CountdownAnimationState.STATIC);
 		this.world = world;
 		countdown1 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown1.ogg");
 		countdown2 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown2.ogg");
@@ -46,10 +46,10 @@ public class Countdown extends Obstacle{
 				
 				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
 				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
-				for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.enemies){
+				for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.enemies){
 					enemy.character.start();
 				}
-				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.player.character.start();
+				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start();
 				remove();
 			}
 			@Override

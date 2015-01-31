@@ -22,7 +22,7 @@ public class Mushroom extends Obstacle{
 	private Fixture mushroomFixture;
 	
 	public Mushroom(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/mushroom.pack", "mushroom", 1, 0.05f, MushroomAnimationState.STATIC);
+		super(object, world, "mushroom", 1, 0.05f, MushroomAnimationState.STATIC);
 		setAnimate(false);
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.worldObjectBody, "nonKilling");

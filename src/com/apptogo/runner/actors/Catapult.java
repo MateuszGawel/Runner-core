@@ -19,7 +19,7 @@ public class Catapult extends Obstacle{
 	private CatapultLeafs leafs;
 	
 	public Catapult(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/catapult.pack", "catapult", 1, 0.05f, CatapultAnimationState.STATIC);
+		super(object, world, "catapult", 1, 0.05f, CatapultAnimationState.STATIC);
 
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "catapult");

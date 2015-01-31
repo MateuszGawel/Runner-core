@@ -52,7 +52,7 @@ public class GameScreenSingle extends GameScreen
 			
 			@Override
 			public void perform() {
-				new Countdown(world).startCountdown();
+				new Countdown(gameWorld).startCountdown();
 			}
 		});
 		

@@ -265,7 +265,6 @@ public class ResourcesManager
 		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
 		
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
-		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/coin.pack" );
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
 		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/gameGuiAtlas.pack" );
 

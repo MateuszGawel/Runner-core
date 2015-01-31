@@ -27,7 +27,9 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class GameScreen extends BaseScreen{
 	
-	public GameWorld world;
+	public GameWorld gameWorld;
+	public GameWorldType gameWorldType;
+	
 	protected GameWorldRenderer worldRenderer;
 	
 	protected Level level;
@@ -84,15 +86,15 @@ public abstract class GameScreen extends BaseScreen{
 		
 		powerupButtons = new Array<Button>();
 		
-		world = GameWorldType.convertToGameWorld( level.worldType, level.mapPath, player );
-
+		gameWorld = GameWorldType.convertToGameWorld(level.mapPath, level.worldType, player );
+		
 		if(enemies != null)
 		{
 			for(int i = 0; i < enemies.size; i++)
 			{
 				try
 				{
-					world.addEnemy( enemies.get(i) );
+					gameWorld.addEnemy( enemies.get(i) );
 				}
 				catch(PlayerExistsException e)
 				{
@@ -101,7 +103,7 @@ public abstract class GameScreen extends BaseScreen{
 			}
 		}
 		
-		worldRenderer = new GameWorldRenderer(world);
+		worldRenderer = new GameWorldRenderer(gameWorld);
 		
 	}
 	
@@ -123,13 +125,13 @@ public abstract class GameScreen extends BaseScreen{
 		//	gameGuiStage.addActor(powerupButton);
 		//}
 		
-		world.player.character.setPowerup(PowerupType.ABILITY1);
+		gameWorld.player.character.setPowerup(PowerupType.ABILITY1);
 		createGameProgressBar();
 	}
 	
 	protected void createGameProgressBar()
 	{
-		gameProgressBar = new GameProgressBar(world);
+		gameProgressBar = new GameProgressBar(gameWorld);
 		gameGuiStage.addActor(gameProgressBar);
 	}
 	
@@ -137,7 +139,7 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		handleInput();	
 		handleCoinLabel();
-		world.update(delta);
+		gameWorld.update(delta);
 		worldRenderer.resize(currentWindowWidth, currentWindowHeight);
 		worldRenderer.render();
 		Input.update();
@@ -145,9 +147,9 @@ public abstract class GameScreen extends BaseScreen{
 	
 	private void handleCoinLabel()
 	{
-		if(coinLabelCounter < world.player.character.getCoinCounter())
+		if(coinLabelCounter < gameWorld.player.character.getCoinCounter())
 		{
-			coinLabelCounter = world.player.character.getCoinCounter();
+			coinLabelCounter = gameWorld.player.character.getCoinCounter();
 			
 			coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
@@ -229,15 +231,15 @@ public abstract class GameScreen extends BaseScreen{
 			}
 			else if( Gdx.input.isKeyPressed(Keys.NUM_2))
 			{
-				currentPlayerInput = world.getEnemyNumber(0);
+				currentPlayerInput = gameWorld.getEnemyNumber(0);
 			}
 			else if( Gdx.input.isKeyPressed(Keys.NUM_3))
 			{
-				currentPlayerInput = world.getEnemyNumber(1);
+				currentPlayerInput = gameWorld.getEnemyNumber(1);
 			}
 			else if( Gdx.input.isKeyPressed(Keys.NUM_4))
 			{
-				currentPlayerInput = world.getEnemyNumber(2);
+				currentPlayerInput = gameWorld.getEnemyNumber(2);
 			}
 		}
 		else
@@ -267,7 +269,7 @@ public abstract class GameScreen extends BaseScreen{
 	public void dispose() 
 	{
 		super.dispose();
-		world.dispose();
+		gameWorld.dispose();
 		CoinsManager.destroy();
 		//CustomActionManager.destroy();
 	}

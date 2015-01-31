@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import java.util.Random;
 
 import com.apptogo.runner.actors.Asteroid;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -60,7 +61,7 @@ public class SpaceWorld extends GameWorld{
     }
     
 	public SpaceWorld(String mapPath, Player player){
-		super(mapPath, player);
+		super(mapPath, player, GameWorldType.SPACE);
 		super.world.setGravity(GRAVITY);
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/spaceMusic.ogg");

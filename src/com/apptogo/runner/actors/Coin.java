@@ -27,7 +27,7 @@ public class Coin extends Obstacle implements Poolable
 	
 	public Coin(MapObject object, GameWorld gameWorld)
 	{
-		super("gfx/game/levels/coin.pack", "coin", 16, 0.03f, CoinAnimationState.NORMAL);
+		super("coin", 16, 0.03f, CoinAnimationState.NORMAL);
 		setAnimate(true);
 
 		this.updatePosition = false;

@@ -25,7 +25,7 @@ public class Swamp extends Obstacle{
 	private long soundId;
 	
 	public Swamp(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/swamp.pack", "swamp", 45, 0.05f, SwampAnimationState.ANIMATING);
+		super(object, world, "swamp", 45, 0.05f, SwampAnimationState.ANIMATING);
 		setAnimate(false);
 		createBody(BodyType.StaticBody, Materials.worldObjectBody, "swamp");
 		gameWorld.getWorldStage().addActor(this);

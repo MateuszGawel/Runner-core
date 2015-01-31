@@ -2,6 +2,7 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -33,7 +34,7 @@ public class WildWestWorld extends GameWorld{
 	
 	public WildWestWorld(String mapPath, Player player)
 	{
-		super(mapPath, player);
+		super(mapPath, player, GameWorldType.WILDWEST);
 		super.world.setGravity(GRAVITY);
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildwestBackground.pack");
 		sandRegion = atlas.findRegion("sand");

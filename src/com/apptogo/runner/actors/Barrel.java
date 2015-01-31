@@ -19,7 +19,7 @@ public class Barrel extends Obstacle{
 	private Sound sound;
 	
 	public Barrel(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/barrelSmall.png");
+		super(object, world, "barrelSmall");
 		gameWorld.getWorldStage().addActor(this);
 
 		

@@ -69,7 +69,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 	private void handleReadyToRun(Player sender){
 		Logger.log(this, "jest to wiadomosc readytorun");
 
-		if( world.player.getName().equals(sender.getName()) )
+		if( gameWorld.player.getName().equals(sender.getName()) )
 		{
 			Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
 			return;
@@ -90,7 +90,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 		
 		startLabel.remove();
 		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
-		Countdown countdown = new Countdown(world);
+		Countdown countdown = new Countdown(gameWorld);
 		countdown.startCountdown();
 		
 		for(Player enemy : enemies){
@@ -102,7 +102,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				}
 			});
 		}
-		CustomActionManager.getInstance().registerAction(new CustomAction(1f, 4, world.player.character) {
+		CustomActionManager.getInstance().registerAction(new CustomAction(1f, 4, gameWorld.player.character) {
 			@Override
 			public void perform() {
 				if(timeElapsed < 4)
@@ -130,7 +130,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 			
 			try
 			{
-				sender = world.getEnemy(enemyName);
+				sender = gameWorld.getEnemy(enemyName);
 				Logger.log(this, "Dostalem wiadomosc od: " + enemyName + " tresc: " + data);
 			}
 			catch(PlayerDoesntExistException e)
@@ -138,7 +138,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				Logger.log(this, "Player " + enemyName + " is not created and cannot be used");
 			}
 
-			if( world.player.getName().equals(enemyName) )
+			if( gameWorld.player.getName().equals(enemyName) )
 			{
 				Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
 				return;

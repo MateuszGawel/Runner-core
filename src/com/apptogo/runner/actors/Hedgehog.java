@@ -18,7 +18,7 @@ public class Hedgehog extends Obstacle{
 	private float direction = 1;
 	
 	public Hedgehog(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "gfx/game/levels/hedgehog.pack", "hedgehog", 12, 0.05f, HedgehogAnimationState.WALKING);
+		super(object, world, "hedgehog", 12, 0.05f, HedgehogAnimationState.WALKING);
 		setAnimate(true);
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.DynamicBody, Materials.obstacleGhostBody, "hedgehog");

@@ -6,16 +6,18 @@ import java.util.Random;
 
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.MyTiledMapRendererActor;
 import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -67,8 +69,9 @@ public abstract class GameWorld
 	private Array<Integer> availablePosition; //UWAGA TEN MECHANIZM MUSI BYC PRZEROBIONY NA MULTI> MUSI KORZYSTAC Z NOTYFIKACJI
 	private Random randomGenerator = new Random();
 	
-	public GameWorld(String mapPath, Player player)
+	public GameWorld(String mapPath, Player player, GameWorldType gameWorldType)
 	{
+		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorldType = gameWorldType;
 		world = new World(DEFAULT_GRAVITY, true);
 		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);
@@ -139,9 +142,10 @@ public abstract class GameWorld
 		this.player.character.flags.setMe(true);
 		
 		worldStage.addActor( this.player.character );
+		this.player.character.setZIndex(1500000);
 		
 		CoinsManager.getInstance().createCoinsToPool(100);
-		tiledMapRendererActorFrontLayer.setZIndex(1000000);
+		tiledMapRendererActorFrontLayer.setZIndex(2000000);
 	}
 	
 	public void destroyWorld()
@@ -231,6 +235,7 @@ public abstract class GameWorld
 		enemies.add( enemy );
 		
 		worldStage.addActor( enemy.character );
+		enemy.character.setZIndex(1000000);
     }
     
     public Player getEnemy(String enemyName) throws PlayerDoesntExistException //tak naprawde tu tez ladniej by bylo przesylac calego playera ale to chyba troche kosztuje wiec zdecydowalem ze samo imie

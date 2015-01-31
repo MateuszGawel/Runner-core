@@ -1,10 +1,8 @@
 package com.apptogo.runner.world;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,7 +23,7 @@ public class ForestWorld extends GameWorld{
 	
 	public ForestWorld(String mapPath, Player player)
 	{
-		super(mapPath, player);
+		super(mapPath, player, GameWorldType.FOREST);
 		super.world.setGravity(GRAVITY);
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/forestMusic.ogg");

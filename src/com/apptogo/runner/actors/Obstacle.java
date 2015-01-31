@@ -56,52 +56,66 @@ public class Obstacle extends Actor{
 	protected GameWorld gameWorld;
 	private float soundVolume = 1;
 	protected boolean handleSoundVolume = true;
-
+	protected String atlasPath = "";
+	
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
+	public Obstacle(){
+		switch(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorldType){
+		case WILDWEST:
+			atlasPath = "gfx/game/levels/wildWestAtlas.pack";
+			break;
+		case FOREST:
+			atlasPath = "gfx/game/levels/forestAtlas.pack";
+			break;
+		case SPACE:
+			atlasPath = "gfx/game/levels/spaceAtlas.pack";
+			break;
+		default:
+			break;		
+		}
+			
+		
+//		if(atlasPath.contains("powerup")){
+//	        if(gameWorld instanceof WildWestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+//	        else if(gameWorld instanceof ForestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+//	        else if(gameWorld instanceof SpaceWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
+//		}
+//		else
+			animationManager = new AnimationManager(atlasPath);	
+	}
+	
 	public Obstacle(MapObject object, World world){
+		this();
 		this.world = world;
 		this.object = object;
 	}
 	
 	public Obstacle(String atlasPath){	
-		
-		if(atlasPath.contains("powerup")){
-	        if(gameWorld instanceof WildWestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-	        else if(gameWorld instanceof ForestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-	        else if(gameWorld instanceof SpaceWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-		}
-		else
-			animationManager = new AnimationManager(atlasPath);	
+		this();
+
 	}
 	
 	public Obstacle(MapObject object, World world, String regionName){	
-		this(object, world);
-		switch(ScreensManager.getInstance().getCurrentScreenType()){
-		
-		}
-
-		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildWestAtlas.pack")).findRegion("barrelSmall");
+		this(object, world);	
+		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath)).findRegion(regionName);
 	}
 	
-	public Obstacle(String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
-		animationManager = new AnimationManager(atlasPath);	
+	public Obstacle(String regionName, int frameCount, float frameDuration, Object animationState){
+		this();
+		//najbrzydszy workaround ever
+		if(regionName.equals("countdown"))
+			animationManager = new AnimationManager("gfx/game/levels/countdown.pack");	
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
 	}
 	
-	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState){
+	public Obstacle(MapObject object, World world, String regionName, int frameCount, float frameDuration, Object animationState){
 		this(object, world);
-		animationManager = new AnimationManager(atlasPath);	
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
-	}
-	
-	public Obstacle(MapObject object, World world, String atlasPath, String regionName, int frameCount, float frameDuration, Object animationState, GameWorld gameWorld){
-		this(object, world, atlasPath, regionName, frameCount, frameDuration, animationState);
-		this.gameWorld = gameWorld;
 	}
 	
 	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){
@@ -241,7 +255,7 @@ public class Obstacle extends Actor{
 	private void handleSoundVolume(){
 		if(getBody() != null && (ScreensManager.getInstance().getCurrentScreenType() == ScreenType.SCREEN_GAME_SINGLE || ScreensManager.getInstance().getCurrentScreenType() == ScreenType.SCREEN_GAME_MULTI)){
 			float myPosition = getBody().getPosition().x;
-			float playerPosition = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.player.character.getBody().getPosition().x;
+			float playerPosition = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.getBody().getPosition().x;
 			float distance = Math.abs(myPosition - playerPosition);
 			
 			//Logger.log(this, "my position: " + myPosition + " player position: " + playerPosition + " i roznica: " + (Math.abs(playerPosition - myPosition)));
