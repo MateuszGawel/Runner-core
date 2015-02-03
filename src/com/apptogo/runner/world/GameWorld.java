@@ -12,12 +12,10 @@ import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.MyTiledMapRendererActor;
 import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
-import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -69,9 +67,12 @@ public abstract class GameWorld
 	private Array<Integer> availablePosition; //UWAGA TEN MECHANIZM MUSI BYC PRZEROBIONY NA MULTI> MUSI KORZYSTAC Z NOTYFIKACJI
 	private Random randomGenerator = new Random();
 	
+	public GameWorldType gameWorldType;
+	
 	public GameWorld(String mapPath, Player player, GameWorldType gameWorldType)
 	{
-		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorldType = gameWorldType;
+		this.gameWorldType = gameWorldType;
+		
 		world = new World(DEFAULT_GRAVITY, true);
 		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);

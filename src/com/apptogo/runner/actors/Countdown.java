@@ -1,17 +1,13 @@
 package com.apptogo.runner.actors;
 
 import com.apptogo.runner.animation.MyAnimation;
-import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.utils.Array;
 
 public class Countdown extends Obstacle{
 
@@ -27,7 +23,7 @@ public class Countdown extends Obstacle{
 	
 	private int frameCounter = 0;
 	public Countdown(GameWorld world){
-		super("countdown", 1, 0.05f, CountdownAnimationState.STATIC);
+		super("countdown", 1, 0.05f, CountdownAnimationState.STATIC, "gfx/game/levels/countdown.pack");
 		this.world = world;
 		countdown1 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown1.ogg");
 		countdown2 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown2.ogg");

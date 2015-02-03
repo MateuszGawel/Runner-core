@@ -2,15 +2,13 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -25,7 +23,7 @@ public class GravityField extends Obstacle
 	
 	public GravityField(MapObject object, World world, GameWorld gameWorld)
 	{
-		super(object, world);
+		super(object, world, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "gravityField");
 		this.gameWorld = gameWorld;
 

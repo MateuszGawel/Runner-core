@@ -230,4 +230,22 @@ public enum GameWorldType
 		
 		return null;
 	}
+
+	public static String convertToAtlasPath(GameWorldType gameWorldType) 
+	{
+		if( gameWorldType == WILDWEST )
+		{
+			return "gfx/game/levels/wildWestAtlas.pack";
+		}
+		else if( gameWorldType == FOREST )
+		{
+			return "gfx/game/levels/forestAtlas.pack";
+		}
+		else if( gameWorldType == SPACE )
+		{
+			return "gfx/game/levels/spaceAtlas.pack";
+		}
+		
+		return null;
+	}
 }

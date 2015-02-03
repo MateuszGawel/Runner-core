@@ -1,25 +1,16 @@
 package com.apptogo.runner.actors;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import java.util.HashMap;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CoinsManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.screens.GameScreen;
-import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -33,7 +24,7 @@ public class CoinField extends Obstacle
 	
 	public CoinField(MapObject object, World world, GameWorld gameWorld) 
 	{
-		super(object, world);
+		super(object, world, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "coinField");	
 		gameWorld.getWorldStage().addActor(this);

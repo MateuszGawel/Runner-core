@@ -21,7 +21,6 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -36,7 +35,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -845,7 +843,7 @@ public abstract class Character extends Actor{
 
 	
 	//BUTTONS
-	protected void createJumpButton(String buttonName){	
+	public CharacterButton getJumpButton(String buttonName){	
 		CharacterButton button = new CharacterButton(buttonName, Runner.SCREEN_WIDTH - 20, 20);	
 		button.addListener(new InputListener() 
 		{
@@ -857,10 +855,11 @@ public abstract class Character extends Actor{
 		    }
 		});
 		button.setPosition(button.getX() - button.getWidth(), button.getY());
-		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
+		
+		return button;
 	}
 	
-	protected void createSlideButton(String buttonName){	
+	public CharacterButton getSlideButton(String buttonName){	
 		CharacterButton button = new CharacterButton(buttonName, 20, 20);	
 		button.addListener(new InputListener() 
 		{
@@ -872,10 +871,11 @@ public abstract class Character extends Actor{
 		        return true;
 		    }
 		});
-		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
+		
+		return button;
 	}
 	
-	protected void createTempButton(String buttonName){	
+	public CharacterButton getTempButton(String buttonName){	
 		CharacterButton button = new CharacterButton(buttonName, Runner.SCREEN_WIDTH - 20, Runner.SCREEN_HEIGHT - 200);	
 		button.addListener(new InputListener() 
 		{
@@ -891,7 +891,8 @@ public abstract class Character extends Actor{
 		    }
 		});
 		button.setPosition(button.getX() - button.getWidth(), button.getY());
-		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(button);
+		
+		return button;
 	}
 	
 	private Array<Button> initializePowerupButtons()

@@ -1,10 +1,5 @@
 package com.apptogo.runner.actors;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
-import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;

@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -19,7 +20,7 @@ public class Catapult extends Obstacle{
 	private CatapultLeafs leafs;
 	
 	public Catapult(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "catapult", 1, 0.05f, CatapultAnimationState.STATIC);
+		super(object, world, "catapult", 1, 0.05f, CatapultAnimationState.STATIC, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "catapult");

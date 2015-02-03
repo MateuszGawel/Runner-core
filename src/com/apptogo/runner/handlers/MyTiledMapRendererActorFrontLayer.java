@@ -2,7 +2,6 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 

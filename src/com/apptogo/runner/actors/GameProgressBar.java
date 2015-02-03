@@ -8,14 +8,11 @@ import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 public class GameProgressBar extends Group{

@@ -1,6 +1,5 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.actors.Character;
 
 public abstract class CustomAction {
 

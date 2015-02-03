@@ -1,12 +1,11 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.enums.FontType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.news.News;
 import com.apptogo.runner.news.NewsManager;
@@ -15,8 +14,6 @@ import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -75,8 +72,8 @@ public class MainMenuScreen extends BaseScreen
 		super(runner);	
 		loadPlayer();
 		
-		ResourcesManager.getInstance().unloadLogoResources();
-		ResourcesManager.getInstance().unloadGameResources();
+		//to jest wyjatek - generalnie nie uzywamy unload() tylko definiujemy reguly w handlerze (unloadUnnecessary)
+		ResourcesManager.getInstance().unloadAllResources( ScreenClass.SPLASH );
 		
 		fadeInOnStart();
 	}
@@ -532,7 +529,7 @@ public class MainMenuScreen extends BaseScreen
 	
 	@Override
 	public void handleInput() 
-	{
+	{	
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
 			Gdx.app.exit();

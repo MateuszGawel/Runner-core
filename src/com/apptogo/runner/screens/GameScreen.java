@@ -9,7 +9,6 @@ import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
-import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
@@ -49,14 +48,41 @@ public abstract class GameScreen extends BaseScreen{
 	
 	private int coinLabelCounter;
 
-	public GameScreen(Runner runner)
+	public GameScreen(Runner runner, Level levelToLoad, Array<Player> enemiesList)
 	{
 		super(runner);
 
 		loadPlayer();
+
+		this.level = levelToLoad;
+		this.enemies = enemiesList;
 		
-		ResourcesManager.getInstance().unloadMenuResources();
 		CoinsManager.create();
+		
+		coinLabelCounter = -1;
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
+		
+		powerupButtons = new Array<Button>();
+		
+		gameWorld = GameWorldType.convertToGameWorld(level.mapPath, level.worldType, player );
+		gameWorldType = level.worldType;
+		
+		if(this.enemies != null)
+		{
+			for(int i = 0; i < this.enemies.size; i++)
+			{
+				try
+				{
+					gameWorld.addEnemy( this.enemies.get(i) );
+				}
+				catch(PlayerExistsException ex)
+				{
+					Logger.log(this, "Player " + this.enemies.get(i).getName() + " is created already!", LogLevel.HIGH);
+				}
+			}
+		}
+		
+		worldRenderer = new GameWorldRenderer(gameWorld);
 	}
 	
 	protected void createLabels()
@@ -68,49 +94,16 @@ public abstract class GameScreen extends BaseScreen{
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
 		//gameGuiStage.addActor(coinLabel);
 	}
-	
-	public void setLevel(Level level)
-	{
-		this.level = level;
-	}
-	
-	public void setEnemies(Array<Player> enemies)
-	{
-		this.enemies = enemies;
-	}
-	
+		
 	public void prepare()
 	{
-		coinLabelCounter = -1;
-		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
-		
-		powerupButtons = new Array<Button>();
-		
-		gameWorld = GameWorldType.convertToGameWorld(level.mapPath, level.worldType, player );
-		
-		if(enemies != null)
-		{
-			for(int i = 0; i < enemies.size; i++)
-			{
-				try
-				{
-					gameWorld.addEnemy( enemies.get(i) );
-				}
-				catch(PlayerExistsException e)
-				{
-					Logger.log(this, "Player " + enemies.get(i).getName() + " is created already!", LogLevel.HIGH);
-				}
-			}
-		}
-		
-		worldRenderer = new GameWorldRenderer(gameWorld);
 		
 	}
 	
 	protected void createGui()
 	{		
-		//jumpButton = world.player.character.getJumpButton();
-		//slideButton = world.player.character.getSlideButton();
+		gameGuiStage.addActor( gameWorld.player.character.getJumpButton("banditJumpButton") );
+		gameGuiStage.addActor( gameWorld.player.character.getSlideButton("banditJumpButton") );
 
 		//powerupButtons = world.player.character.initializePowerupButtons();
 		
@@ -118,7 +111,7 @@ public abstract class GameScreen extends BaseScreen{
 		//gameGuiStage.addActor(jumpButton);		
 		
 		//TEMP
-		//gameGuiStage.addActor(world.player.character.getTempButton());
+		gameGuiStage.addActor(gameWorld.player.character.getTempButton("banditJumpButton"));
 		
 		//for(Button powerupButton: powerupButtons)
 		//{

@@ -1,10 +1,10 @@
 package com.apptogo.runner.handlers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.logger.Logger.LogLevel;
@@ -50,7 +50,7 @@ public class ResourcesManager
 	//---
 	public class ScreenMeta
 	{
-		public ScreenType screenType;
+		public ScreenClass screenClass;
 		public AssetManager manager;
 		public ArrayList<String> textures;
 		public ArrayList<String> textureAtlases;
@@ -65,9 +65,11 @@ public class ResourcesManager
 		public String soundsDirectory;
 		public String soundsExtension;
 		
-		public ScreenMeta(ScreenType screenType)
+		public boolean isLoaded;
+		
+		public ScreenMeta(ScreenClass screenClass)
 		{
-			this.screenType = screenType;
+			this.screenClass = screenClass;
 			manager = new AssetManager();
 			textures = new ArrayList<String>();
 			textureAtlases = new ArrayList<String>();
@@ -82,6 +84,8 @@ public class ResourcesManager
 			musicsExtension = "";
 			soundsDirectory = "";
 			soundsExtension = "";
+			
+			isLoaded = false;
 		}
 		
 		public void addTextures(String[] textures) { if( textures != null) for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
@@ -129,10 +133,6 @@ public class ResourcesManager
 	//---
 
 	private Array<ScreenMeta> screenMetaArray;
-	ScreenMeta logoSpecialMeta;
-	ScreenMeta menuSpecialMeta;
-	public ScreenMeta gameSpecialMeta;
-	ScreenMeta stillSpecialMeta;
 	
 	private Skin uiskin;
 	private Skin guiskin;
@@ -141,160 +141,127 @@ public class ResourcesManager
 	{
 		screenMetaArray = new Array<ScreenMeta>();
 		
-		//ADDING SCREENS:
-		//-----------------------------------------------------------------------------
-		//|1. SPLASH SCREEN
-		ScreenMeta splashMeta = new ScreenMeta(ScreenType.SCREEN_SPLASH);
+		//ASSETS FOR SPLASH
+		ScreenMeta splashMeta = new ScreenMeta(ScreenClass.SPLASH);
 		
 		splashMeta.addTexture("gfx/splash/splash.png");
 		splashMeta.addTexture("gfx/menu/menuBackgrounds/splashScreenBackground.png");
 		
-		screenMetaArray.add( splashMeta ); 
+		splashMeta.addTexture("gfx/splash/logoSplash.png");
 		
-		//|2. MAIN MENU SCREEN
-		ScreenMeta mainMenuMeta = new ScreenMeta(ScreenType.SCREEN_MAIN_MENU);		
-		screenMetaArray.add( mainMenuMeta );
+		splashMeta.addTextureAtlas("gfx/splash/logoSplashLetterD.pack");
+		splashMeta.addTextureAtlas("gfx/splash/dust.pack");
+		splashMeta.addTextureAtlas("gfx/splash/loading.pack");
 		
-		//|3. GAME SCREEN SINGLE
-		ScreenMeta singleGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_SINGLE);		
-		screenMetaArray.add( singleGameMeta );
+		screenMetaArray.add(splashMeta);
 		
-		//|4. GAME SCREEN MULTI
-		ScreenMeta multiplayerGameMeta = new ScreenMeta(ScreenType.SCREEN_GAME_MULTI);
-		screenMetaArray.add( multiplayerGameMeta );
-				
-		//|5. LOADING SCREEN
-		ScreenMeta loadingMeta = new ScreenMeta(ScreenType.SCREEN_LOADING);
-		screenMetaArray.add( loadingMeta );
+		//ASSETS FOR STILL [ALWAYS LOADED]
+		ScreenMeta stillMeta = new ScreenMeta(ScreenClass.STILL);
 		
-		//|6. CAMPAIGN SCREEN
-		ScreenMeta campaignMeta = new ScreenMeta(ScreenType.SCREEN_CAMPAIGN);		
-		screenMetaArray.add( campaignMeta );
+		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
+		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
+		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
 		
-		//|7. MULTIPLAYER SCREEN
-		ScreenMeta multiplayerMeta = new ScreenMeta(ScreenType.SCREEN_MULTIPLAYER);		
-		screenMetaArray.add( multiplayerMeta );
+		stillMeta.addTextureAtlas("gfx/splash/loading.pack");
 		
-		//|8. WAITING ROOM SCREEN
-		ScreenMeta waitingRoomMeta = new ScreenMeta(ScreenType.SCREEN_WAITING_ROOM);
-		screenMetaArray.add( waitingRoomMeta );
+		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
+		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
+		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");
 		
-		//|9. REGISTER SCREEN
-		ScreenMeta registerMeta = new ScreenMeta(ScreenType.SCREEN_REGISTER);
-		screenMetaArray.add( registerMeta );
+		screenMetaArray.add(stillMeta);
 		
-		//ADDING SPECIALS:
-		//-----------------------------------------------------------------------------
-		//-1. LOGO RESOURCES
-		logoSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
+		//ASSETS FOR MENU
+		ScreenMeta menuMeta = new ScreenMeta(ScreenClass.MENU);
 		
-		logoSpecialMeta.addTexture("gfx/splash/logoSplash.png");
+		menuMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 		
-		logoSpecialMeta.addTextureAtlas("gfx/splash/logoSplashLetterD.pack");
-		logoSpecialMeta.addTextureAtlas("gfx/splash/dust.pack");
-		logoSpecialMeta.addTextureAtlas("gfx/splash/loading.pack");
+		menuMeta.addTexture("gfx/menu/newIcon.png");
+		menuMeta.addTexture("gfx/menu/newsfeed.png");
+		menuMeta.addTexture("gfx/menu/chainsDecoration.png");
 		
-		//|0. MENU RESOURCES
-		menuSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);
+		menuMeta.addTexture("gfx/menu/logoMenu.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		menuMeta.addTexture("gfx/languageFlags/de_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/de.png");
+		menuMeta.addTexture("gfx/languageFlags/es_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/es.png");
+		menuMeta.addTexture("gfx/languageFlags/in_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/in.png");
+		menuMeta.addTexture("gfx/languageFlags/pl_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/pl.png");
+		menuMeta.addTexture("gfx/languageFlags/ru_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/ru.png");
+		menuMeta.addTexture("gfx/languageFlags/uk_chosen.png");
+		menuMeta.addTexture("gfx/languageFlags/uk.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/newIcon.png");
-		menuSpecialMeta.addTexture("gfx/menu/newsfeed.png");
-		menuSpecialMeta.addTexture("gfx/menu/chainsDecoration.png");
-		
-		menuSpecialMeta.addTexture("gfx/menu/logoMenu.png");
-		
-		menuSpecialMeta.addTexture("gfx/languageFlags/de_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/de.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/es_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/es.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/in_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/in.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/pl_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/pl.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/ru_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/ru.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/uk_chosen.png");
-		menuSpecialMeta.addTexture("gfx/languageFlags/uk.png");
-		
-		menuSpecialMeta.addTexture("gfx/game/characters/banditGround.png");
+		menuMeta.addTexture("gfx/game/characters/banditGround.png");
 				
 		//tempy totalnie do wyjebania
-		menuSpecialMeta.addTexture("temp/exampleFlag.png");
-		menuSpecialMeta.addTexture("temp/online.png");
-		menuSpecialMeta.addTexture("temp/offline.png");
-		menuSpecialMeta.addTexture("temp/find.png");
-		menuSpecialMeta.addTexture("temp/coin.png");
-		menuSpecialMeta.addTexture("temp/diamond.png");
-		menuSpecialMeta.addTexture("temp/settingsButton.png");
-		menuSpecialMeta.addTexture("temp/achievementsButton.png");
-		menuSpecialMeta.addTexture("temp/shopSign.png");
+		menuMeta.addTexture("temp/exampleFlag.png");
+		menuMeta.addTexture("temp/online.png");
+		menuMeta.addTexture("temp/offline.png");
+		menuMeta.addTexture("temp/find.png");
+		menuMeta.addTexture("temp/coin.png");
+		menuMeta.addTexture("temp/diamond.png");
+		menuMeta.addTexture("temp/settingsButton.png");
+		menuMeta.addTexture("temp/achievementsButton.png");
+		menuMeta.addTexture("temp/shopSign.png");
 		//
 		
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
+		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
+		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
+		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/sliderMask.png");
+		menuMeta.addTexture("gfx/menu/sliderMask.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/paperSmall.png");
-		menuSpecialMeta.addTexture("gfx/menu/blackBoardMedium.png");
-		menuSpecialMeta.addTexture("gfx/menu/paperBig.png");
+		menuMeta.addTexture("gfx/menu/paperSmall.png");
+		menuMeta.addTexture("gfx/menu/blackBoardMedium.png");
+		menuMeta.addTexture("gfx/menu/paperBig.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/shareButtonFacebook.png");
-		menuSpecialMeta.addTexture("gfx/menu/shareButtonGoogle.png");
-		menuSpecialMeta.addTexture("gfx/menu/shareButtonTwitter.png");
+		menuMeta.addTexture("gfx/menu/shareButtonFacebook.png");
+		menuMeta.addTexture("gfx/menu/shareButtonGoogle.png");
+		menuMeta.addTexture("gfx/menu/shareButtonTwitter.png");
 		
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
-		menuSpecialMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");
+		menuMeta.addTexture("gfx/menu/starSmallEmpty.png");
+		menuMeta.addTexture("gfx/menu/starSmallFull.png");
+		
+		screenMetaArray.add(menuMeta);
+		
+		//ASSETS FOR GAME
+		ScreenMeta gameMeta = new ScreenMeta(ScreenClass.GAME);
+		
+		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
+		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
+		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
+		
+		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.WILDWEST ) );
+		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
+		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
+		
+		gameMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
+		gameMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
+		gameMeta.addTextureAtlas( "gfx/game/levels/gameGuiAtlas.pack" );
 
-		menuSpecialMeta.addTexture("gfx/menu/starSmallEmpty.png");
-		menuSpecialMeta.addTexture("gfx/menu/starSmallFull.png");
+		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
+		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
+		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ALIEN ) );
 		
-		//|1. GAME RESOURCES
-		gameSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
+		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
+		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
+		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
 		
-		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
-		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
-		gameSpecialMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
+		gameMeta.addSounds("mfx/game/levels/countdown1.ogg", "mfx/game/levels/countdown2.ogg", "mfx/game/levels/countdown3.ogg", "mfx/game/levels/countdownGo.ogg", "mfx/game/levels/coin.ogg");
+		gameMeta.addSounds("mfx/game/characters/steps.ogg", "mfx/game/characters/land.ogg", "mfx/game/characters/slide.ogg");
 		
-		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.WILDWEST ) );
-		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
-		gameSpecialMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
+		gameMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.WILDWEST ) );
+		gameMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.FOREST ) );
+		gameMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.SPACE ) );
 		
-		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
-		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
-		gameSpecialMeta.addTextureAtlas( "gfx/game/levels/gameGuiAtlas.pack" );
-
-		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
-		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
-		gameSpecialMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ALIEN ) );
+		gameMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.WILDWEST ) );
+		gameMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.FOREST ) );
+		gameMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.SPACE ) );
 		
-		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
-		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
-		gameSpecialMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
-		
-		gameSpecialMeta.addSounds("mfx/game/levels/countdown1.ogg", "mfx/game/levels/countdown2.ogg", "mfx/game/levels/countdown3.ogg", "mfx/game/levels/countdownGo.ogg", "mfx/game/levels/coin.ogg");
-		gameSpecialMeta.addSounds("mfx/game/characters/steps.ogg", "mfx/game/characters/land.ogg", "mfx/game/characters/slide.ogg");
-		
-		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.WILDWEST ) );
-		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.FOREST ) );
-		gameSpecialMeta.addMusics( GameWorldType.convertToMusics( GameWorldType.SPACE ) );
-		
-		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.WILDWEST ) );
-		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.FOREST ) );
-		gameSpecialMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.SPACE ) );
-		
-		//|2. STILL RESOURCES [CONTINUOSLY BEING USED IN MENU AND GAME]
-		stillSpecialMeta = new ScreenMeta(ScreenType.SCREEN_NONE);	
-		
-		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
-		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
-		stillSpecialMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
-		
-		stillSpecialMeta.addTextureAtlas("gfx/splash/loading.pack");
+		screenMetaArray.add(gameMeta);
 		
 		//|... INITIALIZING SKINS
 		this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"));
@@ -334,48 +301,7 @@ public class ResourcesManager
 		}*/
 	}
 	
-	//--------- LOADING RESOURCES
-	public void loadLogoResources()
-	{
-		if( logoSpecialMeta.manager.getLoadedAssets() == 0 )
-		{			
-			loadSpecialResources(logoSpecialMeta);
-		}
-	}
-	
-	public void loadMenuResources()
-	{
-		if( menuSpecialMeta.manager.getLoadedAssets() == 0 )
-		{			
-			loadSpecialResources(menuSpecialMeta);
-		}
-	}
-	
-	public void loadGameResources()
-	{		
-		if( gameSpecialMeta.manager.getLoadedAssets() == 0 )
-		{		
-			loadSpecialResources(gameSpecialMeta);
-		}
-	}
-	
-	//still chyba nie jest zbyt szczesliwe ale chodzi mi o resourcy ktore powinny byc caly czas w pamieci - i w menu i w game
-	public void loadStillResources()
-	{		
-		if( stillSpecialMeta.manager.getLoadedAssets() == 0 )
-		{		
-			loadSpecialResources(stillSpecialMeta);
-		}
-	}
-	
-	private void loadSpecialResources(ScreenMeta specialMeta)
-	{
-		specialMeta.loadTextures();
-		specialMeta.loadTextureAtlases();
-		specialMeta.loadMusics();
-		specialMeta.loadSounds();
-	}
-	
+	//--------- LOADING RESOURCES	
 	public void loadResources(BaseScreen screen)
 	{
 		ScreenType screenType = screen.getSceneType();
@@ -383,73 +309,71 @@ public class ResourcesManager
 	}	
 	public void loadResources(ScreenType screenType)
 	{		
-		this.loadTextureAtlases(screenType);
-		this.loadTextures(screenType);
-		this.loadMusics(screenType);
-		this.loadSounds(screenType);
+		ScreenClass screenClass = ScreenType.convertToScreenClass(screenType);
+		loadResources(screenClass);
+	}
+	public void loadResources(ScreenClass screenClass)
+	{
+		int index = getScreenIndex(screenClass);
+		
+		if( !this.screenMetaArray.get( index ).isLoaded )
+		{
+			this.screenMetaArray.get( index ).isLoaded = true;
+			
+			this.loadTextureAtlases(index);
+			this.loadTextures(index);
+			this.loadMusics(index);
+			this.loadSounds(index);
+			
+			unloadUnnecessary(screenClass);
+		}
 	}
 	
-	public void loadTextures(BaseScreen screen)
+	public void loadTextures(int index)
 	{
-		ScreenType screenType = screen.getSceneType();
-		loadTextures(screenType);
-	}
-	public void loadTextures(ScreenType screenType)
-	{
-		int index = getScreenIndex(screenType);
 		screenMetaArray.get(index).loadTextures();
 	}
 	
-	public void loadTextureAtlases(BaseScreen screen)
+	public void loadTextureAtlases(int index)
 	{
-		ScreenType screenType = screen.getSceneType();
-		loadTextureAtlases(screenType);
-	}
-	public void loadTextureAtlases(ScreenType screenType)
-	{
-		int index = getScreenIndex(screenType);
 		screenMetaArray.get(index).loadTextureAtlases();
 	}
 	
-	public void loadMusics(BaseScreen screen)
+	public void loadMusics(int index)
 	{
-		ScreenType screenType = screen.getSceneType();
-		loadMusics(screenType);
-	}
-	public void loadMusics(ScreenType screenType)
-	{	
-		int index = getScreenIndex(screenType);
 		screenMetaArray.get(index).loadMusics();
 	}
 	
-	public void loadSounds(BaseScreen screen)
+	public void loadSounds(int index)
 	{
-		ScreenType screenType = screen.getSceneType();
-		loadSounds(screenType);
-	}
-	public void loadSounds(ScreenType screenType)
-	{
-		int index = getScreenIndex(screenType);
 		screenMetaArray.get(index).loadSounds();
 	}
 	//---------
 	
 	//--------- UNLOADING RESOURCES
-	public void unloadLogoResources()
-	{		
-		if( logoSpecialMeta.manager.getLoadedAssets() > 0 )
-		{		
-			logoSpecialMeta.manager.clear();
+	private void unloadUnnecessary(ScreenClass loadingScreenClass) //tu sa praktycznie reguly co kiedy unloadowac
+	{
+		if( loadingScreenClass == ScreenClass.MENU )
+		{
+			int gameIndex = getScreenIndex( ScreenClass.GAME );
+			
+			if( this.screenMetaArray.get(gameIndex).isLoaded )
+			{
+				this.unloadAllResources(ScreenClass.GAME);
+			}
 		}
-	}
-	public void unloadMenuResources()
-	{		
-		if( menuSpecialMeta.manager.getLoadedAssets() > 0 )
-		{			
-			menuSpecialMeta.manager.clear();
+		else if( loadingScreenClass == ScreenClass.GAME )
+		{
+			int menuIndex = getScreenIndex( ScreenClass.MENU );
+			
+			if( this.screenMetaArray.get(menuIndex).isLoaded )
+			{
+				this.unloadAllResources(ScreenClass.MENU);
+			}
 		}
 	}
 	
+	/* to jest do wywalenia ale widze ze tu sie dzieja jakies czary i magia wiec zostawiam zakomentowane	
 	public void unloadGameResources()
 	{		
 		if( gameSpecialMeta.manager.getLoadedAssets() > 0 )
@@ -473,16 +397,8 @@ public class ResourcesManager
 			
 			gameSpecialMeta.manager.clear();
 		}
-	}
-	
-	public void unloadStillResources()
-	{		
-		if( stillSpecialMeta.manager.getLoadedAssets() > 0 )
-		{		
-			stillSpecialMeta.manager.clear();
-		}
-	}
-	
+	}*/
+		
 	public void unloadAllResources(BaseScreen screen)
 	{
 		ScreenType screenType = screen.getSceneType();
@@ -490,11 +406,17 @@ public class ResourcesManager
 	}
 	public void unloadAllResources(ScreenType screenType)
 	{		
-		int index = getScreenIndex(screenType);
-		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+		ScreenClass screenClass = ScreenType.convertToScreenClass(screenType);
+		unloadAllResources(screenClass);
+	}
+	public void unloadAllResources(ScreenClass screenClass)
+	{		
+		int index = getScreenIndex(screenClass);
 		
+		this.screenMetaArray.get( index ).isLoaded = false;
+		
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		manager.clear();
-		//manager.dispose();
 	}
 	
 	public void unloadResource(BaseScreen screen, String filename)
@@ -519,7 +441,6 @@ public class ResourcesManager
 		
 		int unloadedAssets = 0;
 		
-		
 		for(ScreenMeta screenMeta: screenMetaArray)
 		{
 			unloadedAssets += screenMeta.manager.getLoadedAssets();
@@ -527,24 +448,7 @@ public class ResourcesManager
 			screenMeta.manager.clear();
 			//screenMeta.manager.dispose();
 		}
-		
-		unloadedAssets += logoSpecialMeta.manager.getLoadedAssets();
-		unloadedAssets += menuSpecialMeta.manager.getLoadedAssets();
-		unloadedAssets += gameSpecialMeta.manager.getLoadedAssets();
-		unloadedAssets += stillSpecialMeta.manager.getLoadedAssets();
-		
-		logoSpecialMeta.manager.clear();
-		//logoSpecialMeta.manager.dispose();
-		
-		menuSpecialMeta.manager.clear();
-		//menuSpecialMeta.manager.dispose();
-		
-		gameSpecialMeta.manager.clear();
-		//gameSpecialMeta.manager.dispose();
-		
-		stillSpecialMeta.manager.clear();
-		//stillSpecialMeta.manager.dispose();
-		
+				
 		screenMetaArray.clear();
 	}
 	//---------
@@ -557,66 +461,33 @@ public class ResourcesManager
 	}
 	public <T> T getResource(ScreenType screenType, String filename)
 	{
-		
+		ScreenClass screenClass = ScreenType.convertToScreenClass(screenType);
+		return getResource(screenClass, filename);
+	}
+	public <T> T getResource(ScreenClass screenClass, String filename)
+	{
 		try
 		{
-			int index = getScreenIndex(screenType);
+			int index = getScreenIndex(screenClass);
 			AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 			
 			return manager.get(filename);
 		}
 		catch(Exception e)
 		{
+			//na wszelki wypadek poszukaj jeszcze w assetManagerze Game - jesli ladujesz wlasnie gre to bd potrzebne
 			try
-			{				
-				return menuSpecialMeta.manager.get(filename);
+			{
+				int index = getScreenIndex( ScreenClass.GAME );
+				AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+				
+				return manager.get(filename);
 			}
 			catch(Exception f)
 			{
-				try
-				{
-					return gameSpecialMeta.manager.get(filename);
-				}
-				catch(Exception g)
-				{
-					try
-					{
-						return stillSpecialMeta.manager.get(filename);
-					}
-					catch(Exception h)
-					{
-						try
-						{							
-							return logoSpecialMeta.manager.get(filename);
-						}
-						catch(Exception i)
-						{						
-							return null;
-						}
-					}
-				}
+				return null;
 			}
 		}
-	}
-	
-	public AssetManager getLogoAssetManager()
-	{
-		return logoSpecialMeta.manager;
-	}
-	
-	public AssetManager getMenuAssetManager()
-	{
-		return menuSpecialMeta.manager;
-	}
-	
-	public AssetManager getGameAssetManager()
-	{
-		return gameSpecialMeta.manager;
-	}
-	
-	public AssetManager getStillAssetManager()
-	{
-		return stillSpecialMeta.manager;
 	}
 	
 	public AssetManager getAssetManager(BaseScreen screen)
@@ -626,18 +497,26 @@ public class ResourcesManager
 	}
 	public AssetManager getAssetManager(ScreenType screenType)
 	{		
-		int index = getScreenIndex(screenType);
+		ScreenClass screenClass = ScreenType.convertToScreenClass( screenType );
+		return getAssetManager(screenClass);
+	}
+	public AssetManager getAssetManager(ScreenClass screenClass)
+	{
+		int index = getScreenIndex(screenClass);
 		return (AssetManager)screenMetaArray.get(index).manager;
 	}
 	//---------
-	
 	private int getScreenIndex(ScreenType screenType)
+	{
+		return getScreenIndex( ScreenType.convertToScreenClass(screenType) );
+	}
+	private int getScreenIndex(ScreenClass screenClass)
 	{
 		int index = -1;
 		
 		for(int i=0; i<screenMetaArray.size; i++)
 		{
-			if( screenMetaArray.get(i).screenType == screenType )
+			if( screenMetaArray.get(i).screenClass == screenClass )
 			{
 				index = i;
 				break;

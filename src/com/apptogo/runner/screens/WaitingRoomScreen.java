@@ -83,7 +83,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) 
             {
-            	ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "", "0", GameWorldType.WILDWEST), enemyPlayers );
+            	ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/map.tmx", "", "", "0", GameWorldType.WILDWEST), enemyPlayers );
             }
         });
         
@@ -234,7 +234,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			@Override
 			public void run () {
 				//nie chcemy na razie nic robic - dopiero jak ktos kliknie play
-				ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/wildwest1.tmx", "", "0", "0", GameWorldType.WILDWEST), enemyPlayers);
+				ScreensManager.getInstance().createLoadingGameScreen(ScreenType.SCREEN_GAME_MULTI, new Level("", "gfx/game/levels/wildwest1.tmx", "", "0", "0", GameWorldType.WILDWEST), enemyPlayers);
 			
 			}
 		});

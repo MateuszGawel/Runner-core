@@ -3,7 +3,6 @@ package com.apptogo.runner.handlers;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.logger.Logger;
 
 public class FlagsHandler {
 	

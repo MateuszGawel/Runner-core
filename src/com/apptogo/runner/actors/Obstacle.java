@@ -9,11 +9,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
-import com.apptogo.runner.world.ForestWorld;
 import com.apptogo.runner.world.GameWorld;
-import com.apptogo.runner.world.SpaceWorld;
-import com.apptogo.runner.world.WildWestWorld;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -37,7 +33,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
 
 public class Obstacle extends Actor{
 
@@ -60,21 +55,9 @@ public class Obstacle extends Actor{
 	
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
-	public Obstacle(){
-		switch(((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorldType){
-		case WILDWEST:
-			atlasPath = "gfx/game/levels/wildWestAtlas.pack";
-			break;
-		case FOREST:
-			atlasPath = "gfx/game/levels/forestAtlas.pack";
-			break;
-		case SPACE:
-			atlasPath = "gfx/game/levels/spaceAtlas.pack";
-			break;
-		default:
-			break;		
-		}
-			
+	public Obstacle(String atlasPath)
+	{
+		this.atlasPath = atlasPath;			
 		
 //		if(atlasPath.contains("powerup")){
 //	        if(gameWorld instanceof WildWestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
@@ -85,34 +68,26 @@ public class Obstacle extends Actor{
 			animationManager = new AnimationManager(atlasPath);	
 	}
 	
-	public Obstacle(MapObject object, World world){
-		this();
+	public Obstacle(MapObject object, World world, String atlasPath){
+		this(atlasPath);
 		this.world = world;
 		this.object = object;
 	}
 	
-	public Obstacle(String atlasPath){	
-		this();
-
-	}
-	
-	public Obstacle(MapObject object, World world, String regionName){	
-		this(object, world);	
+	public Obstacle(MapObject object, World world, String regionName, String atlasPath){	
+		this(object, world, atlasPath);	
 		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath)).findRegion(regionName);
 	}
 	
-	public Obstacle(String regionName, int frameCount, float frameDuration, Object animationState){
-		this();
-		//najbrzydszy workaround ever
-		if(regionName.equals("countdown"))
-			animationManager = new AnimationManager("gfx/game/levels/countdown.pack");	
+	public Obstacle(String regionName, int frameCount, float frameDuration, Object animationState, String atlasPath){
+		this(atlasPath);
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
 	}
 	
-	public Obstacle(MapObject object, World world, String regionName, int frameCount, float frameDuration, Object animationState){
-		this(object, world);
+	public Obstacle(MapObject object, World world, String regionName, int frameCount, float frameDuration, Object animationState, String atlasPath){
+		this(object, world, atlasPath);
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);

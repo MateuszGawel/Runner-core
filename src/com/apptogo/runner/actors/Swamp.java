@@ -2,6 +2,7 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.vars.Materials;
@@ -25,7 +26,7 @@ public class Swamp extends Obstacle{
 	private long soundId;
 	
 	public Swamp(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "swamp", 45, 0.05f, SwampAnimationState.ANIMATING);
+		super(object, world, "swamp", 45, 0.05f, SwampAnimationState.ANIMATING, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		setAnimate(false);
 		createBody(BodyType.StaticBody, Materials.worldObjectBody, "swamp");
 		gameWorld.getWorldStage().addActor(this);

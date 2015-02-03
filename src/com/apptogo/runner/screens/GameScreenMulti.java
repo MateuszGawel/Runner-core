@@ -3,6 +3,7 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
@@ -12,17 +13,18 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.math.Vector2;
-import com.apptogo.runner.actors.Character;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreenMulti extends GameScreen implements WarpListener
 {	
-	public GameScreenMulti(Runner runner)
+	public GameScreenMulti(Runner runner, Level level, Array<Player> enemies)
 	{
-		super(runner);	
+		super(runner, level, enemies);	
 	}
 		
 	public void prepare() 

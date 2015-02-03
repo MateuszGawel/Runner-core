@@ -2,11 +2,9 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CoinsManager;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.world.GameWorld;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -27,7 +25,7 @@ public class Coin extends Obstacle implements Poolable
 	
 	public Coin(MapObject object, GameWorld gameWorld)
 	{
-		super("coin", 16, 0.03f, CoinAnimationState.NORMAL);
+		super("coin", 16, 0.03f, CoinAnimationState.NORMAL, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		setAnimate(true);
 
 		this.updatePosition = false;

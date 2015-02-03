@@ -9,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.exception.AnonymousPlayerException;
 import com.apptogo.runner.exception.AppWarpConnectionException;
 import com.apptogo.runner.player.Player;

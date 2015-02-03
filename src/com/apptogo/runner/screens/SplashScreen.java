@@ -3,6 +3,7 @@ package com.apptogo.runner.screens;
 import java.util.Random;
 
 import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -153,9 +154,9 @@ public class SplashScreen extends BaseScreen
 		if( currentPhase == SplashPhase.SPLASH_IMAGE_IN && splashImage.getActions().size <= 0)
 		{
 			currentPhase = SplashPhase.SPLASH_IMAGE_WAITING;
-			ResourcesManager.getInstance().loadLogoResources();
+			ResourcesManager.getInstance().loadResources(this.getSceneType());
 		}
-		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getLogoAssetManager().update())
+		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getAssetManager(this.getSceneType()).update() )
 		{
 			//tworze animacje itd tutaj bo musimy czekac na zaladowanie sie animacji do pamieci
 			logoImage = createImage("gfx/splash/logoSplash.png", -421.0f, 400.0f);
@@ -225,12 +226,13 @@ public class SplashScreen extends BaseScreen
 			};
 			t.start();
 			
-			ResourcesManager.getInstance().loadMenuResources();
-			ResourcesManager.getInstance().loadStillResources();
-			
-			menuAssetManager = ResourcesManager.getInstance().getMenuAssetManager();
-			stillAssetManager = ResourcesManager.getInstance().getStillAssetManager();
-			
+			//tutaj ladujemy troche wprost ale jest to potrzebne zeby nie angazowac loading screena na samym poczatku
+			ResourcesManager.getInstance().loadResources(ScreenClass.STILL);
+			ResourcesManager.getInstance().loadResources(ScreenClass.MENU);
+
+			stillAssetManager = ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL);
+			menuAssetManager = ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU);
+		
 			currentPhase = SplashPhase.FONT_INITIALIZATION_WAITING;
 		}
 		else if( currentPhase == SplashPhase.FONT_INITIALIZATION_WAITING && menuAssetManager.update() && stillAssetManager.update() )

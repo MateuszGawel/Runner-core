@@ -9,18 +9,14 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -166,10 +162,6 @@ public class Bandit extends Character{
 		animationManager.createAnimation(8, 0.03f, "slide", CharacterAnimationState.SLIDING, true);
 		animationManager.createAnimation(9, 0.03f, "diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
-		
-		createJumpButton();
-		createSlideButton();
-		createTempButton();
 	}
 	
 	@Override
@@ -238,17 +230,6 @@ public class Bandit extends Character{
 		super.draw(batch, parentAlpha);
 		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (110 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
-			
-	private void createJumpButton(){
-		super.createJumpButton("banditJumpButton");
-	}
-	private void createSlideButton(){
-		super.createSlideButton("banditSlideButton");
-	}
-	private void createTempButton(){
-		super.createTempButton("banditJumpButton");
-	}
-	
 	
 	private Button getAbilityButton()
 	{

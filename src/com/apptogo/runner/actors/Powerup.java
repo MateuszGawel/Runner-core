@@ -2,6 +2,7 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -38,7 +39,7 @@ public class Powerup extends Obstacle{
 	
 	public Powerup(MapObject object, World world, GameWorld gameWorld)
 	{
-		super(object, world, "powerup", 36, 0.03f, PowerupAnimationState.NORMAL);
+		super(object, world, "powerup", 36, 0.03f, PowerupAnimationState.NORMAL, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		setAnimate(false);
 				
 		PowerupType powerup = PowerupType.getRandom();

@@ -1,8 +1,8 @@
 package com.apptogo.runner.main;
 
 import com.apptogo.runner.appwarp.NotificationManager;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
-import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.LanguageManager;
@@ -16,7 +16,6 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.news.NewsManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 
 public class Runner extends Game
 {
@@ -44,7 +43,8 @@ public class Runner extends Game
 		try
 		{
 			super.render();	
-			Logger.log(this, "--------------------------------");
+			//Logger.log(this, "--------------------------------");
+			Logger.log( this, ResourcesManager.getInstance().getAssetManager(ScreenClass.SPLASH).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.GAME).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).getLoadedAssets() );
 		}
 		catch(Exception e)
 		{ 

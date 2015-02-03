@@ -10,8 +10,9 @@ import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreenSingle extends GameScreen
 {	
@@ -32,9 +34,9 @@ public class GameScreenSingle extends GameScreen
 	Label timeLabel;
 	Label coinsLabel;
 	
-	public GameScreenSingle(Runner runner)
+	public GameScreenSingle(Runner runner, Level level, Array<Player> enemies)
 	{
-		super(runner);
+		super(runner, level, enemies);
 		NotificationManager.getInstance().disableAppWarpNotifications();
 	}
 	
@@ -46,7 +48,6 @@ public class GameScreenSingle extends GameScreen
 		
 		createGui();
 		createLabels();
-		
 		
 		CustomActionManager.getInstance().registerAction(new CustomAction(2f, 1, player.character) {
 			

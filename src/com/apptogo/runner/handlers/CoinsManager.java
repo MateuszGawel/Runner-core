@@ -2,12 +2,9 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.HashMap;
-
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.CoinField;
 import com.apptogo.runner.actors.ParticleEffectActor;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.FPSLogger;
