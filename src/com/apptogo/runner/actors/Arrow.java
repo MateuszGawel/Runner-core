@@ -6,6 +6,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,26 +50,31 @@ public class Arrow extends Actor implements Poolable{
 		this.position = new Vector2();
         this.alive = false;
         this.player = player;
-
         
         arrowTexture = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/arrow.png");
 
-        
         Vector2 bodySize = new Vector2(25 / PPM, 2 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(new Vector2(Runner.SCREEN_WIDTH / 2 / PPM, 800 / PPM));
 		
 		PolygonShape shape = new PolygonShape();
-		FixtureDef fixtureDef;
+		shape.setAsBox(bodySize.x, bodySize.y);
+		
+		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		
+		UserData userData = new UserData("arrow");
+		userData.bodyWidth = shapeWidth;
 		
 		arrowBody = world.createBody(bodyDef);
-		arrowBody.setUserData( new UserData("arrow") );
-		
-		shape.setAsBox(bodySize.x, bodySize.y);
+				
+		FixtureDef fixtureDef;
 		fixtureDef = Materials.arrowBody;
 		fixtureDef.shape = shape;
-		arrowBody.createFixture(fixtureDef).setUserData( new UserData("arrow") );
+		
+		arrowBody.createFixture(fixtureDef).setUserData( userData );
+		arrowBody.setUserData( userData );
+		
 		arrowRegion = new TextureRegion(arrowTexture);
 		
 		//shape.setAsBox(3/PPM, 3/PPM, new Vector2(12/PPM, 0), 0);

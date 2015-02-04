@@ -14,6 +14,7 @@ import com.apptogo.runner.handlers.MyTiledMapRendererActor;
 import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -169,34 +170,45 @@ public abstract class GameWorld
 			world.destroyJoint(joint);
 		}
 	}
-	
-	boolean bdsA = false;
-	public Body groundBody;
-	
-	private void handleBodyCulling(){
-		if(!bdsA || bdsA)
-    	{
-    		bdsA = true;
-    		Array<Body> bs = new Array<Body>();
-    		world.getBodies(bs);
-    		
-    		Body tempB = this.player.character.getBody();
-    		int ciala = 0; int ciali = 0;
-    		for(Body b : bs) 
-    		{
-    			if( Math.abs( tempB.getPosition().x - b.getPosition().x ) < 5 )
-				{ciala++;
-					b.setActive(true);
+		
+	private void handleBodyCulling()
+	{
+		Array<Body> worldBodies = new Array<Body>();
+		world.getBodies(worldBodies);
+		
+		Body playerBody = this.player.character.getBody();
+		UserData playerUserData = (UserData)playerBody.getUserData();
+		
+		float playerPosition = playerBody.getPosition().x + (playerUserData.bodyWidth / 2.0f);
+		
+		int activeBodies = 0;
+		int activationOffset = 5;
+
+		for(Body body : worldBodies)
+		{   
+			UserData userData = (UserData)body.getUserData();
+			
+			if( !userData.isWidthNull() )
+			{
+				float bodyPosition = body.getPosition().x + (userData.bodyWidth / 2.0f);
+				
+				if( Math.abs( bodyPosition - playerPosition ) < activationOffset + (userData.bodyWidth / 2.0f) )
+				{
+					body.setActive(true);
 				}
-    			else
-    			{ciali++;
-    				b.setActive(false);
-    			}
-    		}
-    		
-    		this.player.character.getBody().setActive(true);
-    		groundBody.setActive(true);
-    	}
+				else
+				{
+					body.setActive(false);
+				}
+			}
+			
+			if( body.isActive() )
+			{
+				activeBodies++;
+			}
+		}
+		
+		Logger.log(this, "ILOSC AKTYWNYCH CIAL TO: " + activeBodies);
 	}
 	
     public void update(float delta) 

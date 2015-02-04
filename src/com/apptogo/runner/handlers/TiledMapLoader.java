@@ -21,6 +21,8 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
+import com.apptogo.runner.exception.UnknownShapeTypeException;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -200,11 +202,18 @@ public class TiledMapLoader
 				bodyDef.position.x = Float.parseFloat( mapObject.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( mapObject.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
-				groundFixture.shape = createShape(mapObject);
+				Shape shape = createShape(mapObject);
+				float shapeWidth = Box2DVars.getShapeWidth(shape);
+				
+				groundFixture.shape = shape;
 				Body body = world.createBody(bodyDef);
-				body.createFixture(groundFixture).setUserData( new UserData("nonkilling") );
-				body.setUserData( new UserData("nonkilling") );
-				gameWorld.groundBody = body;
+				
+				UserData userData = new UserData("nonkilling");
+				userData.bodyWidth = shapeWidth;
+				
+				body.createFixture(groundFixture).setUserData( userData );
+				body.setUserData( userData );
+
 				bodies.add(body);
 			}
 			
@@ -241,18 +250,26 @@ public class TiledMapLoader
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
 				
-				objectFixture.shape = createShape(object);
+				Shape shape = createShape(object);
+				float shapeWidth = Box2DVars.getShapeWidth(shape);				
+				
+				objectFixture.shape = shape;
 				body = world.createBody(bodyDef);
+				
+				UserData userData = new UserData("nonkilling");
+				userData.bodyWidth = shapeWidth;
 				
 				if( checkObjectType(object, "finishingLine") )
 				{
-					body.createFixture(objectFixture).setUserData( new UserData("finishingLine") );
-					body.setUserData( new UserData("finishingLine") );
+					userData.key = "finishingLine";
+					
+					body.createFixture(objectFixture).setUserData( userData );
+					body.setUserData( userData );
 				}
 				else
 				{
-					body.createFixture(objectFixture).setUserData( new UserData("nonkilling") );
-					body.setUserData( new UserData("nonkilling") );
+					body.createFixture(objectFixture).setUserData( userData );
+					body.setUserData( userData );
 				}
 				
 				if( isPropertyTrue(object, "isGhost"))
@@ -375,8 +392,6 @@ public class TiledMapLoader
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
 			{
-				
-				
 				BodyDef bodyDef = new BodyDef();
 				
 				bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -387,22 +402,31 @@ public class TiledMapLoader
 				
 				bodyDef.position.x = Float.parseFloat( object.getProperties().get("x").toString() ) / Box2DVars.PPM;
 				bodyDef.position.y = Float.parseFloat( object.getProperties().get("y").toString() ) / Box2DVars.PPM;
+						
+				Shape shape = createShape(object);
+				float shapeWidth = Box2DVars.getShapeWidth(shape);	
 				
 				Fixture fixture;
 				body = world.createBody(bodyDef);
+				
 				if(isPropertyTrue(object, "isGhost")){
-					obstacleSensorFixture.shape = createShape(object);
+					obstacleSensorFixture.shape = shape;
 					fixture = body.createFixture(obstacleSensorFixture);
 				}
 				else{
-					obstacleFixture.shape = createShape(object);
+					obstacleFixture.shape = shape;
 					fixture = body.createFixture(obstacleFixture);
 				}
 				
 				Object type = object.getProperties().get("type");
-				if(type!=null){
-					fixture.setUserData( new UserData( object.getProperties().get("type") ) );
-					body.setUserData( new UserData( object.getProperties().get("type") ) );
+				
+				if(type!=null)
+				{
+					UserData userData = new UserData( type );
+					userData.bodyWidth = shapeWidth;
+					
+					fixture.setUserData( userData );
+					body.setUserData( userData );
 				}
 				
 				if( checkObjectType(object, "jointHandle") )

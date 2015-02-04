@@ -12,6 +12,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -45,15 +46,22 @@ public class SpaceWorld extends GameWorld{
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		
 		CircleShape shape = new CircleShape();
-		FixtureDef fixtureDef;
+		shape.setRadius(14/PPM);
+		
+		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		
+		UserData userData = new UserData("testBody");
+		userData.bodyWidth = shapeWidth;
 		
 		Body testBody = world.createBody(bodyDef);
-		testBody.setUserData( new UserData("testBody") );
-
-		shape.setRadius(14/PPM);
+				
+		FixtureDef fixtureDef;
 		fixtureDef = Materials.obstacleBody;
 		fixtureDef.shape = shape;
-		testBody.createFixture(fixtureDef).setUserData( new UserData("testBody") );
+		
+		testBody.createFixture(fixtureDef).setUserData( userData );
+		testBody.setUserData( userData );
+		
 		testBody.setTransform(x, 10f,  0);
     }
     

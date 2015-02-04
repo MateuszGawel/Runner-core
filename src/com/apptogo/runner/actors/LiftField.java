@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -35,20 +36,26 @@ public class LiftField extends Actor{
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		
 		CircleShape shape = new CircleShape();
-		FixtureDef fixtureDef;
+		shape.setRadius(400/PPM);
+		
+		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		
+		UserData userData = new UserData("liftField", ownerPlayer);
+		userData.bodyWidth = shapeWidth;
 		
 		fieldBody = world.createBody(bodyDef);
-		fieldBody.setUserData( new UserData("liftField", ownerPlayer) );
-
-		shape.setRadius(400/PPM);
+		
+		FixtureDef fixtureDef;
 		fixtureDef = Materials.worldObjectBody;
 		fixtureDef.shape = shape;
-
-		Fixture fieldFixture = fieldBody.createFixture(fixtureDef);
-		fieldFixture.setUserData( new UserData("liftField", ownerPlayer));
-		fieldFixture.setSensor(true);
-		fieldBody.setTransform(-100f, 0, 0);
 		
+		Fixture fieldFixture = fieldBody.createFixture(fixtureDef);
+		fieldFixture.setSensor(true);
+		
+		fieldFixture.setUserData( userData );
+		fieldBody.setUserData( userData );
+		
+		fieldBody.setTransform(-100f, 0, 0);
 	}
 
     public void init() {

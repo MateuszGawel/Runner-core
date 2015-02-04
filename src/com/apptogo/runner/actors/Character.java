@@ -24,6 +24,7 @@ import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -122,21 +123,29 @@ public abstract class Character extends Actor{
 		bodyDef.fixedRotation = true;
 		
 		PolygonShape shape = new PolygonShape();
-		FixtureDef fixtureDef;
-		
-		body = world.createBody(bodyDef);
-		body.setUserData( new UserData("player") );
-		
-		//main fixture
 		shape.setAsBox(bodySize.x, bodySize.y);
+		
+		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		
+		UserData userData = new UserData("mainBody");
+		userData.bodyWidth = shapeWidth;
+				
+		body = world.createBody(bodyDef);
+		
+		FixtureDef fixtureDef;
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
+				
+		//main fixture
 		Fixture fix = body.createFixture(fixtureDef);
-		fix.setUserData( new UserData("mainBody") );
+		fix.setUserData( userData );
+		
+		userData.key = "player";
+		
+		body.setUserData( userData );
 		
 		createNormalFixtures(fixtureDef, bodySize, shape);
 		createMirrorFixtures(fixtureDef, bodySize, shape);
-
 	}
 	
 	private void createNormalFixtures(FixtureDef fixtureDef, Vector2 bodySize, PolygonShape shape){

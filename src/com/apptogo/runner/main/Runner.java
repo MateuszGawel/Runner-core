@@ -44,7 +44,7 @@ public class Runner extends Game
 		{
 			super.render();	
 			//Logger.log(this, "--------------------------------");
-			Logger.log( this, ResourcesManager.getInstance().getAssetManager(ScreenClass.SPLASH).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.GAME).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).getLoadedAssets() );
+			//Logger.log( this, ResourcesManager.getInstance().getAssetManager(ScreenClass.SPLASH).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.GAME).getLoadedAssets() + " | " + ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).getLoadedAssets() );
 		}
 		catch(Exception e)
 		{ 

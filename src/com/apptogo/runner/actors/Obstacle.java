@@ -9,6 +9,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -192,16 +193,23 @@ public class Obstacle extends Actor{
 		return createShape(object);
 	}
 	
-	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userData)
+	public void createBody(BodyType bodyType, FixtureDef fixtureDef, String userDataString)
 	{
 		bodyDef = new BodyDef();
 		bodyDef.type = bodyType;
 
-		fixtureDef.shape = createShape(object);
+		Shape shape = createShape(object);
+			
+		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		
+		UserData userData = new UserData(userDataString);
+		userData.bodyWidth = shapeWidth;
+		
+		fixtureDef.shape = shape;
 		
 		body = world.createBody(bodyDef);
-		body.createFixture(fixtureDef).setUserData( new UserData(userData) );
-		body.setUserData( new UserData(userData) );
+		body.createFixture(fixtureDef).setUserData( userData );
+		body.setUserData( userData );
 	}
 	public void createFixture(FixtureDef fixtureDef, String userData)
 	{
