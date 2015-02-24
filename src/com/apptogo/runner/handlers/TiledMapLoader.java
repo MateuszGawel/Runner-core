@@ -103,7 +103,7 @@ public class TiledMapLoader
 //	private RayHandler rayHandler;
 	
 	public void loadMap(String mapPath)
-	{
+	{Logger.log(this,"ZYJE DO CHUJA");
 		groundFixture = Materials.terrainBody;
 		objectFixture = Materials.worldObjectBody;
 		obstacleFixture = Materials.obstacleBody;
@@ -391,7 +391,7 @@ public class TiledMapLoader
 			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
-			{
+			{Logger.log(this, "TU JEST PRZECIEZ COS INNEGO!!!!");
 				BodyDef bodyDef = new BodyDef();
 				
 				bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -419,9 +419,9 @@ public class TiledMapLoader
 				}
 				
 				Object type = object.getProperties().get("type");
-				
+				Logger.log(this, "SPRAWDZILEM TYPE");
 				if(type!=null)
-				{
+				{Logger.log(this, type);
 					UserData userData = new UserData( type );
 					userData.bodyWidth = shapeWidth;
 					

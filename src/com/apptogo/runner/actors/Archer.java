@@ -38,7 +38,7 @@ public class Archer extends Character{
     };
 	
 	public Archer(World world, GameWorld gameWorld, int startingPosition, String playerName){
-		super(world, "gfx/game/characters/archer.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName);
+		super(world, "gfx/game/characters/characters.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
@@ -60,13 +60,13 @@ public class Archer extends Character{
 	
 	private void initAnimations(){
 
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "jump"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "archer_jump"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "archer_land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f)
@@ -75,7 +75,7 @@ public class Archer extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(8, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(8, "archer_land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
@@ -90,13 +90,13 @@ public class Archer extends Character{
 				}
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "archer_beginslide"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.SLIDING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "standup"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "archer_standup"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f)
@@ -105,32 +105,32 @@ public class Archer extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});		
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "archer_run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
 				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "idle"), true, 8 + randonGenerator.nextInt(5)){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(21, "archer_idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(30, "bored"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(30, "archer_bored"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYARROW, animationManager.createFrames(10, "flyarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYARROW, animationManager.createFrames(10, "archer_flyarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNARROW, animationManager.createFrames(15, "runarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNARROW, animationManager.createFrames(15, "archer_runarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)
@@ -140,10 +140,10 @@ public class Archer extends Character{
 			}
 		});	
 		
-		animationManager.createAnimation(30, 0.03f, "fly", CharacterAnimationState.FLYING, true);
-		animationManager.createAnimation(8, 0.03f, "slide", CharacterAnimationState.SLIDING, true);
-		animationManager.createAnimation(9, 0.03f, "diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
-		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
+		animationManager.createAnimation(30, 0.03f, "archer_fly", CharacterAnimationState.FLYING, true);
+		animationManager.createAnimation(8, 0.03f, "archer_slide", CharacterAnimationState.SLIDING, true);
+		animationManager.createAnimation(9, 0.03f, "archer_diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
+		animationManager.createAnimation(9, 0.03f, "archer_dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
 	
 	@Override

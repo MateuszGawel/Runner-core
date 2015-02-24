@@ -21,6 +21,7 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -126,7 +127,7 @@ public abstract class Character extends Actor{
 		shape.setAsBox(bodySize.x, bodySize.y);
 		
 		float shapeWidth = Box2DVars.getShapeWidth(shape);
-		
+		Logger.log(this, "Player body width: " + shapeWidth);
 		UserData userData = new UserData("mainBody");
 		userData.bodyWidth = shapeWidth;
 				
@@ -140,9 +141,10 @@ public abstract class Character extends Actor{
 		Fixture fix = body.createFixture(fixtureDef);
 		fix.setUserData( userData );
 		
-		userData.key = "player";
+		//przyjrzec sie pozostalym userData - nie mozna uzywac tej samej referencji! :(
+		UserData bodyUserData = new UserData("player");
 		
-		body.setUserData( userData );
+		body.setUserData( bodyUserData );
 		
 		createNormalFixtures(fixtureDef, bodySize, shape);
 		createMirrorFixtures(fixtureDef, bodySize, shape);

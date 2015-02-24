@@ -208,7 +208,7 @@ public abstract class GameWorld
 			}
 		}
 		
-		Logger.log(this, "ILOSC AKTYWNYCH CIAL TO: " + activeBodies);
+		//Logger.log(this, "ILOSC AKTYWNYCH CIAL TO: " + activeBodies);
 	}
 	
     public void update(float delta) 

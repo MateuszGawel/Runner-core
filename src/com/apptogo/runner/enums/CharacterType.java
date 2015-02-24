@@ -91,15 +91,15 @@ public enum CharacterType
 		
 		if( characterType == BANDIT )
 		{
-			return new String[]{"gfx/game/characters/bandit.pack", "gfx/game/characters/bomb.pack"};
+			return new String[]{"gfx/game/characters/characters.pack", "gfx/game/characters/bomb.pack"};
 		}
 		else if( characterType == ARCHER )
 		{
-			return new String[]{"gfx/game/characters/archer.pack"};
+			return new String[]{"gfx/game/characters/characters.pack"};
 		}
 		else if( characterType == ALIEN )
 		{
-			return new String[]{"gfx/game/characters/alien.pack"};
+			return new String[]{"gfx/game/characters/characters.pack"};
 		}
 		
 		return null;

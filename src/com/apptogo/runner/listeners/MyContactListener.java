@@ -3,6 +3,7 @@ package com.apptogo.runner.listeners;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
@@ -31,16 +32,17 @@ public class MyContactListener implements ContactListener
 
 		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
-			
+Logger.log(this, ((UserData)fa.getUserData()).key  );
+Logger.log(this, ((UserData)fb.getUserData()).key  );
 			//smierc TOP
-			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	
+			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	Logger.log(this, "!gora");
 				if(flags.isCanDie()){
 					flags.setDieTop(true);
 				}
 			}
-			
+
 			//smierc BOTTOM
-			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){
+			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){ Logger.log(this, "!dol");
 				if(flags.isCanDie()){
 					flags.setDieBottom(true);
 				}

@@ -49,7 +49,7 @@ public class Bandit extends Character{
     }
     
 	public Bandit(World world, GameWorld gameWorld, int startingPosition, String playerName){
-		super(world, "gfx/game/characters/bandit.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton", playerName);
+		super(world, "gfx/game/characters/characters.pack", "banditJumpButton", "banditSlideButton", "banditSlowButton", playerName);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
@@ -62,13 +62,13 @@ public class Bandit extends Character{
 	
 	private void initAnimations(){
 
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "jump"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "bandit_jump"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "bandit_land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
@@ -83,7 +83,7 @@ public class Bandit extends Character{
 				}
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(5, "land"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(5, "bandit_land"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
@@ -98,13 +98,13 @@ public class Bandit extends Character{
 				}
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "beginslide"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BEGINSLIDING, animationManager.createFrames(6, "bandit_beginslide"), false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.SLIDING);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "standup"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "bandit_standup"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(getSpeed() < 0.001f){
@@ -118,32 +118,32 @@ public class Bandit extends Character{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 			}
 		});		
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "bandit_run"), true){
 			@Override
 			public void additionalTaskDuringAnimation(){
 				this.setFrameDuration(1/getSpeed() * 0.4f);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "idle"), true, 8 + randonGenerator.nextInt(5)){
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "bandit_idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(31, "moonwalk"), true, 5){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(31, "bandit_moonwalk"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, animationManager.createFrames(10, "flybomb"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, animationManager.createFrames(10, "bandit_flybomb"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, animationManager.createFrames(10, "runbomb"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, animationManager.createFrames(10, "bandit_runbomb"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)
@@ -158,10 +158,10 @@ public class Bandit extends Character{
 			}
 		});	
 		
-		animationManager.createAnimation(33, 0.03f, "fly", CharacterAnimationState.FLYING, true);
-		animationManager.createAnimation(8, 0.03f, "slide", CharacterAnimationState.SLIDING, true);
-		animationManager.createAnimation(9, 0.03f, "diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
-		animationManager.createAnimation(9, 0.03f, "dietop", CharacterAnimationState.DIEINGTOP, false);
+		animationManager.createAnimation(33, 0.03f, "bandit_fly", CharacterAnimationState.FLYING, true);
+		animationManager.createAnimation(8, 0.03f, "bandit_slide", CharacterAnimationState.SLIDING, true);
+		animationManager.createAnimation(9, 0.03f, "bandit_diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
+		animationManager.createAnimation(9, 0.03f, "bandit_dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
 	
 	@Override
