@@ -127,9 +127,12 @@ public abstract class Character extends Actor{
 		shape.setAsBox(bodySize.x, bodySize.y);
 		
 		float shapeWidth = Box2DVars.getShapeWidth(shape);
+		float shapeHeight = Box2DVars.getShapeHeight(shape);
+		
 		Logger.log(this, "Player body width: " + shapeWidth);
 		UserData userData = new UserData("mainBody");
 		userData.bodyWidth = shapeWidth;
+		userData.bodyHeight = shapeHeight;
 				
 		body = world.createBody(bodyDef);
 		
@@ -143,6 +146,8 @@ public abstract class Character extends Actor{
 		
 		//przyjrzec sie pozostalym userData - nie mozna uzywac tej samej referencji! :(
 		UserData bodyUserData = new UserData("player");
+		bodyUserData.bodyWidth = shapeWidth;
+		bodyUserData.bodyHeight = shapeHeight;
 		
 		body.setUserData( bodyUserData );
 		
@@ -835,7 +840,8 @@ public abstract class Character extends Actor{
 
 		currentFrame = animationManager.animate(delta);
 		
-        setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
+        //setPosition(body.getPosition().x + 10/PPM, body.getPosition().y + 20/PPM);
+		setPosition(body.getPosition().x - ((UserData)body.getUserData()).bodyWidth, body.getPosition().y - ( ((UserData)body.getUserData()).bodyHeight / 2.0f ));
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         //setRotation(body.getAngle() * MathUtils.radiansToDegrees);            

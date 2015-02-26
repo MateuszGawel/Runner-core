@@ -5,9 +5,11 @@ import java.util.List;
 
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class AnimationManager {
 
@@ -32,9 +34,31 @@ public class AnimationManager {
 	
 	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
+		
+		float minOffsetX = atlas.findRegion(name + 0).offsetX;
+		float minOffsetY = atlas.findRegion(name + 0).offsetY;
+		
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
+			
+			if( frames[i].offsetX < minOffsetX )
+			{
+				minOffsetX = frames[i].offsetX;
+			}
+			
+			if( frames[i].offsetY < minOffsetY )
+			{
+				minOffsetY = frames[i].offsetY;
+			}
 		}
+		
+		for(int i=0; i<framesCount; i++)
+		{	
+				frames[i].offsetX -= minOffsetX;
+				//to zle dziala - tak jakbym kilka razy od jednej klatki odejmowal
+				//frames[i].offsetY -= 10.0f;
+		}
+		
 		return frames;
 	}
 	
@@ -43,19 +67,25 @@ public class AnimationManager {
 	}
 	
 	public void createAnimation(int framesCount, float frameTime, String name, Object animationState, boolean looping){
-		AtlasRegion[] frames = new AtlasRegion[framesCount];
+		/*AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
-		}
+		}*/
+		
+		AtlasRegion[] frames = createFrames(framesCount, name);
+		
 		//narazie obsluguje utworzenie tylko z rownym czasem i framemami podanymi w tablicy
 		animations.add(new MyAnimation(frameTime, animationState, frames, looping));
 	}
 	
 	public void createAnimation(int framesCount, float frameTime, String name, Object animationState, boolean looping, int loopCount){
-		AtlasRegion[] frames = new AtlasRegion[framesCount];
+		/*AtlasRegion[] frames = new AtlasRegion[framesCount];
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
-		}
+		}*/
+		
+		AtlasRegion[] frames = createFrames(framesCount, name);
+		
 		//narazie obsluguje utworzenie tylko z rownym czasem i framemami podanymi w tablicy
 		animations.add(new MyAnimation(frameTime, animationState, frames, looping, loopCount));
 	}

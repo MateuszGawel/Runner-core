@@ -28,9 +28,9 @@ public class Logger
 	private static final boolean USE_WHITE_LIST = false;
 	private static final boolean USE_BLACK_LIST = false;
 	
-	private static final Array<String> whiteList = new Array<String>( new String[]{ "class com.apptogo.runner.listeners.MyContactListener",
-																					"class com.apptogo.runner.handlers.TiledMapLoader",
-																					"class com.apptogo.runner.actors Character"
+	private static final Array<String> whiteList = new Array<String>( new String[]{ //"class com.apptogo.runner.listeners.MyContactListener",
+																					//"class com.apptogo.runner.handlers.TiledMapLoader",
+																					"class com.apptogo.runner.actors.Bandit"
 																					//"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
 																				  } ); 
 	

@@ -44,7 +44,7 @@ public class Box2DVars {
 					maxX = vertex.x;
 				}
 			}
-			
+			Logger.log("String", "RETURNED : " + (maxX - minX));
 			return (maxX - minX);
 		}
 		else if( shape instanceof ChainShape )
@@ -71,6 +71,68 @@ public class Box2DVars {
 			}
 			
 			return (maxX - minX);
+		}
+		else if( shape instanceof CircleShape )
+		{
+			CircleShape circle = (CircleShape)shape;
+			
+			return (circle.getRadius() * 2 );
+		}
+		else
+			return -1.0f;
+	}
+
+	public static float getShapeHeight(Shape shape)
+	{
+		if( shape instanceof PolygonShape )
+		{
+			PolygonShape polygon = (PolygonShape)shape;
+			Vector2 vertex = new Vector2();
+			
+			polygon.getVertex(0, vertex);
+			
+			float minY = vertex.y;
+			float maxY = vertex.y;
+			
+			for(int i = 1; i < polygon.getVertexCount(); i++ )
+			{
+				polygon.getVertex(i, vertex);
+				if( vertex.y < minY )
+				{
+					minY = vertex.y;
+				}
+				if( vertex.y > maxY )
+				{
+					maxY = vertex.y;
+				}
+			}
+			Logger.log("String", "RETURNED : " + (maxY - minY));
+			return (maxY - minY);
+		}
+		else if( shape instanceof ChainShape )
+		{
+			ChainShape chain = (ChainShape)shape;
+			Vector2 vertex = new Vector2();
+			
+			chain.getVertex(0, vertex);
+			
+			float minY = vertex.y;
+			float maxY = vertex.y;
+			
+			for(int i = 1; i < chain.getVertexCount(); i++ )
+			{
+				chain.getVertex(i, vertex);
+				if( vertex.y < minY )
+				{
+					minY = vertex.y;
+				}
+				if( vertex.y > maxY )
+				{
+					maxY = vertex.y;
+				}
+			}
+			
+			return (maxY - minY);
 		}
 		else if( shape instanceof CircleShape )
 		{

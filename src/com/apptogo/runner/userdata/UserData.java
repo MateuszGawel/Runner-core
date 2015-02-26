@@ -27,6 +27,7 @@ public class UserData
 	
 	//all bodies
 	public float bodyWidth;
+	public float bodyHeight;
 	
 	
 	public UserData(Object key){
@@ -38,11 +39,19 @@ public class UserData
 		this.key = key.toString();
 		this.playerName = playerName;
 		this.bodyWidth = -1.0f;
+		this.bodyHeight = -1.0f;
 	}
 	
 	public boolean isWidthNull()
 	{
 		if( this.bodyWidth == -1.0f )
+			return true;
+		return false;
+	}
+	
+	public boolean isHeightNull()
+	{
+		if( this.bodyHeight == -1.0f )
 			return true;
 		return false;
 	}
