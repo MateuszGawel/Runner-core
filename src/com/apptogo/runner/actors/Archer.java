@@ -9,10 +9,12 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -46,6 +48,9 @@ public class Archer extends Character{
         
         createBodyMembers();
         addSounds();
+        
+        customOffsetX = 50.0f / PPM;
+        customOffsetY = 20.0f / PPM;
 	}
 	
 	private void addSounds(){
@@ -214,7 +219,11 @@ public class Archer extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+		//batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+	
+		Logger.log(this, "OFFSET : " + ((AtlasRegion)currentFrame).offsetX + ", " + ((AtlasRegion)currentFrame).offsetY );
+		Logger.log(this, "NAME : " + ((AtlasRegion)currentFrame).name ); 
+	
 	}
 		
 	public Button getAbilityButton()

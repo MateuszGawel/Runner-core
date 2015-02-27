@@ -28,7 +28,9 @@ import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -59,6 +61,9 @@ public abstract class Character extends Actor{
 	public AnimationManager animationManager;
 	protected ArrayList<BodyMember> bodyMembers;
 	protected boolean flipX, flipY;
+	
+	protected float customOffsetX = 0.0f;
+	protected float customOffsetY = 0.0f;
 	
 	protected Random randonGenerator = new Random();
 	
@@ -639,7 +644,7 @@ public abstract class Character extends Actor{
 		speed = body.getLinearVelocity().x;
 		if(flags.isCanRun()){
 			if(flags.isOnGround()){
-				body.applyForceToCenter(new Vector2(3000, 0), true); 
+				body.applyForceToCenter(new Vector2(4500, 0), true); 
 			}
 			else if(this.getBody().getLinearVelocity().x <= 1){
 					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
@@ -988,4 +993,26 @@ public abstract class Character extends Actor{
 		coinCounter++;
 	}
 	public int getCoinCounter(){ return coinCounter; }
+	
+	@Override
+	public void draw(Batch batch, float parentAlpha) 
+	{
+		batch.draw(currentFrame.getTexture(),  //Texture texture
+				   getX() + ( (((AtlasRegion)currentFrame).offsetX) * 1.1363f / PPM) - customOffsetX, //float x
+                   getY() + ( (((AtlasRegion)currentFrame).offsetY) * 1.1363f / PPM) - customOffsetY, //float y
+                   getOriginX(),  //float originX
+                   getOriginY(),  //float originY
+                   getWidth(),    //float width
+                   getHeight(),   //float height
+                   1,             //float scaleX
+                   1,             //float scaleY
+                   getRotation(), //float rotation
+                   currentFrame.getRegionX(), //int srcX
+                   currentFrame.getRegionY(), //int srcY
+                   currentFrame.getRegionWidth(), //int srcWidth
+                   currentFrame.getRegionHeight(),//int srcHeight 
+                   flipX, //boolean flipX
+                   flipY  //boolean flipY
+                  );
+}
 }

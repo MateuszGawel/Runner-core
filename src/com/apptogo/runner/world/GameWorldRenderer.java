@@ -63,6 +63,6 @@ public class GameWorldRenderer
     	Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
-    	//debugRenderer.render(gameWorld.world, camera.combined);
+    	debugRenderer.render(gameWorld.world, camera.combined);
     }
 }

@@ -9,6 +9,7 @@ import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class AnimationManager {
@@ -32,32 +33,101 @@ public class AnimationManager {
 		this.initStateTime = initStateTime;
 	}
 	
+	public Vector2 getMaxOffset(String name)
+	{
+		Array<AtlasRegion> fs = atlas.getRegions();
+		
+		float minOffsetX = 100000.0f, minOffsetY = 0.0f;
+		
+		for(AtlasRegion a: fs)
+		{
+			if( a.name.contains("alien") )
+				if( a.offsetX < minOffsetX )
+				{
+					minOffsetX = a.offsetX;
+				}
+			
+				if( a.offsetY < minOffsetY )
+				{
+					minOffsetY = a.offsetY;
+				}
+		}
+		
+		return new Vector2(minOffsetX,minOffsetY);
+	}
+	
 	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		
 		float minOffsetX = atlas.findRegion(name + 0).offsetX;
 		float minOffsetY = atlas.findRegion(name + 0).offsetY;
 		
+		Array<AtlasRegion> fs = atlas.getRegions();
+		
+		if( name.contains("alien") )
+		{Logger.log(this, "ALIEN FOUND");
+			for(AtlasRegion a: fs)
+			{
+				if( a.name.contains("alien") )
+					if( a.offsetX < minOffsetX )
+						minOffsetX = a.offsetX;
+			}
+		}
+		else if( name.contains("archer") )
+		{Logger.log(this, "ARCHER FOUND");
+			for(AtlasRegion a: fs)
+			{
+				if( a.name.contains("archer") )
+					if( a.offsetX < minOffsetX )
+						minOffsetX = a.offsetX;
+			}
+		}
+		else if( name.contains("bandit") )
+		{Logger.log(this, "BANDIT FOUND");
+			for(AtlasRegion a: fs)
+			{
+				if( a.name.contains("bandit") )
+					if( a.offsetX < minOffsetX )
+						minOffsetX = a.offsetX;
+			}
+		}
+		else Logger.log(this, "NIE ZNALAZLEM TAKIEGO :( ");
+		
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
 			
-			if( frames[i].offsetX < minOffsetX )
+			/*if( frames[i].offsetX < minOffsetX )
 			{
 				minOffsetX = frames[i].offsetX;
+			}
+			
+			if( frames[i].offsetX > maxOffsetX )
+			{
+				maxOffsetX = frames[i].offsetX;
 			}
 			
 			if( frames[i].offsetY < minOffsetY )
 			{
 				minOffsetY = frames[i].offsetY;
 			}
+			
+			if( frames[i].offsetY > maxOffsetY )
+			{
+				maxOffsetY = frames[i].offsetY;
+			}*/
 		}
 		
 		for(int i=0; i<framesCount; i++)
 		{	
-				frames[i].offsetX -= minOffsetX;
+				//frames[i].offsetX -= minOffsetX;
 				//to zle dziala - tak jakbym kilka razy od jednej klatki odejmowal
-				//frames[i].offsetY -= 10.0f;
+				
+				Logger.log(this, "TWORZENIE, name: " + frames[i].name + ", offsetY: " + frames[i].offsetY );
+				
+				//frames[i].offsetY -= minOffsetY;
 		}
+		
+		Logger.log(this, frames[0].name + ": " + minOffsetX + " | " + minOffsetY );
 		
 		return frames;
 	}

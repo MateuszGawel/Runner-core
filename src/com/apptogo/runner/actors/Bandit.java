@@ -62,6 +62,9 @@ public class Bandit extends Character{
 		//createBodyMembers();
 		 
         addSounds();
+        
+        customOffsetX = 45.0f / PPM;
+        customOffsetY = 30.0f / PPM;
 	}
 	
 	private void initAnimations(){
@@ -233,12 +236,12 @@ public class Bandit extends Character{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 
-		Logger.log(this, "OFFSET : " + ((AtlasRegion)currentFrame).offsetY );
-		Logger.log(this, "NAME : " + ((AtlasRegion)currentFrame).name );
+		//Logger.log(this, "OFFSET : " + ((AtlasRegion)currentFrame).offsetY );
+		//Logger.log(this, "NAME : " + ((AtlasRegion)currentFrame).name );
 		//batch.draw(currentFrame.getTexture(), getX() - ( (110 - ((AtlasRegion)currentFrame).offsetX) / PPM), getY() - ( (110 - ((AtlasRegion)currentFrame).offsetY) / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
-		batch.draw(currentFrame.getTexture(), getX() + ( (((AtlasRegion)currentFrame).offsetX) * 1.1363f / PPM), 
-				                              getY() + ( (((AtlasRegion)currentFrame).offsetY) * 1.1363f / PPM), 
-				                              getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+//		batch.draw(currentFrame.getTexture(), getX() + ( (((AtlasRegion)currentFrame).offsetX) * 1.1363f / PPM), 
+//				                              getY() + ( (((AtlasRegion)currentFrame).offsetY) * 1.1363f / PPM), 
+//				                              getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 	
 	private Button getAbilityButton()

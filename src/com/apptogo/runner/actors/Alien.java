@@ -36,6 +36,9 @@ public class Alien extends Character{
         liftField = new LiftField(this, world, playerName, gameWorld);
         gameWorld.getBackgroundStage().addActor(liftField);
         addSounds();
+        
+        customOffsetX = 55.0f / PPM;
+        customOffsetY = 27.0f / PPM;
 	}
 	
 	private void addSounds(){
@@ -201,7 +204,7 @@ public class Alien extends Character{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (105 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
+		//batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (105 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
 	}
 		
 	public Button getAbilityButton()
