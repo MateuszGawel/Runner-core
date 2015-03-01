@@ -44,7 +44,6 @@ public class RepeatingParallaxBackground extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha){
 		super.draw(batch, parentAlpha); 
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.draw(texture, getX(), getY(), getWidth(), getHeight(), 0, 1, xWrapCount, 0);
 		//Logger.log(this, "rysuje na x: " + getX() + " y: " + getY() + " width: " + getWidth() + " height: " + getHeight() + " a player ma x: " + player.getX() + " y: " + player.getY());
 	}

@@ -3,6 +3,7 @@ package com.apptogo.runner.world;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,8 +30,8 @@ public class ParallaxBackground extends Actor{
 		this.initialRegionWidth = textureRegion.getRegionWidth();
 		this.textureRegion = textureRegion;
 		setPosition(x/PPM, y/PPM);
-		setWidth(getWidth()/PPM);
-		setHeight(getHeight()/PPM);
+		setWidth(textureRegion.getRegionWidth()/PPM);
+		setHeight(textureRegion.getRegionHeight()/PPM);
 		this.xFactor = xFactor;
 		this.yFactor = yFactor;
 		this.mapSize = mapSize;
@@ -45,14 +46,18 @@ public class ParallaxBackground extends Actor{
 	}
 	
 	private void drawRegion(Batch batch, float offSet){
-
+	
+		
 		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - (offset-1)*textureRegion.getRegionWidth()));
-		textureRegion.setRegionWidth(initialRegionWidth);
+		//textureRegion.setRegionWidth(initialRegionWidth);
+		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
+		batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());
+		
+		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - offset*textureRegion.getRegionWidth()));
+		//textureRegion.setRegionWidth(initialRegionWidth);
+		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
 		batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());
 
-		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - offset*textureRegion.getRegionWidth()));
-		textureRegion.setRegionWidth(initialRegionWidth);
-		batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());
 	}
 	
 	private float offset;

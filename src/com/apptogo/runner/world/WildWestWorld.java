@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
@@ -76,6 +77,7 @@ public class WildWestWorld extends GameWorld{
 	public void update(float delta){
 		Gdx.gl.glClearColor(0.855f, 0.639f, 0.321f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Logger.log(this, "sprawkkkdzam2");
 		shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*2/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
 			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*1/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100, brown, brown, brown, brown);
