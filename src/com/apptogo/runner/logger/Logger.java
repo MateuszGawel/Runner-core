@@ -30,7 +30,8 @@ public class Logger
 	
 	private static final Array<String> whiteList = new Array<String>( new String[]{ "class com.apptogo.runner.listeners.MyContactListener",
 																					//"class com.apptogo.runner.handlers.TiledMapLoader",
-																					"class com.apptogo.runner.actors.Bandit"
+																					"class com.apptogo.runner.actors.Bandit",
+																					"class com.apptogo.runner.world.ParallaxBackground",
 																					//"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
 																				  } ); 
 	
