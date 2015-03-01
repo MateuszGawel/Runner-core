@@ -208,6 +208,7 @@ public class ResourcesManager
 		menuMeta.addTexture("temp/settingsButton.png");
 		menuMeta.addTexture("temp/achievementsButton.png");
 		menuMeta.addTexture("temp/shopSign.png");
+		menuMeta.addTexture("gfx/menu/comingSoon.png");
 		//
 		
 		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");

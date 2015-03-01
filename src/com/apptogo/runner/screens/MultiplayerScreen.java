@@ -34,7 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
 
 public class MultiplayerScreen extends BaseScreen implements WarpListener
 {			
@@ -59,8 +58,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private DialogWidget confirmationDialog;
 	
+	private Widget shopWidget;
 	private Widget profileWidget;
 	private Widget friendsWidget;
+	private Widget rankWidget;
 	
 	private InfoWidget confirmWidget;
     
@@ -135,8 +136,12 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		confirmationDialog = new DialogWidget("", null, null);
 		
+		createShopWidget();
+		
 		createFriendsWidget();
 		createProfileWidget();
+		
+		createRankWidget();
 		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -163,11 +168,18 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         createRoomButton.setPosition( 205.0f, 120.0f );
         createRoomButton.addListener( friendsWidget.toggleWidgetListener );
 		
+        shopGroup.addActor( shopWidget.actor() );
+        
+        shopGroup.setPosition(0.0f, 0.0f);
+        
 		mainGroup.addActor(profileWidget.actor());
 		mainGroup.addActor(createRoomButton);
 		mainGroup.addActor(joinRandomButton);
 		
 		mainGroup.setPosition(Runner.SCREEN_WIDTH, 0.0f);
+		
+		rankGroup.addActor( rankWidget.actor() );
+		rankGroup.setPosition(Runner.SCREEN_WIDTH * 2,  0.0f);
 		
 		group.addActor(shopGroup);
 		group.addActor(mainGroup);
@@ -207,6 +219,69 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	public void step()
 	{
 		handleInput();
+	}
+	
+	private void createShopWidget()
+	{
+		shopWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
+		
+		TextButton cat1B = new TextButton("category1", skin, "categoryTab");
+		cat1B.setSize(200.0f, 100.0f);
+		cat1B.setPosition(-340.0f, 170.0f);
+		
+		TextButton cat2B = new TextButton("category2", skin, "categoryTab");
+		cat2B.setSize(200.0f, 100.0f);
+		cat2B.setPosition(-100.0f, 170.0f);
+		
+		TextButton cat3B = new TextButton("category3", skin, "categoryTab");
+		cat3B.setSize(200.0f, 100.0f);
+		cat3B.setPosition(140.0f, 170.0f);
+		
+		shopWidget.addTabButton(1, cat1B);
+		shopWidget.addTabButton(2, cat2B);
+		shopWidget.addTabButton(3, cat3B);
+		
+		CharacterAnimation alienCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -600.0f, -20.0f, true);
+		CharacterAnimation archerCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -600.0f, -180.0f, true);
+		CharacterAnimation banditCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -600.0f, -340.0f, true);
+		
+		shopWidget.addActorToTab(alienCharacterAnimation, 2);
+		shopWidget.addActorToTab(archerCharacterAnimation, 2);
+		shopWidget.addActorToTab(banditCharacterAnimation, 2);
+		
+		Image comingSoon = createImage("gfx/menu/comingSoon.png", -200, -200);
+		shopWidget.addActorToTab(comingSoon, 3);
+		
+		shopWidget.setCurrentTab(1);
+		
+        Table table = new Table();
+        table.debug();
+        
+        //table.setSize(640.0f, 920.0f);
+        //able.setPosition(-320.0f, -300.0f);
+        
+        table.add().width(32 * 02).height(32 * 02).center().top();
+        table.add().width(32 * 18).height(32 * 02).center().top().colspan(2);
+        
+        table.row();
+        table.add().width(32 * 20).height(32 * 01).colspan(3);
+        
+        table.row();
+        table.add().width(32 * 03).height(32 * 106).center().top();
+        table.add().width(32 * 03).height(32 * 106).center().top();
+        table.add().width(32 * 16).height(32 * 106).center().top();
+        
+        table.row();
+        table.add().width(32 * 05).height(32 * 01).center().top().colspan(2);
+        table.add().width(32 * 16).height(32 * 01).center().top();
+        
+        Container<ScrollPane> container = createScroll(table, 672.0f, 390.0f, true);
+        container.debug();
+        container.setPosition(-340.0f, -300.0f);
+        
+        shopWidget.addActorToTab(container, 1);
+        
+        shopWidget.toggleWidget(); 
 	}
 	
 	private void createProfileWidget()
@@ -392,7 +467,37 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		friendsWidget.setCurrentTab(1);
 	}
-			
+	
+	private void createRankWidget()
+	{
+		rankWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
+		rankWidget.toggleWidget(); 
+        
+        Table table = new Table();
+        table.debug();
+        
+        table.setSize(640.0f, 320.0f);
+        table.setPosition(-320.0f, -300.0f);
+        
+        table.add().width(32 * 02).height(32 * 02).center().top();
+        table.add().width(32 * 18).height(32 * 02).center().top().colspan(2);
+        
+        table.row();
+        table.add().width(32 * 20).height(32 * 01).colspan(3);
+        
+        table.row();
+        table.add().width(32 * 02).height(32 * 06).center().top();
+        table.add().width(32 * 02).height(32 * 06).center().top();
+        table.add().width(32 * 16).height(32 * 06).center().top();
+        
+        table.row();
+        table.add().width(32 * 04).height(32 * 01).center().top().colspan(2);
+        table.add().width(32 * 16).height(32 * 01).center().top();
+        
+        rankWidget.addActor(table);
+	}
+	
+	
 	@Override
 	public void handleInput() 
 	{
