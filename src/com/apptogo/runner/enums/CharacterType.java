@@ -127,15 +127,15 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return new CharacterAnimation("gfx/game/characters/bandit.pack", x, y, running);
+			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
 		}
 		else if( characterType == ARCHER )
 		{
-			return new CharacterAnimation("gfx/game/characters/archer.pack", x, y, running);
+			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
 		}
 		else if( characterType == ALIEN )
 		{
-			return new CharacterAnimation("gfx/game/characters/alien.pack", x, y, running);
+			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
 		}
 
 		return null;

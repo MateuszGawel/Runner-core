@@ -230,6 +230,8 @@ public class Bandit extends Character{
     	super.act(delta);
     	freePools();
 		
+    	
+    	
 	}
 	
 	@Override

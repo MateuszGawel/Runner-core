@@ -1,14 +1,18 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.FontType;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.news.News;
 import com.apptogo.runner.news.NewsManager;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -81,6 +85,22 @@ public class MainMenuScreen extends BaseScreen
 	@Override
 	public void prepare() 
 	{
+		//-------------------TEMP--------------------
+		/*player.setCharacterType( CharacterType.BANDIT );//GameWorldType.convertToCharacterType( level.worldType ) );
+    	player.save();
+    	//ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null ); - odpalenie singla, wykomentowane do testow
+    	
+    	Array<Player> players = new Array<Player>();
+    	Player enemyPlayer1 = new Player("dupek", CharacterType.ARCHER);
+    	Player enemyPlayer2 = new Player("cipek", CharacterType.ALIEN);
+    	//Player enemyPlayer3 = new Player("siurek", CharacterType.ARCHER);
+    	players.add(enemyPlayer1);
+    	players.add(enemyPlayer2);
+    	//players.add(enemyPlayer3);
+    	ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, new Level("", "gfx/game/levels/wildwest2.tmx", "", "", "1", GameWorldType.WILDWEST), players );
+    	*///----------------------------------------------
+		
+		
 		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
 		
 		settingsButton = new Button(skin, "settings");
@@ -560,7 +580,7 @@ public class MainMenuScreen extends BaseScreen
 	{
 		super.dispose();
 		
-		settingsWidget.dispose();
+		//settingsWidget.dispose();
 	}
 
 	@Override

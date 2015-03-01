@@ -214,15 +214,35 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
         profileWidget.toggleWidget();        
         		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -330.0f, -200.0f, true);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
 		currentCharacterAnimation.setVisible(true);
         
-		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -330.0f, -240.0f);
-				        
-        Table table = new Table();
+		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -320.0f, -260.0f);
+		ground.setWidth(128.0f);		        
 		
-		table.setSize(700.0f, 320.0f);
-		table.setPosition(-350.0f, -300.0f);
+        Table table = new Table();
+        table.debug();
+        
+        table.setSize(640.0f, 320.0f);
+        table.setPosition(-320.0f, -300.0f);
+        
+        table.add().width(32 * 02).height(32 * 02).center().top();
+        table.add().width(32 * 18).height(32 * 02).center().top().colspan(2);
+        
+        table.row();
+        table.add().width(32 * 20).height(32 * 01).colspan(3);
+        
+        table.row();
+        table.add().width(32 * 02).height(32 * 06).center().top();
+        table.add().width(32 * 02).height(32 * 06).center().top();
+        table.add().width(32 * 16).height(32 * 06).center().top();
+        
+        table.row();
+        table.add().width(32 * 04).height(32 * 01).center().top().colspan(2);
+        table.add().width(32 * 16).height(32 * 01).center().top();
+        /*
+		
+		
 		table.debug();
 		
 		Image flag = createImage("temp/exampleFlag.png", 0, 0);
@@ -269,7 +289,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		Image diamondImage = createImage("temp/diamond.png", 0, 0);
 		diamondImage.setScaling(Scaling.none);
-		diamondImage.setAlign(Align.right);
+		diamondImage.setAlign(Align.right);*/
 		
 		/*
 		table.row();

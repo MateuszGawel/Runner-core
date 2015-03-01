@@ -2,6 +2,7 @@ package com.apptogo.runner.animation;
 
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -31,7 +32,7 @@ public class CharacterAnimation extends Actor
 		
 		animationManager = new AnimationManager(atlasName);
 				
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "run"), true)
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNNING, animationManager.createFrames(18, "bandit_run"), true)
 		{
 			@Override
 			public void additionalTaskDuringAnimation(){
@@ -39,7 +40,7 @@ public class CharacterAnimation extends Actor
 			}
 		});
 		
-		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(20, "idle"), true)
+		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(20, "bandit_idle"), true)
 		{
 			@Override
 			public void additionalTaskDuringAnimation(){
@@ -80,6 +81,6 @@ public class CharacterAnimation extends Actor
 	@Override
 	public void draw(Batch batch, float parentAlpha) 
 	{
-		batch.draw(currentFrame, x, y);	
+		batch.draw(currentFrame, x + ((AtlasRegion)currentFrame).offsetX, y + ((AtlasRegion)currentFrame).offsetY); 
 	}
 }

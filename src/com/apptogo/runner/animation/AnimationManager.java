@@ -58,7 +58,7 @@ public class AnimationManager {
 	
 	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
-		
+
 		float minOffsetX = atlas.findRegion(name + 0).offsetX;
 		float minOffsetY = atlas.findRegion(name + 0).offsetY;
 		

@@ -32,8 +32,7 @@ public class MyContactListener implements ContactListener
 
 		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
-Logger.log(this, ((UserData)fa.getUserData()).key  );
-Logger.log(this, ((UserData)fb.getUserData()).key  );
+
 			//smierc TOP
 			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	Logger.log(this, "!gora");
 				if(flags.isCanDie()){
@@ -107,6 +106,11 @@ Logger.log(this, ((UserData)fb.getUserData()).key  );
 			}
 			if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
 				flags.incrementBarrelSensor();
+				
+				Fixture f = getFixtureByType(fa, fb, "barrel");
+				( (UserData)f.getUserData() ).key = "barrel_touched";
+				
+				Logger.log(this, "+ BARREL SENSOR = " + flags.getBarrelSensor() );
 			}
 	//		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
 	//			player.character.incrementLeftRotationSensor();
@@ -117,24 +121,24 @@ Logger.log(this, ((UserData)fb.getUserData()).key  );
 			
 			//beczki
 			if(checkFixturesTypes(fa, fb, "barrel", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
-				
-				Fixture playerFixture = getFixtureByType(fa, fb, "mainBody");
-				if(playerFixture == null)
-					playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
+				//Logger.log(this, "ZDERZENIE Z BECZKA");
+				//Fixture playerFixture = getFixtureByType(fa, fb, "mainBody");
+				//if(playerFixture == null)
+				//	playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
 				Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");			
 				
-				if(!((UserData)barrelFixture.getBody().getUserData()).active){
-					((UserData)barrelFixture.getBody().getUserData()).active = true;
-					((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-				}
-					
-				if(flags.isCanDie() &&
-						(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f 
-								|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
-				{
-					flags.setDieBottom(true);
-					((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-				}
+				//if(!((UserData)barrelFixture.getBody().getUserData()).active){
+				((UserData)barrelFixture.getBody().getUserData()).active = true;
+				//	((UserData)barrelFixture.getBody().getUserData()).playSound = true;
+				//}
+				//	
+				//if(flags.isCanDie() &&
+				//		(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f
+				//				|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
+				//{
+				//	flags.setDieBottom(true);
+				//	((UserData)barrelFixture.getBody().getUserData()).playSound = true;
+				//}
 			}
 	
 			//bagno
@@ -249,8 +253,10 @@ Logger.log(this, ((UserData)fb.getUserData()).key  );
 	//		}
 			
 			//barrel
-			if(checkFixturesTypes(fa, fb, "footSensor", "barrel")){
+			if(checkFixturesTypes(fa, fb, "footSensor", "barrel_touched")){
 				flags.decrementBarrelSensor();
+				
+				Logger.log(this, "- BARREL SENSOR = " + flags.getBarrelSensor() );
 			}
 			//gravity field
 			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){

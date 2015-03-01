@@ -195,6 +195,8 @@ public class ResourcesManager
 		menuMeta.addTexture("gfx/languageFlags/uk.png");
 		
 		menuMeta.addTexture("gfx/game/characters/banditGround.png");
+		
+		menuMeta.addTextureAtlas("gfx/game/characters/characters.pack");
 				
 		//tempy totalnie do wyjebania
 		menuMeta.addTexture("temp/exampleFlag.png");

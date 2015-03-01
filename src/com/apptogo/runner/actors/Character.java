@@ -262,7 +262,7 @@ public abstract class Character extends Actor{
 		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, 80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
+		//body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
 		
 		//standup sensor
 		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, -8/PPM), 0);
@@ -288,9 +288,9 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
 		
+		body.getFixtureList().get(10).setSensor(true);
 		body.getFixtureList().get(11).setSensor(true);
-		body.getFixtureList().get(12).setSensor(true);
-		for(int i = 11; i<=20; i++){
+		for(int i = 11; i<=19; i++){
 			((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
 		}
 	}

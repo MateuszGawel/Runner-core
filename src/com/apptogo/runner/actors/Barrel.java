@@ -32,6 +32,11 @@ public class Barrel extends Obstacle{
 		if(((UserData)getBody().getUserData()).active && getBody().getType() != BodyType.DynamicBody)
 			getBody().setType(BodyType.DynamicBody);
 		
+		if( (Math.abs(body.getLinearVelocity().x) > 10f	|| Math.abs(body.getLinearVelocity().y) > 7f ))
+		{
+			( (UserData) body.getFixtureList().first().getUserData() ).key = "killingBottom";
+		}
+		
 		if(userData.playSound){
 			userData.playSound = false;
 			sound.play(getSoundVolume());
