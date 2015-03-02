@@ -12,6 +12,8 @@ import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.MyTiledMapRendererActor;
 import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
 import com.apptogo.runner.logger.Logger;
@@ -21,6 +23,7 @@ import com.apptogo.runner.userdata.UserData;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -101,7 +104,7 @@ public abstract class GameWorld
 		backgroundViewport = new FillViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundViewport);
 		backgroundStage.getRoot().setTransform(false);
-		backgroundCamera.zoom = 4f;
+		//backgroundCamera.zoom = 4f;
 		
 		
 		availablePosition = new Array<Integer>();
@@ -126,7 +129,11 @@ public abstract class GameWorld
 	{	
 		TiledMapLoader.getInstance().setWorld(world);
 		TiledMapLoader.getInstance().setGameWorld(this);
-		TiledMapLoader.getInstance().loadMap(mapPath);
+		String atlasPath = GameWorldType.convertToAtlasPath(this.gameWorldType);
+		TextureAtlas textureAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath);
+		TiledMapLoader.getInstance().loadMap(mapPath, textureAtlas.getTextures().first(), atlasPath.substring(0, atlasPath.lastIndexOf('.')));
+
+		
 		tiledMapRendererActor = new MyTiledMapRendererActor(TiledMapLoader.getInstance().getMapRenderer(), (OrthographicCamera)worldStage.getCamera());
 		worldStage.addActor(tiledMapRendererActor);
 		tiledMapRendererActor.setZIndex(0);
@@ -148,7 +155,7 @@ public abstract class GameWorld
 		worldStage.addActor( this.player.character );
 		this.player.character.setZIndex(1500000);
 		
-		CoinsManager.getInstance().createCoinsToPool(100);
+		//CoinsManager.getInstance().createCoinsToPool(100);
 		tiledMapRendererActorFrontLayer.setZIndex(2000000);
 	}
 	
@@ -190,7 +197,7 @@ public abstract class GameWorld
 		{   
 			UserData userData = (UserData)body.getUserData();
 			
-			if( !userData.isWidthNull() )
+			if( userData!=null && !userData.isWidthNull() )
 			{
 				float bodyPosition = body.getPosition().x + (userData.bodyWidth / 2.0f);
 				

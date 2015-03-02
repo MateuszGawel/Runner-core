@@ -21,12 +21,12 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
-import com.apptogo.runner.exception.UnknownShapeTypeException;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -102,14 +102,14 @@ public class TiledMapLoader
 	MapProperties mapProperties;
 //	private RayHandler rayHandler;
 	
-	public void loadMap(String mapPath)
-	{Logger.log(this,"ZYJE DO CHUJA");
+	public void loadMap(String mapPath, Texture texture, String texturePath)
+	{
 		groundFixture = Materials.terrainBody;
 		objectFixture = Materials.worldObjectBody;
 		obstacleFixture = Materials.obstacleBody;
 		obstacleSensorFixture = Materials.obstacleSensor;
 		
-		tiledMap = new TmxMapLoader().load( mapPath );
+		tiledMap = new TmxMapLoader().load( mapPath, texture, texturePath);
 		tiledMapRenderer = new MyTiledMapRenderer(tiledMap, 1/PPM, gameWorld.worldStage.getBatch());
 		
 		//initLights();

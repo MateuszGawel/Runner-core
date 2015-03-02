@@ -18,7 +18,7 @@ public class SwampSegment extends Actor{
 	private AnimationManager animationManager;
 	
 	public SwampSegment(){
-		animationManager = new AnimationManager("gfx/game/levels/swamp.pack", new Random().nextFloat()*3, true);	
+		animationManager = new AnimationManager("gfx/game/levels/forestAtlas.pack", new Random().nextFloat()*3, true);	
 		animationManager.createAnimation(45, 0.05f, "swamp", SwampAnimationState.ANIMATING, true);
 		animationManager.setCurrentAnimationState(SwampAnimationState.ANIMATING);
 		currentFrame = animationManager.animate(0f);
