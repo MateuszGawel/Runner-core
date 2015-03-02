@@ -383,17 +383,28 @@ public class Widget
 		Button activeButton = new Button(skin, "tempTab");//buttonName);
 		activeButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
 		activeButton.setY( 1160.0f );
-		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
 		Button nonActiveButton = new Button(skin, "tempTab");//buttonName);
 		nonActiveButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
 		nonActiveButton.setY( 1160.0f );
-		nonActiveButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
 		nonActiveButton.getColor().a /= 3.0f;
 		
 		activeButton.setVisible(false);
 		nonActiveButton.setVisible(false);
+		
+		addTabButton(tabIndex, activeButton, nonActiveButton);
+	}
+	
+	public void addTabButton(int tabIndex, Button button)
+	{
+		addTabButton(tabIndex, button, button);
+	}
+	
+	public void addTabButton(int tabIndex, Button activeButton, Button nonActiveButton)
+	{
+		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
+		nonActiveButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		
 		int counter = 0;
 		
