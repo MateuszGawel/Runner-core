@@ -146,7 +146,7 @@ public abstract class GameScreen extends BaseScreen{
 			
 			coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
-			//gameGuiStage.addActor(coinLabel);
+			gameGuiStage.addActor(coinLabel);
 			
 			if( coinCounterEffectActor.isComplete() )
 			{
@@ -154,8 +154,8 @@ public abstract class GameScreen extends BaseScreen{
 				coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
 				coinCounterEffectActor.start();
 			}
-			
-			//gameGuiStage.addActor(coinCounterEffectActor);
+			//to ma slaba wydajnosc, do zrobienia
+			gameGuiStage.addActor(coinCounterEffectActor);
 		}
 	}
 	

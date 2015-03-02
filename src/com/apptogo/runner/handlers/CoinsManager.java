@@ -119,6 +119,7 @@ public class CoinsManager
 					if( distance.len2() < (gameWorld.player.character.coinFixtureRadius / PPM) + (coin.radius / PPM) )
 					{
 						coin.collected = true;
+						gameWorld.player.character.incrementCoinCounter();
 					}
 				}
 			}

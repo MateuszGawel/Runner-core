@@ -155,7 +155,7 @@ public abstract class GameWorld
 		worldStage.addActor( this.player.character );
 		this.player.character.setZIndex(1500000);
 		
-		//CoinsManager.getInstance().createCoinsToPool(100);
+		CoinsManager.getInstance().createCoinsToPool(100);
 		tiledMapRendererActorFrontLayer.setZIndex(2000000);
 	}
 	
