@@ -215,8 +215,12 @@ public abstract class BaseScreen implements Screen
 	protected void initializeFadeOutButton()
 	{
 		fadeButton = new Button(skin, "fadeOut");
-		fadeButton.setSize(1280.0f, 800.0f);
-		fadeButton.setPosition(-640.0f, -400.0f);
+		//fadeButton.setSize(4096.0f, 4096.0f);
+		//fadeButton.setPosition(-2048.0f, -2048.0f);
+		
+		fadeButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		fadeButton.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
+		
 		fadeButton.setVisible(false);
 		fadeButton.toBack();
 		
@@ -310,10 +314,20 @@ public abstract class BaseScreen implements Screen
 	
 	protected Label createLabel(String text, FontType fontType)
 	{
-		return createLabel(text, fontType, 0, 0);
+		return createLabel(text, fontType, 0, 0, false);
+	}
+	
+	protected Label createLabel(String text, FontType fontType, boolean wrap)
+	{
+		return createLabel(text, fontType, 0, 0, wrap);
 	}
 	
 	protected Label createLabel(String text, FontType fontType, float x, float y)
+	{
+		return createLabel(text, fontType, x, y, false);
+	}
+	
+	protected Label createLabel(String text, FontType fontType, float x, float y, boolean wrap)
 	{
 		LabelStyle labelStyle = new LabelStyle();	
 		labelStyle.font = FontType.convertToFont(fontType);
@@ -322,6 +336,8 @@ public abstract class BaseScreen implements Screen
 		label.setColor( FontType.convertToColor(fontType) );
 		label.setPosition(x, y);
 		
+		label.setWrap(wrap);
+				
 		return label;
 	}
 	

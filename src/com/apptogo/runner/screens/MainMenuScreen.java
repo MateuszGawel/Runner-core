@@ -456,7 +456,7 @@ public class MainMenuScreen extends BaseScreen
 		{
 			public void clicked(InputEvent event, float x, float y) 
             {
-            	//languageChanged = true;
+				loadScreenAfterFadeOut(ScreenType.SCREEN_SHOP);
             }
 		};
 		

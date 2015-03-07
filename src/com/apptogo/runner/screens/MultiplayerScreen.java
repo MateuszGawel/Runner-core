@@ -8,6 +8,8 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
+import com.apptogo.runner.handlers.ShopManager;
+import com.apptogo.runner.handlers.ShopManager.ShopItem;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Contact;
@@ -43,22 +45,17 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private TextButton joinRandomButton;
 	
 	private Group group;
-	private Group shopGroup;
 	private Group mainGroup;
 	private Group rankGroup;
 	
-	private Button moveToMainRightButton;
 	private Button moveToMainLeftButton;
-	private Button moveToShopButton;
 	private Button moveToRankButton;
 	
-	private ClickListener moveToShopListener;
 	private ClickListener moveToMainListener;
 	private ClickListener moveToRankListener;
 	
 	private DialogWidget confirmationDialog;
 	
-	private Widget shopWidget;
 	private Widget profileWidget;
 	private Widget friendsWidget;
 	private Widget rankWidget;
@@ -90,53 +87,31 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		group = new Group();
 		
-		shopGroup = new Group();
 		mainGroup = new Group();
 		rankGroup = new Group();
 		
-		moveToShopListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
-			group.addAction( getMoveAction(0.0f, 0.0f) ); 
-			moveToMainRightButton.setVisible(true); 
-			moveToMainLeftButton.setVisible(false);
-			moveToShopButton.setVisible(false);
-			moveToRankButton.setVisible(false);
-		} };    
 			
 		moveToMainListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
 			group.addAction( getMoveAction(-Runner.SCREEN_WIDTH, 0.0f) );
-			moveToMainRightButton.setVisible(false); 
-			moveToMainLeftButton.setVisible(false); 
-			moveToShopButton.setVisible(true);
+			moveToMainLeftButton.setVisible(false);
 			moveToRankButton.setVisible(true);
 		} };
 		
 		moveToRankListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
 			group.addAction( getMoveAction(-2*Runner.SCREEN_WIDTH, 0.0f) );
-			moveToMainRightButton.setVisible(false); 
-			moveToMainLeftButton.setVisible(true); 
-			moveToShopButton.setVisible(false);
+			moveToMainLeftButton.setVisible(true);
 			moveToRankButton.setVisible(false);
 		} };
-		
-		moveToMainRightButton = new Button(skin, "campaignArrowRight");
-		moveToMainRightButton.setPosition(470.0f, -100.0f);
-		moveToMainRightButton.addListener(moveToMainListener);
 		
 		moveToMainLeftButton = new Button(skin, "campaignArrowLeft");
 		moveToMainLeftButton.setPosition(-570.0f + (2 * Runner.SCREEN_WIDTH), -100.0f);
 		moveToMainLeftButton.addListener(moveToMainListener);
-		
-		moveToShopButton = new Button(skin, "campaignArrowLeft");
-		moveToShopButton.setPosition(-570.0f + Runner.SCREEN_WIDTH, -100.0f);
-		moveToShopButton.addListener(moveToShopListener);
-		
+				
 		moveToRankButton = new Button(skin, "campaignArrowRight");
 		moveToRankButton.setPosition(470.0f + Runner.SCREEN_WIDTH, -100.0f);
 		moveToRankButton.addListener(moveToRankListener);
 		
 		confirmationDialog = new DialogWidget("", null, null);
-		
-		createShopWidget();
 		
 		createFriendsWidget();
 		createProfileWidget();
@@ -167,11 +142,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         createRoomButton = new Button(skin, "inviteFriends");
         createRoomButton.setPosition( 205.0f, 120.0f );
         createRoomButton.addListener( friendsWidget.toggleWidgetListener );
-		
-        shopGroup.addActor( shopWidget.actor() );
-        
-        shopGroup.setPosition(0.0f, 0.0f);
-        
+		        
 		mainGroup.addActor(profileWidget.actor());
 		mainGroup.addActor(createRoomButton);
 		mainGroup.addActor(joinRandomButton);
@@ -181,30 +152,25 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		rankGroup.addActor( rankWidget.actor() );
 		rankGroup.setPosition(Runner.SCREEN_WIDTH * 2,  0.0f);
 		
-		group.addActor(shopGroup);
 		group.addActor(mainGroup);
 		group.addActor(rankGroup);
 		
-		group.addActor(moveToMainRightButton);
 		group.addActor(moveToMainLeftButton);
-		group.addActor(moveToShopButton);
 		group.addActor(moveToRankButton);
 		
-		moveToMainRightButton.setVisible(false); 
-		moveToMainLeftButton.setVisible(false); 
-		moveToShopButton.setVisible(true);
+		moveToMainLeftButton.setVisible(false);
 		moveToRankButton.setVisible(true);
 		
 		group.setPosition(-Runner.SCREEN_WIDTH, 0.0f);
 		
 		addToScreen(group);
-		
-		addToScreen(backButton);
-		
+				
 		addToScreen(confirmWidget.actor());
 		addToScreen(friendsWidget.actor());
 		
 		addToScreen( confirmationDialog.actor() );
+		
+		addToScreen(backButton);
 	}
 	
 	private MoveToAction getMoveAction(float x, float y)
@@ -220,70 +186,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	{
 		handleInput();
 	}
-	
-	private void createShopWidget()
-	{
-		shopWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
 		
-		TextButton cat1B = new TextButton("category1", skin, "categoryTab");
-		cat1B.setSize(200.0f, 100.0f);
-		cat1B.setPosition(-340.0f, 170.0f);
-		
-		TextButton cat2B = new TextButton("category2", skin, "categoryTab");
-		cat2B.setSize(200.0f, 100.0f);
-		cat2B.setPosition(-100.0f, 170.0f);
-		
-		TextButton cat3B = new TextButton("category3", skin, "categoryTab");
-		cat3B.setSize(200.0f, 100.0f);
-		cat3B.setPosition(140.0f, 170.0f);
-		
-		shopWidget.addTabButton(1, cat1B);
-		shopWidget.addTabButton(2, cat2B);
-		shopWidget.addTabButton(3, cat3B);
-		
-		CharacterAnimation alienCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -600.0f, -20.0f, true);
-		CharacterAnimation archerCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -600.0f, -180.0f, true);
-		CharacterAnimation banditCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -600.0f, -340.0f, true);
-		
-		shopWidget.addActorToTab(alienCharacterAnimation, 2);
-		shopWidget.addActorToTab(archerCharacterAnimation, 2);
-		shopWidget.addActorToTab(banditCharacterAnimation, 2);
-		
-		Image comingSoon = createImage("gfx/menu/comingSoon.png", -200, -200);
-		shopWidget.addActorToTab(comingSoon, 3);
-		
-		shopWidget.setCurrentTab(1);
-		
-        Table table = new Table();
-        table.debug();
-        
-        //table.setSize(640.0f, 920.0f);
-        //able.setPosition(-320.0f, -300.0f);
-        
-        table.add().width(32 * 02).height(32 * 02).center().top();
-        table.add().width(32 * 18).height(32 * 02).center().top().colspan(2);
-        
-        table.row();
-        table.add().width(32 * 20).height(32 * 01).colspan(3);
-        
-        table.row();
-        table.add().width(32 * 03).height(32 * 106).center().top();
-        table.add().width(32 * 03).height(32 * 106).center().top();
-        table.add().width(32 * 16).height(32 * 106).center().top();
-        
-        table.row();
-        table.add().width(32 * 05).height(32 * 01).center().top().colspan(2);
-        table.add().width(32 * 16).height(32 * 01).center().top();
-        
-        Container<ScrollPane> container = createScroll(table, 672.0f, 390.0f, true);
-        container.debug();
-        container.setPosition(-340.0f, -300.0f);
-        
-        shopWidget.addActorToTab(container, 1);
-        
-        shopWidget.toggleWidget(); 
-	}
-	
 	private void createProfileWidget()
 	{
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
@@ -315,72 +218,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         table.row();
         table.add().width(32 * 04).height(32 * 01).center().top().colspan(2);
         table.add().width(32 * 16).height(32 * 01).center().top();
-        /*
-		
-		
-		table.debug();
-		
-		Image flag = createImage("temp/exampleFlag.png", 0, 0);
-		Label playerName = createLabel( player.getName(), FontType.BLACKBOARDMEDIUM);
-		
-		table.add(flag).width(32.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).center().top();
-		table.add(playerName).width(628.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f).left().top();
-		
-		table.row();
-		table.add().width(30.0f).height(192.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);		
-		
-		//inner table part
-		Table innerTable = new Table();
-		{
-			innerTable.setSize(628.0f, 192.0f);
-			innerTable.debug();
-						
-			Label ligueLabel = createLabel("Ligue:", FontType.BLACKBOARDSMALL);
-			ligueLabel.setAlignment(Align.right);
-			
-			Label positionLabel = createLabel("Position:", FontType.BLACKBOARDSMALL);
-			positionLabel.setAlignment(Align.right);
-			
-			Label worldPositionLabel = createLabel("World rank:", FontType.BLACKBOARDSMALL);
-			worldPositionLabel.setAlignment(Align.right);
-			
-			innerTable.add( ligueLabel ).width(160.0f).height(64.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).right();
-			innerTable.add( createLabel("A", FontType.BIG) ).width(140.0f).height(64.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
-			
-			innerTable.row();
-			innerTable.add( positionLabel ).width(160.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 0.0f).right();
-			innerTable.add( createLabel("124", FontType.BLACKBOARDSMALL) ).width(140.0f).height(32.0f).pad(10.0f, 10.0f, 0.0f, 10.0f);
-			
-			innerTable.row();
-			innerTable.add( worldPositionLabel ).width(160.0f).height(32.0f).pad(10.0f, 10.0f, 36.0f, 0.0f).right();
-			innerTable.add( createLabel("124 469", FontType.BLACKBOARDSMALL) ).width(140.0f).height(32.0f).pad(10.0f, 10.0f, 36.0f, 10.0f);
-		}
-		
-		table.add(innerTable).width(330.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 10.0f);
-		
-		Image coinImage = createImage("temp/coin.png", 0, 0);
-		coinImage.setScaling(Scaling.none);
-		coinImage.setAlign(Align.right);
-		
-		Image diamondImage = createImage("temp/diamond.png", 0, 0);
-		diamondImage.setScaling(Scaling.none);
-		diamondImage.setAlign(Align.right);*/
-		
-		/*
-		table.row();
-		table.add( diamondImage ).width(30.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
-		table.add( createLabel("99999", FontType.BLACKBOARDSMALL) ).width(70.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
-		table.add( coinImage ).width(30.0f).height(30.0f).pad(18.0f, 20.0f, 0.0f, 0.0f);
-		table.add( createLabel("9999999999", FontType.BLACKBOARDSMALL) ).width(150.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 0.0f);
-		table.add().width(330.0f).height(50.0f).pad(18.0f, 10.0f, 0.0f, 10.0f);
-
-		//--to ofc tymczasowe
-		Image b1 = createImage("temp/settingsButton.png", -100.0f, -130.0f);
-		
-		Image b3 = createImage("temp/achievementsButton.png", -100.0f, -230.0f);
-			
-		//--
-		*/
 		
 		profileWidget.addActor(table);
 			

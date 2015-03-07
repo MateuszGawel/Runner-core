@@ -1,7 +1,6 @@
 package com.apptogo.runner.main;
 
 import com.apptogo.runner.appwarp.NotificationManager;
-import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.FontManager;
@@ -9,6 +8,7 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.ShopManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.handlers.TipManager;
 import com.apptogo.runner.levels.LevelManager;
@@ -27,9 +27,9 @@ public class Runner extends Game
 	{
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setCatchMenuKey(true); //znow - czy to odpowiednie miejsce dla tych funkcji?
-		
+
 		createManagers();
-		
+				
 		ScreensManager.prepareManager(this);
 		ResourcesManager.prepareManager(this);
 		
@@ -65,6 +65,7 @@ public class Runner extends Game
 	private void createManagers()
 	{
 		//wiem ze to troche psuje singletony ale musimy odswiezac managery za kazdym wlaczeniem aplikacji bo inaczej android je trzyma w pamieci i sie dzieja cuda 
+		ShopManager.create(); //musi byc przed Resources!
 		ResourcesManager.create(); 
 		ScreensManager.create();
 		LanguageManager.create();
@@ -80,6 +81,7 @@ public class Runner extends Game
 	
 	private void destroyManagers()
 	{
+		ShopManager.destroy();
 		ResourcesManager.destroy();
 		ScreensManager.destroy();
 		LanguageManager.destroy();

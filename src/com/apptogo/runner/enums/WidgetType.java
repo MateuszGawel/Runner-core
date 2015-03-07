@@ -24,7 +24,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.BLACKBIG)
 		{
-			return 800.0f;
+			return 1280.0f;
 		}
 		else if(widgetType == WidgetType.FINISH)
 		{
@@ -52,7 +52,7 @@ public enum WidgetType
 		}
 		else if(widgetType == WidgetType.BLACKBIG)
 		{
-			return 500.0f;
+			return 450.0f;
 		}
 		else if(widgetType == WidgetType.FINISH)
 		{
