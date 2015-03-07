@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class BackgroundRenderer extends Actor{
 	private ShapeRenderer shapeRenderer;
 	private Color lightBlue, brown, lightBrown;
-	private int currentWidth, currentHeight;
+	private int currentWidth=0, currentHeight=0;
 	
 	public BackgroundRenderer() {
 		shapeRenderer = new ShapeRenderer();
@@ -23,11 +23,15 @@ public class BackgroundRenderer extends Actor{
 	}
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		if(currentWidth==0 && currentHeight==0 && ScreensManager.getInstance().getCurrentScreen() instanceof GameScreen){
+			currentWidth = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).worldRenderer.currentScreenWidth;
+			currentHeight = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).worldRenderer.currentScreenHeight;
+		}
 		batch.end();
 			shapeRenderer.begin(ShapeType.Filled);
-				shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*2/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
-				shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*1/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100, brown, brown, brown, brown);
-				shapeRenderer.rect(0, 0, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3-200, lightBrown, lightBrown, lightBrown, lightBrown);
+				shapeRenderer.rect(0, currentHeight*2/3-200, currentWidth, currentHeight/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
+				shapeRenderer.rect(0, currentHeight*1/3-200, currentWidth, currentHeight/3+100, brown, brown, brown, brown);
+				shapeRenderer.rect(0, 0, currentWidth, currentHeight/3-200, lightBrown, lightBrown, lightBrown, lightBrown);
 			shapeRenderer.end();
 		batch.begin();
 	}
