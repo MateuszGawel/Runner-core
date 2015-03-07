@@ -5,9 +5,11 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.CoinField;
 import com.apptogo.runner.actors.ParticleEffectActor;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
@@ -67,7 +69,7 @@ public class CoinsManager
 		}
 		coinsPool.freeAll(coins);
 		
-		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM);
+		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");

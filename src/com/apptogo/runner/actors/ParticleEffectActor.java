@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
@@ -18,14 +19,14 @@ public class ParticleEffectActor extends Image {
 	public ParticleEffectPool particleEffectPool;
 	Array<PooledEffect> pooledEffects = new Array<PooledEffect>();
 	
-	public ParticleEffectActor(String particleName) {
+	public ParticleEffectActor(String particleName, TextureAtlas atlas) {
 		super();
 		effect = new ParticleEffect();
-		effect.load(Gdx.files.internal("gfx/game/particles/" + particleName), Gdx.files.internal("gfx/game/particles"));	
+		effect.load(Gdx.files.internal("gfx/game/particles/" + particleName), atlas);	
 	}
-	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool, int initialValue, float effectScale){
+	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool, int initialValue, float effectScale, TextureAtlas atlas){
 		ParticleEffect tempEffect = new ParticleEffect();	
-		tempEffect.load(Gdx.files.internal("gfx/game/particles/" + particleName), Gdx.files.internal("gfx/game/particles"));
+		tempEffect.load(Gdx.files.internal("gfx/game/particles/" + particleName), atlas);
 		tempEffect.scaleEffect(effectScale);
 		particleEffectPool = new ParticleEffectPool(tempEffect, initialPoolCapacity, maxPool);
 		pooled = true;

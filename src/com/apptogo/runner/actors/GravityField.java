@@ -3,8 +3,11 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -63,7 +66,7 @@ public class GravityField extends Obstacle
 		for(int i=0; i<effectsInRow; i++){
 			for(int j=0; j<effectsInColumn; j++){
 				if ( Intersector.isPointInPolygon( new Array(worldVertices), new Vector2(bottomLeft.x+i, bottomLeft.y+j) ) ){
-					ParticleEffectActor effectActor = new ParticleEffectActor("gravityField.p");
+					ParticleEffectActor effectActor = new ParticleEffectActor("gravityField.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 					effectActor.scaleBy(1/PPM);
 					effectActor.setPosition(bottomLeft.x+i, bottomLeft.y+j);
 					gameWorld.worldBackgroundGroup.addActor(effectActor);

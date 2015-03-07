@@ -16,6 +16,7 @@ import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -54,9 +55,9 @@ public class Powerup extends Obstacle{
         
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/powerup.ogg");
 		
-        if(gameWorld instanceof WildWestWorld) effectActor = new ParticleEffectActor("powerup-wildwest.p");
-        else if(gameWorld instanceof ForestWorld) effectActor = new ParticleEffectActor("powerup-forest.p");
-        else if(gameWorld instanceof SpaceWorld) effectActor = new ParticleEffectActor("powerup-space.p");
+        if(gameWorld instanceof WildWestWorld) effectActor = new ParticleEffectActor("powerup-wildwest.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+        else if(gameWorld instanceof ForestWorld) effectActor = new ParticleEffectActor("powerup-forest.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+        else if(gameWorld instanceof SpaceWorld) effectActor = new ParticleEffectActor("powerup-space.p",(TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		effectActor.scaleBy(1/PPM);
 		gameWorld.getWorldStage().addActor(effectActor);
 		

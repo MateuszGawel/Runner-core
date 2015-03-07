@@ -2,12 +2,16 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -63,7 +67,7 @@ public class LiftField extends Actor{
     	setPosition(player.getX(), player.getY());
 		fieldBody.setTransform(player.getX() + 50/PPM, player.getY() + 5/PPM, 0);
 		
-		effectActor = new ParticleEffectActor("liftField-lvl1.p");
+		effectActor = new ParticleEffectActor("liftField-lvl1.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		effectActor.scaleBy(1/PPM);
 		gameWorld.getWorldStage().addActor(effectActor);
 		effectActor.setPosition(getX() + getWidth()/2, getY() + getHeight()/2);

@@ -11,6 +11,7 @@ import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
@@ -21,6 +22,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -93,12 +95,11 @@ public abstract class GameScreen extends BaseScreen{
 		
 
 		//gameGuiStage.addActor(coinLabel);
-		
 	}
 	
 	protected void createCoinLabel(){
 		coinLabelCounter = -1;
-		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack"));
 
 		
 		coinLabel = createLabel("0", FontType.COINFONT);
