@@ -88,6 +88,7 @@ public class ResourcesManager
 			isLoaded = false;
 		}
 		
+		public void addTextures(Array<String> textures) { if( textures != null) for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
 		public void addTextures(String[] textures) { if( textures != null) for(String t: textures) this.textures.add(texturesDirectory+t+texturesExtension); }
 		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
 		public void addTextureAtlases(String[] textureAtlases) { if( textureAtlases != null) for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
@@ -198,6 +199,8 @@ public class ResourcesManager
 		
 		menuMeta.addTextureAtlas("gfx/game/characters/characters.pack");
 				
+		menuMeta.addTextures( ShopManager.getInstance().getTextures() );
+		
 		//tempy totalnie do wyjebania
 		menuMeta.addTexture("temp/exampleFlag.png");
 		menuMeta.addTexture("temp/online.png");
