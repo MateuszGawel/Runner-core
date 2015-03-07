@@ -14,6 +14,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -286,7 +287,16 @@ public class Obstacle extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(currentFrame != null)
-			batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+			batch.draw(currentFrame, 
+					   getX() + ( (((AtlasRegion)currentFrame).offsetX) / PPM ), 
+					   getY() + ( (((AtlasRegion)currentFrame).offsetY) / PPM ), 
+					   getOriginX(), 
+					   getOriginY(), 
+					   getWidth(), 
+					   getHeight(), 
+					   1, 
+					   1, 
+					   getRotation());
 		//Logger.log(this, getX() + " " + getY());
 	}
 	
