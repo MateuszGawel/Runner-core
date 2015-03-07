@@ -104,7 +104,6 @@ public abstract class GameWorld
 		backgroundViewport = new FillViewport(WIDTH, HEIGHT, backgroundCamera);
 		backgroundStage.setViewport(backgroundViewport);
 		backgroundStage.getRoot().setTransform(false);
-		//backgroundCamera.zoom = 4f;
 		
 		
 		availablePosition = new Array<Integer>();

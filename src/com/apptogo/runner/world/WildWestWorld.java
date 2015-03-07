@@ -25,12 +25,10 @@ public class WildWestWorld extends GameWorld{
 	public ParallaxBackground rocks;
 	public Image skyBlue;
 	public ParallaxBackground sand;
+	private BackgroundRenderer background;
 	
 	private TextureRegion sandRegion, mountainsRegion, rocksRegion;
 	private TextureAtlas atlas;
-	
-	private ShapeRenderer shapeRenderer;
-	private Color lightBlue, brown, lightBrown;
 	
 	public WildWestWorld(String mapPath, Player player)
 	{
@@ -42,20 +40,14 @@ public class WildWestWorld extends GameWorld{
 		rocksRegion = atlas.findRegion("rocks");
 		createBackground();
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/wildWestMusic.ogg");
-		music.setVolume(0.25f);
-		shapeRenderer = new ShapeRenderer();
-		lightBlue = new Color(0.823f, 0.960f, 1, 1);
-		brown = new Color(0.576f, 0.349f, 0.247f, 1);
-		lightBrown = new Color(0.855f, 0.639f, 0.321f, 1);
+		music.setVolume(0.25f);	
 	}
 	
 	private void createBackground(){
 
-		//skyBlue = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/skyBlue.png"));
-		//skyBlue.setPosition(0, 400/PPM);
+		background = new BackgroundRenderer();
+		backgroundStage.addActor(background);
 		
-		//background.addActor(skyBlue);
-
 		mountains = new ParallaxBackground(mountainsRegion, mapSize, 0, -79/mapSize.y, player.character, 0, 300/PPM);
 		backgroundStage.addActor(mountains);
 		
@@ -77,12 +69,6 @@ public class WildWestWorld extends GameWorld{
 	public void update(float delta){
 		Gdx.gl.glClearColor(0.855f, 0.639f, 0.321f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		Logger.log(this, "sprawkkkdzam2");
-		shapeRenderer.begin(ShapeType.Filled);
-			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*2/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
-			shapeRenderer.rect(0, Runner.SCREEN_HEIGHT*1/3-200, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3+100, brown, brown, brown, brown);
-			shapeRenderer.rect(0, 0, Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT/3-200, lightBrown, lightBrown, lightBrown, lightBrown);
-		shapeRenderer.end();
 		super.update(delta);
 
 	}

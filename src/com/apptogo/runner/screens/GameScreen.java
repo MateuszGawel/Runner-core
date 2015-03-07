@@ -29,7 +29,7 @@ public abstract class GameScreen extends BaseScreen{
 	public GameWorld gameWorld;
 	public GameWorldType gameWorldType;
 	
-	protected GameWorldRenderer worldRenderer;
+	public GameWorldRenderer worldRenderer;
 	
 	protected Level level;
 	protected Array<Player> enemies;
