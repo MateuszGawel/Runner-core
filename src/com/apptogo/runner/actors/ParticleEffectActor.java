@@ -65,6 +65,16 @@ public class ParticleEffectActor extends Image {
 		started = false;
 	}
 	
+	public void allowCompletion(){
+		effect.allowCompletion();
+	}
+	
+	public void disallowCompletion(){
+		effect.disallowCompletion();
+	}
+	
+	public boolean isStarted(){ return started; }
+	
 	public void reset()
 	{
 		stop();

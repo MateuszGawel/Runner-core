@@ -25,6 +25,16 @@ public class CustomActionManager {
 		this.actionsCreated.add(action);
 	}
 	
+	public void unregisterAction(CustomAction action){
+		ListIterator<CustomAction> iter = actions.listIterator();
+		while(iter.hasNext()) {
+		    if (action == iter.next()){
+		        iter.remove();
+		        break;
+		    }
+		}
+	}
+	
 	private void handleActions(float delta){
 		ListIterator<CustomAction> iter = actions.listIterator();
 		while(iter.hasNext()) {

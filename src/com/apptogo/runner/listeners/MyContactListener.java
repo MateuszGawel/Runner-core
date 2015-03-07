@@ -165,15 +165,9 @@ public class MyContactListener implements ContactListener
 					( (UserData) (catapultFixture.getBody().getUserData()) ).key = "catapultWorking";
 				}		
 			}
-			
-			//coin
-			//if( checkFixturesTypes(fa, fb, "coin", "coinCollectorSensor") ){
-			//	Fixture fixture = getFixtureByType(fa, fb, "coin");
-			//	((UserData)fixture.getBody().getUserData()).collected = true;
-			//	//player.character.incrementCoinCounter();
-			//}
+
 			//coinField
-			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") )
+			if( checkFixturesTypes(fa, fb, "coinField", "mainBody") )
 			{
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = true;
@@ -264,7 +258,7 @@ public class MyContactListener implements ContactListener
 					player.character.flags.setGravityRotationSwitch(true);
 			}
 			//coinField
-			if( checkFixturesTypes(fa, fb, "coinField", "coinCollectorSensor") ){
+			if( checkFixturesTypes(fa, fb, "coinField", "mainBody") ){
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}
@@ -444,10 +438,6 @@ public class MyContactListener implements ContactListener
 		}
 		else if(checkIsOneOfType(fa, fb, "headSensor")){
 			String playerName = ((UserData)getFixtureByType(fa, fb, "headSensor").getBody().getUserData()).playerName;
-			player = findPlayerByName(playerName);
-		}
-		else if(checkIsOneOfType(fa, fb, "coinCollectorSensor")){
-			String playerName = ((UserData)getFixtureByType(fa, fb, "coinCollectorSensor").getBody().getUserData()).playerName;
 			player = findPlayerByName(playerName);
 		}
 		else if(checkIsOneOfType(fa, fb, "mainBody")){

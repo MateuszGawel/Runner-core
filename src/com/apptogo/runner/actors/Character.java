@@ -48,7 +48,7 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Character extends Actor{
 	
-	public final float coinFixtureRadius = 64;
+	public final float coinFixtureRadius = 128;
 	
 	public String playerName;
 	public FlagsHandler flags;
@@ -180,13 +180,6 @@ public abstract class Character extends Actor{
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
-		//coin collector sensor
-		CircleShape circleShape = new CircleShape();
-    	circleShape.setRadius( this.coinFixtureRadius /PPM);
-		fixtureDef.shape = circleShape;
-		fixtureDef = Materials.characterSensor;
-		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
-		
 		//foot sensor
 		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
@@ -244,13 +237,6 @@ public abstract class Character extends Actor{
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
-		
-		//coin collector sensor
-		CircleShape circleShape = new CircleShape();
-    	circleShape.setRadius(64/PPM);
-		fixtureDef.shape = circleShape;
-		fixtureDef = Materials.characterSensor;
-		body.createFixture(fixtureDef).setUserData( new UserData("coinCollectorSensor") );
 	
 		//foot sensor
 		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 80 / PPM), 0);
@@ -290,7 +276,7 @@ public abstract class Character extends Actor{
 		
 		body.getFixtureList().get(10).setSensor(true);
 		body.getFixtureList().get(11).setSensor(true);
-		for(int i = 11; i<=19; i++){
+		for(int i = 11; i<=17; i++){
 			((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
 		}
 	}
@@ -721,10 +707,10 @@ public abstract class Character extends Actor{
 			body.getFixtureList().get(11).setSensor(true);
 			body.getFixtureList().get(12).setSensor(true);
 			
-			for(int i = 1; i<=10; i++){
+			for(int i = 1; i<=9; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = false;
 			}
-			for(int i = 11; i<=20; i++){
+			for(int i = 11; i<=18; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
 			}
 			

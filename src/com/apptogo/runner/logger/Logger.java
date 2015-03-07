@@ -33,6 +33,10 @@ public class Logger
 																					"class com.apptogo.runner.actors.Bandit",
 																					"class com.apptogo.runner.world.ParallaxBackground",
 																					//"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
+																					"class com.apptogo.runner.animation.AnimationManager",
+																					"class com.apptogo.runner.world.GameWorldRenderer",
+																					"class com.apptogo.runner.world.WildWestWorld",
+																					"class com.apptogo.runner.world.BackgroundRenderer"
 																				  } ); 
 	
 	private static final Array<String> blackList = new Array<String>( new String[]{ "class com.apptogo.runner.handlers.ResourcesManager",

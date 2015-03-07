@@ -49,4 +49,10 @@ public abstract class CustomAction {
 	
 	public boolean isFinished(){ return this.finished; }
 	public void setFinished(boolean isFinished){ this.finished = isFinished; }
+	public void resetAction(){
+		finished = false;
+		stateTime = 0;
+		loopCount = 0;
+		timeElapsed = 0;
+	}
 }

@@ -9,6 +9,8 @@ import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
@@ -29,7 +31,7 @@ public abstract class GameScreen extends BaseScreen{
 	public GameWorld gameWorld;
 	public GameWorldType gameWorldType;
 	
-	protected GameWorldRenderer worldRenderer;
+	public GameWorldRenderer worldRenderer;
 	
 	protected Level level;
 	protected Array<Player> enemies;
@@ -47,6 +49,8 @@ public abstract class GameScreen extends BaseScreen{
 	public Label coinLabel;
 	
 	private int coinLabelCounter;
+	private int prevCoinCounter;
+	private CustomAction stopAction;
 
 	public GameScreen(Runner runner, Level levelToLoad, Array<Player> enemiesList)
 	{
@@ -58,9 +62,6 @@ public abstract class GameScreen extends BaseScreen{
 		this.enemies = enemiesList;
 		
 		CoinsManager.create();
-		
-		coinLabelCounter = -1;
-		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
 		
 		powerupButtons = new Array<Button>();
 		
@@ -90,14 +91,34 @@ public abstract class GameScreen extends BaseScreen{
 		startLabel = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
 		startLabel.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (startLabel.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
 		
+
+		//gameGuiStage.addActor(coinLabel);
+		
+	}
+	
+	protected void createCoinLabel(){
+		coinLabelCounter = -1;
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p");
+
+		
 		coinLabel = createLabel("0", FontType.COINFONT);
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
-		//gameGuiStage.addActor(coinLabel);
+		
+		stopAction = new CustomAction(0.10f) {
+			@Override
+			public void perform() {
+				if(!coinCounterEffectActor.isComplete()){
+					coinCounterEffectActor.allowCompletion();
+				}
+			}
+		};
+		coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
+		gameGuiStage.addActor(coinCounterEffectActor);
 	}
 		
 	public void prepare()
 	{
-		
+		createCoinLabel();
 	}
 	
 	protected void createGui()
@@ -146,15 +167,31 @@ public abstract class GameScreen extends BaseScreen{
 			
 			coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
-			//gameGuiStage.addActor(coinLabel);
+			gameGuiStage.addActor(coinLabel);
 			
-			if( coinCounterEffectActor.isComplete() )
-			{
-				coinCounterEffectActor.reset();
-				coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
-				coinCounterEffectActor.start();
+			if(coinLabelCounter > prevCoinCounter){
+				prevCoinCounter = coinLabelCounter;
+				coinCounterEffectActor.disallowCompletion();
+				if(coinCounterEffectActor.isComplete()){
+					coinCounterEffectActor.reset();
+					coinCounterEffectActor.start();
+				}
+				stopAction.resetAction();
+				CustomActionManager.getInstance().unregisterAction(stopAction);
+				CustomActionManager.getInstance().registerAction(stopAction);
+				
 			}
 			
+			
+			//CustomActionManager.getInstance().registerAction(stopAction);
+			
+//			if( coinCounterEffectActor.isComplete() )
+//			{
+//				coinCounterEffectActor.reset();
+//				coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
+//				coinCounterEffectActor.start();
+//			}
+			//to ma slaba wydajnosc, do zrobienia
 			//gameGuiStage.addActor(coinCounterEffectActor);
 		}
 	}
