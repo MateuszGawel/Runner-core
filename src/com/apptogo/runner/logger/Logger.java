@@ -25,18 +25,11 @@ public class Logger
 	
 	private static final LogLevel LOG_LEVEL = LogLevel.HIGH;
 	
-	private static final boolean USE_WHITE_LIST = false;
+	private static final boolean USE_WHITE_LIST = true;
 	private static final boolean USE_BLACK_LIST = false;
 	
 	private static final Array<String> whiteList = new Array<String>( new String[]{ "class com.apptogo.runner.listeners.MyContactListener",
-																					//"class com.apptogo.runner.handlers.TiledMapLoader",
-																					"class com.apptogo.runner.actors.Bandit",
-																					"class com.apptogo.runner.world.ParallaxBackground",
-																					//"class com.apptogo.runner.handlers.ResourcesManager$ScreenMeta"
-																					"class com.apptogo.runner.animation.AnimationManager",
-																					"class com.apptogo.runner.world.GameWorldRenderer",
-																					"class com.apptogo.runner.world.WildWestWorld",
-																					"class com.apptogo.runner.world.BackgroundRenderer"
+																					"class com.apptogo.runner.animation.AnimationManager"
 																				  } ); 
 	
 	private static final Array<String> blackList = new Array<String>( new String[]{ "class com.apptogo.runner.handlers.ResourcesManager",

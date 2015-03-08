@@ -179,7 +179,9 @@ public class AnimationManager {
 					if(stateTime == 0){
 						animation.resetLoops();
 					}
-					stateTime += delta;
+					Logger.log(this,  "delta: " + delta);
+					if(delta <= 0.1)
+						stateTime += delta;
 					currentFrame = animation.getKeyFrame(stateTime);
 				}
 			}
