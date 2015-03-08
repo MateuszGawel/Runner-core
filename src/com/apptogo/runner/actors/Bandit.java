@@ -36,7 +36,7 @@ public class Bandit extends Character{
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb((Bandit)character, world);
+	    	Bomb bomb = new Bomb((Bandit)character, world, gameWorld);
 	    	((Bandit)character).getStage().addActor(bomb);
 	    	return bomb;
 	    }
@@ -200,7 +200,7 @@ public class Bandit extends Character{
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
 		}
 		Bomb bomb = bombsPool.obtain();
-		bomb.init();
+		bomb.init(this.playerName);
         activeBombs.add(bomb);
 	}
 	
@@ -233,8 +233,7 @@ public class Bandit extends Character{
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
             if (activeBombs.get(i).alive == false) {
-            	activeBombs.removeIndex(i);
-                bombsPool.free(activeBombs.get(i));
+                bombsPool.free(activeBombs.removeIndex(i));
             }
         }
 	}

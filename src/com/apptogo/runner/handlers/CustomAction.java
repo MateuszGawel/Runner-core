@@ -35,7 +35,8 @@ public abstract class CustomAction {
 	public abstract void perform();
 	
 	public void act(float delta){
-		stateTime += delta;
+		if(delta <= 0.1)
+			stateTime += delta;
 
 		if((stateTime - timeElapsed)/delay >= 1){
 			loopCount++;

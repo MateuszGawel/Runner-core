@@ -208,12 +208,20 @@ public class Obstacle extends Actor{
 		
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef).setUserData( userData );
-		body.setUserData( userData );
+		body.setUserData(new UserData(userData));
 	}
 	public void createFixture(FixtureDef fixtureDef, String userData)
 	{
 		fixtureDef.shape = createShape(object);
 		body.createFixture(fixtureDef).setUserData( new UserData(userData) );
+	}
+	
+	public Fixture createFixture(FixtureDef fixtureDef, String userData, MapObject object)
+	{
+		fixtureDef.shape = createShape(object);
+		Fixture fixture = body.createFixture(fixtureDef);
+		fixture.setUserData( new UserData(userData) );
+		return fixture;
 	}
 	
 	public void createFixture(FixtureDef fixtureDef, UserData userData)

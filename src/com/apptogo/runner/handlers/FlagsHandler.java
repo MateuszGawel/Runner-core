@@ -11,7 +11,8 @@ public class FlagsHandler {
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
 	private boolean queuedLift;
-
+	private boolean queuedDeath;
+	
 	//ZMIENNE
 	private Character character;
 	private AnimationManager animManager;
@@ -222,6 +223,14 @@ public class FlagsHandler {
 		this.queuedJump = queuedJump;
 		
 	}
+	public boolean isQueuedDeath() {
+		return queuedDeath;
+	}
+
+	public void setQueuedDeath(boolean queuedDeath) {
+		this.queuedDeath = queuedDeath;
+	}
+
 	public boolean isCanBegin() {
 		return canBegin;
 	}

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class AnimationManager {
 
@@ -59,8 +60,12 @@ public class AnimationManager {
 	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		Logger.log(this, "regionName: " + name);
-		float minOffsetX = atlas.findRegion(name + 0).offsetX;
-		float minOffsetY = atlas.findRegion(name + 0).offsetY;
+		
+		AtlasRegion currentRegion = atlas.findRegion(name + 0);
+		if(currentRegion == null)
+			throw new GdxRuntimeException("No region: " + name);
+		float minOffsetX = currentRegion.offsetX;
+		float minOffsetY = currentRegion.offsetY;
 		
 		Array<AtlasRegion> fs = atlas.getRegions();
 		
@@ -179,7 +184,7 @@ public class AnimationManager {
 					if(stateTime == 0){
 						animation.resetLoops();
 					}
-					Logger.log(this,  "delta: " + delta);
+
 					if(delta <= 0.1)
 						stateTime += delta;
 					currentFrame = animation.getKeyFrame(stateTime);

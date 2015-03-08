@@ -605,6 +605,11 @@ public abstract class Character extends Actor{
 			lift();
 			flags.setQueuedLift(false);
 		}
+		
+		if(flags.isQueuedDeath()){
+			dieDismemberment();
+			flags.setQueuedDeath(false);
+		}
 	}
 	
 	private void handleActions(){
@@ -903,7 +908,7 @@ public abstract class Character extends Actor{
 		return button;
 	}
 	
-	private Array<Button> initializePowerupButtons()
+	public Array<Button> initializePowerupButtons()
 	{
 		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) )
 		{
@@ -946,11 +951,9 @@ public abstract class Character extends Actor{
 				character.useAbility(CharacterAbilityType.ARROW);
 			else if(getCharacterType() == CharacterType.ALIEN)
 				character.useAbility(CharacterAbilityType.LIFT);
-			
-			//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
 		}
-		
-		flags.setPowerupSet(false);
+		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
+		//flags.setPowerupSet(false);
 	}
 
 	public PowerupType currentPowerupSet; //zmienna pomocnicza do sterowania klawiatura

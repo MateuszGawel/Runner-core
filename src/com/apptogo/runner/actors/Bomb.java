@@ -2,117 +2,78 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.userdata.UserData;
-import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
-public class Bomb extends Actor implements Poolable{
+public class Bomb extends Obstacle implements Poolable{
 
-	private Vector2 position;
 	public boolean alive;
-	private Body bombBody;
 	private Bandit player;
-
+	private Fixture explodeSensor;
 	private float timeToExplode = 2;
-
-	private TextureRegion currentFrame;
-	
-	private AnimationManager animationManager;
+	private float explosionRange = 2;
 	public enum BombAnimationState{
 		NORMAL, EXPLODING
 	}
 	
-	public Bomb(Bandit player, World world){
-		this.position = new Vector2();
-        this.alive = false;
-        this.player = player;
-        
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		
-		CircleShape shape = new CircleShape();
-		shape.setRadius(14/PPM);
-		
-		float shapeWidth = Box2DVars.getShapeWidth(shape);
-		
-		UserData userData = new UserData("character");
-		userData.bodyWidth = shapeWidth;
-			
-		bombBody = world.createBody(bodyDef);
-		
-		FixtureDef fixtureDef;
-		fixtureDef = Materials.bombBody;
-		fixtureDef.shape = shape;
-		
-		bombBody.createFixture(fixtureDef).setUserData( userData );
-		
-		userData.key = "bomb";
-		bombBody.setUserData( userData );
-		
-		animationManager = new AnimationManager("gfx/game/characters/bomb.pack");	
-		animationManager.createAnimation(5, 0.1f, "bomb", BombAnimationState.NORMAL, true);
-		animationManager.createAnimation(new MyAnimation(0.05f, BombAnimationState.EXPLODING, animationManager.createFrames(6, "bombExplosion"), false){
+	public Bomb(Bandit player, World world, GameWorld gameWorld){
+		super(new EllipseMapObject(0,0,32,32), world, "coin", 5, 0.03f, BombAnimationState.NORMAL, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
+		this.player = player;
+		animationManager.createAnimation(new MyAnimation(0.03f, BombAnimationState.EXPLODING, animationManager.createFrames(6, "coin"), false){
 			@Override
 			public void onAnimationFinished(){
 				alive = false;
 		    	animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
+		    	((UserData)explodeSensor.getUserData()).ignoreContact = true;
 			}
 		});
+		
+		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
+		
+		CircleShape shape = new CircleShape();
+		shape.setRadius(explosionRange);
+		shape.setPosition(new Vector2(0.25f, 0.25f));
+		explodeSensor = createFixture(Materials.obstacleSensor, shape, "bombExplosion");
+		((UserData)explodeSensor.getUserData()).ignoreContact = true;
+		
+		gameWorld.getWorldStage().addActor(this);
+
 		animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
 		currentFrame = animationManager.animate(0f);
 	}
 
-    public void init() {
+    public void init(String ownerPlayer) {
 
-    	position.set(player.getX()-20/PPM, player.getY());
-        bombBody.setTransform(position, 0);
-        bombBody.setLinearVelocity(player.getSpeed()/3, 0);
+        body.setTransform(player.getX()-20/PPM, player.getY(), 0);
+        body.setLinearVelocity(player.getSpeed()/3, 0);
+        body.setUserData(new UserData("bomb", ownerPlayer));
         alive = true;
-		Timer.schedule(new Task() {
+
+		CustomActionManager.getInstance().registerAction(new CustomAction(timeToExplode) {	
 			@Override
-			public void run() {
+			public void perform() {
+				((UserData)explodeSensor.getUserData()).ignoreContact = false;
 				animationManager.setCurrentAnimationState(BombAnimationState.EXPLODING);
 			}
-		}, timeToExplode);
-		
+		});	
     }
     
 	@Override
 	public void reset() {
 		position.set(-100, 0);
-		bombBody.setTransform(position, 0);
+		body.setTransform(position, 0);
         alive = false;
-	}
-
-	@Override
-	public void act(float delta) {
-    	currentFrame = animationManager.animate(delta);
-        setPosition(bombBody.getPosition().x - currentFrame.getRegionWidth()/2/PPM, bombBody.getPosition().y - currentFrame.getRegionHeight()/2/PPM + 7/PPM);
-        setWidth(currentFrame.getRegionWidth() / PPM);
-        setHeight(currentFrame.getRegionHeight() / PPM);
-        setRotation(bombBody.getAngle() * MathUtils.radiansToDegrees);
-        setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM -7/PPM);
-		
-	}
-	
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 }

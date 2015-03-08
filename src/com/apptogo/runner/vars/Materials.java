@@ -42,7 +42,7 @@ public class Materials {
 		//obstacle
 		obstacleGhostBody = createFixtureDef(1000f, 0.1f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false); //bez kolizji z playerem, trzeba sensor jesli ma byc wykrywane
 		obstacleBody = createFixtureDef(500f, 1f, 0f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR), false); //z kolizja z playerem, nie trzeba sensora
-		obstacleSensor = createFixtureDef(0.1f, 1f, 0.8f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_WORLD_OBJECT), true); //wystarczy jesli przeszkoda jest statyczna
+		obstacleSensor = createFixtureDef(0f, 0f, 0f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_WORLD_OBJECT), true); //wystarczy jesli przeszkoda jest statyczna
 		bushBody = createFixtureDef(30f, 1f, 0.99f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_CHARACTER_SENSOR), false);
 		
 		bombBody = createFixtureDef(10f, 0.1f, 0.5f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);
