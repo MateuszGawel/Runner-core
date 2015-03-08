@@ -60,18 +60,16 @@ public class Obstacle extends Actor{
 	public Obstacle(String atlasPath)
 	{
 		this.atlasPath = atlasPath;			
-		
-//		if(atlasPath.contains("powerup")){
-//	        if(gameWorld instanceof WildWestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-//	        else if(gameWorld instanceof ForestWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-//	        else if(gameWorld instanceof SpaceWorld) animationManager = new AnimationManager("gfx/game/levels/powerup.pack");	
-//		}
-//		else
-			animationManager = new AnimationManager(atlasPath);	
+		animationManager = new AnimationManager(atlasPath);	
 	}
 	
 	public Obstacle(MapObject object, World world, String atlasPath){
 		this(atlasPath);
+		this.world = world;
+		this.object = object;
+	}
+	
+	public Obstacle(MapObject object, World world){
 		this.world = world;
 		this.object = object;
 	}
@@ -297,7 +295,6 @@ public class Obstacle extends Actor{
 					   1, 
 					   1, 
 					   getRotation());
-		//Logger.log(this, getX() + " " + getY());
 	}
 	
 	public Body getBody(){ return this.body; }

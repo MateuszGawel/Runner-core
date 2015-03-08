@@ -71,6 +71,7 @@ public class CoinsManager
 		
 		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
+		pooledEffectActor.setZIndex(2);
 		
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/coin.ogg");
 	}

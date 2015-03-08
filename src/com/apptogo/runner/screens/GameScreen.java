@@ -98,12 +98,14 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	protected void createCoinLabel(){
-		coinLabelCounter = -1;
+		coinLabelCounter = 0;
 		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack"));
 
 		
 		coinLabel = createLabel("0", FontType.COINFONT);
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
+		coinLabel.setText( String.valueOf(coinLabelCounter) );
+		gameGuiStage.addActor(coinLabel);
 		
 		stopAction = new CustomAction(0.10f) {
 			@Override
@@ -162,38 +164,20 @@ public abstract class GameScreen extends BaseScreen{
 	
 	private void handleCoinLabel()
 	{
-		if(coinLabelCounter < gameWorld.player.character.getCoinCounter())
-		{
-			coinLabelCounter = gameWorld.player.character.getCoinCounter();
-			
-			coinLabel.remove();
+		coinLabelCounter = gameWorld.player.character.getCoinCounter();
+		if(coinLabelCounter > prevCoinCounter){
+			//coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
-			gameGuiStage.addActor(coinLabel);
-			
-			if(coinLabelCounter > prevCoinCounter){
-				prevCoinCounter = coinLabelCounter;
-				coinCounterEffectActor.disallowCompletion();
-				if(coinCounterEffectActor.isComplete()){
-					coinCounterEffectActor.reset();
-					coinCounterEffectActor.start();
-				}
-				stopAction.resetAction();
-				CustomActionManager.getInstance().unregisterAction(stopAction);
-				CustomActionManager.getInstance().registerAction(stopAction);
-				
+			//gameGuiStage.addActor(coinLabel);
+			prevCoinCounter = coinLabelCounter;
+			coinCounterEffectActor.disallowCompletion();
+			if(coinCounterEffectActor.isComplete()){
+				coinCounterEffectActor.reset();
+				coinCounterEffectActor.start();
 			}
-			
-			
-			//CustomActionManager.getInstance().registerAction(stopAction);
-			
-//			if( coinCounterEffectActor.isComplete() )
-//			{
-//				coinCounterEffectActor.reset();
-//				coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth()/2, coinLabel.getY() + coinLabel.getHeight()/2);
-//				coinCounterEffectActor.start();
-//			}
-			//to ma slaba wydajnosc, do zrobienia
-			//gameGuiStage.addActor(coinCounterEffectActor);
+			stopAction.resetAction();
+			CustomActionManager.getInstance().unregisterAction(stopAction);
+			CustomActionManager.getInstance().registerAction(stopAction);	
 		}
 	}
 	

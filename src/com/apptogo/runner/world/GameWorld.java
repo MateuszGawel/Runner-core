@@ -155,7 +155,6 @@ public abstract class GameWorld
 		this.player.character.setZIndex(1500000);
 		
 		CoinsManager.getInstance().createCoinsToPool(100);
-		tiledMapRendererActorFrontLayer.setZIndex(2000000);
 	}
 	
 	public void destroyWorld()
@@ -257,6 +256,7 @@ public abstract class GameWorld
 		
 		worldStage.addActor( enemy.character );
 		enemy.character.setZIndex(1000000);
+		tiledMapRendererActorFrontLayer.setZIndex(2000000);
     }
     
     public Player getEnemy(String enemyName) throws PlayerDoesntExistException //tak naprawde tu tez ladniej by bylo przesylac calego playera ale to chyba troche kosztuje wiec zdecydowalem ze samo imie

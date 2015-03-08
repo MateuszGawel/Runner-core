@@ -220,10 +220,6 @@ public class Archer extends Character{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		//batch.draw(currentFrame.getTexture(), getX() - (110 / PPM), getY() - (100 / PPM), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation(), currentFrame.getRegionX(), currentFrame.getRegionY(), currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), flipX, flipY);
-	
-		Logger.log(this, "OFFSET : " + ((AtlasRegion)currentFrame).offsetX + ", " + ((AtlasRegion)currentFrame).offsetY );
-		Logger.log(this, "NAME : " + ((AtlasRegion)currentFrame).name ); 
-	
 	}
 		
 	public Button getAbilityButton()

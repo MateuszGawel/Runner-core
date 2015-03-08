@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -35,7 +36,10 @@ public class Coin extends Obstacle implements Poolable
 		this.handleSoundVolume = false;
 	}
 	
-
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+	}
 	@Override
 	public void act(float delta) {
     	super.act(delta);
@@ -77,7 +81,7 @@ public class Coin extends Obstacle implements Poolable
 	public void initEmpty(Vector2 nextPosition, int coinFieldId )
 	{
 		gameWorld.getWorldStage().addActor(this);
-		
+		this.setZIndex(1);
 		setOffset(-16/PPM, -16/PPM);
 		this.position = nextPosition;
 		

@@ -1,11 +1,15 @@
 package com.apptogo.runner.actors;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import java.util.HashMap;
 
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Intersector;
@@ -55,6 +59,10 @@ public class CoinField extends Obstacle
 			}
 		}
 		
+	}
+	
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
 	}
 	
 	private void createCoinsPosition(MapObject mapObject) 
