@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
@@ -38,7 +39,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected Level level;
 	protected Array<Player> enemies;
 	
-	protected Array<Button> powerupButtons;
+	protected Array<CharacterButton> powerupButtons;
 	protected Button jumpButton;
 	protected Button slideButton;
 	protected Button slowButton;
@@ -65,7 +66,7 @@ public abstract class GameScreen extends BaseScreen{
 		
 		CoinsManager.create();
 		
-		powerupButtons = new Array<Button>();
+		powerupButtons = new Array<CharacterButton>();
 		
 		gameWorld = GameWorldType.convertToGameWorld(level.mapPath, level.worldType, player );
 		gameWorldType = level.worldType;
@@ -131,7 +132,7 @@ public abstract class GameScreen extends BaseScreen{
 		gameGuiStage.addActor(gameWorld.player.character.getTempButton("banditJumpButton"));
 		
 		powerupButtons = gameWorld.player.character.initializePowerupButtons();
-		for(Button powerupButton: powerupButtons)
+		for(CharacterButton powerupButton: powerupButtons)
 		{
 			gameGuiStage.addActor(powerupButton);
 		}

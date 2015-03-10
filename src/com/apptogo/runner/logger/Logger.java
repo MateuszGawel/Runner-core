@@ -25,11 +25,11 @@ public class Logger
 	
 	private static final LogLevel LOG_LEVEL = LogLevel.HIGH;
 	
-	private static final boolean USE_WHITE_LIST = true;
+	private static final boolean USE_WHITE_LIST = false;
 	private static final boolean USE_BLACK_LIST = false;
 	
 	private static final Array<String> whiteList = new Array<String>( new String[]{ "class com.apptogo.runner.listeners.MyContactListener",
-																					"class com.apptogo.runner.animation.AnimationManager",
+																					"class com.apptogo.runner.world.GameWorldRenderer",
 																					"class com.apptogo.runner.actors.Bomb"
 																				  } ); 
 	

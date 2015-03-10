@@ -1,5 +1,6 @@
 package com.apptogo.runner.enums;
 
+import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -7,23 +8,18 @@ import com.badlogic.gdx.utils.Array;
 
 public enum PowerupType
 {
-	NONE, SUPERSPEED, ABILITY1;
+	SUPERSPEED, ABILITY1;
 	
 	public static Array<PowerupType> values;
 	
 	static
 	{
 		values = new Array<PowerupType>( PowerupType.values() );
-		values.removeValue(PowerupType.NONE, true);
 	}
 	
 	static public PowerupType parseFromString(String key)
 	{
-		if( key.equals( PowerupType.NONE.toString() ) )
-		{
-			return PowerupType.NONE;
-		}
-		else if( key.equals( PowerupType.SUPERSPEED.toString() ) )
+		if( key.equals( PowerupType.SUPERSPEED.toString() ) )
 		{
 			return PowerupType.SUPERSPEED;
 		}
@@ -35,65 +31,40 @@ public enum PowerupType
 		else return null;
 	}
 	
-	static public Button convertToPowerupButton(PowerupType powerupType, CharacterType characterType)
+	static public CharacterButton convertToPowerupButton(PowerupType powerupType, CharacterType characterType)
 	{
-		Skin skin = ResourcesManager.getInstance().getGuiSkin();
-		
-		Button button = new Button(skin, "banditBlankButton");
-		
-		if(powerupType == PowerupType.NONE)
+		CharacterButton button = null;
+
+		if(powerupType == PowerupType.SUPERSPEED)
 		{
 			if(characterType == CharacterType.BANDIT)
 			{
-				button = new Button(skin, "banditBlankButton");
+				button = new CharacterButton("banditSuperSpeedButton", 20, 200);
 			}
 			else if(characterType == CharacterType.ARCHER)
 			{
-				button = new Button(skin, "archerBlankButton");
+				button = new CharacterButton("archerSuperSpeedButton", 20, 200);
 			}
 			else if(characterType == CharacterType.ALIEN)
 			{
-				button = new Button(skin, "alienBlankButton");
-			}
-		}
-		else if(powerupType == PowerupType.SUPERSPEED)
-		{
-			if(characterType == CharacterType.BANDIT)
-			{
-				button = new Button(skin, "banditSuperSpeedButton");
-			}
-			else if(characterType == CharacterType.ARCHER)
-			{
-				button = new Button(skin, "archerSuperSpeedButton");
-			}
-			else if(characterType == CharacterType.ALIEN)
-			{
-				button = new Button(skin, "alienSuperSpeedButton");
+				button = new CharacterButton("alienSuperSpeedButton", 20, 200);
 			}
 		}
 		else if(powerupType == PowerupType.ABILITY1)
 		{
 			if(characterType == CharacterType.BANDIT)
 			{
-				button = new Button(skin, "banditBombAbilityButton");
+				button = new CharacterButton("banditBombAbilityButton", 20, 200);
 			}
 			else if(characterType == CharacterType.ARCHER)
 			{
-				button = new Button(skin, "archerArrowAbilityButton");
+				button = new CharacterButton("archerArrowAbilityButton", 20, 200);
 			}
 			else if(characterType == CharacterType.ALIEN)
 			{
-				button = new Button(skin, "alienLiftAbilityButton");
+				button = new CharacterButton("alienLiftAbilityButton", 20, 200);
 			}
 		}
-		
-		
-		button.setSize(button.getWidth(), button.getHeight());
-		button.setPosition(20, button.getHeight() + 20 + 80);
-		button.setBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight());
-		button.setScaleX(5f);
-		button.setScaleY(2f);
-		button.setVisible(false);
 		return button;
 	}
 
