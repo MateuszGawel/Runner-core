@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -31,16 +32,6 @@ public class Bandit extends Character{
 
 	public GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.BOMB;
-	
-    private final Array<Bomb> activeBombs = new Array<Bomb>();
-    private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
-	    @Override
-	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb((Bandit)character, world, gameWorld);
-	    	((Bandit)character).getStage().addActor(bomb);
-	    	return bomb;
-	    }
-    };
 	
     private void addSounds(){
     	ResourcesManager rm = ResourcesManager.getInstance();
@@ -188,21 +179,10 @@ public class Bandit extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.BOMB ) ((Bandit)character).throwBombs();
+		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}
 	
-	public void throwBombs()
-	{
-		if(!flags.isOnGround()){
-			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
-		}
-		else{
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
-		}
-		Bomb bomb = bombsPool.obtain();
-		bomb.init(this.playerName);
-        activeBombs.add(bomb);
-	}
+
 	
 	public void createBodyMembers(){
 		CircleShape circleShape = new CircleShape();
@@ -228,25 +208,7 @@ public class Bandit extends Character{
 			gameWorld.worldStage.addActor(bodyMember);
 		}
 	}
-	
-	private void freePools(){
-        int len = activeBombs.size;
-        for (int i = len; --i >= 0;) {
-            if (activeBombs.get(i).alive == false) {
-                bombsPool.free(activeBombs.removeIndex(i));
-            }
-        }
-	}
-	
-	@Override
-	public void act(float delta) {
-    	super.act(delta);
-    	freePools();
-		
-    	
-    	
-	}
-	
+
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);

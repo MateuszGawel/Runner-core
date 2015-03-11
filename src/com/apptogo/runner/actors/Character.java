@@ -14,6 +14,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -88,6 +89,10 @@ public abstract class Character extends Actor{
 	private int coinCounter;
 	
 	protected boolean blinkShow = false;
+	
+	//ABILITY LEVELS - na sztywno ale to bedzie zaczytywane z chmury
+	private final int superSpeedLevel = 1;
+	private final int abilityOneLevel = 1;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
@@ -917,9 +922,12 @@ public abstract class Character extends Actor{
 				@Override
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 				{
-					if(flags.isCanUseAbility()) 
-						character.usePowerup( powerupType );
-						//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
+					if(flags.isCanUseAbility()){
+						CharacterAbilityType ability = PowerupType.convertToAbilityType(powerupType, character.getCharacterType());
+						AbilityManager.getInstance().useAbility(character, ability, getAbilityLevel(ability));
+					}
+						
+					//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
 			    }
 			});
@@ -927,6 +935,22 @@ public abstract class Character extends Actor{
 			//button.setPosition(button.getX() - button.getWidth(), button.getY());
 		}
 		return powerupButtons;
+	}
+	
+	private int getAbilityLevel(CharacterAbilityType ability){
+		switch(ability){
+		case ARROW:
+			return abilityOneLevel;
+		case BOMB:
+			return abilityOneLevel;
+		case LIFT:
+			return abilityOneLevel;
+		case SUPERSPEED:
+			return superSpeedLevel;
+		default:
+			return 0;
+		
+		}
 	}
 //	
 //	public Array<Button> initializePowerupButtons()

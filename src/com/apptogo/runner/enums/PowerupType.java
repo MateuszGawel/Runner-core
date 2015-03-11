@@ -67,6 +67,32 @@ public enum PowerupType
 		}
 		return button;
 	}
+	
+	static public CharacterAbilityType convertToAbilityType(PowerupType powerupType, CharacterType characterType)
+	{
+
+		if(powerupType == PowerupType.SUPERSPEED)
+		{
+			return CharacterAbilityType.SUPERSPEED;
+			
+		}
+		else if(powerupType == PowerupType.ABILITY1)
+		{
+			if(characterType == CharacterType.BANDIT)
+			{
+				return CharacterAbilityType.BOMB;
+			}
+			else if(characterType == CharacterType.ARCHER)
+			{
+				return CharacterAbilityType.ARROW;
+			}
+			else if(characterType == CharacterType.ALIEN)
+			{
+				return CharacterAbilityType.LIFT;
+			}
+		}
+		return null;
+	}
 
 	public static PowerupType getRandom() 
 	{

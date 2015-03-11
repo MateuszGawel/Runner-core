@@ -9,6 +9,7 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.exception.PlayerExistsException;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.MyTiledMapRendererActor;
 import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
@@ -111,6 +112,9 @@ public abstract class GameWorld
 		availablePosition.add(1);
 		availablePosition.add(2);
 		availablePosition.add(3);
+		
+		AbilityManager.create();
+		AbilityManager.getInstance().init(world, this);
 		
 		createWorld(mapPath);
 		fpsLogger = new FPSLogger();
@@ -225,7 +229,7 @@ public abstract class GameWorld
         backgroundStage.act(delta);
         worldBackgroundGroup.act(delta);
         worldStage.act(delta);
-		
+		AbilityManager.getInstance().act();
         contactListener.postStep();
         //fpsLogger.log();
         

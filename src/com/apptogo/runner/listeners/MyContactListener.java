@@ -34,14 +34,14 @@ public class MyContactListener implements ContactListener
 			FlagsHandler flags = player.character.flags;
 
 			//smierc TOP
-			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	Logger.log(this, "!gora");
+			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){
 				if(flags.isCanDie()){
 					flags.setDieTop(true);
 				}
 			}
 
 			//smierc BOTTOM
-			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){ Logger.log(this, "!dol");
+			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){
 				if(flags.isCanDie()){
 					flags.setDieBottom(true);
 				}
@@ -173,7 +173,6 @@ public class MyContactListener implements ContactListener
 				((UserData)fixture.getBody().getUserData()).active = true;
 			}
 			
-
 			//UMIEJETNOSCI
 			//bomby
 			if(checkFixturesTypes(fa, fb, "mainBody", "bombExplosion")){
