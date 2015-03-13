@@ -99,7 +99,7 @@ public abstract class Character extends Actor{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		
+		this.playerName = playerName;
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;

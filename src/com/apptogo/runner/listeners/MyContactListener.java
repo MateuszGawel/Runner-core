@@ -176,12 +176,16 @@ public class MyContactListener implements ContactListener
 			//UMIEJETNOSCI
 			//bomby
 			if(checkFixturesTypes(fa, fb, "mainBody", "bombExplosion")){
-				Logger.log(this, "wykrylem kolizje");
-				Fixture bombExplosionFixture = getFixtureByType(fa, fb, "liftField");
+				Fixture bombExplosionFixture = getFixtureByType(fa, fb, "bombExplosion");
 				String bombOwner = ((UserData)bombExplosionFixture.getUserData()).playerName;
-				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ bombOwner!=player.getName())
 					player.character.flags.setQueuedDeath(true);
+			}
+			if(checkFixturesTypes(fa, fb, "mainBody", "bomb")){
+				Fixture bomb = getFixtureByType(fa, fb, "bomb");
+				String bombOwner = ((UserData)bomb.getUserData()).playerName;
+				if(/*player.character.flags.isMe() &&*/ bombOwner!=player.getName())
+					((UserData)bomb.getBody().getUserData()).collected = true;
 			}
 			//podnoszenie aliena
 			if(checkFixturesTypes(fa, fb, "mainBody", "liftField")){

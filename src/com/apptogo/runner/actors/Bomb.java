@@ -6,6 +6,7 @@ import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -23,34 +24,24 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 
 	public boolean alive;
 	private Body explodeSensor;
-	
+	private boolean exploding;
 	
 	//parameters
 	private int level = 1;
 	private float timeToExplode = 2;
 	private float explosionRange = 2;
 	
+	private CustomAction explodeAction, explodingAction;
+	
 	public enum BombAnimationState{
-		NORMAL, EXPLODING
+		NORMAL
 	}
 	
 	public Bomb(World world, GameWorld gameWorld){
 		super(new EllipseMapObject(0,0,32,32), world, "coin", 5, 0.03f, BombAnimationState.NORMAL, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
-		animationManager.createAnimation(new MyAnimation(0.03f, BombAnimationState.EXPLODING, animationManager.createFrames(6, "coin"), false){
-			@Override
-			public void onAnimationFinished(){
-				alive = false;
-		    	animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
-		    	//((UserData)explodeSensor.getUserData()).ignoreContact = true;
-			}
-		});
 		
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
 		createExplosion();
-		
-		
-
-		
 		
 //		CircleShape shape = new CircleShape();
 //		shape.setRadius(explosionRange);
@@ -69,24 +60,50 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 
         body.setTransform(characterOwner.getX()-20/PPM, characterOwner.getY(), 0);
         body.setLinearVelocity(characterOwner.getSpeed()/3, 0);
-        body.setUserData(new UserData("bomb", characterOwner.getName()));
-        
+        body.setUserData(new UserData("bomb", characterOwner.playerName));
+        explodeSensor.getFixtureList().get(0).setUserData(new UserData("bombExplosion", characterOwner.playerName));
         alive = true;
-
-		CustomActionManager.getInstance().registerAction(new CustomAction(timeToExplode) {	
+        
+        explodingAction = new CustomAction(0.5f) {	
 			@Override
 			public void perform() {
-				//((UserData)explodeSensor.getUserData()).ignoreContact = false;
-				animationManager.setCurrentAnimationState(BombAnimationState.EXPLODING);
+				exploding=false;
+	    		reset();
 			}
-		});	
+		};
+		explodeAction = new CustomAction(timeToExplode) {	
+			@Override
+			public void perform() {
+				exploding=true;
+				CustomActionManager.getInstance().registerAction(explodingAction);
+			}
+		};
+		
+		CustomActionManager.getInstance().registerAction(explodeAction);	
+		
+    }
+    
+    private void explode(){
+    	if(!exploding){
+	    	CustomActionManager.getInstance().unregisterAction(explodeAction);
+	    	CustomActionManager.getInstance().registerAction(explodingAction);	
+	    	exploding = true;
+    	}
     }
     
     @Override
     public void act(float delta){
     	super.act(delta);
-    	if(alive && animationManager.getCurrentAnimationState()==BombAnimationState.EXPLODING);
-    		explodeSensor.setTransform(body.getPosition(), 0);
+    	if(exploding){ 		
+    		explodeSensor.setTransform(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
+    	}
+    	else if(explodeSensor.getPosition().x > -100)
+    		explodeSensor.setTransform(-100, 0, 0);
+    	
+    	if(((UserData)body.getUserData()).collected){
+    		explode();
+    		((UserData)body.getUserData()).collected = false;
+    	}
     }
     
     private void createExplosion(){
@@ -95,13 +112,13 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 		FixtureDef fixtureDef = Materials.obstacleSensor;
 		CircleShape shape = new CircleShape();
 		shape.setRadius(explosionRange);
-		shape.setPosition(new Vector2(0.25f, 0.25f));
+		shape.setPosition(new Vector2(0, 0));
 		
 		fixtureDef.shape = shape;
 		
 		explodeSensor = world.createBody(bodyDef);
-		explodeSensor.createFixture(fixtureDef).setUserData(new UserData("bombExplosion"));
-		explodeSensor.setUserData(new UserData("bombExplosion"));
+		explodeSensor.createFixture(fixtureDef);
+		explodeSensor.setTransform(-100, 0, 0);
     }
     
 	@Override
