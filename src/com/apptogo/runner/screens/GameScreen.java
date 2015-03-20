@@ -127,9 +127,10 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createGui()
 	{		
-		gameGuiStage.addActor( gameWorld.player.character.getJumpButton("banditJumpButton") );
-		gameGuiStage.addActor( gameWorld.player.character.getSlideButton("banditSlideButton") );
-		gameGuiStage.addActor(gameWorld.player.character.getTempButton("banditJumpButton"));
+		Logger.log(this, gameWorld.player.character.getCharacterType().toString() + "JumpButton");
+		gameGuiStage.addActor( gameWorld.player.character.getJumpButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton") );
+		gameGuiStage.addActor( gameWorld.player.character.getSlideButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "SlideButton") );
+		gameGuiStage.addActor(gameWorld.player.character.getTempButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton"));
 		
 		powerupButtons = gameWorld.player.character.initializePowerupButtons();
 		for(CharacterButton powerupButton: powerupButtons)

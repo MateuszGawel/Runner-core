@@ -1,5 +1,7 @@
 package com.apptogo.runner.handlers;
 
+import com.apptogo.runner.actors.Archer;
+import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.enums.CharacterAbilityType;
@@ -39,6 +41,7 @@ public class AbilityManager
 				throwBombs(character, abilityLevel);
 				break;
 			case ARROW:
+				shootArrow(character, abilityLevel);
 				break;
 			case LIFT:
 				break;
@@ -64,7 +67,22 @@ public class AbilityManager
 		}
 	}
 	
-	
+	private void shootArrow(Character character, int abilityLevel)
+	{
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+		}
+
+		for(int i=0; i<abilityLevel; i++){
+			Arrow arrow = arrowsPool.obtain();
+			arrow.setLevel(abilityLevel);
+			arrow.init(character);
+			activeArrows.add(arrow);
+		}
+	}
 	
 	public void act(){
 		freePools();
@@ -81,11 +99,27 @@ public class AbilityManager
 	    }
     };
     
+    private final Array<Arrow> activeArrows = new Array<Arrow>();
+    private final Pool<Arrow> arrowsPool = new Pool<Arrow>() {
+	    @Override
+	    protected Arrow newObject() {
+	    	Arrow arrow = new Arrow(world, gameWorld);
+	    	gameWorld.worldStage.addActor(arrow);
+	    	return arrow;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
             if (activeBombs.get(i).alive == false) {
                 bombsPool.free(activeBombs.removeIndex(i));
+            }
+        }
+        len = activeArrows.size;
+        for (int i = len; --i >= 0;) {
+            if (activeArrows.get(i).alive == false) {
+                arrowsPool.free(activeArrows.removeIndex(i));
             }
         }
 	}

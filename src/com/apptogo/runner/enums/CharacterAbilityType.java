@@ -3,7 +3,8 @@ package com.apptogo.runner.enums;
 public enum CharacterAbilityType
 {
 	SUPERSPEED,
-	BOMB, ARROW, LIFT;
+	BOMB, ARROW, LIFT,
+	JUMP, SLIDE;
 	
 	static public CharacterAbilityType parseFromString(String key)
 	{

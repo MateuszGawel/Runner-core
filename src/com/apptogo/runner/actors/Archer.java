@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
@@ -29,15 +30,7 @@ public class Archer extends Character{
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 
-    private final Array<Arrow> activeArrows = new Array<Arrow>();
-    private final Pool<Arrow> arrowsPool = new Pool<Arrow>() {
-	    @Override
-	    protected Arrow newObject() {
-	    	Arrow arrow = new Arrow((Archer)character, world);
-	    	((Archer)character).getStage().addActor(arrow);
-	    	return arrow;
-	    }
-    };
+
 	
 	public Archer(World world, GameWorld gameWorld, int startingPosition, String playerName){
 		super(world, "gfx/game/characters/characters.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName);
@@ -154,7 +147,7 @@ public class Archer extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.ARROW ) ((Archer)character).shootArrows();
+		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}
 	
 	public void createBodyMembers(){
@@ -184,36 +177,11 @@ public class Archer extends Character{
 		}
 	}
 	
-	public void shootArrows()
-	{
-		if(!!flags.isOnGround()){
-			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
-		}
-		else{
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
-		}
-		Arrow arrow = arrowsPool.obtain();
-		arrow.init();
-        activeArrows.add(arrow);
-	}
-	
-	private void freePools()
-	{
-        int len = activeArrows.size;
-        for (int i = len; --i >= 0;) 
-        {
-            if (activeArrows.get(i).alive == false) {
-            	activeArrows.removeIndex(i);
-                arrowsPool.free(activeArrows.get(i));
-            }
-        }
-	}
+
 	
 	@Override
 	public void act(float delta) {
     	super.act(delta);
-    	freePools();
-		
 	}
 	
 	@Override

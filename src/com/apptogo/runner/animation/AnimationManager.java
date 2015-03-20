@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class AnimationManager {
 
-	private static TextureAtlas atlas;
+	public TextureAtlas atlas;
 	private Object currentAnimationState;
 	private Object prevAnimationState;
 	private List<MyAnimation> animations = new ArrayList<MyAnimation>();

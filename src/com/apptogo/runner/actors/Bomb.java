@@ -6,10 +6,13 @@ import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -28,18 +31,19 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	
 	//parameters
 	private int level = 1;
-	private float timeToExplode = 2;
+	private float timeToExplode = 15;
 	private float explosionRange = 2;
 	
 	private CustomAction explodeAction, explodingAction;
+	public ParticleEffectActor explosionParticle;
 	
 	public enum BombAnimationState{
 		NORMAL
 	}
 	
 	public Bomb(World world, GameWorld gameWorld){
-		super(new EllipseMapObject(0,0,32,32), world, "coin", 5, 0.03f, BombAnimationState.NORMAL, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
-		
+		super(new EllipseMapObject(0,0,32,32), world, "bomb", 5, 0.03f, BombAnimationState.NORMAL, "gfx/game/characters/characters.pack");
+		explosionParticle = new ParticleEffectActor("explosion.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
 		createExplosion();
 		
@@ -51,7 +55,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 		
 		
 		gameWorld.getWorldStage().addActor(this);
-
+		gameWorld.getWorldStage().addActor(explosionParticle);
 		animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
 		currentFrame = animationManager.animate(0f);
 	}
@@ -60,10 +64,10 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 
         body.setTransform(characterOwner.getX()-20/PPM, characterOwner.getY(), 0);
         body.setLinearVelocity(characterOwner.getSpeed()/3, 0);
-        body.setUserData(new UserData("bomb", characterOwner.playerName));
+        body.getFixtureList().get(0).setUserData(new UserData("bomb", characterOwner.playerName));
         explodeSensor.getFixtureList().get(0).setUserData(new UserData("bombExplosion", characterOwner.playerName));
         alive = true;
-        
+        setVisible(true);
         explodingAction = new CustomAction(0.5f) {	
 			@Override
 			public void perform() {
@@ -75,7 +79,9 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 			@Override
 			public void perform() {
 				exploding=true;
+				setVisible(false);
 				CustomActionManager.getInstance().registerAction(explodingAction);
+				explosionParticle.obtainAndStart(body.getPosition().x, body.getPosition().y);
 			}
 		};
 		
@@ -87,6 +93,8 @@ public class Bomb extends Obstacle implements Poolable, Ability{
     	if(!exploding){
 	    	CustomActionManager.getInstance().unregisterAction(explodeAction);
 	    	CustomActionManager.getInstance().registerAction(explodingAction);	
+	    	setVisible(false);
+			explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f);
 	    	exploding = true;
     	}
     }

@@ -2,14 +2,18 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -23,17 +27,18 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class Arrow extends Actor implements Poolable{
+public class Arrow extends Obstacle implements Poolable, Ability{
 
 	private Vector2 position;
 	public boolean alive;
 	private Body arrowBody;
-	private Archer player;
+	private GameWorld gameWorld;
 
 	private float timeToDisappear = 2;
-	
-	private Texture arrowTexture;
 	private TextureRegion arrowRegion;
+	
+	//parameters
+	private int level = 1;
 	
 	//arrow things
 	float dragConstant;
@@ -44,14 +49,11 @@ public class Arrow extends Actor implements Poolable{
 	float dragForceMagnitude;
 	Vector2 arrowTailPosition;
 	
-	
-	//jesli zajdzie potrzeba zeby strzala sie wbijala do ruchomego obiektu to trzeba bedzie weldjointa zrobic.
-	public Arrow(Archer player, World world){
+	public Arrow(World world, GameWorld gameWorld){
+		super(((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/characters.pack")).findRegion("arrow"));
 		this.position = new Vector2();
         this.alive = false;
-        this.player = player;
-        
-        arrowTexture = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/arrow.png");
+        this.gameWorld = gameWorld;
 
         Vector2 bodySize = new Vector2(25 / PPM, 2 / PPM);
 		BodyDef bodyDef = new BodyDef();
@@ -61,38 +63,19 @@ public class Arrow extends Actor implements Poolable{
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(bodySize.x, bodySize.y);
 		
-		float shapeWidth = Box2DVars.getShapeWidth(shape);
-		
-		UserData userData = new UserData("arrow");
-		userData.bodyWidth = shapeWidth;
-		
 		arrowBody = world.createBody(bodyDef);
 				
 		FixtureDef fixtureDef;
 		fixtureDef = Materials.arrowBody;
 		fixtureDef.shape = shape;
-		
-		arrowBody.createFixture(fixtureDef).setUserData( userData );
-		arrowBody.setUserData( userData );
-		
-		arrowRegion = new TextureRegion(arrowTexture);
-		
-		//shape.setAsBox(3/PPM, 3/PPM, new Vector2(12/PPM, 0), 0);
-		//fixtureDef = Materials.arrowheadBody;
-		//fixtureDef.shape = shape;
-		//arrowBody.createFixture(fixtureDef).setUserData( new UserData("player") );
-		
-		
 
-		//Logger.log(this, "Koniec: " + arrowTailPosition.x + " " + arrowTailPosition.y);
-		//Logger.log(this, "player: " + player.getX());
 		dragConstant = 0.007f;
 		arrowBody.setAngularDamping(10);
 
 	}
 
-    public void init() {
-    	position.set(player.getX()+10/PPM, player.getY()-10/PPM);
+    public void init(Character character) {
+    	position.set(character.getX()+10/PPM, character.getY()+50/PPM);
     	//http://www.iforce2d.net/b2dtut/sticky-projectiles
     	arrowBody.setActive(true);
     	//dla potomnych
@@ -100,17 +83,18 @@ public class Arrow extends Actor implements Poolable{
     	//trzeba policzyc x/y i potem sprawdziæ w necie dla ilu stopni tangens=to co nam wyjdzie
     	//tym sposobem mamy k¹t, jeszcze trzeba go zamieniæ na radiany bo setTransform przyjmuje radiany
     	
+    	arrowBody.setUserData(new UserData("arrow", character.playerName));
     	arrowBody.setTransform(position, 0.28f);
     	arrowBody.setLinearVelocity(45, 10);
         alive = true;
-		Timer.schedule(new Task() {
+		
+		CustomActionManager.getInstance().registerAction(new CustomAction(timeToDisappear) {	
 			@Override
-			public void run() {
+			public void perform() {
 				reset();
 			}
-		}, timeToDisappear);
-		
-		setOrigin(arrowTexture.getWidth()/2/PPM,  arrowTexture.getHeight()/2/PPM);
+		});	
+		setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
     }
     
 	@Override
@@ -130,17 +114,17 @@ public class Arrow extends Actor implements Poolable{
 		dot = Vector2.dot(flightDirection.x, flightDirection.y, pointingDirection.x, pointingDirection.y); //dot to iloczyn skalarny
 		dragForceMagnitude = (1 - Math.abs(dot)) * flightSpeed * flightSpeed * dragConstant * arrowBody.getMass();
 	    arrowBody.applyForce(new Vector2(dragForceMagnitude * -flightDirection.x, dragForceMagnitude * -flightDirection.y), arrowTailPosition, true);
-        setPosition(arrowBody.getPosition().x - arrowTexture.getWidth()/2/PPM, arrowBody.getPosition().y - arrowTexture.getHeight()/2/PPM);
-        setWidth(arrowTexture.getWidth() / PPM);
-        setHeight(arrowTexture.getHeight() / PPM);
+        
+	    setPosition(arrowBody.getPosition().x - currentFrame.getRegionWidth()/2/PPM, arrowBody.getPosition().y - currentFrame.getRegionHeight()/2/PPM);
+        setWidth(currentFrame.getRegionWidth() / PPM);
+        setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(arrowBody.getAngle() * MathUtils.radiansToDegrees);
-        if(((UserData)arrowBody.getUserData()).active)
-        	arrowBody.setActive(false);
+       // if(((UserData)arrowBody.getUserData()).active)
+        	//arrowBody.setActive(false);
 	}
-	
+
 	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-		batch.draw(arrowRegion, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }
