@@ -224,7 +224,7 @@ public abstract class GameWorld
 	
     public void update(float delta) 
     {
-    	handleBodyCulling();
+    	//handleBodyCulling();
         world.step(delta, 3, 3);
         backgroundStage.act(delta);
         worldBackgroundGroup.act(delta);

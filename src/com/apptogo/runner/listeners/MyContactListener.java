@@ -308,10 +308,12 @@ public class MyContactListener implements ContactListener
 
 		if( checkFixturesTypes(fa, fb, "arrow", "nonkilling") || checkFixturesTypes(fa, fb, "arrow", "killing") )
 		{
+			
 			float[] impulses = impulse.getNormalImpulses();
 			
 			if(impulses[0] > 0.2f)
 			{
+				Logger.log(this, "impulse; " + impulses[0]);
 				Fixture fixture = getFixtureByType(fa, fb, "arrow");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}	

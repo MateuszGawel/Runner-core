@@ -76,10 +76,10 @@ public class AbilityManager
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
 		}
 
-		for(int i=0; i<abilityLevel; i++){
+		for(int i=0; i<abilityLevel*5; i++){
 			Arrow arrow = arrowsPool.obtain();
-			arrow.setLevel(abilityLevel);
-			arrow.init(character);
+			//arrow.setLevel(abilityLevel);
+			arrow.init(character, i);
 			activeArrows.add(arrow);
 		}
 	}
