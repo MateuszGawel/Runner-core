@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 public class AnimationManager {
 
 	public static TextureAtlas atlas;
-	public TextureAtlas atlas;
 	private Object currentAnimationState;
 	private Object prevAnimationState;
 	private List<MyAnimation> animations = new ArrayList<MyAnimation>();
@@ -24,6 +23,8 @@ public class AnimationManager {
 	private TextureRegion currentFrame;
 	private float initStateTime = 0;
 	private boolean animate = true;
+	
+	public AnimationManager(){}
 	
 	public AnimationManager(String atlasName){
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasName);
@@ -58,6 +59,12 @@ public class AnimationManager {
 		return new Vector2(minOffsetX,minOffsetY);
 	}
 	
+	public AtlasRegion[] createFrames(int framesCount, String name)
+	{
+		return ResourcesManager.getInstance().getAtlasRegionArray(name, framesCount);
+	}
+	
+	/*
 	public AtlasRegion[] createFrames(int framesCount, String name){
 		AtlasRegion[] frames = new AtlasRegion[framesCount];
 		Logger.log(this, "regionName: " + name);
@@ -102,7 +109,7 @@ public class AnimationManager {
 		for(int i=0; i<framesCount; i++){
 			frames[i] = atlas.findRegion(name + i);
 			
-			/*if( frames[i].offsetX < minOffsetX )
+			if( frames[i].offsetX < minOffsetX )
 			{
 				minOffsetX = frames[i].offsetX;
 			}
@@ -120,7 +127,7 @@ public class AnimationManager {
 			if( frames[i].offsetY > maxOffsetY )
 			{
 				maxOffsetY = frames[i].offsetY;
-			}*/
+			}
 		}
 		
 		for(int i=0; i<framesCount; i++)
@@ -137,6 +144,8 @@ public class AnimationManager {
 		
 		return frames;
 	}
+	
+	*/
 	
 	public void createAnimation(MyAnimation animation){
 		animations.add(animation);
@@ -199,5 +208,18 @@ public class AnimationManager {
 	public void setAnimate(boolean animate) {
 		stateTime = 0;
 		this.animate = animate;
+	}
+	
+	public MyAnimation getCurrentAnimation()
+	{
+		for(MyAnimation animation : animations)
+		{
+			if(animation.getAnimationState() == currentAnimationState)
+			{
+				return animation;
+			}
+		}
+		
+		return null;
 	}
 }
