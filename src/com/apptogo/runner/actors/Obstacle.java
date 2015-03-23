@@ -94,6 +94,10 @@ public class Obstacle extends Actor{
 		currentFrame = animationManager.animate(0f);
 	}
 	
+	public Obstacle(TextureRegion currentFrame){
+		this.currentFrame = currentFrame;
+	}
+	
 	public Obstacle(MapObject object, World world, String regionName, int frameCount, float frameDuration, Object animationState, String atlasPath){
 		this(object, world, atlasPath);
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, true);

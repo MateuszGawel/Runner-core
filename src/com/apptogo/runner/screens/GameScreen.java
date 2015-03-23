@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
@@ -38,7 +39,7 @@ public abstract class GameScreen extends BaseScreen{
 	protected Level level;
 	protected Array<Player> enemies;
 	
-	protected Array<Button> powerupButtons;
+	protected Array<CharacterButton> powerupButtons;
 	protected Button jumpButton;
 	protected Button slideButton;
 	protected Button slowButton;
@@ -65,7 +66,7 @@ public abstract class GameScreen extends BaseScreen{
 		
 		CoinsManager.create();
 		
-		powerupButtons = new Array<Button>();
+		powerupButtons = new Array<CharacterButton>();
 		
 		gameWorld = GameWorldType.convertToGameWorld(level.mapPath, level.worldType, player );
 		gameWorldType = level.worldType;
@@ -125,12 +126,13 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createGui()
 	{		
-		gameGuiStage.addActor( gameWorld.player.character.getJumpButton("banditJumpButton") );
-		gameGuiStage.addActor( gameWorld.player.character.getSlideButton("banditSlideButton") );
-		gameGuiStage.addActor(gameWorld.player.character.getTempButton("banditJumpButton"));
+		Logger.log(this, gameWorld.player.character.getCharacterType().toString() + "JumpButton");
+		gameGuiStage.addActor( gameWorld.player.character.getJumpButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton") );
+		gameGuiStage.addActor( gameWorld.player.character.getSlideButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "SlideButton") );
+		gameGuiStage.addActor(gameWorld.player.character.getTempButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton"));
 		
 		powerupButtons = gameWorld.player.character.initializePowerupButtons();
-		for(Button powerupButton: powerupButtons)
+		for(CharacterButton powerupButton: powerupButtons)
 		{
 			gameGuiStage.addActor(powerupButton);
 		}

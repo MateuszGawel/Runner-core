@@ -34,14 +34,14 @@ public class MyContactListener implements ContactListener
 			FlagsHandler flags = player.character.flags;
 
 			//smierc TOP
-			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){	Logger.log(this, "!gora");
+			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){
 				if(flags.isCanDie()){
 					flags.setDieTop(true);
 				}
 			}
 
 			//smierc BOTTOM
-			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){ Logger.log(this, "!dol");
+			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){
 				if(flags.isCanDie()){
 					flags.setDieBottom(true);
 				}
@@ -173,16 +173,19 @@ public class MyContactListener implements ContactListener
 				((UserData)fixture.getBody().getUserData()).active = true;
 			}
 			
-
 			//UMIEJETNOSCI
 			//bomby
 			if(checkFixturesTypes(fa, fb, "mainBody", "bombExplosion")){
-				Logger.log(this, "wykrylem kolizje");
-				Fixture bombExplosionFixture = getFixtureByType(fa, fb, "liftField");
+				Fixture bombExplosionFixture = getFixtureByType(fa, fb, "bombExplosion");
 				String bombOwner = ((UserData)bombExplosionFixture.getUserData()).playerName;
-				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ bombOwner!=player.getName())
 					player.character.flags.setQueuedDeath(true);
+			}
+			if(checkFixturesTypes(fa, fb, "mainBody", "bomb")){
+				Fixture bomb = getFixtureByType(fa, fb, "bomb");
+				String bombOwner = ((UserData)bomb.getUserData()).playerName;
+				if(/*player.character.flags.isMe() &&*/ bombOwner!=player.getName())
+					((UserData)bomb.getBody().getUserData()).collected = true;
 			}
 			//podnoszenie aliena
 			if(checkFixturesTypes(fa, fb, "mainBody", "liftField")){
@@ -305,10 +308,12 @@ public class MyContactListener implements ContactListener
 
 		if( checkFixturesTypes(fa, fb, "arrow", "nonkilling") || checkFixturesTypes(fa, fb, "arrow", "killing") )
 		{
+			
 			float[] impulses = impulse.getNormalImpulses();
 			
 			if(impulses[0] > 0.2f)
 			{
+				Logger.log(this, "impulse; " + impulses[0]);
 				Fixture fixture = getFixtureByType(fa, fb, "arrow");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}	

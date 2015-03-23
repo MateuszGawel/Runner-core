@@ -14,6 +14,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -84,22 +85,26 @@ public abstract class Character extends Actor{
 	protected String jumpButtonStyleName;
 	protected String slideButtonStyleName; 
 	protected String slowButtonStyleName;
-	protected Array<Button> powerupButtons;
+	protected Array<CharacterButton> powerupButtons;
 	private int coinCounter;
 	
 	protected boolean blinkShow = false;
+	
+	//ABILITY LEVELS - na sztywno ale to bedzie zaczytywane z chmury
+	private final int superSpeedLevel = 1;
+	private final int abilityOneLevel = 1;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
 		this.world = world;
 		animationManager = new AnimationManager(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
-		
+		this.playerName = playerName;
 		guiSkin = ResourcesManager.getInstance().getGuiSkin();
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;
 		this.slowButtonStyleName = slowButtonStyleName;
-		powerupButtons = new Array<Button>();
+		powerupButtons = new Array<CharacterButton>();
 		
 		addSounds();
 		
@@ -908,37 +913,73 @@ public abstract class Character extends Actor{
 		return button;
 	}
 	
-	public Array<Button> initializePowerupButtons()
-	{
-		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) )
-		{
-			Button button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
+	public Array<CharacterButton> initializePowerupButtons(){	
+		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) ){
+			CharacterButton button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
 			button.setUserObject(powerupType);
 			button.addListener(new InputListener() 
 			{
 				@Override
-			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
+			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 				{
-					if(flags.isCanUseAbility()) 
-						character.usePowerup( powerupType );
-						//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
+					if(flags.isCanUseAbility()){
+						CharacterAbilityType ability = PowerupType.convertToAbilityType(powerupType, character.getCharacterType());
+						AbilityManager.getInstance().useAbility(character, ability, getAbilityLevel(ability));
+					}
+						
+					//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
 			    }
 			});
-			
 			this.powerupButtons.add(button);
+			//button.setPosition(button.getX() - button.getWidth(), button.getY());
 		}
-		
-		return this.powerupButtons;
+		return powerupButtons;
 	}
+	
+	private int getAbilityLevel(CharacterAbilityType ability){
+		switch(ability){
+		case ARROW:
+			return abilityOneLevel;
+		case BOMB:
+			return abilityOneLevel;
+		case LIFT:
+			return abilityOneLevel;
+		case SUPERSPEED:
+			return superSpeedLevel;
+		default:
+			return 0;
+		
+		}
+	}
+//	
+//	public Array<Button> initializePowerupButtons()
+//	{
+//		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) )
+//		{
+//			Button button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
+//			button.setUserObject(powerupType);
+//			button.addListener(new InputListener() 
+//			{
+//				@Override
+//			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) 
+//				{
+//					if(flags.isCanUseAbility()) 
+//						character.usePowerup( powerupType );
+//						//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
+//			        return true;
+//			    }
+//			});
+//			
+//			this.powerupButtons.add(button);
+//		}
+//		
+//		return this.powerupButtons;
+//	}
 	
 	public void usePowerup(PowerupType powerupType) 
 	{
-		if( powerupType == PowerupType.NONE )
-		{
-			//pass
-		}
-		else if( powerupType == PowerupType.SUPERSPEED )
+		if( powerupType == PowerupType.SUPERSPEED )
 		{
 			character.superRun();
 			removePowerup(PowerupType.SUPERSPEED);
@@ -960,7 +1001,7 @@ public abstract class Character extends Actor{
 	public void setPowerup(PowerupType powerupType) 
 	{
 		currentPowerupSet = powerupType;
-		for(Button button: powerupButtons){
+		for(CharacterButton button: powerupButtons){
 			if( ( (PowerupType)button.getUserObject() ) == powerupType ){
 				button.setVisible(true);
 			}
@@ -970,7 +1011,7 @@ public abstract class Character extends Actor{
 	
 	public void removePowerup(PowerupType powerupType) 
 	{
-		for(Button button: powerupButtons){
+		for(CharacterButton button: powerupButtons){
 			if( ( (PowerupType)button.getUserObject() ) == powerupType ){
 				button.setVisible(false);
 			}

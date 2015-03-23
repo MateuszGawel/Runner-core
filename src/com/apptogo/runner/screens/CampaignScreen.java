@@ -245,7 +245,7 @@ public class CampaignScreen extends BaseScreen
         		{
     	            public void clicked(InputEvent event, float x, float y) 
     	            {
-    	            	player.setCharacterType( CharacterType.BANDIT );//GameWorldType.convertToCharacterType( level.worldType ) );
+    	            	player.setCharacterType( CharacterType.ARCHER );//GameWorldType.convertToCharacterType( level.worldType ) );
     	            	player.save();
     	            	//ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null ); - odpalenie singla, wykomentowane do testow
     	            	

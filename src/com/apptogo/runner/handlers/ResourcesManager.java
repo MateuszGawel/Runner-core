@@ -564,7 +564,16 @@ public class ResourcesManager
 			}
 			catch(Exception f)
 			{
-				return null;
+				try{
+					int index = getScreenIndex( ScreenClass.STILL );
+					AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+					
+					return manager.get(filename);
+				}
+				catch(Exception ex){
+					Logger.log(this, "can't load asset");
+					return null;
+				}
 			}
 		}
 	}

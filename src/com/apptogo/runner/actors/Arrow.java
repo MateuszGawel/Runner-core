@@ -2,12 +2,17 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.Random;
+
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,7 +33,6 @@ public class Arrow extends Actor implements Poolable{
 	private Vector2 position;
 	public boolean alive;
 	private Body arrowBody;
-	private Archer player;
 
 	private float timeToDisappear = 2;
 	
@@ -44,12 +48,12 @@ public class Arrow extends Actor implements Poolable{
 	float dragForceMagnitude;
 	Vector2 arrowTailPosition;
 	
+	private Random random;
 	
 	//jesli zajdzie potrzeba zeby strzala sie wbijala do ruchomego obiektu to trzeba bedzie weldjointa zrobic.
-	public Arrow(Archer player, World world){
+	public Arrow(World world, GameWorld gameWorld){
 		this.position = new Vector2();
         this.alive = false;
-        this.player = player;
         
         arrowTexture = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/arrow.png");
 
@@ -82,34 +86,44 @@ public class Arrow extends Actor implements Poolable{
 		//fixtureDef.shape = shape;
 		//arrowBody.createFixture(fixtureDef).setUserData( new UserData("player") );
 		
-		
+		random = new Random();
 
 		//Logger.log(this, "Koniec: " + arrowTailPosition.x + " " + arrowTailPosition.y);
 		//Logger.log(this, "player: " + player.getX());
-		dragConstant = 0.007f;
-		arrowBody.setAngularDamping(10);
 
 	}
 
-    public void init() {
-    	position.set(player.getX()+10/PPM, player.getY()-10/PPM);
-    	//http://www.iforce2d.net/b2dtut/sticky-projectiles
-    	arrowBody.setActive(true);
-    	//dla potomnych
-    	//nadaj¹c si³ê dla strza³y w x i y musimy dobraæ odpowiedni k¹t
-    	//trzeba policzyc x/y i potem sprawdziæ w necie dla ilu stopni tangens=to co nam wyjdzie
-    	//tym sposobem mamy k¹t, jeszcze trzeba go zamieniæ na radiany bo setTransform przyjmuje radiany
-    	
-    	arrowBody.setTransform(position, 0.28f);
-    	arrowBody.setLinearVelocity(45, 10);
-        alive = true;
-		Timer.schedule(new Task() {
+    public void init(Character character, int arrowNumber) {
+
+//        CustomActionManager.getInstance().registerAction(new CustomAction(timeToDisappear) {		
+//			@Override
+//			public void perform() {
+//				reset();
+//			}
+//		});
+        
+        CustomActionManager.getInstance().registerAction(new CustomAction(arrowNumber*0.1f, 1, character) {		
 			@Override
-			public void run() {
-				reset();
+			public void perform() {
+		    	position.set(((Character)args[0]).getX()+10/PPM, ((Character)args[0]).getY()+40/PPM);
+		    	//http://www.iforce2d.net/b2dtut/sticky-projectiles
+		    	((UserData)arrowBody.getUserData()).active = true;
+		    	arrowBody.setActive(true);
+		    	//dla potomnych
+		    	//nadajï¿½c siï¿½ï¿½ dla strzaï¿½y w x i y musimy dobraï¿½ odpowiedni kï¿½t
+		    	//trzeba policzyc x/y i potem sprawdziï¿½ w necie dla ilu stopni tangens=to co nam wyjdzie
+		    	//tym sposobem mamy kï¿½t, jeszcze trzeba go zamieniï¿½ na radiany bo setTransform przyjmuje radiany
+		    	
+		    	arrowBody.setTransform(position, 0.785f);
+		    	//arrowBody.setLinearVelocity(55 + ((Character)args[0]).getBody().getLinearVelocity().x/2 + random.nextInt(10), 14 + random.nextInt(10));
+		    	
+				dragConstant = 0.1f;
+				//arrowBody.setAngularDamping(10);
+		    	arrowBody.setLinearVelocity(25, 25);
+		    	alive = true;
 			}
-		}, timeToDisappear);
-		
+		});
+
 		setOrigin(arrowTexture.getWidth()/2/PPM,  arrowTexture.getHeight()/2/PPM);
     }
     
@@ -123,19 +137,22 @@ public class Arrow extends Actor implements Poolable{
 	@Override
 	public void act(float delta)
 	{
-		pointingDirection = arrowBody.getWorldVector(new Vector2(1/PPM, 0));
-		arrowTailPosition = arrowBody.getWorldPoint(new Vector2(-25/PPM, 0));
-		flightDirection = arrowBody.getLinearVelocity();
-		flightSpeed = flightDirection.len();
-		dot = Vector2.dot(flightDirection.x, flightDirection.y, pointingDirection.x, pointingDirection.y); //dot to iloczyn skalarny
-		dragForceMagnitude = (1 - Math.abs(dot)) * flightSpeed * flightSpeed * dragConstant * arrowBody.getMass();
-	    arrowBody.applyForce(new Vector2(dragForceMagnitude * -flightDirection.x, dragForceMagnitude * -flightDirection.y), arrowTailPosition, true);
-        setPosition(arrowBody.getPosition().x - arrowTexture.getWidth()/2/PPM, arrowBody.getPosition().y - arrowTexture.getHeight()/2/PPM);
-        setWidth(arrowTexture.getWidth() / PPM);
-        setHeight(arrowTexture.getHeight() / PPM);
-        setRotation(arrowBody.getAngle() * MathUtils.radiansToDegrees);
-        if(((UserData)arrowBody.getUserData()).active)
-        	arrowBody.setActive(false);
+		if(alive){
+			pointingDirection = arrowBody.getWorldVector(new Vector2(1/PPM, 0));
+			arrowTailPosition = arrowBody.getWorldPoint(new Vector2(-25/PPM, 0));
+			flightDirection = arrowBody.getLinearVelocity();
+			flightSpeed = flightDirection.nor().len();
+			dot = Vector2.dot(flightDirection.x, flightDirection.y, pointingDirection.x, pointingDirection.y); //dot to iloczyn skalarny
+			dragForceMagnitude = (1 - Math.abs(dot)) * flightSpeed * flightSpeed * dragConstant * arrowBody.getMass();
+		    //arrowBody.applyForce(new Vector2(dragForceMagnitude * -flightDirection.x, dragForceMagnitude * -flightDirection.y), arrowTailPosition, true);
+	        setPosition(arrowBody.getPosition().x - arrowTexture.getWidth()/2/PPM, arrowBody.getPosition().y - arrowTexture.getHeight()/2/PPM);
+	        setWidth(arrowTexture.getWidth() / PPM);
+	        setHeight(arrowTexture.getHeight() / PPM);
+	        setRotation(arrowBody.getAngle() * MathUtils.radiansToDegrees);
+	        if(!((UserData)arrowBody.getUserData()).active){
+	        	arrowBody.setActive(false);
+	        }
+		}
 	}
 	
 	@Override

@@ -189,7 +189,7 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
     		gameGuiStage.draw();
-    		Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
+    		//Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
 		}
 		
 		CustomActionManager.getInstance().act(delta);
