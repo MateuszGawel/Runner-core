@@ -22,8 +22,9 @@ public enum ScreenType
 		{
 			return ScreenClass.SPLASH;
 		}
-		else if( screenType == SCREEN_LOADING                ||
-				screenType == ScreenType.SCREEN_LOADING_GAME )
+		else if( screenType == SCREEN_LOADING                 ||
+				 screenType == ScreenType.SCREEN_LOADING_GAME 
+			   )
 		{
 			return ScreenClass.STILL;
 		}

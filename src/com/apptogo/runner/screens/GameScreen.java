@@ -57,7 +57,7 @@ public abstract class GameScreen extends BaseScreen{
 	public GameScreen(Runner runner, Level levelToLoad, Array<Player> enemiesList)
 	{
 		super(runner);
-
+		
 		loadPlayer();
 
 		this.level = levelToLoad;
@@ -90,7 +90,7 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createLabels()
 	{
-		startLabel = createLabel(getLangString("tapToStart"), FontType.GAMEWORLDFONT);
+		startLabel = new Label(getLangString("tapToStart"), skin, "default");
 		startLabel.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (startLabel.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
 		
 
@@ -101,8 +101,7 @@ public abstract class GameScreen extends BaseScreen{
 		coinLabelCounter = 0;
 		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack"));
 
-		
-		coinLabel = createLabel("0", FontType.COINFONT);
+		coinLabel = new Label("0", skin, "default");
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
 		coinLabel.setText( String.valueOf(coinLabelCounter) );
 		gameGuiStage.addActor(coinLabel);

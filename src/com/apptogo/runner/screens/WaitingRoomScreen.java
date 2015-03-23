@@ -67,7 +67,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	
 	public void prepare() 
 	{		
-		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("mainMenuScreenBackground");
 		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -205,7 +205,7 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 		{
 			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
 			
-			Label playerNameLabel = createLabel(player.getName(), FontType.SMALL);
+			Label playerNameLabel = new Label(player.getName(), skin, "default");
 			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x - (playerNameLabel.getWidth() / 2.0f) + 100.0f, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);
 			
 			addToScreen(playerAnimation);

@@ -1,7 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.controller.InputHandler;
-import com.apptogo.runner.enums.FontType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.LanguageManager;
@@ -15,24 +15,23 @@ import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -66,7 +65,7 @@ public abstract class BaseScreen implements Screen
 	
 	protected Player player; //to jest wazne - musi byc dostep do playera juz na poziomie menu - chcemy miec o nim info w menu
 	
-	protected Button fadeButton;
+	protected Actor fadeButton;
 	public boolean fadeOutScreen;
 	public boolean fadeInScreen;
 	public boolean isFadedOut;
@@ -121,7 +120,9 @@ public abstract class BaseScreen implements Screen
 			fadeViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			menuFadeStage.setViewport( fadeViewport );
 			
-			skin = ResourcesManager.getInstance().getUiSkin();
+			skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
+			if(skin==null) Logger.log(this, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			
 			initializeFadeOutButton();
 			
 			Gdx.input.setInputProcessor(menuStage);
@@ -130,6 +131,12 @@ public abstract class BaseScreen implements Screen
 		}
 		else
 		{
+			//TEGO NIE POWINNO TU BYC BO NIE CHCEMY MIEC SKINA W GS W PAMIECI!
+			skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
+			//----------------------------------------------------------------
+			//tylko na potrzeby testow
+			
+			
 			gameGuiStage = new Stage();
 			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			gameGuiStage.setViewport(guiViewport);
@@ -162,13 +169,19 @@ public abstract class BaseScreen implements Screen
 			menuBackgroundStage.act();
 			menuBackgroundStage.draw();
 					
+			Logger.log(this, "liczba rendercalli menuBackgroundStage: " + ((SpriteBatch)menuBackgroundStage.getBatch()).renderCalls);
+			
 			viewport.update(currentWindowWidth, currentWindowHeight);
 			menuStage.act();
 			menuStage.draw();
 			
+			Logger.log(this, "liczba rendercalli menuStage: " + ((SpriteBatch)menuStage.getBatch()).renderCalls);
+			
 			fadeViewport.update(currentWindowWidth, currentWindowHeight);
 			menuFadeStage.act();
 			menuFadeStage.draw();
+			
+			Logger.log(this, "liczba rendercalli menuFadeStage: " + ((SpriteBatch)menuFadeStage.getBatch()).renderCalls);
 		}
 		else
 		{
@@ -188,15 +201,15 @@ public abstract class BaseScreen implements Screen
 		currentWindowHeight = height;
 	}
 	
-	protected void setBackground(String path)
-	{
-		backgroundTexture = ResourcesManager.getInstance().getResource(this, path);
+	protected void setBackground(String regionName)
+	{		Logger.log(this, "&&&&&&&&&&&& USTAWIAM BACKGROUND");
+		background = new Image ( ResourcesManager.getInstance().getAtlasRegion( getScreenClass(), regionName) );
 		
-		background = new Image( backgroundTexture );
+		background.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		background.setPosition(0 - (Runner.SCREEN_WIDTH/2.0f), 0 - (Runner.SCREEN_HEIGHT/2.0f));
 		menuBackgroundStage.addActor( background );
 	}
-
+		
 	protected void addToBackground(Actor actor)
 	{
 		this.menuBackgroundStage.addActor(actor);
@@ -213,11 +226,9 @@ public abstract class BaseScreen implements Screen
 	}
 	
 	protected void initializeFadeOutButton()
-	{
-		fadeButton = new Button(skin, "fadeOut");
-		//fadeButton.setSize(4096.0f, 4096.0f);
-		//fadeButton.setPosition(-2048.0f, -2048.0f);
-		
+	{		
+		fadeButton = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "black") );
+
 		fadeButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		fadeButton.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
 		
@@ -235,9 +246,9 @@ public abstract class BaseScreen implements Screen
 	public void handleFadingOutScreen()
 	{
 		if(fadeOutScreen)
-		{
+		{Logger.log(this, "1 FO | " + currentFadeOutLevel);
 			if( currentFadeOutLevel < 1.0f )
-			{
+			{Logger.log(this, "2 FO");
 				isFadedOut = false;
 				currentFadeOutLevel += 0.1f;
 				
@@ -249,7 +260,7 @@ public abstract class BaseScreen implements Screen
 				fadeButton.addAction(fadeOutAction);
 			}
 			else
-			{
+			{Logger.log(this, "3 FO");
 				isFadedOut = true;
 				currentFadeOutLevel = 0.0f;
 				fadeOutScreen = false;
@@ -287,7 +298,7 @@ public abstract class BaseScreen implements Screen
 	}
 	
 	protected void loadScreenAfterFadeOut( ScreenType screenType )
-	{
+	{Logger.log(this, "LOADUJEMY PO FADEOUCIE");
 		screenToLoadAfterFadeOut = screenType;
 		fadeOutScreen = true;
 	}
@@ -297,48 +308,33 @@ public abstract class BaseScreen implements Screen
 		fadeInScreen = true;
 	}
 	
-	protected Image createImage(String imagePath, float x, float y)
+	protected Image createImage(String imageName, float x, float y)
 	{
-		return createImage(imagePath, x, y, TextureFilter.Linear, TextureFilter.Linear);
+		return createImage(imageName, x, y, TextureFilter.Linear, TextureFilter.Linear);
 	}
-	protected Image createImage(String imagePath, float x, float y, TextureFilter minFilter, TextureFilter magFilter)
+	protected Image createImage(String imageName, float x, float y, TextureFilter minFilter, TextureFilter magFilter)
 	{
-		Texture texture = ResourcesManager.getInstance().getResource(this, imagePath);
-		texture.setFilter(minFilter, magFilter);
+		Image image;
+		AtlasRegion atlasRegion = ResourcesManager.getInstance().getAtlasRegion( getScreenClass(), imageName);
 		
-		Image image = new Image(texture);
+		if( atlasRegion != null )
+		{
+			image = new Image( atlasRegion );
+		}
+		else
+		{
+			Texture texture = ResourcesManager.getInstance().getResource(this, imageName);
+			texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			
+			image = new Image( texture );
+		}
+		
+		//texture.setFilter(minFilter, magFilter);
+		
+		//Image image = new Image(texture);
 		image.setPosition(x, y);
 		
 		return image;
-	}
-	
-	protected Label createLabel(String text, FontType fontType)
-	{
-		return createLabel(text, fontType, 0, 0, false);
-	}
-	
-	protected Label createLabel(String text, FontType fontType, boolean wrap)
-	{
-		return createLabel(text, fontType, 0, 0, wrap);
-	}
-	
-	protected Label createLabel(String text, FontType fontType, float x, float y)
-	{
-		return createLabel(text, fontType, x, y, false);
-	}
-	
-	protected Label createLabel(String text, FontType fontType, float x, float y, boolean wrap)
-	{
-		LabelStyle labelStyle = new LabelStyle();	
-		labelStyle.font = FontType.convertToFont(fontType);
-		
-		Label label = new Label(text, labelStyle);
-		label.setColor( FontType.convertToColor(fontType) );
-		label.setPosition(x, y);
-		
-		label.setWrap(wrap);
-				
-		return label;
 	}
 	
 	protected Container<ScrollPane> createScroll(Table table, float width, float height, boolean vertical)
@@ -362,20 +358,15 @@ public abstract class BaseScreen implements Screen
         
         return container;
 	}
-		
-	protected void setTextButtonFont(TextButton textButton, FontType fontType)
-	{
-		TextButtonStyle textButtonStyle = new TextButtonStyle(textButton.getStyle());
-        
-		textButtonStyle.font = FontType.convertToFont(fontType);
-		textButtonStyle.fontColor = FontType.convertToColor(fontType) ;
-        
-		textButton.setStyle(textButtonStyle);
-	}
-	
+			
 	protected void setCenterPosition(Actor actor, float y)
 	{
 		actor.setPosition(-(actor.getWidth() / 2.0f), y);
+	}
+	
+	protected ScreenClass getScreenClass()
+	{
+		return ScreenType.convertToScreenClass( this.getSceneType() );
 	}
 	
 	@Override

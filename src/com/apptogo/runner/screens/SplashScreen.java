@@ -2,59 +2,65 @@ package com.apptogo.runner.screens;
 
 import java.util.Random;
 
-import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.animation.Loading;
+import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
-import com.apptogo.runner.handlers.FontManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SplashScreen extends BaseScreen
-{			
+{		
+	private final boolean SKIP_ANIMATIONS = true;
+	
 	private enum SplashPhase
 	{
-		SPLASH_IMAGE_IN,
-		SPLASH_IMAGE_WAITING,
-		LOGO_IN,
-		LOGO_ANIMATING,
-		LOGO_WAITING,
-		BACKGROUND_WAITING,
-		FONT_INITIALIZATION_WAITING,
+		APPTOGO_LOGO_IN,
+		DASHANDSMASH_LOGO_IN,
+		SCREEN_SHAKEING,
+		START_LOADING,
+		LOADING,
 		FINISHED
 	}
 	
-	private Thread t;
+	private AssetManager menuAssetManager;
 	
 	private SplashPhase currentPhase;
 	
-	private AssetManager menuAssetManager;
-	private AssetManager stillAssetManager;
+	Image backgroundHalo;
 	
-	private Group logo;
+	Image appToGoLogo;
 	
-	private ObjectAnimation letterDAnimation;
-	private ObjectAnimation dustAnimation;
-	private ObjectAnimation loadingAnimation;
+	Group dashAndSmashLogo;
+	
+	Image groupLogo;
+	Animation groupLetter;
+	Animation groupDust;
 		
-	private Image splashImage;
-	private Image logoImage;
+	private Label loadingLabel;
 	
-	private MoveToAction splashImageInAction;
-	private MoveToAction splashImageOutAction;
-	private MoveToAction logoInAction;
+	Loading loadingAnimation;
+	
+	private MoveToAction apptogoLogoInAction;
+	private MoveToAction apptogoLogoOutAction;
+	private MoveToAction dashandsmashLogoInAction;
 	private AlphaAction backgroundInAction;
-	private AlphaAction logoWaitingAction;
 	
 	Camera camera;
 	
@@ -62,61 +68,94 @@ public class SplashScreen extends BaseScreen
 	
 	private CustomAction cameraShakeAction;
 	private CustomAction cameraStopShakeAction;
-	
-	private Label loadingLabel;
-	
+			
 	public SplashScreen(Runner runner)
 	{
 		super(runner);
+		
+		ResourcesManager.getInstance().loadResources(this);
+		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
+		
+		ResourcesManager.getInstance().loadResources(ScreenClass.STILL);
+		ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).finishLoading();
 	}
 	
 	@Override
 	public void prepare()
-	{	
-		ResourcesManager.getInstance().loadResources(this);
-		ResourcesManager.getInstance().getAssetManager(this).finishLoading();
-		
-		setBackground("gfx/menu/menuBackgrounds/splashScreenBackground.png");
-		background.setColor(background.getColor().r, background.getColor().g, background.getColor().b, 0.0f);
-		
-		logo = new Group();
-		logo.setPosition(0, 0);
-		
+	{			
 		initializeActions();
+
+		currentPhase = SplashPhase.APPTOGO_LOGO_IN;
 		
-		splashImage = createImage("gfx/splash/splash.png", -106.0f, -800.0f);
-		splashImage.addAction( splashImageInAction );
-	
-		addToScreen(splashImage);
+		//!!WORKARROUND - nalezy przerobic animacje tak zeby sobie same znalazly atlas odpowiedni
+		TextureAtlas atlas = (TextureAtlas)ResourcesManager.getInstance().getResource(getScreenClass(), "gfx/splash/splashAtlas.atlas");
 		
-		currentPhase = SplashPhase.SPLASH_IMAGE_IN;
+		//creating background
+		backgroundHalo = createImage("ellipse", 0, 0);
+		backgroundHalo.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		backgroundHalo.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
+		
+		backgroundHalo.getColor().a = 0.0f;
+		
+		addToScreen(backgroundHalo);
+		
+		//creating Dash&Smash logo
+		dashAndSmashLogo = new Group();
+		setCenterPosition( dashAndSmashLogo, 800);
+		
+		dashAndSmashLogo.setTransform(false);
+		
+		groupLogo = createImage("logoSplash", 0, 0);
+		setCenterPosition(groupLogo, -200);
+				
+		groupLetter = new Animation("d", 16, 0.03f, CharacterAnimationState.RUNNING, true, false);
+		groupLetter.setPosition(-370, -110);
+		
+		dashAndSmashLogo.addActor(groupLogo);
+		dashAndSmashLogo.addActor(groupLetter);
+				
+		addToScreen(dashAndSmashLogo);
+		
+		//creating App2go logo
+		appToGoLogo = createImage("splash", 0, 0);
+		setCenterPosition(appToGoLogo, -800);
+		
+		appToGoLogo.addAction(apptogoLogoInAction);
+		
+		addToScreen(appToGoLogo);
+
+		//creating loading controls
+		loadingLabel = new Label("loading", skin, "default");
+		setCenterPosition(loadingLabel, 270);
+		
+		loadingAnimation = new Loading();
+		setCenterPosition(loadingAnimation, 240);
 	}
 	
 	private void initializeActions()
 	{
-		splashImageInAction = new MoveToAction();
-		splashImageInAction.setDuration(1.5f);
-		splashImageInAction.setPosition(-106.0f, -200.0f);
-		splashImageInAction.setInterpolation(Interpolation.pow5Out);
+		apptogoLogoInAction = new MoveToAction();
+		if( SKIP_ANIMATIONS ) apptogoLogoInAction.setDuration(0.1f);
+		else                  apptogoLogoInAction.setDuration(1.5f);
+		apptogoLogoInAction.setPosition(-106.0f, -200.0f);
+		apptogoLogoInAction.setInterpolation(Interpolation.pow5Out);
 		
-		splashImageOutAction = new MoveToAction();
-		splashImageOutAction.setDuration(0.4f);
-		splashImageOutAction.setPosition(-106.0f, -800.0f);
-		splashImageOutAction.setInterpolation(Interpolation.sineOut);
+		apptogoLogoOutAction = new MoveToAction();
+		if( SKIP_ANIMATIONS ) apptogoLogoOutAction.setDuration(0.1f);
+		else                  apptogoLogoOutAction.setDuration(0.3f);
+		apptogoLogoOutAction.setPosition(-106.0f, -800.0f);
 		
-		logoInAction = new MoveToAction();
-		logoInAction.setDuration(0.8f);
-		logoInAction.setPosition(0, -600.0f);
-		logoInAction.setInterpolation(Interpolation.exp10In);
+		dashandsmashLogoInAction = new MoveToAction();
+		if( SKIP_ANIMATIONS ) dashandsmashLogoInAction.setDuration(0.1f);
+		else                  dashandsmashLogoInAction.setDuration(0.5f);
+		dashandsmashLogoInAction.setPosition(0, 0.0f);
+		dashandsmashLogoInAction.setInterpolation(Interpolation.exp10In);
 				
 		backgroundInAction = new AlphaAction();
-		backgroundInAction.setDuration(1.0f);
+		if( SKIP_ANIMATIONS ) backgroundInAction.setDuration(0.1f);
+		else                  backgroundInAction.setDuration(1.0f);
 		backgroundInAction.setAlpha(1.0f);
-		
-		logoWaitingAction = new AlphaAction();
-		logoWaitingAction.setDuration(0.1f);
-		logoWaitingAction.setAlpha(1.0f);
-		
+				
 		final Camera camera = menuStage.getCamera();
 		
 		cameraShakeCounter = 0;
@@ -144,110 +183,81 @@ public class SplashScreen extends BaseScreen
 	}
 	
 	public void step()
-	{		
+	{
 		if( currentPhase == SplashPhase.FINISHED ) 
 		{
 			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}
 		
-		//Animation flow
-		if( currentPhase == SplashPhase.SPLASH_IMAGE_IN && splashImage.getActions().size <= 0)
+		else if( currentPhase == SplashPhase.APPTOGO_LOGO_IN && appToGoLogo.getActions().size <= 0 )
 		{
-			currentPhase = SplashPhase.SPLASH_IMAGE_WAITING;
-			ResourcesManager.getInstance().loadResources(this.getSceneType());
+			//start loading assets
+			ResourcesManager.getInstance().loadResources(ScreenClass.MENU);
+
+			menuAssetManager = ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU);
+			
+			appToGoLogo.addAction(apptogoLogoOutAction);
+			
+			currentPhase = SplashPhase.DASHANDSMASH_LOGO_IN;
 		}
-		else if( currentPhase == SplashPhase.SPLASH_IMAGE_WAITING && ResourcesManager.getInstance().getAssetManager(this.getSceneType()).update() )
-		{
-			//tworze animacje itd tutaj bo musimy czekac na zaladowanie sie animacji do pamieci
-			logoImage = createImage("gfx/splash/logoSplash.png", -421.0f, 400.0f);
-			
-			letterDAnimation = new ObjectAnimation("gfx/splash/logoSplashLetterD.pack", "d", 16, -422.0f, 270.0f, false, false);
-			
-			logo.addActor(logoImage);
-			logo.addActor(letterDAnimation);
-			
-			dustAnimation = new ObjectAnimation("gfx/splash/dust.pack", "dust", 20, -600.0f, -400.0f, false, false);
-			dustAnimation.scaleFrames(2.0f);
-			dustAnimation.setVisible(false);
-			
-			loadingLabel = new Label(getLangString("loadingLabel"), skin);
-			setCenterPosition(loadingLabel, 300);
-			loadingLabel.setVisible(false);
-			
-			loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, 270.0f, false, true);
-			loadingAnimation.setVisible(false);
-			
-			addToScreen(logo);
-			addToScreen(dustAnimation);
-			addToScreen(loadingLabel);
-			addToScreen(loadingAnimation);
-			
-			splashImage.addAction(splashImageOutAction);
-			logo.addAction(logoInAction);
 		
-			currentPhase = SplashPhase.LOGO_IN;
+		else if( currentPhase == SplashPhase.DASHANDSMASH_LOGO_IN && appToGoLogo.getActions().size <= 0 )
+		{
+			dashAndSmashLogo.addAction(dashandsmashLogoInAction);
+			
+			currentPhase = SplashPhase.SCREEN_SHAKEING;
 		}
-		else if( currentPhase == SplashPhase.LOGO_IN && logo.getActions().size <= 0)
-		{			
+		
+		else if(currentPhase == SplashPhase.SCREEN_SHAKEING && dashAndSmashLogo.getActions().size <= 0 )
+		{
+			//creating dust
+			groupDust = new Animation("dust", 21, 0.03f, CharacterAnimationState.RUNNING, true, false);
+			groupDust.setPosition(-470, -250);
+			groupDust.scaleFrames(4);
+			
+			dashAndSmashLogo.addActor(groupDust);
+			
+			//shakeing screen
 			CustomActionManager.getInstance().registerAction(cameraShakeAction);
 			CustomActionManager.getInstance().registerAction(cameraStopShakeAction);
 			
-			dustAnimation.setVisible(true);
-			dustAnimation.start();
+			//animating letter
+			groupLetter.start();
 			
-			letterDAnimation.start();
+			//fadeing in background
+			backgroundHalo.addAction(backgroundInAction);
 			
-			background.addAction(backgroundInAction);
-			
-			currentPhase = SplashPhase.LOGO_ANIMATING;
+			currentPhase = SplashPhase.START_LOADING;
 		}
-		else if( currentPhase == SplashPhase.LOGO_ANIMATING && letterDAnimation.isFinished()  && dustAnimation.isFinished())
-		{
-			dustAnimation.setVisible(false);
-			
-			logo.addAction(logoWaitingAction);
-			
-			currentPhase = SplashPhase.LOGO_WAITING;
-		}
-		else if( currentPhase == SplashPhase.LOGO_WAITING && logo.getActions().size <= 0 )
-		{
-			currentPhase = SplashPhase.BACKGROUND_WAITING;
-		}
-		else if( currentPhase == SplashPhase.BACKGROUND_WAITING && background.getActions().size <= 0)
-		{
-			loadingLabel.setVisible(true);
-			loadingAnimation.setVisible(true);
-			loadingAnimation.start();
-			
-			t = new Thread() {
-			    public void run() {
-			    	
-			    }
-			};
-			t.start();
-			
-			//tutaj ladujemy troche wprost ale jest to potrzebne zeby nie angazowac loading screena na samym poczatku
-			ResourcesManager.getInstance().loadResources(ScreenClass.STILL);
-			ResourcesManager.getInstance().loadResources(ScreenClass.MENU);
-
-			stillAssetManager = ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL);
-			menuAssetManager = ResourcesManager.getInstance().getAssetManager(ScreenClass.MENU);
 		
-			currentPhase = SplashPhase.FONT_INITIALIZATION_WAITING;
-		}
-		else if( currentPhase == SplashPhase.FONT_INITIALIZATION_WAITING && menuAssetManager.update() && stillAssetManager.update() )
+		else if(currentPhase == SplashPhase.START_LOADING && groupDust.isFinished() )
 		{
-			FontManager.getInstance().initializeFonts();
+			//removing dust
+			groupDust.setVisible(false);
 			
+			//adding loading controls
+			addToScreen(loadingLabel);
+			addToScreen(loadingAnimation); //uwaga tu pojawi sie drugi renderCall bo loading biezemy ze STILL
+						
+			currentPhase = SplashPhase.LOADING;
+		}
+		
+		else if(currentPhase == SplashPhase.LOADING && menuAssetManager.update() )
+		{
+			Logger.log(this, "MENU ZALADOWANE");
 			currentPhase = SplashPhase.FINISHED;
+			
+			Logger.log(this, ResourcesManager.getInstance().screenMetaArray.get(2).skinFile );
 		}
-		
 	}
 	
 	@Override
-	public void handleInput() {
-		// TODO Auto-generated method stub
-		
+	public void handleInput() 
+	{
+		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
+		{
+			Gdx.app.exit();
+		}
 	}
 	
 	@Override
@@ -278,6 +288,4 @@ public class SplashScreen extends BaseScreen
 	public ScreenType getSceneType() {
 		return ScreenType.SCREEN_SPLASH;
 	}
-
-
 }

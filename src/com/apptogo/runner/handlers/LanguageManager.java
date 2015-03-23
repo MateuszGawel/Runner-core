@@ -98,7 +98,7 @@ public class LanguageManager {
 		
 		return defaultLanguage;
 	}
-	public String getIcoFile(String key)
+	public String getIcoName(String key)
 	{
 		String iconPath = null;
 		
@@ -110,9 +110,9 @@ public class LanguageManager {
 			{
 				if( currentLanguage.getAttribute("id").equals(key) )
 				{
-					iconPath = node.getAttribute("chosenIcoFilePath");
+					iconPath = node.getAttribute("chosenIcoFileName");
 				}
-				else iconPath = node.getAttribute("icoFilePath");
+				else iconPath = node.getAttribute("icoFileName");
 				break;
 			}
 		}

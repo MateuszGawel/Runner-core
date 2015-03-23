@@ -67,11 +67,11 @@ public class GameScreenSingle extends GameScreen
 		finishWidget = new Widget("settings", Align.center, 1240.0f, 950.0f, WidgetType.FINISH, WidgetFadingType.TOP_TO_BOTTOM, true);
 		finishWidget.setEasing( Interpolation.elasticOut );
 	
-		restartButton = createLabel( getLangString("restartLevel"), FontType.BIG);
+		restartButton = new Label( getLangString("restartLevel"), skin, "default");
 		setCenterPosition(restartButton, 900f);
 		restartButton.setX( restartButton.getX() + 640.0f + 250.0f );
 		
-		backToMenuButton = createLabel( getLangString("backToMenu"), FontType.BIG);
+		backToMenuButton = new Label( getLangString("backToMenu"), skin, "default");
 		setCenterPosition(backToMenuButton, 900f);
 		backToMenuButton.setX( backToMenuButton.getX() + 640.0f - 250.0f );
 				
@@ -95,8 +95,8 @@ public class GameScreenSingle extends GameScreen
 		            }
 		});
 		
-		timeLabel = createLabel( "0:45'23", FontType.BIG);
-		coinsLabel = createLabel( "2300", FontType.BIG);
+		timeLabel = new Label( "0:45'23", skin, "default");
+		coinsLabel = new Label( "2300", skin, "default");
 		
 				
 		Table finishTable = new Table();

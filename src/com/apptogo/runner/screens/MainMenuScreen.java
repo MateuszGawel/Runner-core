@@ -1,18 +1,15 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
-import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.news.News;
 import com.apptogo.runner.news.NewsManager;
-import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -101,7 +98,7 @@ public class MainMenuScreen extends BaseScreen
     	*///----------------------------------------------
 		
 		
-		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("mainMenuScreenBackground");
 		
 		settingsButton = new Button(skin, "settings");
 		settingsButton.setPosition(-550f, 140f);
@@ -119,11 +116,9 @@ public class MainMenuScreen extends BaseScreen
 		facebookButton.setPosition(-550f, -295f);
 			
         campaignButton = new TextButton( getLangString("campaignButton"), skin, "default");
-        setTextButtonFont(campaignButton, FontType.WOODFONT);
         campaignButton.setPosition( -(campaignButton.getWidth() / 2.0f), -50.0f );
 		
 		multiplayerButton = new TextButton( getLangString("multiplayerButton"), skin, "default");
-		setTextButtonFont(multiplayerButton, FontType.WOODFONT);
 		multiplayerButton.setPosition( -(multiplayerButton.getWidth() / 2.0f), -250.0f );
 		
 		joinRandomRoomButton = new Button(skin, "joinRandomRoom");
@@ -135,15 +130,15 @@ public class MainMenuScreen extends BaseScreen
 		createListeners();
 		setListeners();
         
-		newContent = createImage("gfx/menu/newIcon.png", -450, 230);
+		newContent = createImage("newIcon", -450, 230);
 		newContent.setVisible( NewsManager.getInstance().isNewContent() );
 		
-		chainsDecoration = createImage("gfx/menu/chainsDecoration.png", 100.0f, -290.0f);
+		chainsDecoration = createImage("chainsDecoration", 100, -290);
 
-		logoImage = createImage("gfx/menu/logoMenu.png", -387.0f, 150.0f);
+		logoImage = createImage("logoMenu", -387.0f, 150.0f);
 		
 		languageChangeDialog = new DialogWidget("", null, null);
-                 
+              
 		addToScreen(settingsButton);
 		addToScreen(newContent);
 		
@@ -158,7 +153,7 @@ public class MainMenuScreen extends BaseScreen
         addToScreen(logoImage);
         
         addToScreen(settingsWidget.actor());
-        addToScreen(languageChangeDialog.actor());
+        //addToScreen(languageChangeDialog.actor()); 
 	}
 	
 	public void step()
@@ -172,10 +167,10 @@ public class MainMenuScreen extends BaseScreen
 		settingsWidget.setEasing( Interpolation.elasticOut );
 
 		//---Obrazki tabow        
-		settingsWidget.addTabButton(1, "generalTab");
+		settingsWidget.addTabButton(1, "settingsTab");
 		settingsWidget.addTabButton(2, "newsFeedTab");
 		
-		Image tabNewContent = createImage("gfx/menu/newIcon.png", -100.0f, 1245.0f);
+		Image tabNewContent = createImage("newIcon", -100.0f, 1245.0f);
 		tabNewContent.setVisible( NewsManager.getInstance().isNewContent() );
 		settingsWidget.addActor(tabNewContent);
 		//---
@@ -183,7 +178,7 @@ public class MainMenuScreen extends BaseScreen
         //---
 		//---Pierwszy tab
 		
-		Label musicLabel = createLabel( getLangString("music"), FontType.WOODFONT);
+		Label musicLabel = new Label( getLangString("music"), skin, "default");
 		
 		musicCheckBox = new CheckBox(" On", skin, "default");
 		musicCheckBox.align(Align.left);
@@ -191,7 +186,7 @@ public class MainMenuScreen extends BaseScreen
 		musicVolume = new Slider(0, 100, 20, false, skin);
 		musicVolume.setWidth(300.0f);
 		
-		Label soundsLabel = createLabel( getLangString("sounds"), FontType.WOODFONT);
+		Label soundsLabel = new Label( getLangString("sounds"), skin, "default");
 				
 		soundsCheckBox = new CheckBox(" On", skin, "default");
 		soundsCheckBox.align(Align.left);
@@ -199,12 +194,13 @@ public class MainMenuScreen extends BaseScreen
 		soundsVolume = new Slider(0, 100, 20, false, skin);
 		soundsVolume.setWidth(300.0f);
 				
-		Label vibrationsLabel = createLabel( getLangString("vibrations"), FontType.WOODFONT);
+		Label vibrationsLabel = new Label( getLangString("vibrations"), skin, "default");
 		
 		vibrationsCheckBox = new CheckBox(" On", skin, "default");
 		vibrationsCheckBox.align(Align.left);
 				
-		Label languageLabel = createLabel( getLangString("language"), FontType.WOODFONT, 50f, 900f);
+		Label languageLabel = new Label( getLangString("language"), skin, "default");
+		languageLabel.setPosition(50f, 900f);
 				
 		Image enflag = getLanguageFlag("en", 30, 820, true);
         Image plflag = getLanguageFlag("pl", 130, 820, true);
@@ -325,7 +321,7 @@ public class MainMenuScreen extends BaseScreen
 		
         //---Drugi tab
         
-        Image newsfeed = createImage("gfx/menu/newsfeed.png", -530.0f, 750.0f);
+        Image newsfeed = createImage("newsfeed", -530.0f, 750.0f);
         
         Array<News> newsArray = NewsManager.getInstance().getNewsArray();
       
@@ -333,18 +329,18 @@ public class MainMenuScreen extends BaseScreen
        
         for(News news: newsArray)
         {
-        	Label date = createLabel(news.date, FontType.WOODFONTSMALL);
+        	Label date = new Label(news.date, skin, "default");
         	
         	newsfeedTable.add(date).width(700.0f).left().pad(50, 0, 0, 0);
         	newsfeedTable.row();
         	
-        	Label topic = createLabel(news.topic, FontType.WOODFONT);
+        	Label topic = new Label(news.topic, skin, "default");
         	topic.setWrap(true);
         	
         	newsfeedTable.add(topic).width(700.0f).left().pad(10, 0, 0, 0);
         	newsfeedTable.row();
         	
-        	Label message = createLabel(news.message, FontType.WOODFONTSMALL);
+        	Label message = new Label(news.message, skin, "default");
         	message.setWrap(true);
         	
         	newsfeedTable.add(message).width(700.0f).left().pad(20, 0, 0, 0);
@@ -537,7 +533,7 @@ public class MainMenuScreen extends BaseScreen
 	
 	private Image getLanguageFlag(String language, float x, float y, boolean isActive)
 	{
-		Image flag = createImage(languageManager.getIcoFile( language ), x, y);
+		Image flag = createImage(languageManager.getIcoName( language ), x, y);
 		
 		if( !settings.getLanguage().equals(language) && isActive )
 		{

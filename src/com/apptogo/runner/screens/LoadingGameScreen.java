@@ -1,8 +1,8 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.animation.Loading;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
@@ -23,7 +23,7 @@ public class LoadingGameScreen extends BaseScreen
 	
 	private Label tipLabel;
 	
-	private ObjectAnimation loadingAnimation;
+	private Loading loadingAnimation;
 	
 	private ScreenType screenToLoad;
 	private Level levelToLoad;
@@ -51,11 +51,12 @@ public class LoadingGameScreen extends BaseScreen
 		
 		String tip = TipManager.getInstance().getTip( levelToLoad.worldType );
 				
-		tipLabel = createLabel(tip, FontType.SMALL);
+		tipLabel = new Label(tip, skin, "default");
 		setCenterPosition(tipLabel, -320.0f);
 		tipLabel.setVisible(true);
 		Logger.log(this, ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).getDiagnostics() );
-		loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -240.0f, false, true);
+		loadingAnimation = new Loading();
+		setCenterPosition(loadingAnimation, -240);
 		loadingAnimation.setVisible(true);
 		loadingAnimation.start();
 		

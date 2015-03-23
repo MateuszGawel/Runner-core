@@ -14,8 +14,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
@@ -47,6 +49,8 @@ public class ResourcesManager
 	
 	//do zaimplementowania bedzie ladowanie tekstur do atlasów	
 		
+	TextureAtlas uiskinAtlas;
+	
 	//---
 	public class ScreenMeta
 	{
@@ -64,6 +68,10 @@ public class ResourcesManager
 		public String musicsExtension;
 		public String soundsDirectory;
 		public String soundsExtension;
+		
+		public Skin skin;
+		public String skinFile;
+		public String skinAtlas;
 		
 		public boolean isLoaded;
 		
@@ -93,10 +101,13 @@ public class ResourcesManager
 		public void addTexture(String texture) { this.textures.add(texturesDirectory+texture+texturesExtension); }
 		public void addTextureAtlases(String[] textureAtlases) { if( textureAtlases != null) for(String a: textureAtlases) this.textureAtlases.add(textureAtlasesDirectory+a+textureAtlasesExtension); }
 		public void addTextureAtlas(String textureAtlas) { this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); }
+		public void addTextureAtlas(String textureAtlas, boolean isSkinAtlas) { this.textureAtlases.add(textureAtlasesDirectory+textureAtlas+textureAtlasesExtension); if( isSkinAtlas ) this.skinAtlas = textureAtlasesDirectory+textureAtlas+textureAtlasesExtension; }
 		public void addMusics(String[] musics) { for(String m: musics) this.musics.add(musicsDirectory+m+musicsExtension); }
 		public void addMusic(String music) { this.musics.add(musicsDirectory+music+musicsExtension); }
 		public void addSounds(String... sounds) { for(String s: sounds) this.sounds.add(soundsDirectory+s+soundsExtension); }
 		public void addSound(String sound) { this.sounds.add(soundsDirectory+sound+soundsExtension); }
+		
+		public void setSkinFile(String skinFile) { this.skinFile = skinFile; Logger.log(this, "##### SKIN FILE DLA " + this.screenClass + " TO: " + skinFile); }
 		
 		public void loadTextures()
 		{
@@ -107,16 +118,23 @@ public class ResourcesManager
 			}
 		}
 		public void loadTextureAtlases()
-		{
-			
+		{//this.skin = new Skin( Gdx.files.internal(this.skinFile), ATLAS);
 			for(String textureAtlas: this.textureAtlases)
 			{
 				this.manager.load(textureAtlas, TextureAtlas.class);
+				this.manager.finishLoading();
+				
+				Logger.log(this, "!!!!!!!!!!!!!!!!!!!!! " + this.skinAtlas + " | " + textureAtlas);
+				if( this.skinAtlas.equals( textureAtlas ) )
+				{Logger.log(this, "JEDZIEMY ZE SKINEM");
+					FileHandle skinFileHandle = Gdx.files.internal( this.skinFile );
+					
+					this.skin = new Skin( skinFileHandle, (TextureAtlas)this.manager.get(textureAtlas) );
+				}
 			}
 		}
 		public void loadMusics()
-		{
-			
+		{			
 			for(String music: this.musics) //tu chyba nie powinien byc string? wyglada mi na niedorobke moja ale bd sie tym martwic jak dojdziemy do dzwiekow
 			{
 				this.manager.load(music, Music.class);
@@ -133,104 +151,47 @@ public class ResourcesManager
 	}
 	//---
 
-	private Array<ScreenMeta> screenMetaArray;
-	
+	public Array<ScreenMeta> screenMetaArray;
+		
 	private Skin uiskin;
 	private Skin guiskin;
 		
+	public TextureAtlas ATLAS = new TextureAtlas("gfx/splash/splashAtlas.atlas");
+	
 	public ResourcesManager() 
 	{
 		screenMetaArray = new Array<ScreenMeta>();
 		
+		uiskinAtlas = new TextureAtlas("ui/ui/uiskin.atlas");
+		
 		//ASSETS FOR SPLASH
 		ScreenMeta splashMeta = new ScreenMeta(ScreenClass.SPLASH);
 		
-		splashMeta.addTexture("gfx/splash/splash.png");
-		splashMeta.addTexture("gfx/menu/menuBackgrounds/splashScreenBackground.png");
-		
-		splashMeta.addTexture("gfx/splash/logoSplash.png");
-		
-		splashMeta.addTextureAtlas("gfx/splash/logoSplashLetterD.pack");
-		splashMeta.addTextureAtlas("gfx/splash/dust.pack");
-		splashMeta.addTextureAtlas("gfx/splash/loading.pack");
+		splashMeta.addTextureAtlas("gfx/splash/splashAtlas.atlas", true);
+		splashMeta.setSkinFile("gfx/splash/splashAtlas.json");
 		
 		screenMetaArray.add(splashMeta);
 		
 		//ASSETS FOR STILL [ALWAYS LOADED]
 		ScreenMeta stillMeta = new ScreenMeta(ScreenClass.STILL);
 		
-		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.BANDIT ) );
-		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ARCHER ) );
-		stillMeta.addTextureAtlases( CharacterType.convertToTextureAtlases( CharacterType.ALIEN ) );
-		
-		stillMeta.addTextureAtlas("gfx/splash/loading.pack");
-		
-		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundWildWest.png");
-		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundForrest.png");
-		stillMeta.addTexture("gfx/menu/menuBackgrounds/loadingScreenBackgroundSpace.png");
-		
+		stillMeta.addTextureAtlas( "gfx/still/stillAtlas.atlas", true );
+		stillMeta.setSkinFile("gfx/still/stillAtlas.json");
+				
 		screenMetaArray.add(stillMeta);
 		
 		//ASSETS FOR MENU
 		ScreenMeta menuMeta = new ScreenMeta(ScreenClass.MENU);
 		
-		menuMeta.addTexture("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
-		
-		menuMeta.addTexture("gfx/menu/newIcon.png");
-		menuMeta.addTexture("gfx/menu/newsfeed.png");
-		menuMeta.addTexture("gfx/menu/chainsDecoration.png");
-		
-		menuMeta.addTexture("gfx/menu/logoMenu.png");
-		
-		menuMeta.addTexture("gfx/languageFlags/de_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/de.png");
-		menuMeta.addTexture("gfx/languageFlags/es_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/es.png");
-		menuMeta.addTexture("gfx/languageFlags/in_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/in.png");
-		menuMeta.addTexture("gfx/languageFlags/pl_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/pl.png");
-		menuMeta.addTexture("gfx/languageFlags/ru_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/ru.png");
-		menuMeta.addTexture("gfx/languageFlags/uk_chosen.png");
-		menuMeta.addTexture("gfx/languageFlags/uk.png");
-		
-		menuMeta.addTexture("gfx/game/characters/banditGround.png");
-		
-		menuMeta.addTextureAtlas("gfx/game/characters/characters.pack");
+		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas.atlas" );
+		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.atlas" );
+		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.atlas", true );
+		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");
 				
-		menuMeta.addTextures( ShopManager.getInstance().getTextures() );
-		
-		//tempy totalnie do wyjebania
-		menuMeta.addTexture("temp/exampleFlag.png");
-		menuMeta.addTexture("temp/online.png");
-		menuMeta.addTexture("temp/offline.png");
-		menuMeta.addTexture("temp/find.png");
-		menuMeta.addTexture("temp/coin.png");
-		menuMeta.addTexture("temp/diamond.png");
-		menuMeta.addTexture("temp/settingsButton.png");
-		menuMeta.addTexture("temp/achievementsButton.png");
-		menuMeta.addTexture("temp/shopSign.png");
-		menuMeta.addTexture("gfx/menu/comingSoon.png");
-		//
-		
 		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png");
 		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png");
 		menuMeta.addTexture("gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png");
-		
-		menuMeta.addTexture("gfx/menu/sliderMask.png");
-		
-		menuMeta.addTexture("gfx/menu/paperSmall.png");
-		menuMeta.addTexture("gfx/menu/blackBoardMedium.png");
-		menuMeta.addTexture("gfx/menu/paperBig.png");
-		
-		menuMeta.addTexture("gfx/menu/shareButtonFacebook.png");
-		menuMeta.addTexture("gfx/menu/shareButtonGoogle.png");
-		menuMeta.addTexture("gfx/menu/shareButtonTwitter.png");
-		
-		menuMeta.addTexture("gfx/menu/starSmallEmpty.png");
-		menuMeta.addTexture("gfx/menu/starSmallFull.png");
-		
+				
 		screenMetaArray.add(menuMeta);
 		
 		//ASSETS FOR GAME
@@ -270,7 +231,8 @@ public class ResourcesManager
 		screenMetaArray.add(gameMeta);
 		
 		//|... INITIALIZING SKINS
-		this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"));
+		//this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"), uiskinAtlas);
+		
 	    this.guiskin = new Skin(Gdx.files.internal("ui/gui/guiskin.json"));
 	}
 	
@@ -319,11 +281,11 @@ public class ResourcesManager
 		loadResources(screenClass);
 	}
 	public void loadResources(ScreenClass screenClass)
-	{
+	{Logger.log(this, "LADOWANIE TERAZ KLASY " + screenClass);
 		int index = getScreenIndex(screenClass);
 		
 		if( !this.screenMetaArray.get( index ).isLoaded )
-		{
+		{Logger.log(this, "LADUJEMY BO NIE ZALADOWANE");
 			this.screenMetaArray.get( index ).isLoaded = true;
 			
 			this.loadTextureAtlases(index);
@@ -423,6 +385,11 @@ public class ResourcesManager
 		
 		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
 		manager.clear();
+		
+		if( this.screenMetaArray.get( index ).skin != null )
+		{
+			this.screenMetaArray.get( index ).skin.dispose();
+		}
 	}
 	
 	public void unloadResource(BaseScreen screen, String filename)
@@ -453,6 +420,11 @@ public class ResourcesManager
 			
 			screenMeta.manager.clear();
 			//screenMeta.manager.dispose();
+			
+			if( screenMeta.skin != null )
+			{
+				screenMeta.skin.dispose();
+			}
 		}
 				
 		screenMetaArray.clear();
@@ -460,6 +432,107 @@ public class ResourcesManager
 	//---------
 	
 	//--------- ACCESSING RESOURCES
+	public AtlasRegion getAtlasRegion(BaseScreen screen, String textureName)
+	{
+		ScreenType screenType = screen.getSceneType();
+		return getResource(screenType, textureName);
+	}
+	public AtlasRegion getAtlasRegion(ScreenType screenType, String textureName)
+	{
+		ScreenClass screenClass = ScreenType.convertToScreenClass(screenType);
+		return getResource(screenClass, textureName);
+	}
+	public AtlasRegion getAtlasRegion(ScreenClass screenClass, String textureName)
+	{Logger.log(this, "PROSBA O " + textureName + " z klasy " + screenClass);
+		int index = getScreenIndex(screenClass);
+		AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
+					
+		Array<TextureAtlas> managerAtlases = new Array<TextureAtlas>();
+		manager.getAll(TextureAtlas.class, managerAtlases);
+		
+		Logger.log(this, "TERAZ BEDE SZUKAL" );
+		
+		for(TextureAtlas atlas : managerAtlases)
+		{Logger.log(this, "SZUKAM W " + atlas.toString() );
+			if( atlas.findRegion(textureName) != null )
+			{
+				Logger.log(this, "ZNALEZIONO W " + atlas.toString() );
+			
+				return atlas.findRegion(textureName);
+			}
+		}
+		
+		//return ATLAS.findRegion(textureName);// ( (TextureAtlas) ( manager.get("gfx/splash/splashAtlas.atlas") ) ).findRegion(textureName);
+		
+		return null;
+	}
+	
+	public AtlasRegion getAtlasRegion(String textureName)
+	{
+		for(ScreenMeta screenMeta : screenMetaArray)
+		{
+			if( screenMeta.isLoaded )
+			{
+				AssetManager manager = screenMeta.manager;
+				
+				Array<TextureAtlas> managerAtlases = new Array<TextureAtlas>();
+				manager.getAll(TextureAtlas.class, managerAtlases);
+				
+				for(TextureAtlas atlas : managerAtlases)
+				{
+					if( atlas.findRegion(textureName) != null )
+					{
+						return atlas.findRegion(textureName);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public AtlasRegion[] getAtlasRegionArray(String regionArrayName, int framesCount)
+	{
+		for(ScreenMeta screenMeta : screenMetaArray)
+		{
+			if( screenMeta.isLoaded )
+			{
+				AssetManager manager = screenMeta.manager;
+				
+				Array<TextureAtlas> managerAtlases = new Array<TextureAtlas>();
+				manager.getAll(TextureAtlas.class, managerAtlases);
+				
+				for(TextureAtlas atlas : managerAtlases)
+				{
+					Array<AtlasRegion> array = atlas.getRegions();
+					
+					for(AtlasRegion region : array)
+					{
+						if(region.name.contains(regionArrayName))
+						{
+							AtlasRegion[] frames = new AtlasRegion[framesCount];
+							
+							for(int i = 0; i < framesCount; i++)
+							{
+								frames[i] = atlas.findRegion(regionArrayName + i);
+							
+								if(frames[i] == null) Logger.log(this, "farmes[" + i + "] jest nullem");
+								
+								Logger.log(this, "???????????????????????? szukam " + regionArrayName + " a zwracam " + frames[i] + " " + region.name  + " framow");
+							}
+							
+							for(int i = 0; i< framesCount; i++) Logger.log(this, "ZWRACAM : " + frames[i]);
+							
+							return frames;
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+	
 	public <T> T getResource(BaseScreen screen, String filename)
 	{
 		ScreenType screenType = screen.getSceneType();
@@ -476,7 +549,7 @@ public class ResourcesManager
 		{
 			int index = getScreenIndex(screenClass);
 			AssetManager manager = (AssetManager)screenMetaArray.get(index).manager;
-			
+									
 			return manager.get(filename);
 		}
 		catch(Exception e)
@@ -495,7 +568,7 @@ public class ResourcesManager
 			}
 		}
 	}
-	
+		
 	public AssetManager getAssetManager(BaseScreen screen)
 	{		
 		ScreenType screenType = screen.getSceneType();
@@ -532,11 +605,23 @@ public class ResourcesManager
 		return index;
 	}
 	
-	public Skin getUiSkin()
+	public Skin getUiSkin(BaseScreen screen)
 	{
-		return this.uiskin;//new Skin(Gdx.files.internal("ui/uiskin.json"));
+		return getUiSkin( screen.getSceneType() );
+	}	
+	public Skin getUiSkin(ScreenType screenType)
+	{		
+		return getUiSkin( ScreenType.convertToScreenClass(screenType) );
 	}
-	
+	public Skin getUiSkin(ScreenClass screenClass)
+	{
+		int index = getScreenIndex(screenClass);
+		
+		Logger.log(this, "NASZ SKIN z " + screenClass + " TO " + screenMetaArray.get( index ).skinFile );
+		
+		return screenMetaArray.get( index ).skin;
+	}
+		
 	public Skin getGuiSkin()
 	{
 		return this.guiskin;//new Skin(Gdx.files.internal("gui/guiskin.json"));

@@ -20,6 +20,7 @@ import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -83,13 +84,16 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	@Override
 	public void prepare()
 	{	
-		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("mainMenuScreenBackground");
 		
 		group = new Group();
+		group.setTransform(false);
 		
 		mainGroup = new Group();
-		rankGroup = new Group();
+		mainGroup.setTransform(false);
 		
+		rankGroup = new Group();
+		rankGroup.setTransform(false);
 			
 		moveToMainListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
 			group.addAction( getMoveAction(-Runner.SCREEN_WIDTH, 0.0f) );
@@ -130,7 +134,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		confirmWidget = new InfoWidget( "Tutaj bêdzie dodawanie przyjació³ do gry" );
 		
 		joinRandomButton = new TextButton( "random room", skin, "default");
-        setTextButtonFont(joinRandomButton, FontType.WOODFONT);
         joinRandomButton.setPosition( -368.0f, 120.0f );
         joinRandomButton.addListener( new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) 
@@ -250,10 +253,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		contactsTable.setSize(920.0f, 370.0f);	
 		contactsTable.setPosition(-460.0f, 750.0f);
 		
-		Label nameTitle = createLabel("Name", FontType.WOODFONT);
+		Label nameTitle = new Label("Name", skin, "default");
 		nameTitle.setAlignment(Align.center);
 		
-		Label statusTitle = createLabel("Status", FontType.WOODFONT);
+		Label statusTitle = new Label("Status", skin, "default");
 		statusTitle.setAlignment(Align.center);
 		
 		contactsTable.add().width(130.0f).height(50.0f).center().pad(0,0,0,0);
@@ -265,15 +268,13 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		for(final Contact contact: contactsArray)
 		{
 			CheckBox check = new CheckBox("", skin);
-			Label name = createLabel( contact.name, FontType.WOODFONTSMALL);
-			Image flag = createImage( "temp/exampleFlag.png", 0, 0);			
-			Image status = createImage( (contact.status)?("temp/online.png"):("temp/offline.png"), 0, 0);
-
+			Label name = new Label( contact.name, skin, "default");
+			
 			contactsScrollTable.row();
 			contactsScrollTable.add(check).width(50.0f).height(50.0f).center().pad(30,0,0,80);
-			contactsScrollTable.add(flag).width(32.0f).height(32.0f).center().pad(39,0,0,18);
+			contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,0,0,18);
 			contactsScrollTable.add(name).width(450.0f).height(50.0f).center().pad(30,0,0,30);
-			contactsScrollTable.add(status).width(32.0f).height(32.0f).center().pad(39,144,0,94);
+			contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,144,0,94);
 		}
 					
 		Container<ScrollPane> contactsContainer = createScroll(contactsScrollTable, 920.0f, 328.0f, true);
@@ -281,7 +282,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		contactsTable.row();
 		contactsTable.add(contactsContainer).colspan(4);
 				
-		Label inviteLabel = createLabel("Invite!", FontType.WOODFONT);
+		Label inviteLabel = new Label("Invite!", skin, "default");
 		setCenterPosition(inviteLabel, 660.0f);
 		
 		friendsWidget.addActorToTab(contactsTable, 1);
@@ -294,14 +295,12 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		searchTextField.setX( searchTextField.getX() - 95.0f );
 		searchTextField.setMaxLength(18);
 		
-		Image findButton = createImage("temp/find.png", searchTextField.getX() + searchTextField.getWidth() + 20.0f , 1090.0f);
+		
 		
 		CheckBox hideMeCheckBox = new CheckBox(" Hide me from others", skin, "default");
 		hideMeCheckBox.setPosition(-400f, 1090f);
 		
-		friendsWidget.addActorToTab(searchTextField, 2);
-		friendsWidget.addActorToTab(findButton, 2);
-		
+		friendsWidget.addActorToTab(searchTextField, 2);		
 		friendsWidget.setCurrentTab(1);
 	}
 	

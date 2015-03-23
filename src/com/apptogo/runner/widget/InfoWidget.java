@@ -1,6 +1,7 @@
 package com.apptogo.runner.widget;
 
 import com.apptogo.runner.enums.FontType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -24,7 +25,7 @@ public class InfoWidget extends Widget
 	{
 		super(Align.center, Align.center, 0f, WidgetType.SMALL, WidgetFadingType.NONE, true);
 				
-		skin = ResourcesManager.getInstance().getUiSkin();
+		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.MENU );
 		
 		okButton = new Button(skin, "yesButton");
 		okButton.setPosition(270, -50.0f);
@@ -32,10 +33,6 @@ public class InfoWidget extends Widget
 		
 		label = new Label(message, skin, "dialogLabel");
 		
-		LabelStyle ls = label.getStyle();
-		ls.font = FontType.convertToFont( FontType.WOODFONT );
-		ls.fontColor = FontType.convertToColor( FontType.WOODFONT );
-		label.setStyle(ls);
 		label.setWrap(true);
 		
 		table = new Table(skin);

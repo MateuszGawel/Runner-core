@@ -145,15 +145,15 @@ public enum CharacterType
 	{
 		if( characterType == BANDIT )
 		{
-			return "gfx/game/characters/banditGround.png";
+			return "banditGround";
 		}
 		else if( characterType == ARCHER )
 		{
-			return "gfx/game/characters/archerGround.png";
+			return "archerGround";
 		}
 		else if( characterType == ALIEN )
 		{
-			return "gfx/game/characters/alienGround.png";
+			return "alienGround";
 		}
 
 		return null;

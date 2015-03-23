@@ -41,7 +41,7 @@ public class ShopScreen extends BaseScreen
 	
 	public void prepare() 
 	{	
-		setBackground("gfx/menu/menuBackgrounds/mainMenuScreenBackground.png");
+		setBackground("mainMenuScreenBackground");
 		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -74,9 +74,9 @@ public class ShopScreen extends BaseScreen
 		cat3B.setSize(230.0f, 75.0f);
 		cat3B.setPosition(170.0f, 70.0f);
 		
-		shopWidget.addTabButton(1, cat1B);
-		shopWidget.addTabButton(2, cat2B);
-		shopWidget.addTabButton(3, cat3B);
+		//shopWidget.addTabButton(1, cat1B);
+		//shopWidget.addTabButton(2, cat2B);
+		//shopWidget.addTabButton(3, cat3B);
 		
 		CharacterAnimation alienCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -600.0f, -20.0f, true);
 		CharacterAnimation archerCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -600.0f, -180.0f, true);
@@ -85,10 +85,7 @@ public class ShopScreen extends BaseScreen
 		shopWidget.addActorToTab(alienCharacterAnimation, 2);
 		shopWidget.addActorToTab(archerCharacterAnimation, 2);
 		shopWidget.addActorToTab(banditCharacterAnimation, 2);
-		
-		Image comingSoon = createImage("gfx/menu/comingSoon.png", -200, -200);
-		shopWidget.addActorToTab(comingSoon, 3);
-		
+				
 		shopWidget.setCurrentTab(1);
 		
         Table table = new Table();
@@ -102,11 +99,11 @@ public class ShopScreen extends BaseScreen
         	table.row().pad(0, 0, 0, 0);
         	table.add().width(50).height(200);
         	
-        	Image image = createImage(item.thumbnailPath, 0, 0);
+        	Image image = createImage("item", 0, 0);
         	image.setSize(150, 150);
-        	Label title = createLabel("Super hipnotyzer", FontType.BLACKBOARDMEDIUM, true);
-        	Label cash = createLabel("3000$", FontType.BLACKBOARDSMALL);
-        	Label itDes = createLabel(item.description, FontType.BLACKBOARDSMALL, true);
+        	Label title = new Label("Super hipnotyzer",  skin, "default"); title.setWrap(true);
+        	Label cash = new Label("3000$",  skin, "default"); cash.setWrap(true);
+        	Label itDes = new Label(item.description,  skin, "default"); itDes.setWrap(true);
         	
         	table.add(image).width(150).height(150).center();
         	table.add().width(25).height(200);

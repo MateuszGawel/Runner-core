@@ -46,7 +46,7 @@ public class Obstacle extends Actor{
 	private float offsetX = 0;
 	private float offsetY = 0;
 	
-	protected boolean updatePosition = true;
+	protected boolean updatePosition = false;
 	protected Vector2 position;
 	protected TextureRegion currentFrame;
 	protected AnimationManager animationManager;
@@ -55,7 +55,15 @@ public class Obstacle extends Actor{
 	protected boolean handleSoundVolume = true;
 	protected String atlasPath = "";
 	
+	protected boolean scaleFrames = false;
+	protected float frameScale = 0.0f;
+	
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
+	
+	public Obstacle()
+	{
+		animationManager = new AnimationManager();
+	}
 	
 	public Obstacle(String atlasPath)
 	{
@@ -93,7 +101,8 @@ public class Obstacle extends Actor{
 		currentFrame = animationManager.animate(0f);
 	}
 	
-	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping){
+	public void createAnimation(String regionName, int frameCount, float frameDuration, Object animationState, boolean looping)
+	{
 		animationManager.createAnimation(frameCount, frameDuration, regionName, animationState, looping);
 		animationManager.setCurrentAnimationState(animationState);
 		currentFrame = animationManager.animate(0f);
@@ -272,7 +281,10 @@ public class Obstacle extends Actor{
 			setPosition(position.x + offsetX, position.y + offsetY);  
         
         if(animationManager != null)
+        {
+        	Logger.log(this, "NAZWA OBECNEGO FRAME'a : " + ((AtlasRegion)currentFrame ).name );
         	currentFrame = animationManager.animate(delta);
+        }
         
         if(currentFrame != null){
 	        setWidth(currentFrame.getRegionWidth() / PPM);
@@ -293,16 +305,35 @@ public class Obstacle extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if(currentFrame != null)
+		{
+			Logger.log(this, "&&&&&&&&&&&&&&&&&&&&&&&&&&& naprawde rysuje : " + ((AtlasRegion)currentFrame).name);
+			
+			float frameWidth = currentFrame.getRegionWidth();
+			float frameHeight = currentFrame.getRegionHeight();
+			
+			if(scaleFrames)
+			{
+				frameWidth *= frameScale;
+				frameHeight *= frameScale;
+			}
+			
 			batch.draw(currentFrame, 
 					   getX() + ( (((AtlasRegion)currentFrame).offsetX) / PPM ), 
 					   getY() + ( (((AtlasRegion)currentFrame).offsetY) / PPM ), 
 					   getOriginX(), 
 					   getOriginY(), 
-					   getWidth(), 
-					   getHeight(), 
+					   frameWidth,
+					   frameHeight, 
 					   1, 
 					   1, 
 					   getRotation());
+		}
+	}
+	
+	public void scaleFrames(float frameScale)
+	{
+		this.scaleFrames = true;
+		this.frameScale = frameScale;
 	}
 	
 	public Body getBody(){ return this.body; }

@@ -38,10 +38,10 @@ public class CampaignScreen extends BaseScreen
 	
 	private Label label;
 	
-	private Image star;
+	private Button star;
 	
-	private float starWidth;
-	private float starHeight;
+	private float starWidth = 50;
+	private float starHeight = 50;
 		
 	private Array<LevelWorld> worlds;
 	
@@ -68,14 +68,15 @@ public class CampaignScreen extends BaseScreen
 	
 	public void prepare() 
 	{
-		starWidth = ( (Texture) ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallEmpty.png") ).getWidth();
-		starHeight = ( (Texture) ResourcesManager.getInstance().getResource(this.getSceneType(), "gfx/menu/starSmallEmpty.png") ).getHeight();
-		
 		backgroundGroup = new Group();
 		backgroundGroup.setPosition(0.0f, 0.0f);
 		
+		backgroundGroup.setTransform(false);
+		
 		group = new Group();
 		group.setPosition(0.0f, 0.0f);
+		
+		group.setTransform(false);
 		
 		moveGroupLeftListener = new ClickListener()
 		{
@@ -144,10 +145,11 @@ public class CampaignScreen extends BaseScreen
         
         int achievedStarsCount = player.statistics.getWorldStars(levelWorld);
         
-        label = createLabel(levelWorld.label + "   " + String.valueOf( achievedStarsCount ) + "/36" , FontType.BIG);
+        label = new Label(levelWorld.label + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "default");
         label.setPosition((Runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * Runner.SCREEN_WIDTH), 250.0f);
         
-        star = createImage("gfx/menu/starSmallFull.png", label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - starHeight) / 2.0f ));
+        star = new Button(skin, "starSmallFull");
+        star.setPosition( label.getWidth() + label.getX() + 10.0f, label.getY() + ( (label.getHeight() - starHeight) / 2.0f ));
 		       
         backgroundGroup.addActor(worldBackground);
         
@@ -239,7 +241,6 @@ public class CampaignScreen extends BaseScreen
         	if( player.isLevelUnlocked(level, levelWorld) )
         	{
         		button = new TextButton( level.buttonLabel, skin, buttonStyleName);
-        		setTextButtonFont(button, GameWorldType.convertToButtonFontType( levelWorld.getWorldType() ) );
         		button.addListener(new ClickListener() 
         		{
     	            public void clicked(InputEvent event, float x, float y) 
@@ -290,9 +291,9 @@ public class CampaignScreen extends BaseScreen
 	
 	private TextButton drawStars(TextButton button, Level level)
 	{
-		Image firstStar;
-		Image secondStar;
-		Image thirdStar;
+		Button firstStar;
+		Button secondStar;
+		Button thirdStar;
 		
 		float margin = 0.0f;
 		float startX = ( button.getWidth() - (3 * starWidth) - (3 * margin) ) / 2.0f;
@@ -301,28 +302,37 @@ public class CampaignScreen extends BaseScreen
 		
 		if( score >= 100 && score < 200 )
 		{
-			firstStar = createImage("gfx/menu/starSmallFull.png", startX, 0.0f);
-			secondStar = createImage("gfx/menu/starSmallEmpty.png", startX + starWidth + margin, -20.0f);
-			thirdStar = createImage("gfx/menu/starSmallEmpty.png", startX + (2 * starWidth) + (2 * margin), 0.0f);
+			firstStar = new Button(skin, "starSmallFull");
+			firstStar.setPosition(startX, 0.0f);
+			
+			secondStar = new Button(skin, "starSmallEmpty");
+			secondStar.setPosition( startX + starWidth + margin, -20.0f);
+			
+			thirdStar = new Button(skin, "starSmallEmpty");
+			thirdStar.setPosition( startX + (2 * starWidth) + (2 * margin), 0.0f);
 		}
 		else if( score >= 200 && score < 300 )
 		{
-			firstStar = createImage("gfx/menu/starSmallFull.png", startX, 0.0f);
-			secondStar = createImage("gfx/menu/starSmallFull.png", startX + starWidth + margin, -20.0f);
-			thirdStar = createImage("gfx/menu/starSmallEmpty.png", startX + (2 * starWidth) + (2 * margin), 0.0f);
+			firstStar = new Button(skin, "starSmallFull");			
+			secondStar = new Button(skin, "starSmallFull");
+			thirdStar = new Button(skin, "starSmallEmpty");
 		}
 		else if( score > 300 )
 		{
-			firstStar = createImage("gfx/menu/starSmallFull.png", startX, 0.0f);
-			secondStar = createImage("gfx/menu/starSmallFull.png", startX + starWidth + margin, -20.0f);
-			thirdStar = createImage("gfx/menu/starSmallFull.png", startX + (2 * starWidth) + (2 * margin), 0.0f);
+			firstStar = new Button(skin, "starSmallFull");		
+			secondStar = new Button(skin, "starSmallFull");			
+			thirdStar = new Button(skin, "starSmallFull");
 		}
 		else
 		{
-			firstStar = createImage("gfx/menu/starSmallEmpty.png", startX, 0.0f);
-			secondStar = createImage("gfx/menu/starSmallEmpty.png", startX + starWidth + margin, -20.0f);
-			thirdStar = createImage("gfx/menu/starSmallEmpty.png", startX + (2 * starWidth) + (2 * margin), 0.0f);
+			firstStar = new Button(skin, "starSmallEmpty");
+			secondStar = new Button(skin, "starSmallEmpty");		
+			thirdStar = new Button(skin, "starSmallEmpty");
 		}
+		
+		firstStar.setPosition(startX, 0.0f);
+		secondStar.setPosition( startX + starWidth + margin, -20.0f);
+		thirdStar.setPosition( startX + (2 * starWidth) + (2 * margin), 0.0f);
 						
 		button.addActor(firstStar);
 		button.addActor(secondStar);

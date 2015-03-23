@@ -1,11 +1,10 @@
 package com.apptogo.runner.enums;
 
-import com.apptogo.runner.handlers.FontManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public enum FontType
-{	
+{	/*
 	BIG,
 	MEDIUM,
 	SMALL,
@@ -19,65 +18,7 @@ public enum FontType
 	ROCKFONT,
 	GAMEWORLDFONT,
 	COINFONT;
-	
-	public static BitmapFont convertToFont(FontType fontType)
-	{
-		if( fontType == FontType.BIG )
-		{
-			return FontManager.getInstance().bigFont;
-		}
-		else if( fontType == FontType.MEDIUM )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.SMALL )
-		{
-			return FontManager.getInstance().smallFont;
-		}
-		else if( fontType == FontType.LOADINGBIG )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.LOADINGSMALL )
-		{
-			return FontManager.getInstance().smallFont;
-		}
-		else if( fontType == FontType.BLACKBOARDSMALL )
-		{
-			return FontManager.getInstance().smallFont;
-		}
-		else if( fontType == FontType.BLACKBOARDMEDIUM )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.WOODFONT )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.WOODFONTSMALL )
-		{
-			return FontManager.getInstance().smallFont;
-		}
-		else if( fontType == FontType.LEAFFONT )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.ROCKFONT )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else if( fontType == FontType.GAMEWORLDFONT )
-		{
-			return FontManager.getInstance().gameWorldFont;
-		}
-		else if( fontType == FontType.COINFONT )
-		{
-			return FontManager.getInstance().mediumFont;
-		}
-		else 
-			return null;
-	}
-	
+		
 	public static Color convertToColor(FontType fontType)
 	{
 		if( fontType == FontType.BIG )
@@ -134,5 +75,5 @@ public enum FontType
 		}
 		else 
 			return null;
-	}
+	}*/
 }

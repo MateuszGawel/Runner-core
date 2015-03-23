@@ -194,25 +194,7 @@ public enum GameWorldType
 		
 		return null;
 	}
-	
-	public static FontType convertToButtonFontType( GameWorldType gameWorldType)
-	{
-		if( gameWorldType == WILDWEST )
-		{
-			return FontType.WOODFONT;
-		}
-		else if( gameWorldType == FOREST )
-		{
-			return FontType.LEAFFONT;
-		}
-		else if( gameWorldType == SPACE )
-		{
-			return FontType.ROCKFONT;
-		}
 		
-		return null;
-	}
-	
 	public static String convertToLoaderButtonName( GameWorldType gameWorldType )
 	{
 		if( gameWorldType == WILDWEST )

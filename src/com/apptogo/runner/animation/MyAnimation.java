@@ -13,7 +13,7 @@ public class MyAnimation extends Animation{
 	private int maxLoopCount = 0;
 	private boolean animationFinished;
 	private float timeElapsed = 0;
-	private int frameNumber = 0;
+	public int frameNumber = 0;
 	private boolean looping;
 	private Object animationState;
 	

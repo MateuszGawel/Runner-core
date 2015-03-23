@@ -64,23 +64,23 @@ public enum WidgetType
 		}
 	}
 
-	public static String getWidgetBackgroundPath(WidgetType widgetType) 
+	public static String getWidgetBackgroundRegionName(WidgetType widgetType) 
 	{
 		if(widgetType == WidgetType.SMALL)
 		{
-			return "gfx/menu/paperSmall.png";
+			return "paperSmall";
 		}
 		else if(widgetType == WidgetType.MEDIUM)
 		{
-			return "gfx/menu/blackBoardMedium.png";
+			return "blackBoardMedium";
 		}
 		else if(widgetType == WidgetType.BIG)
 		{
-			return "gfx/menu/paperBig.png";
+			return "paperBig";
 		}
 		else if(widgetType == WidgetType.BLACKBIG)
 		{
-			return "gfx/menu/blackBoardBig.png";
+			return null;
 		}
 		else if(widgetType == WidgetType.FINISH)
 		{

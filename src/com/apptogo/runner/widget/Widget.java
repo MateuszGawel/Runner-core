@@ -2,27 +2,21 @@ package com.apptogo.runner.widget;
 
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.apptogo.runner.logger.Logger;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
 public class Widget
-{	private static int CTR = 0;
-	private String name = "";
-
+{	
 	public enum WidgetFadingType
 	{
 		NONE,
@@ -34,26 +28,21 @@ public class Widget
 	}
 	
 	private final float FADE_IN_DURATION = 0.75f;
-	private final int WIDGET_TAB_COUNT = 5;
-	
-	private Skin skin;
+	private final int WIDGET_TAB_COUNT = 10;
 	
 	protected Widget widget = this;
 	
 	public Group window;
 	
-	private Texture widgetBackgroundTexture;
 	private Image widgetBackground;
-	
-	private Button blackOutButton;
-	private Button closeWidgetButton;
+	private Image blackOut;
+	private Image closeWidget;
 	
 	public ClickListener hideWidgetListener;
 	public ClickListener toggleWidgetListener;
 	
 	protected float hiddenPartWidth;
 
-	private WidgetType widgetType;
 	private WidgetFadingType fadeInType;
 	
 	private Interpolation interpolation;
@@ -64,49 +53,32 @@ public class Widget
 	protected Array< Array<Actor> > widgetTab;
 	protected int currentTab = 0;
 	
-	public boolean getToFrontOnClick = false;
-	
 	public Widget(String name, float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
 	{
 		this(x,y,hiddenPartWidth,widgetType,fadeInType,blackOut);
-		this.name = name;
 	}
 	/** @param hiddenPartWidth Jesli fading nie porusza widgetem to powinien byc ustawiony na 0 
 	 *  @param x Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie
 	 *  @param y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w poziomie*/
 	public Widget(float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
-	{			
-		this.skin = ResourcesManager.getInstance().getUiSkin();
-		
+	{
 		this.hiddenPartWidth = hiddenPartWidth;
-		this.widgetType = widgetType;
 		this.fadeInType = fadeInType;
 		this.setBlackOut = blackOut;
 		
-		initializeListeners();
-		
-		initializeBlackOutButton();
-					
-		initializeWindow();
-		
-		initializeWidgetTabs();
-				
-		float width = WidgetType.getWidth( this.widgetType );
-		float height = WidgetType.getHeight(this.widgetType);
+		float width = WidgetType.getWidth( widgetType );
+		float height = WidgetType.getHeight( widgetType );
 		x = ( x == (float)Align.center )?( -width/2.0f ):x;
 		y = ( y == (float)Align.center )?( -height/2.0f ):y;
 		
-		window.addActor( createWindow(x, y, width, height) );
-	}
-	
-	//---Initializing widget
-	private void initializeListeners()
-	{
 		hideWidgetListener = new ClickListener() 
 		{
             public void clicked(InputEvent event, float x, float y) 
             {
-                 widget.hideWidget();
+            	if( widget.isShowed )
+            	{
+            		widget.toggleWidget();
+            	}
             }
         };
         
@@ -117,25 +89,52 @@ public class Widget
                  widget.toggleWidget();
             }
         };
+					
+		initializeWindow(x, y, width, height, WidgetType.getWidgetBackgroundRegionName( widgetType ), WidgetType.showCloseWidgetButton( widgetType ));
+		
+		initializeWidgetTabs();
 	}
 	
-	private void initializeBlackOutButton()
-	{
-		blackOutButton = new Button(skin, "blackOut");
-		//blackOutButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		//chcemy miec pewnosc ze pokryje caly ekran, a takiej rozdzielczosci nikt nie przebije chyba
-		blackOutButton.setSize(4096.0f, 4096.0f);
-		//blackOutButton.setPosition( -(Runner.SCREEN_WIDTH / 2f), -(Runner.SCREEN_HEIGHT / 2f));
-		blackOutButton.setPosition( -2048.0f, -2048.0f);
-		
-		blackOutButton.addListener( hideWidgetListener );
-		
-		blackOutButton.setVisible(false);
-	}
-
-	private void initializeWindow()
+	//---Initializing widget
+	private void initializeWindow(float x, float y, float width, float height, String backgroundRegionName, boolean showCloseButton)
 	{
 		this.window = new Group();
+		this.window.setTransform(false);
+		
+		blackOut = new Image( ResourcesManager.getInstance().getAtlasRegion("widgetBlack") );
+		blackOut.setSize(4096.0f, 4096.0f);
+		blackOut.setPosition( -2048.0f, -2048.0f);
+		
+		blackOut.addListener( hideWidgetListener );
+		
+		blackOut.setVisible(false);
+		
+		this.window.addActor(this.blackOut);
+		
+		AtlasRegion region = null;
+		
+		if(backgroundRegionName != null)
+		{	
+			region = ResourcesManager.getInstance().getAtlasRegion(backgroundRegionName);
+			widgetBackground = new Image( region );
+			widgetBackground.setPosition(x, y);
+		}
+		
+		closeWidget = new Image( ResourcesManager.getInstance().getAtlasRegion("closeWidget") );
+		closeWidget.setPosition( x + width - 100.0f, y + height - 100.0f);
+		closeWidget.addListener( hideWidgetListener );
+		
+		if( !showCloseButton )
+		{
+			closeWidget.setVisible(false);
+		}
+		
+		if(widgetBackground != null)
+		{
+			this.window.addActor(widgetBackground);
+		}
+		
+		this.window.addActor(closeWidget);
 		
 		if( this.fadeInType == WidgetFadingType.ALPHA_ANIMATION || this.fadeInType == WidgetFadingType.NONE)
 		{
@@ -153,42 +152,6 @@ public class Widget
 		}
 	}
 	
-	private Window createWindow(float x, float y, float width, float height)
-	{			
-		Window win = new Window("", this.skin, "default");
-		win.setSize(width, height);
-		win.setPosition(x, y);
-		win.clearListeners();
-		
-		String texturePath = WidgetType.getWidgetBackgroundPath( this.widgetType );
-		
-		if(texturePath != null)
-		{		
-			widgetBackgroundTexture = new Texture( Gdx.files.internal( texturePath ) );
-			widgetBackgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-			widgetBackground = new Image( widgetBackgroundTexture );
-			widgetBackground.setPosition(0f, 0f);
-		}
-		
-		closeWidgetButton = new Button(skin, "closeWidget");
-		closeWidgetButton.setPosition(win.getWidth() - 100.0f, win.getHeight() - 100.0f);
-		closeWidgetButton.addListener( hideWidgetListener );
-		
-		if( !(WidgetType.showCloseWidgetButton( this.widgetType )) )
-		{
-			closeWidgetButton.setVisible(false);
-		}
-		
-		if(widgetBackground != null)
-		{
-			win.addActor(widgetBackground);
-		}
-		
-		win.addActor(closeWidgetButton);
-		
-		return win;
-	}
-
 	public void setEasing(Interpolation interpolation)
 	{
 		this.interpolation = interpolation;
@@ -197,29 +160,11 @@ public class Widget
 	
 	//---Getting and adding actors
 	public Group actor()
-	{		
-		final Group widgetGroup = new Group();
+	{	
+		this.isShowed = false;
+		this.hideWidget();
 		
-		widgetGroup.addActor(blackOutButton);
-		
-		widgetGroup.addActor(window);
-		
-		if( getToFrontOnClick )
-		{
-			widgetGroup.addListener( new ClickListener()
-			{
-				
-				public void clicked(InputEvent event, float x, float y) 
-	            {
-					widgetGroup.toFront();
-	            }
-				
-			}
-			);
-
-		}
-		
-		return widgetGroup;
+		return this.window;
 	}
 	
 	public void addActor(Actor actor)
@@ -239,40 +184,35 @@ public class Widget
 	//---Toggling widget
 	public void toggleWidget()
 	{
+		Logger.log(this, this.isShowed);
+		
 		if( this.isShowed ) this.hideWidget();
 		else this.showWidget();
+		
+		this.isShowed = !this.isShowed;
 	}
 	
 	public void showWidget()
 	{
-		if( !(this.isShowed) ) 
-		{
-			if( setBlackOut )
-			{
-				blackOutButton.setVisible(true);
-				blackOutButton.toFront();
-			}
-			
-			playFading(false);
-			this.isShowed = true;
-			
-			setCurrentTabVisibile(true);
-			
-			this.window.toFront();
-		}
+		blackOut.setVisible(setBlackOut);
+		
+		this.window.setVisible(true);
+		
+		setCurrentTabVisible(true);
+		
+		this.window.toFront();
+		playFading(false);
 	}
 	
 	public void hideWidget()
 	{
-		if( this.isShowed ) 
-		{
-			blackOutButton.setVisible(false);
-			
-			playFading(true);
-			this.isShowed = false;
-			
-			setCurrentTabVisibile(false);
-		}
+		blackOut.setVisible(false);
+		
+		this.window.setVisible(false);
+		
+		setCurrentTabVisible(false);
+		
+		playFading(true);
 	}
 
 	private void playFading(boolean hide)
@@ -339,7 +279,7 @@ public class Widget
 		currentTab = widgetTabIndex;
 	}
 	
-	public void setCurrentTabVisibile(boolean visibility)
+	public void setCurrentTabVisible(boolean visibility)
 	{
 		for(Actor actor: widgetTab.get(currentTab))
 		{
@@ -349,7 +289,7 @@ public class Widget
 	
 	public void changeWidgetTab(int widgetTabIndex)
 	{
-		setCurrentTabVisibile(false);
+		setCurrentTabVisible(false);
 		
 		if(widgetTabIndex >= 0 && widgetTabIndex < WIDGET_TAB_COUNT)
 		{
@@ -364,7 +304,7 @@ public class Widget
 			currentTab = WIDGET_TAB_COUNT - 1;
 		}
 		
-		setCurrentTabVisibile(true);
+		setCurrentTabVisible(true);
 	}
 
 	public ClickListener getChangeWidgetTabListener(final int widgetTabIndex)
@@ -380,11 +320,11 @@ public class Widget
 	
 	public void addTabButton(int tabIndex, String buttonName)
 	{
-		Button activeButton = new Button(skin, "tempTab");//buttonName);
+		Image activeButton = new Image( ResourcesManager.getInstance().getAtlasRegion(buttonName) );
 		activeButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
 		activeButton.setY( 1160.0f );
 		
-		Button nonActiveButton = new Button(skin, "tempTab");//buttonName);
+		Image nonActiveButton = new Image( ResourcesManager.getInstance().getAtlasRegion(buttonName) );
 		nonActiveButton.setX( -550.0f + ((tabIndex - 1) * 300)  );
 		nonActiveButton.setY( 1160.0f );
 		
@@ -396,12 +336,12 @@ public class Widget
 		addTabButton(tabIndex, activeButton, nonActiveButton);
 	}
 	
-	public void addTabButton(int tabIndex, Button button)
+	public void addTabButton(int tabIndex, Image button)
 	{
 		addTabButton(tabIndex, button, button);
 	}
 	
-	public void addTabButton(int tabIndex, Button activeButton, Button nonActiveButton)
+	public void addTabButton(int tabIndex, Image activeButton, Image nonActiveButton)
 	{
 		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
 		nonActiveButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );
@@ -424,24 +364,9 @@ public class Widget
 			counter++;
 		}
 	}
-	//---	
-	public boolean isShowed()
-	{
-		return this.isShowed;
-	}
-		
-	public WidgetType getWidgetType()
-	{
-		return this.widgetType;
-	}
-	
+	//---		
 	public void dispose()
 	{
 		this.widget = null;
-		
-		if( widgetBackgroundTexture != null)
-		{
-			this.widgetBackgroundTexture.dispose();
-		}
 	}
 }

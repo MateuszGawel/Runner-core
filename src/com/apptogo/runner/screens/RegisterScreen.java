@@ -48,19 +48,19 @@ public class RegisterScreen extends BaseScreen
             }
          });
         
-        notLoggedLabel = createLabel( getLangString("youreNotLoggedIn"), FontType.MEDIUM);
+        notLoggedLabel = new Label( getLangString("youreNotLoggedIn"), skin, "default");
     	setCenterPosition(notLoggedLabel, 240.0f);
         
-        informationLabel = createLabel( getLangString("giveYourAccountInformations"), FontType.MEDIUM);
+        informationLabel = new Label( getLangString("giveYourAccountInformations"), skin, "default");
         setCenterPosition(informationLabel, 170.0f);
         
-        additionalInformationLabel = createLabel( getLangString("accountWillBeCreatedIfItIsNot"), FontType.SMALL);
+        additionalInformationLabel = new Label( getLangString("accountWillBeCreatedIfItIsNot"), skin, "default");
         setCenterPosition(additionalInformationLabel, 120.0f);
         
-        nameLabel = createLabel( getLangString("name") + ":", FontType.MEDIUM);
+        nameLabel = new Label( getLangString("name") + ":", skin, "default");
         nameLabel.setPosition( -220.0f - nameLabel.getWidth(), -25.0f);
         
-        passwordLabel = createLabel( getLangString("password") + ":", FontType.MEDIUM);
+        passwordLabel = new Label( getLangString("password") + ":", skin, "default");
         passwordLabel.setPosition( -220.0f - passwordLabel.getWidth(), -125.0f);
         
 		nameTextField = new TextField("", skin, "default");
@@ -80,7 +80,7 @@ public class RegisterScreen extends BaseScreen
 		nameTextField.getStyle().background.setLeftWidth( 10.0f );
 		passwordTextField.getStyle().background.setLeftWidth( 10.0f );
 		
-		submitButton = createLabel( getLangString("login"), FontType.MEDIUM);
+		submitButton = new Label( getLangString("login"), skin, "default");
 		submitButton.setPosition( -(submitButton.getWidth() / 2.0f), -300.0f);
 		submitButton.addListener(new ClickListener(){
 			

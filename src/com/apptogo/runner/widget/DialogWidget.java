@@ -1,6 +1,7 @@
 package com.apptogo.runner.widget;
 
 import com.apptogo.runner.enums.FontType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -32,7 +33,7 @@ public class DialogWidget extends Widget
 		if(noListener == null) noListener = this.toggleWidgetListener;
 		if(yesListener == null) yesListener = this.toggleWidgetListener;
 		
-		skin = ResourcesManager.getInstance().getUiSkin();
+		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.MENU );
 		
 		yesButton = new Button(skin, "yesButton");
 		yesButton.setPosition(270, 10);
@@ -45,10 +46,6 @@ public class DialogWidget extends Widget
 		label = new Label(message, skin, "dialogLabel");
 		
 		//przy czcionce WOODFONT max szerokosc wiersza to 23 znaki [lub 356px]
-		LabelStyle ls = label.getStyle();
-		ls.font = FontType.convertToFont( FontType.WOODFONT );
-		ls.fontColor = FontType.convertToColor( FontType.WOODFONT );
-		label.setStyle(ls);
 		label.setWrap(true);
 		
 		table = new Table(skin);

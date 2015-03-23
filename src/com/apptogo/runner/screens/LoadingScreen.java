@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.ObjectAnimation;
+import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.animation.Loading;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
@@ -15,7 +16,7 @@ public class LoadingScreen extends BaseScreen
 	
 	private Label loadingLabel;
 	
-	private ObjectAnimation loadingAnimation;
+	private Loading loadingAnimation;
 		
 	private long timeStart;
 	private boolean loadingLabelIsAdded = false;
@@ -40,7 +41,7 @@ public class LoadingScreen extends BaseScreen
 		setCenterPosition(loadingLabel, 10.0f);
 		loadingLabel.setVisible(false);
 				
-		loadingAnimation = new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f, false, true);
+		loadingAnimation = new Loading(); // new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f, false, true);
 		loadingAnimation.setVisible(false);
 				
 		addToScreen(loadingLabel);
