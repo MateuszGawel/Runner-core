@@ -58,6 +58,9 @@ public class Obstacle extends Actor{
 	protected boolean scaleFrames = false;
 	protected float frameScale = 0.0f;
 	
+	//jesli chcielibysmy sobie zrobic obstacle w menu to nie powinno byc dzielone przez PPM (draw)
+	protected boolean isGameObstacle = true;
+	
 	//ta klasa odpowiada za stworzenie obiektu animowanego lub sta³ego w odpowiednim miejscu a nastepnie jego body
 	
 	public Obstacle()
@@ -286,7 +289,7 @@ public class Obstacle extends Actor{
         
         if(animationManager != null)
         {
-        	Logger.log(this, "NAZWA OBECNEGO FRAME'a : " + ((AtlasRegion)currentFrame ).name );
+        	//Logger.log(this, "NAZWA OBECNEGO FRAME'a : " + ((AtlasRegion)currentFrame ).name );
         	currentFrame = animationManager.animate(delta);
         }
         
@@ -310,13 +313,19 @@ public class Obstacle extends Actor{
 		super.draw(batch, parentAlpha);
 		if(currentFrame != null)
 		{
-			Logger.log(this, "&&&&&&&&&&&&&&&&&&&&&&&&&&& naprawde rysuje : " + ((AtlasRegion)currentFrame).name);
-			
 			float frameWidth = currentFrame.getRegionWidth();
 			float frameHeight = currentFrame.getRegionHeight();
 			
-			if(scaleFrames)
+			if( isGameObstacle )
 			{
+				frameWidth /= PPM;
+				frameHeight /= PPM;
+			}
+			
+			Logger.log(this, "&&&&&&&&&&&&&&&&&&&&&&&&&&& naprawde rysuje : " + ((AtlasRegion)currentFrame).name + " | " + frameWidth + ", " + frameHeight);
+			
+			if(scaleFrames)
+			{Logger.log(this, "SKALUJE RAZY " + frameScale);
 				frameWidth *= frameScale;
 				frameHeight *= frameScale;
 			}

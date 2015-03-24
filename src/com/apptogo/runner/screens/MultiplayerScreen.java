@@ -1,15 +1,13 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
+import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.handlers.ShopManager;
-import com.apptogo.runner.handlers.ShopManager.ShopItem;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Contact;
@@ -20,7 +18,6 @@ import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -63,7 +60,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private InfoWidget confirmWidget;
     
-    private CharacterAnimation currentCharacterAnimation;
+    private Animation currentCharacterAnimation;
 	    
 	public MultiplayerScreen(Runner runner)
 	{
@@ -193,9 +190,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private void createProfileWidget()
 	{
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
-        profileWidget.toggleWidget();        
+        profileWidget.showWidget();     
         		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
+		currentCharacterAnimation = new Animation("alien_idle", 10, 0.03f, CharacterAnimationState.IDLE, true, true); // CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
+		currentCharacterAnimation.setPosition(0, 0);
 		currentCharacterAnimation.setVisible(true);
         
 		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -320.0f, -260.0f);
@@ -226,6 +224,8 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			
         profileWidget.addActor(ground);
         profileWidget.addActor(currentCharacterAnimation);
+        
+        profileWidget.showWidget();
 	}
 	
 	private void createFriendsWidget()

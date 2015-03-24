@@ -23,26 +23,24 @@ public class GameProgressBar extends Group{
 	private Array<Character> characters;
 	float percent;
 	private float actorWidth;
-	private TextureAtlas atlas;
-	
+
 	public GameProgressBar(GameWorld gameWorld){
 		
-		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack");
 		this.setTransform(false);
 		if(gameWorld instanceof WildWestWorld){
-			this.barTextureBegin = atlas.findRegion("wildwestProgressBarBegin");
-			this.barTextureMiddle = atlas.findRegion("wildwestProgressBarMiddle");
-			this.barTextureEnd = atlas.findRegion("wildwestProgressBarEnd");
+			this.barTextureBegin = ResourcesManager.getInstance().getAtlasRegion("wildwestProgressBarBegin");
+			this.barTextureMiddle = ResourcesManager.getInstance().getAtlasRegion("wildwestProgressBarMiddle"); 
+			this.barTextureEnd = ResourcesManager.getInstance().getAtlasRegion("wildwestProgressBarEnd"); 
 		}
 		else if(gameWorld instanceof ForestWorld){
-			this.barTextureBegin = atlas.findRegion("forestProgressBarBegin");
-			this.barTextureMiddle = atlas.findRegion("forestProgressBarMiddle");
-			this.barTextureEnd = atlas.findRegion("forestProgressBarEnd");
+			this.barTextureBegin = ResourcesManager.getInstance().getAtlasRegion("forestProgressBarBegin");
+			this.barTextureMiddle = ResourcesManager.getInstance().getAtlasRegion("forestProgressBarMiddle");
+			this.barTextureEnd = ResourcesManager.getInstance().getAtlasRegion("forestProgressBarEnd");
 		}
 		else if(gameWorld instanceof SpaceWorld){
-			this.barTextureBegin = atlas.findRegion("planetProgressBarBegin");
-			this.barTextureMiddle = atlas.findRegion("planetProgressBarMiddle");
-			this.barTextureEnd = atlas.findRegion("planetProgressBarEnd");
+			this.barTextureBegin = ResourcesManager.getInstance().getAtlasRegion("planetProgressBarBegin");
+			this.barTextureMiddle = ResourcesManager.getInstance().getAtlasRegion("planetProgressBarMiddle");
+			this.barTextureEnd = ResourcesManager.getInstance().getAtlasRegion("planetProgressBarEnd");
 		}
 
 		this.gameWorld = gameWorld;
@@ -76,13 +74,13 @@ public class GameProgressBar extends Group{
 		for(Character character : characters){
 			switch(character.getCharacterType()){
 			case BANDIT:
-				addActor(new GameProgressBarHead(atlas.findRegion("banditProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
+				addActor(new GameProgressBarHead(ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
 				break;
 			case ARCHER:
-				addActor(new GameProgressBarHead(atlas.findRegion("archerProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
+				addActor(new GameProgressBarHead(ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
 				break;
 			case ALIEN:
-				addActor(new GameProgressBarHead(atlas.findRegion("alienProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
+				addActor(new GameProgressBarHead(ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead"), gameWorld, character, getWidth(), getHeight()));
 				break;
 			default:
 				break;

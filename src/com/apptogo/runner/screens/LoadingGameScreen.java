@@ -1,6 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.animation.Loading;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.GameWorldType;
@@ -13,11 +12,13 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 
 public class LoadingGameScreen extends BaseScreen
-{	    
+{
+	Image loadingBackground;
 	
 	private ResourcesManager resourcesManager;
 	
@@ -46,7 +47,12 @@ public class LoadingGameScreen extends BaseScreen
 		//jesli cos sie stanie z tlem przy ladowaniu to tu jest pewnie wina
 		if( levelToLoad != null )
 		{
-			setBackground( CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) ) );
+			String backgroundRegionName = CharacterType.convertToLoadingScreenBackground( GameWorldType.convertToCharacterType( levelToLoad.worldType ) );
+			
+			loadingBackground = new Image( ResourcesManager.getInstance().getAtlasRegion( backgroundRegionName ) );
+			setCenterPosition(loadingBackground, -200);			
+			
+			addToScreen(loadingBackground);
 		}
 		
 		String tip = TipManager.getInstance().getTip( levelToLoad.worldType );

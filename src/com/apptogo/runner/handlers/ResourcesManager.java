@@ -125,7 +125,7 @@ public class ResourcesManager
 				this.manager.finishLoading();
 				
 				Logger.log(this, "!!!!!!!!!!!!!!!!!!!!! " + this.skinAtlas + " | " + textureAtlas);
-				if( this.skinAtlas.equals( textureAtlas ) )
+				if( this.skinAtlas != null && this.skinAtlas.equals( textureAtlas ) )
 				{Logger.log(this, "JEDZIEMY ZE SKINEM");
 					FileHandle skinFileHandle = Gdx.files.internal( this.skinFile );
 					
@@ -153,9 +153,6 @@ public class ResourcesManager
 
 	public Array<ScreenMeta> screenMetaArray;
 		
-	private Skin uiskin;
-	private Skin guiskin;
-		
 	public TextureAtlas ATLAS = new TextureAtlas("gfx/splash/splashAtlas.atlas");
 	
 	public ResourcesManager() 
@@ -175,6 +172,7 @@ public class ResourcesManager
 		//ASSETS FOR STILL [ALWAYS LOADED]
 		ScreenMeta stillMeta = new ScreenMeta(ScreenClass.STILL);
 		
+		stillMeta.addTextureAtlas( "gfx/menu/backgroundAtlas.atlas" );
 		stillMeta.addTextureAtlas( "gfx/still/stillAtlas.atlas", true );
 		stillMeta.setSkinFile("gfx/still/stillAtlas.json");
 				
@@ -197,6 +195,9 @@ public class ResourcesManager
 		//ASSETS FOR GAME
 		ScreenMeta gameMeta = new ScreenMeta(ScreenClass.GAME);
 		
+		gameMeta.addTextureAtlas("gfx/game/characters/charactersAtlas.pack", true);
+		gameMeta.setSkinFile("gfx/game/characters/charactersAtlas.json");
+		
 		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
 		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
 		gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
@@ -204,15 +205,7 @@ public class ResourcesManager
 		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.WILDWEST ) );
 		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
 		gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
-		
-		gameMeta.addTextureAtlas( "gfx/game/levels/powerup.pack" );
-		gameMeta.addTextureAtlas( "gfx/game/levels/countdown.pack" );
-		gameMeta.addTextureAtlas( "gfx/game/levels/gameGuiAtlas.pack" );
-
-		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.BANDIT ) );
-		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ARCHER ) );
-		gameMeta.addTextures( CharacterType.convertToTexturesList( CharacterType.ALIEN ) );
-		
+				
 		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
 		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
 		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ALIEN ) );
@@ -229,11 +222,6 @@ public class ResourcesManager
 		gameMeta.addSounds( GameWorldType.convertToSounds( GameWorldType.SPACE ) );
 		
 		screenMetaArray.add(gameMeta);
-		
-		//|... INITIALIZING SKINS
-		//this.uiskin = new Skin(Gdx.files.internal("ui/ui/uiskin.json"), uiskinAtlas);
-		
-	    this.guiskin = new Skin(Gdx.files.internal("ui/gui/guiskin.json"));
 	}
 	
 	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
@@ -630,9 +618,9 @@ public class ResourcesManager
 		
 		return screenMetaArray.get( index ).skin;
 	}
-		
-	public Skin getGuiSkin()
+	
+	public Skin getStillSkin()
 	{
-		return this.guiskin;//new Skin(Gdx.files.internal("gui/guiskin.json"));
+		return getUiSkin( ScreenClass.STILL );
 	}
 }

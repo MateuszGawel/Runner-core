@@ -94,15 +94,14 @@ public abstract class GameScreen extends BaseScreen{
 		startLabel = new Label(getLangString("tapToStart"), skin, "default");
 		startLabel.setPosition( (Runner.SCREEN_WIDTH / 2.0f) - (startLabel.getWidth() / 2.0f), Runner.SCREEN_HEIGHT/2 + 300.0f);
 		
-
-		//gameGuiStage.addActor(coinLabel);
+		gameGuiStage.addActor(coinLabel);
 	}
 	
 	protected void createCoinLabel(){
 		coinLabelCounter = 0;
-		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack"));
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
 
-		coinLabel = new Label("0", skin, "default");
+		coinLabel = new Label("0", ResourcesManager.getInstance().getStillSkin(), "default");
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
 		coinLabel.setText( String.valueOf(coinLabelCounter) );
 		gameGuiStage.addActor(coinLabel);
@@ -161,9 +160,9 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		coinLabelCounter = gameWorld.player.character.getCoinCounter();
 		if(coinLabelCounter > prevCoinCounter){
-			//coinLabel.remove();
+			coinLabel.remove();
 			coinLabel.setText( String.valueOf(coinLabelCounter) );
-			//gameGuiStage.addActor(coinLabel);
+			gameGuiStage.addActor(coinLabel);
 			prevCoinCounter = coinLabelCounter;
 			coinCounterEffectActor.disallowCompletion();
 			if(coinCounterEffectActor.isComplete()){

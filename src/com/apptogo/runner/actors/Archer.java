@@ -58,7 +58,11 @@ public class Archer extends Character{
 	
 	private void initAnimations(){
 
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, animationManager.createFrames(6, "archer_jump"), false){
+		AtlasRegion[] ar = animationManager.createFrames(6, "archer_jump");
+				
+				if(ar == null) Logger.log(this, "DUPA");
+		
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, ar, false){
 			@Override
 			public void onAnimationFinished(){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
@@ -153,24 +157,24 @@ public class Archer extends Character{
 	public void createBodyMembers(){
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(20/PPM);
-		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/archerHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, circleShape, "archerHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
 		
 		PolygonShape polygonShape = new PolygonShape();
 		polygonShape.setAsBox(15/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerTorso.png", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerTorso", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
 		polygonShape.setAsBox(5/PPM, 10/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerLeg.png", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerLeg.png", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerFoot.png", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerFoot.png", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerArm.png", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerArm.png", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerHand.png", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerHand.png", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
 		polygonShape.setAsBox(9/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerBow.png", 65/PPM, -10/PPM, 200f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerBow", 65/PPM, -10/PPM, 200f * MathUtils.degreesToRadians));
 		polygonShape.setAsBox(5/PPM, 15/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/archerArrows.png", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArrows", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
 		
 		for(BodyMember bodyMember : bodyMembers){
 			gameWorld.worldStage.addActor(bodyMember);

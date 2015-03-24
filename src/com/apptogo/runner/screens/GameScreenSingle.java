@@ -57,14 +57,14 @@ public class GameScreenSingle extends GameScreen
 			}
 		});
 		
-		createFinishWidget();
+		//createFinishWidget();
 		
 		//gameGuiStage.addActor( finishWidget.actor() );
 	}
 	
 	private void createFinishWidget()
 	{
-		finishWidget = new Widget("settings", Align.center, 1240.0f, 950.0f, WidgetType.FINISH, WidgetFadingType.TOP_TO_BOTTOM, true);
+		finishWidget = new Widget(Align.center, 1240.0f, 950.0f, WidgetType.FINISH, WidgetFadingType.TOP_TO_BOTTOM, true);
 		finishWidget.setEasing( Interpolation.elasticOut );
 	
 		restartButton = new Label( getLangString("restartLevel"), skin, "default");

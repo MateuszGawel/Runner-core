@@ -10,6 +10,8 @@ public class Animation extends Obstacle
 	{
 		super();
 		
+		isGameObstacle = false;
+		
 		this.framesCount = framesCount;
 		
 		this.createAnimation(frameRegionName, framesCount, frameDuration, animationState, loop);

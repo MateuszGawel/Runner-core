@@ -14,6 +14,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
@@ -97,10 +98,10 @@ public abstract class Character extends Actor{
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
 		this.world = world;
-		animationManager = new AnimationManager(atlasName);
+		animationManager = new AnimationManager();//(atlasName);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 		this.playerName = playerName;
-		guiSkin = ResourcesManager.getInstance().getGuiSkin();
+		guiSkin = ResourcesManager.getInstance().getUiSkin(ScreenClass.GAME);
 		this.jumpButtonStyleName = jumpButtonStyleName;
 		this.slideButtonStyleName = slideButtonStyleName;
 		this.slowButtonStyleName = slowButtonStyleName;

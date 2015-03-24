@@ -53,13 +53,7 @@ public class Widget
 	protected Array< Array<Actor> > widgetTab;
 	protected int currentTab = 0;
 	
-	public Widget(String name, float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
-	{
-		this(x,y,hiddenPartWidth,widgetType,fadeInType,blackOut);
-	}
-	/** @param hiddenPartWidth Jesli fading nie porusza widgetem to powinien byc ustawiony na 0 
-	 *  @param x Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie
-	 *  @param y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w poziomie*/
+	//x/y Ustawienie na 1 [Align.center] spowoduje wysrodkowanie w pionie/poziomie
 	public Widget(float x, float y, float hiddenPartWidth, WidgetType widgetType, WidgetFadingType fadeInType, boolean blackOut)
 	{
 		this.hiddenPartWidth = hiddenPartWidth;
@@ -93,6 +87,8 @@ public class Widget
 		initializeWindow(x, y, width, height, WidgetType.getWidgetBackgroundRegionName( widgetType ), WidgetType.showCloseWidgetButton( widgetType ));
 		
 		initializeWidgetTabs();
+				
+		this.hideWidget();
 	}
 	
 	//---Initializing widget
@@ -160,10 +156,7 @@ public class Widget
 	
 	//---Getting and adding actors
 	public Group actor()
-	{	
-		this.isShowed = false;
-		this.hideWidget();
-		
+	{		
 		return this.window;
 	}
 	
@@ -184,8 +177,6 @@ public class Widget
 	//---Toggling widget
 	public void toggleWidget()
 	{
-		Logger.log(this, this.isShowed);
-		
 		if( this.isShowed ) this.hideWidget();
 		else this.showWidget();
 		
@@ -335,12 +326,7 @@ public class Widget
 		
 		addTabButton(tabIndex, activeButton, nonActiveButton);
 	}
-	
-	public void addTabButton(int tabIndex, Image button)
-	{
-		addTabButton(tabIndex, button, button);
-	}
-	
+		
 	public void addTabButton(int tabIndex, Image activeButton, Image nonActiveButton)
 	{
 		activeButton.addListener( this.getChangeWidgetTabListener( tabIndex ) );

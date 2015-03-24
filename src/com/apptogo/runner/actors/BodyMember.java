@@ -48,7 +48,7 @@ public class BodyMember extends Actor{
 		body.createFixture(fixtureDef).setUserData( userData );
 		body.setUserData( userData );
 		
-		this.currentFrame = new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), path));
+		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path); // new TextureRegion((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), path));
 		body.setTransform(-100, 0, 0);
 	}
 	

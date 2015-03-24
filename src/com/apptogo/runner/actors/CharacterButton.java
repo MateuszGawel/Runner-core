@@ -11,8 +11,8 @@ public class CharacterButton extends Image{
 	private TextureRegion textureRegion;
 	
 	public CharacterButton(String buttonName, float posX, float posY){
-		super(((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack")).findRegion(buttonName));
-		this.textureRegion = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/gameGuiAtlas.pack")).findRegion(buttonName);
+		super(ResourcesManager.getInstance().getAtlasRegion(buttonName));
+		this.textureRegion = ResourcesManager.getInstance().getAtlasRegion(buttonName);
 		setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
 		
 		
