@@ -28,17 +28,22 @@ public class WildWestWorld extends GameWorld{
 	private BackgroundRenderer background;
 	
 	private TextureRegion sandRegion, mountainsRegion, rocksRegion;
-	private TextureAtlas atlas;
+	//private TextureAtlas atlas;
 	
 	public WildWestWorld(String mapPath, Player player)
 	{
 		super(mapPath, player, GameWorldType.WILDWEST);
 		super.world.setGravity(GRAVITY);
-		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildwestBackground.pack");
-		sandRegion = atlas.findRegion("sand");
-		mountainsRegion = atlas.findRegion("mountains");
-		rocksRegion = atlas.findRegion("rocks");
+		//atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildwestBackground.pack");
+		
+		Logger.log(this, "TWORZENIE GS REGIONOW");
+		
+		sandRegion = ResourcesManager.getInstance().getAtlasRegion("sand"); //atlas.findRegion("sand");
+		mountainsRegion = ResourcesManager.getInstance().getAtlasRegion("mountains"); //atlas.findRegion("mountains");
+		rocksRegion = ResourcesManager.getInstance().getAtlasRegion("rocks"); //atlas.findRegion("rocks");
+		
 		createBackground();
+		
 		music = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/wildWestMusic.ogg");
 		music.setVolume(0.25f);	
 	}

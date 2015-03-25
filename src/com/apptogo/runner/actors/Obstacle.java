@@ -264,8 +264,6 @@ public class Obstacle extends Actor{
 			float playerPosition = ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.getBody().getPosition().x;
 			float distance = Math.abs(myPosition - playerPosition);
 			
-			//Logger.log(this, "my position: " + myPosition + " player position: " + playerPosition + " i roznica: " + (Math.abs(playerPosition - myPosition)));
-			
 			if(distance > 10){
 				setSoundVolume(0);
 			}
@@ -275,7 +273,6 @@ public class Obstacle extends Actor{
 			else{
 				setSoundVolume(1/(distance));
 			}
-			//Logger.log(this, "glosnosc: " + 1/(distance));
 		}
 	}
 	@Override
@@ -289,7 +286,6 @@ public class Obstacle extends Actor{
         
         if(animationManager != null)
         {
-        	//Logger.log(this, "NAZWA OBECNEGO FRAME'a : " + ((AtlasRegion)currentFrame ).name );
         	currentFrame = animationManager.animate(delta);
         }
         
@@ -321,11 +317,9 @@ public class Obstacle extends Actor{
 				frameWidth /= PPM;
 				frameHeight /= PPM;
 			}
-			
-			Logger.log(this, "&&&&&&&&&&&&&&&&&&&&&&&&&&& naprawde rysuje : " + ((AtlasRegion)currentFrame).name + " | " + frameWidth + ", " + frameHeight);
-			
+
 			if(scaleFrames)
-			{Logger.log(this, "SKALUJE RAZY " + frameScale);
+			{
 				frameWidth *= frameScale;
 				frameHeight *= frameScale;
 			}

@@ -101,7 +101,7 @@ public abstract class GameScreen extends BaseScreen{
 		coinLabelCounter = 0;
 		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
 
-		coinLabel = new Label("0", ResourcesManager.getInstance().getStillSkin(), "default");
+		coinLabel = new Label("0", skin, "coin");
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
 		coinLabel.setText( String.valueOf(coinLabelCounter) );
 		gameGuiStage.addActor(coinLabel);

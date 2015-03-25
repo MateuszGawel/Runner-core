@@ -13,7 +13,7 @@ public class GameWorldRenderer
 {	
     GameWorld gameWorld;  
     OrthographicCamera camera;  
-    Box2DDebugRenderer debugRenderer;
+    //Box2DDebugRenderer debugRenderer;
     
 	public int currentScreenWidth, currentScreenHeight;
 	private Rectangle cullingArea;
@@ -21,7 +21,7 @@ public class GameWorldRenderer
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
         this.gameWorld = gameWorld;  
-        this.debugRenderer = new Box2DDebugRenderer();  
+        //this.debugRenderer = new Box2DDebugRenderer();  
         this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();  
        
         camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
@@ -55,16 +55,16 @@ public class GameWorldRenderer
     	//gameWorld.getBackgroundStage().getRoot().setCullingArea(cullingArea);
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
-    	//Logger.log(this, "liczba rendercalli BackgroundStage: " + ((SpriteBatch)gameWorld.getBackgroundStage().getBatch()).renderCalls);
+    	Logger.log(this, "liczba rendercalli BackgroundStage: " + ((SpriteBatch)gameWorld.getBackgroundStage().getBatch()).renderCalls);
 
     	
     	//worldStage
     	gameWorld.getWorldStage().getRoot().setCullingArea(cullingArea);
     	gameWorld.getWorldStage().getViewport().update(currentScreenWidth, currentScreenHeight);	
-    	gameWorld.getWorldStage().draw();  
-    	//Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
+    	gameWorld.getWorldStage().draw();
+    	Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
-    	debugRenderer.render(gameWorld.world, camera.combined);
+    	//debugRenderer.render(gameWorld.world, camera.combined);
     }
 }

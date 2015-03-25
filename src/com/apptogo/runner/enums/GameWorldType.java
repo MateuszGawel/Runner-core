@@ -47,26 +47,7 @@ public enum GameWorldType
 		
 		return null;
 	}
-	
-	static public String[] convertToTextureAtlases(GameWorldType gameWorldType)
-	{
 		
-		if( gameWorldType == WILDWEST )
-		{
-			return new String[]{ "gfx/game/levels/wildwestBackground.pack", "gfx/game/levels/wildWestAtlas.pack" };
-		}
-		else if( gameWorldType == FOREST )
-		{
-			return new String[]{ "gfx/game/levels/forestAtlas.pack" };
-		}
-		else if( gameWorldType == SPACE )
-		{
-			return new String[]{ "gfx/game/levels/asteroid.pack"};
-		}
-		
-		return null;
-	}
-	
 	static public String[] convertToMusics(GameWorldType gameWorldType)
 	{
 		
@@ -159,19 +140,19 @@ public enum GameWorldType
 		return null;
 	}
 	
-	public static String convertToWorldBackgroundPath( GameWorldType gameWorldType, ScreenType screenType )
+	public static String convertToWorldBackgroundRegionName( GameWorldType gameWorldType )
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundWildWest.png";
+			return "campaignScreenBackgroundWildWest";
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundForrest.png";
+			return "campaignScreenBackgroundForrest";
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return "gfx/menu/menuBackgrounds/campaignScreenBackgroundSpace.png";
+			return "campaignScreenBackgroundSpace";
 		}
 		
 		return null;

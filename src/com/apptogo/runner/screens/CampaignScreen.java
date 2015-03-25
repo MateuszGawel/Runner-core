@@ -1,7 +1,6 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -15,7 +14,7 @@ import com.apptogo.runner.player.Player;
 import com.apptogo.runner.vars.Box2DVars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -130,7 +129,12 @@ public class CampaignScreen extends BaseScreen
 	
 	private void addNewWorldToGroup(LevelWorld levelWorld)
 	{
-		Image worldBackground = createImage(GameWorldType.convertToWorldBackgroundPath( levelWorld.getWorldType(), this.getSceneType() ), (-Runner.SCREEN_WIDTH/2.0f) + Runner.SCREEN_WIDTH * worldsCount, -400.0f);
+		String worldBackgroundRegionName = GameWorldType.convertToWorldBackgroundRegionName( levelWorld.getWorldType() );
+		
+		AtlasRegion worldBackgroundRegion = ResourcesManager.getInstance().getAtlasRegion(worldBackgroundRegionName);
+		
+		Image worldBackground = new Image( worldBackgroundRegion );
+		worldBackground.setPosition((-Runner.SCREEN_WIDTH/2.0f) + Runner.SCREEN_WIDTH * worldsCount, -400.0f);
 		
 		previousWorldButton = new Button(skin, "campaignArrowLeft");
         previousWorldButton.setPosition( -570.0f + (worldsCount * Runner.SCREEN_WIDTH), -100.0f );

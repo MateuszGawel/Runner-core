@@ -82,7 +82,7 @@ public class SplashScreen extends BaseScreen
 	
 	@Override
 	public void prepare()
-	{			
+	{			Logger.log(this, 1);
 		initializeActions();
 
 		currentPhase = SplashPhase.APPTOGO_LOGO_IN;
@@ -130,6 +130,8 @@ public class SplashScreen extends BaseScreen
 		
 		loadingAnimation = new Loading();
 		setCenterPosition(loadingAnimation, 240);
+		
+		Logger.log(this, 2);
 	}
 	
 	private void initializeActions()

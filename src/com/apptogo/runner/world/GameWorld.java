@@ -139,6 +139,9 @@ public abstract class GameWorld
 		
 		tiledMapRendererActor = new MyTiledMapRendererActor(TiledMapLoader.getInstance().getMapRenderer(), (OrthographicCamera)worldStage.getCamera());
 		worldStage.addActor(tiledMapRendererActor);
+		
+		worldStage.getActors().swap(0, worldStage.getActors().size-1);
+		
 		tiledMapRendererActor.setZIndex(0);
 		tiledMapRendererActorFrontLayer = new MyTiledMapRendererActorFrontLayer(TiledMapLoader.getInstance().getMapRenderer());
 		worldStage.addActor(tiledMapRendererActorFrontLayer);
@@ -231,7 +234,7 @@ public abstract class GameWorld
         worldStage.act(delta);
 		AbilityManager.getInstance().act();
         contactListener.postStep();
-        //fpsLogger.log();
+        fpsLogger.log();
         
     }  
     
