@@ -612,9 +612,19 @@ public abstract class Character extends Actor{
 			flags.setQueuedLift(false);
 		}
 		
-		if(flags.isQueuedDeath()){
+		if(flags.isQueuedDeathDismemberment()){
 			dieDismemberment();
-			flags.setQueuedDeath(false);
+			flags.setQueuedDeathDismemberment(false);
+		}
+		
+		if(flags.isQueuedDeathTop()){
+			dieTop();
+			flags.setQueuedDeathTop(false);
+		}
+		
+		if(flags.isQueuedDeathBottom()){
+			dieBottom();
+			flags.setQueuedDeathBottom(false);
 		}
 	}
 	

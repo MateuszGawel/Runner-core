@@ -174,12 +174,19 @@ public class MyContactListener implements ContactListener
 			}
 			
 			//UMIEJETNOSCI
+			//strzaly
+			if(checkFixturesTypes(fa, fb, "mainBody", "arrow")){
+				Fixture arrowFixture = getFixtureByType(fa, fb, "arrow");
+				String arrowOwner = ((UserData)arrowFixture.getUserData()).playerName;
+				if(/*player.character.flags.isMe() &&*/ arrowOwner!=player.getName())
+					player.character.flags.setQueuedDeathBottom(true);
+			}
 			//bomby
 			if(checkFixturesTypes(fa, fb, "mainBody", "bombExplosion")){
 				Fixture bombExplosionFixture = getFixtureByType(fa, fb, "bombExplosion");
 				String bombOwner = ((UserData)bombExplosionFixture.getUserData()).playerName;
 				if(/*player.character.flags.isMe() &&*/ bombOwner!=player.getName())
-					player.character.flags.setQueuedDeath(true);
+					player.character.flags.setQueuedDeathDismemberment(true);
 			}
 			if(checkFixturesTypes(fa, fb, "mainBody", "bomb")){
 				Fixture bomb = getFixtureByType(fa, fb, "bomb");

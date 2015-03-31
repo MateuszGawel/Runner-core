@@ -169,19 +169,19 @@ public abstract class BaseScreen implements Screen
 			menuBackgroundStage.act();   
 			menuBackgroundStage.draw();
 					
-			Logger.log(this, "liczba rendercalli menuBackgroundStage: " + ((SpriteBatch)menuBackgroundStage.getBatch()).renderCalls);
+			//Logger.log(this, "liczba rendercalli menuBackgroundStage: " + ((SpriteBatch)menuBackgroundStage.getBatch()).renderCalls);
 			
 			viewport.update(currentWindowWidth, currentWindowHeight);
 			menuStage.act();
 			menuStage.draw();
 			
-			Logger.log(this, "liczba rendercalli menuStage: " + ((SpriteBatch)menuStage.getBatch()).renderCalls);
+			//Logger.log(this, "liczba rendercalli menuStage: " + ((SpriteBatch)menuStage.getBatch()).renderCalls);
 			
 			fadeViewport.update(currentWindowWidth, currentWindowHeight);
 			menuFadeStage.act();
 			menuFadeStage.draw();
 			
-			Logger.log(this, "liczba rendercalli menuFadeStage: " + ((SpriteBatch)menuFadeStage.getBatch()).renderCalls);
+			//Logger.log(this, "liczba rendercalli menuFadeStage: " + ((SpriteBatch)menuFadeStage.getBatch()).renderCalls);
 		}
 		else
 		{
@@ -189,7 +189,7 @@ public abstract class BaseScreen implements Screen
 			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
 			gameGuiStage.act(delta);
     		gameGuiStage.draw();
-    		Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
+    		//Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
 		}
 		
 		CustomActionManager.getInstance().act(delta);

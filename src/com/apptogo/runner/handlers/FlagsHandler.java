@@ -11,7 +11,9 @@ public class FlagsHandler {
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
 	private boolean queuedLift;
-	private boolean queuedDeath;
+	private boolean queuedDeathDismemberment;
+	private boolean queuedDeathTop;
+	private boolean queuedDeathBottom;
 	
 	//ZMIENNE
 	private Character character;
@@ -223,12 +225,28 @@ public class FlagsHandler {
 		this.queuedJump = queuedJump;
 		
 	}
-	public boolean isQueuedDeath() {
-		return queuedDeath;
+	public boolean isQueuedDeathDismemberment() {
+		return queuedDeathDismemberment;
 	}
 
-	public void setQueuedDeath(boolean queuedDeath) {
-		this.queuedDeath = queuedDeath;
+	public void setQueuedDeathDismemberment(boolean queuedDeathDismemberment) {
+		this.queuedDeathDismemberment = queuedDeathDismemberment;
+	}
+
+	public boolean isQueuedDeathTop() {
+		return queuedDeathTop;
+	}
+
+	public void setQueuedDeathTop(boolean queuedDeathTop) {
+		this.queuedDeathTop = queuedDeathTop;
+	}
+
+	public boolean isQueuedDeathBottom() {
+		return queuedDeathBottom;
+	}
+
+	public void setQueuedDeathBottom(boolean queuedDeathBottom) {
+		this.queuedDeathBottom = queuedDeathBottom;
 	}
 
 	public boolean isCanBegin() {

@@ -55,14 +55,14 @@ public class GameWorldRenderer
     	//gameWorld.getBackgroundStage().getRoot().setCullingArea(cullingArea);
 		gameWorld.getBackgroundStage().getViewport().update(currentScreenWidth, currentScreenHeight);
     	gameWorld.getBackgroundStage().draw();
-    	Logger.log(this, "liczba rendercalli BackgroundStage: " + ((SpriteBatch)gameWorld.getBackgroundStage().getBatch()).renderCalls);
+    	//Logger.log(this, "liczba rendercalli BackgroundStage: " + ((SpriteBatch)gameWorld.getBackgroundStage().getBatch()).renderCalls);
 
     	
     	//worldStage
     	gameWorld.getWorldStage().getRoot().setCullingArea(cullingArea);
     	gameWorld.getWorldStage().getViewport().update(currentScreenWidth, currentScreenHeight);	
     	gameWorld.getWorldStage().draw();
-    	Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
+    	//Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
     	debugRenderer.render(gameWorld.world, camera.combined);

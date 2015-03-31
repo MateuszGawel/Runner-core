@@ -68,6 +68,10 @@ public class Arrow extends Actor implements Poolable{
 		fixtureDef.shape = shape;
 		
 		arrowBody.createFixture(fixtureDef).setUserData( userData );
+		fixtureDef = Materials.arrowSensor;
+		fixtureDef.shape = shape;
+		arrowBody.createFixture(fixtureDef).setUserData( userData );
+		
 		arrowBody.setUserData( userData );
 		
 		random = new Random();
@@ -84,6 +88,8 @@ public class Arrow extends Actor implements Poolable{
         CustomActionManager.getInstance().registerAction(new CustomAction(arrowNumber*0.1f, 1, character) {		
 			@Override
 			public void perform() {
+				((UserData)arrowBody.getFixtureList().get(0).getUserData()).playerName = ((Character)args[0]).playerName;
+				((UserData)arrowBody.getFixtureList().get(1).getUserData()).playerName = ((Character)args[0]).playerName;
 		    	position.set(((Character)args[0]).getX()+10/PPM, ((Character)args[0]).getY()+40/PPM);
 		    	((UserData)arrowBody.getUserData()).active = true;
 		    	arrowBody.setActive(true);
