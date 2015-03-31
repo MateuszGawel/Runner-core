@@ -42,7 +42,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	}
 	
 	public Bomb(World world, GameWorld gameWorld){
-		super(new EllipseMapObject(0,0,32,32), world, "bomb", 5, 0.03f, BombAnimationState.NORMAL, "gfx/game/characters/characters.pack");
+		super(new EllipseMapObject(0,0,32,32), world, "bomb", 5, 0.03f, BombAnimationState.NORMAL, "gfx/game/characters/charactersAtlas.pack");
 		explosionParticle = new ParticleEffectActor("explosion.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
 		createExplosion();

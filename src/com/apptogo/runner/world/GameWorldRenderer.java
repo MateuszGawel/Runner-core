@@ -13,7 +13,7 @@ public class GameWorldRenderer
 {	
     GameWorld gameWorld;  
     OrthographicCamera camera;  
-    //Box2DDebugRenderer debugRenderer;
+    Box2DDebugRenderer debugRenderer;
     
 	public int currentScreenWidth, currentScreenHeight;
 	private Rectangle cullingArea;
@@ -21,7 +21,7 @@ public class GameWorldRenderer
     public GameWorldRenderer(GameWorld gameWorld)  
     {  
         this.gameWorld = gameWorld;  
-        //this.debugRenderer = new Box2DDebugRenderer();  
+        this.debugRenderer = new Box2DDebugRenderer();  
         this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();  
        
         camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
@@ -65,6 +65,6 @@ public class GameWorldRenderer
     	Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
-    	//debugRenderer.render(gameWorld.world, camera.combined);
+    	debugRenderer.render(gameWorld.world, camera.combined);
     }
 }
