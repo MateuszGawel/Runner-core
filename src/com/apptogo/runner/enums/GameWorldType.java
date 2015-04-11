@@ -34,7 +34,7 @@ public enum GameWorldType
 	{
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{};
+			return new String[]{"gfx/game/levels/wildwestBackground.pack"};
 		}
 		else if( gameWorldType == FOREST )
 		{

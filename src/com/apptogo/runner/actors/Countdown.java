@@ -25,6 +25,9 @@ public class Countdown extends Obstacle{
 	private int frameCounter = 0;
 	public Countdown(GameWorld world){
 		super();
+		
+		this.isGameObstacle = false;
+		
 		this.world = world;
 		countdown1 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown1.ogg");
 		countdown2 = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdown2.ogg");
@@ -83,8 +86,15 @@ public class Countdown extends Obstacle{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+		
+		Logger.log(this, "WIDTH: " + currentFrame.getRegionWidth());
+		Logger.log(this, "HEIGHT: " + currentFrame.getRegionHeight());
+		
         setWidth(currentFrame.getRegionWidth());
         setHeight(currentFrame.getRegionHeight());
 		setPosition(Runner.SCREEN_WIDTH/2 - currentFrame.getRegionWidth()/2, Runner.SCREEN_HEIGHT/2 - currentFrame.getRegionHeight()/2);
+	
+		Logger.log(this, "WIDTH TH: " + this.getWidth());
+		Logger.log(this, "HEIGHT TH: " + this.getHeight());
 	}
 }
