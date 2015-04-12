@@ -23,12 +23,14 @@ public class Asteroid extends Actor implements Poolable{
 
 	public Asteroid(){
         this.alive = false;
-        asteroidAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/asteroid.pack");
+        asteroidAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/spaceAtlas.pack");
         setPosition(1500, 0);
 	}
 
     public void init() {
-    	currentFrame = asteroidAtlas.findRegion("asteroid"+(random.nextInt(4)+1));
+    	//currentFrame = asteroidAtlas.findRegion("asteroid"+(random.nextInt(4)+1));
+    	currentFrame = ResourcesManager.getInstance().getAtlasRegion( "asteroid"+(random.nextInt(4)+1) );
+    	
     	setPosition(1300/PPM, random.nextInt(900)/PPM - 50/PPM);
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
 		setWidth(currentFrame.getRegionWidth()/PPM);

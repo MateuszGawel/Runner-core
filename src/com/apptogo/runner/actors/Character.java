@@ -752,7 +752,7 @@ public abstract class Character extends Actor{
 			for(int i = 1; i<=9; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = false;
 			}
-			for(int i = 11; i<=18; i++){
+			for(int i = 11; i<=17; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
 			}
 			
@@ -798,7 +798,7 @@ public abstract class Character extends Actor{
 			for(int i = 1; i<=10; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = true;
 			}
-			for(int i = 11; i<=20; i++){
+			for(int i = 11; i<=17; i++){
 				((UserData)body.getFixtureList().get(i).getUserData()).ignoreContact = false;
 			}
 			

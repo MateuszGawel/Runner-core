@@ -135,7 +135,6 @@ public abstract class GameWorld
 		String atlasPath = GameWorldType.convertToAtlasPath(this.gameWorldType);
 		TextureAtlas textureAtlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath);
 		TiledMapLoader.getInstance().loadMap(mapPath, textureAtlas.getTextures().first(), atlasPath.substring(0, atlasPath.lastIndexOf('.')));
-
 		
 		tiledMapRendererActor = new MyTiledMapRendererActor(TiledMapLoader.getInstance().getMapRenderer(), (OrthographicCamera)worldStage.getCamera());
 		worldStage.addActor(tiledMapRendererActor);

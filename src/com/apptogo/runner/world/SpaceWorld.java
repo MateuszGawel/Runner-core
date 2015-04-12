@@ -91,21 +91,18 @@ public class SpaceWorld extends GameWorld{
 	
 	private void createBackground(){
 
-		space = createImage("gfx/game/levels/space.jpg", 0, 0);
+		space = new Image( ResourcesManager.getInstance().getAtlasRegion("space") );
+		
+		space.setPosition(0, 0);
+		space.setWidth(space.getWidth()/PPM);
+		space.setHeight(space.getHeight()/PPM);
+		
+		backgroundStage.addActor(space);
 		
 		//chujowa interpolacja
 		//planet1 = new ConstantParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/planet1.png"), 0.05f, -0.04f, 800, 400);
 		//background.addActor(planet1);
 		
-	}
-	
-	private Image createImage(String path, int posX, int posY){
-		Image image = new Image((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), path));
-		image.setPosition(posX/PPM, posY/PPM);
-		image.setWidth(image.getWidth()/PPM);
-		image.setHeight(image.getHeight()/PPM);
-		backgroundStage.addActor(image);
-		return image;
 	}
 	
 	private void freePools(){

@@ -29,24 +29,6 @@ public enum GameWorldType
 
 		return null;
 	}
-
-	public static String[] convertToTexturesList(GameWorldType gameWorldType)
-	{
-		if( gameWorldType == WILDWEST )
-		{
-			return new String[]{"gfx/game/levels/wildwestBackground.pack"};
-		}
-		else if( gameWorldType == FOREST )
-		{
-			return new String[]{"gfx/game/levels/forestBackground.pack"};
-		}
-		else if( gameWorldType == SPACE )
-		{
-			return new String[]{ "gfx/game/levels/space.jpg", "gfx/game/levels/planet1.png" , "gfx/game/levels/planet2.png" , "gfx/game/levels/planet3.png", "gfx/game/levels/asteroid1.png", "gfx/game/levels/asteroid2.png", "gfx/game/levels/asteroid3.png", "gfx/game/levels/asteroid4.png", "gfx/game/levels/asteroid5.png", "gfx/game/levels/rockBig.png", "gfx/game/levels/rockSmall.png"};
-		}
-		
-		return null;
-	}
 		
 	static public String[] convertToMusics(GameWorldType gameWorldType)
 	{

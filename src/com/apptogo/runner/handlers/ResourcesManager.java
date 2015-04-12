@@ -187,17 +187,15 @@ public class ResourcesManager
 		
 		gameMeta.addTextureAtlas("gfx/game/characters/charactersAtlas.pack", true);
 		gameMeta.setSkinFile("gfx/game/characters/charactersAtlas.json");
-		
-		gameMeta.addTextureAtlases( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
-		gameMeta.addTextureAtlases( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
-		//gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
-		//gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
-		
+				
 		gameMeta.addTextureAtlas( "gfx/game/levels/wildWestAtlas.pack" );
 		gameMeta.addTextureAtlas( "gfx/game/levels/forestAtlas.pack" );
+		gameMeta.addTextureAtlas( "gfx/game/levels/spaceAtlas.pack" );
 		
-		//gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
-		//gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
+		gameMeta.addTextureAtlas( "gfx/game/levels/wildwestBackground.pack" );
+		gameMeta.addTextureAtlas( "gfx/game/levels/forestBackground.pack" );
+		gameMeta.addTextureAtlas( "gfx/game/levels/spaceBackground.pack" );
+		
 				
 		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.BANDIT ) );
 		gameMeta.addSounds( CharacterType.convertToSoundsList( CharacterType.ARCHER ) );
