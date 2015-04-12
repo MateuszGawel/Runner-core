@@ -25,7 +25,7 @@ public class WildWestWorld extends GameWorld{
 	public ParallaxBackground rocks;
 	public Image skyBlue;
 	public ParallaxBackground sand;
-	private BackgroundRenderer background;
+	private WildWestBackgroundRenderer background;
 	
 	private TextureRegion sandRegion, mountainsRegion, rocksRegion;
 	//private TextureAtlas atlas;
@@ -50,7 +50,7 @@ public class WildWestWorld extends GameWorld{
 	
 	private void createBackground(){
 
-		background = new BackgroundRenderer();
+		background = new WildWestBackgroundRenderer();
 		backgroundStage.addActor(background);
 		
 		mountains = new ParallaxBackground(mountainsRegion, mapSize, 0, -79/mapSize.y, player.character, 0, 300/PPM);

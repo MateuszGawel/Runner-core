@@ -18,6 +18,9 @@ public class UserData
 	//obstacle
 	public boolean active;
 	public boolean playSound;
+	public boolean killingBottom;
+	public boolean killingTop;
+	public boolean killingDismemberment;
 	
 	//swamp
 	public boolean touchSwamp;

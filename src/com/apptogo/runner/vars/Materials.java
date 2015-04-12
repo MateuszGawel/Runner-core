@@ -27,6 +27,7 @@ public class Materials {
 	public static FixtureDef arrowBody;
 	public static FixtureDef arrowSensor;
 	public static FixtureDef fieldBody;
+	public static FixtureDef barrelBody;
 	
 	static
 	{
@@ -45,11 +46,13 @@ public class Materials {
 		obstacleBody = createFixtureDef(500f, 1f, 0f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR), false); //z kolizja z playerem, nie trzeba sensora
 		obstacleSensor = createFixtureDef(0f, 0f, 0f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_WORLD_OBJECT), true); //wystarczy jesli przeszkoda jest statyczna
 		bushBody = createFixtureDef(30f, 1f, 0.99f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_CHARACTER_SENSOR), false);
+		barrelBody = createFixtureDef(10f, 0.2f, 0f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR), false); //z kolizja z playerem, nie trzeba sensora
 		
 		bombBody = createFixtureDef(10f, 0.1f, 0.5f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		arrowBody = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		arrowSensor = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
 		fieldBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT), true);
+		
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution, short categoryBits, short maskBits, boolean sensor)

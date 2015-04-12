@@ -1,11 +1,13 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,12 +18,12 @@ public class Barrel extends Obstacle{
 	private Sound sound;
 	
 	public Barrel(MapObject object, World world, GameWorld gameWorld){
-		super(object, world, "barrelSmall");
+		super(object, world, "barrelSmall", GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		gameWorld.getWorldStage().addActor(this);
 
 		
-		createBody(BodyType.StaticBody, Materials.obstacleBody, "barrel");
-		
+		createBody(BodyType.StaticBody, Materials.barrelBody, "barrel");
+		getBody().setAngularDamping(3);
 		userData = ((UserData)getBody().getUserData());
 		sound = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/barrel.ogg");
 	}
@@ -32,9 +34,12 @@ public class Barrel extends Obstacle{
 		if(((UserData)getBody().getUserData()).active && getBody().getType() != BodyType.DynamicBody)
 			getBody().setType(BodyType.DynamicBody);
 		
-		if( (Math.abs(body.getLinearVelocity().x) > 10f	|| Math.abs(body.getLinearVelocity().y) > 7f ))
+		if( (Math.abs(body.getLinearVelocity().x) > 15f	|| Math.abs(body.getLinearVelocity().y) > 7f ))
 		{
-			( (UserData) body.getFixtureList().first().getUserData() ).key = "killingBottom";
+			( (UserData) body.getFixtureList().first().getUserData() ).killingBottom = true;
+		}
+		else{
+			( (UserData) body.getFixtureList().first().getUserData() ).killingBottom = false;
 		}
 		
 		if(userData.playSound){
@@ -42,5 +47,10 @@ public class Barrel extends Obstacle{
 			sound.play(getSoundVolume());
 		}
 		
+	}
+	
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+
 	}
 }

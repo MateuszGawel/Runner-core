@@ -189,13 +189,13 @@ public class ResourcesManager
 		gameMeta.setSkinFile("gfx/game/characters/charactersAtlas.json");
 		
 		gameMeta.addTextureAtlases( GameWorldType.convertToTexturesList( GameWorldType.WILDWEST ) );
+		gameMeta.addTextureAtlases( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
 		//gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.FOREST ) );
 		//gameMeta.addTextures( GameWorldType.convertToTexturesList( GameWorldType.SPACE ) );
 		
 		gameMeta.addTextureAtlas( "gfx/game/levels/wildWestAtlas.pack" );
 		gameMeta.addTextureAtlas( "gfx/game/levels/forestAtlas.pack" );
 		
-		gameMeta.addTexture( "gfx/game/levels/tree4.png" );
 		//gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.FOREST ) );
 		//gameMeta.addTextureAtlases( GameWorldType.convertToTextureAtlases( GameWorldType.SPACE ) );
 				

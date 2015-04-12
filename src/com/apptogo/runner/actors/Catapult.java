@@ -4,6 +4,8 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
@@ -27,13 +29,19 @@ public class Catapult extends Obstacle{
 		setVisible(false);
 		setOffset(-20/PPM, -40/PPM);
 
-		animationManager.createAnimation(new MyAnimation(0.02f, CatapultAnimationState.WORKING, animationManager.createFrames(16, "catapult"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CatapultAnimationState.WORKING, animationManager.createFrames(16, "catapult"), false){
 			@Override
 			public void onAnimationFinished(){
-				setVisible(false);
-				animationManager.setCurrentAnimationState(CatapultAnimationState.STATIC);
-				//currentFrame = animationManager.animate(0f);
-				setAnimate(false);
+				CustomActionManager.getInstance().registerAction(new CustomAction(0.2f) {					
+					@Override
+					public void perform() {
+						setVisible(false);
+						animationManager.setCurrentAnimationState(CatapultAnimationState.STATIC);
+						setAnimate(false);
+					}
+				});
+				
+
 			}
 		});
 		leafs = new CatapultLeafs(object, world, gameWorld);

@@ -23,7 +23,8 @@ public class Hedgehog extends Obstacle{
 		setAnimate(true);
 		gameWorld.getWorldStage().addActor(this);
 		createBody(BodyType.DynamicBody, Materials.obstacleGhostBody, "hedgehog");
-		createFixture(Materials.obstacleSensor, "killingBottom");
+		createFixture(Materials.obstacleSensor, "obstacle");
+		( (UserData) body.getFixtureList().first().getUserData() ).killingBottom = true;
 		setOffset(-60f/PPM, -30f/PPM);
 	}
 	

@@ -45,19 +45,20 @@ public class ParallaxBackground extends Actor{
 		setPosition(0, currentY);
 	}
 	
+	private float alpha = 1;
+	private float darken = 1;
 	private void drawRegion(Batch batch, float offSet){
 	
 		
 		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - (offset-1)*textureRegion.getRegionWidth()));
-		//textureRegion.setRegionWidth(initialRegionWidth);
 		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
-		batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());
+		batch.setColor(darken, darken, darken, alpha);
+		batch.draw(textureRegion, getX(), getY(), 0, 0, getWidth(), getHeight(), getScaleX(), getScaleY(), 0);
 		
 		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - offset*textureRegion.getRegionWidth()));
-		//textureRegion.setRegionWidth(initialRegionWidth);
 		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
-		batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());
-
+		batch.setColor(darken, darken, darken, alpha);
+		batch.draw(textureRegion, getX(), getY(), 0, 0, getWidth(), getHeight(), getScaleX(), getScaleY(), 0);
 	}
 	
 	private float offset;
@@ -77,5 +78,13 @@ public class ParallaxBackground extends Actor{
 				offset++;
 			}
 		}
+	}
+
+	public void setAlpha(float alpha) {
+		this.alpha = alpha;
+	}
+
+	public void setDarken(float darken) {
+		this.darken = darken;
 	}
 }

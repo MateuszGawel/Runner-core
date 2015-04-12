@@ -14,6 +14,9 @@ public class FlagsHandler {
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
+	private boolean queuedCatapultJump;
+	private boolean queuedMushroomJump;
+	
 	
 	//ZMIENNE
 	private Character character;
@@ -48,7 +51,7 @@ public class FlagsHandler {
 	private boolean jumped;
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
-	
+
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
 	
@@ -120,12 +123,12 @@ public class FlagsHandler {
 			else
 				shouldChangeToRunningState = false;
 			
-			if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0)
+			if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0 && swampSensor<=0)
 				canJump = true;
 			else
 				canJump = false;
 			
-			if(!canJump && !doubleJumped && alive && began && !finished)
+			if(!canJump && !doubleJumped && alive && began && !finished && swampSensor<=0)
 				canDoubleJump = true;
 			else
 				canDoubleJump = false;
@@ -343,6 +346,14 @@ public class FlagsHandler {
 	public boolean isPowerupSet() {
 		return powerupSet;
 	}
+	public boolean isQueuedMushroomJump() {
+		return queuedMushroomJump;
+	}
+
+	public void setQueuedMushroomJump(boolean queuedMushroomJump) {
+		this.queuedMushroomJump = queuedMushroomJump;
+	}
+
 	public void setPowerupSet(boolean powerupSet) {
 		this.powerupSet = powerupSet;
 		
@@ -619,6 +630,14 @@ public class FlagsHandler {
 
 	public int getBarrelSensor() {
 		return barrelSensor;
+	}
+
+	public boolean isQueuedCatapultJump() {
+		return queuedCatapultJump;
+	}
+
+	public void setQueuedCatapultJump(boolean queuedCatapultJump) {
+		this.queuedCatapultJump = queuedCatapultJump;
 	}
 
 	public void setBarrelSensor(int barrelSensor) {

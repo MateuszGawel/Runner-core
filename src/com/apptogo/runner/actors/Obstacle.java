@@ -13,8 +13,8 @@ import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -88,6 +88,7 @@ public class Obstacle extends Actor{
 	public Obstacle(MapObject object, World world, String regionName, String atlasPath){	
 		this(object, world, atlasPath);	
 		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath)).findRegion(regionName);
+		animationManager = null;
 	}
 	
 	public Obstacle(String regionName, int frameCount, float frameDuration, Object animationState, String atlasPath){

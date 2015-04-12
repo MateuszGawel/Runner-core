@@ -10,12 +10,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class BackgroundRenderer extends Actor{
+public class WildWestBackgroundRenderer extends Actor{
 	private ShapeRenderer shapeRenderer;
 	private Color lightBlue, brown, lightBrown;
 	private int currentWidth=0, currentHeight=0;
 	
-	public BackgroundRenderer() {
+	public WildWestBackgroundRenderer() {
 		shapeRenderer = new ShapeRenderer();
 		lightBlue = new Color(0.823f, 0.960f, 1, 1);
 		brown = new Color(0.576f, 0.349f, 0.247f, 1);
@@ -35,11 +35,4 @@ public class BackgroundRenderer extends Actor{
 			shapeRenderer.end();
 		batch.begin();
 	}
-
-	@Override
-	public void act(float delta) {
-		// TODO Auto-generated method stub
-		super.act(delta);
-	}
-
 }

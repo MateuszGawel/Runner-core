@@ -391,7 +391,7 @@ public class TiledMapLoader
 			}
 			//else if ( checkObjectType(object, "innaprzeszkoda") ) { do sth... }
 			else
-			{Logger.log(this, "TU JEST PRZECIEZ COS INNEGO!!!!");
+			{
 				BodyDef bodyDef = new BodyDef();
 				
 				bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -419,10 +419,18 @@ public class TiledMapLoader
 				}
 				
 				Object type = object.getProperties().get("type");
-				Logger.log(this, "SPRAWDZILEM TYPE");
+				
 				if(type!=null)
-				{Logger.log(this, type);
-					UserData userData = new UserData( type );
+				{
+					Logger.log(this, "TYPE: " + type);
+					UserData userData = new UserData( "obstacle" );
+					if(type.equals("killingBottom"))
+						userData.killingBottom = true;
+					else if(type.equals("killingTop"))
+						userData.killingTop = true;
+					else if(type.equals("killingDismemberment"))
+						userData.killingDismemberment = true;
+					
 					userData.bodyWidth = shapeWidth;
 					
 					fixture.setUserData( userData );

@@ -24,12 +24,11 @@ public class CatapultLeafs extends Obstacle{
 		setOffset(-15f/PPM, -15f/PPM);
 		setAnimate(false);
 		setVisible(false);
-		animationManager.createAnimation(new MyAnimation(0.02f, LeafAnimationState.WORKING, animationManager.createFrames(16, "leaf"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, LeafAnimationState.WORKING, animationManager.createFrames(16, "leaf"), false){
 			@Override
 			public void onAnimationFinished(){
 				setVisible(false);
 				animationManager.setCurrentAnimationState(LeafAnimationState.STATIC);
-				//currentFrame = animationManager.animate(0f);
 				setAnimate(false);
 			}
 		});

@@ -38,7 +38,7 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{ "gfx/game/levels/tree1.png", "gfx/game/levels/tree2.png", "gfx/game/levels/tree3.png", "gfx/game/levels/tree4.png"};
+			return new String[]{"gfx/game/levels/forestBackground.pack"};
 		}
 		else if( gameWorldType == SPACE )
 		{

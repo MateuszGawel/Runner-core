@@ -33,26 +33,17 @@ public class MyContactListener implements ContactListener
 		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
 
-			//smierc TOP
-			if(checkFixturesTypes(fa, fb, "killingTop", "mainBody")){
+			//smierc
+			if(checkFixturesTypes(fa, fb, "obstacle", "mainBody")){
 				if(flags.isCanDie()){
-					flags.setDieTop(true);
+					if(((UserData)getFixtureByType(fa, fb, "obstacle").getUserData()).killingBottom)
+						flags.setDieBottom(true);
+					else if(((UserData)getFixtureByType(fa, fb, "obstacle").getUserData()).killingTop)	
+						flags.setDieTop(true);
+					else if(((UserData)getFixtureByType(fa, fb, "obstacle").getUserData()).killingDismemberment)
+						flags.setDieDismemberment(true);
 				}
 			}
-
-			//smierc BOTTOM
-			if( checkFixturesTypes(fa, fb, "killingBottom", "mainBody")){
-				if(flags.isCanDie()){
-					flags.setDieBottom(true);
-				}
-			}
-			
-			//smierc od ogniska
-			if( checkFixturesTypes(fa, fb, "bonfire", "mainBody")){
-				if(flags.isCanDie()){
-					flags.setDieDismemberment(true);
-				}
-			}	
 			
 			//powerup
 			if(checkFixturesTypes(fa, fb, "powerup", "mainBody")){
@@ -121,24 +112,13 @@ public class MyContactListener implements ContactListener
 			
 			//beczki
 			if(checkFixturesTypes(fa, fb, "barrel", "mainBody") || checkFixturesTypes(fa, fb, "barrel", "wallSensorBody")){
-				//Logger.log(this, "ZDERZENIE Z BECZKA");
-				//Fixture playerFixture = getFixtureByType(fa, fb, "mainBody");
-				//if(playerFixture == null)
-				//	playerFixture = getFixtureByType(fa, fb, "wallSensorBody");
 				Fixture barrelFixture = getFixtureByType(fa, fb, "barrel");			
-				
-				//if(!((UserData)barrelFixture.getBody().getUserData()).active){
+			
 				((UserData)barrelFixture.getBody().getUserData()).active = true;
-				//	((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-				//}
-				//	
-				//if(flags.isCanDie() &&
-				//		(Math.abs(barrelFixture.getBody().getLinearVelocity().x) > 10f
-				//				|| Math.abs(barrelFixture.getBody().getLinearVelocity().y) > 7f ))
-				//{
-				//	flags.setDieBottom(true);
-				//	((UserData)barrelFixture.getBody().getUserData()).playSound = true;
-				//}
+				if(((UserData)barrelFixture.getUserData()).killingBottom)
+					flags.setDieBottom(true);
+				
+				((UserData)barrelFixture.getBody().getUserData()).playSound = true;
 			}
 	
 			//bagno
@@ -151,7 +131,7 @@ public class MyContactListener implements ContactListener
 			if(checkFixturesTypes(fa, fb, "mushroom", "footSensor")){
 				Fixture mushroomFixture = getFixtureByType(fa, fb, "mushroom");		
 				if(flags.isAlive()){	
-					flags.incrementMushroomSensor();
+					flags.setQueuedMushroomJump(true);
 					( (UserData) (mushroomFixture.getUserData()) ).key = "mushroomWorking";
 				}
 			}
@@ -161,7 +141,7 @@ public class MyContactListener implements ContactListener
 				Fixture catapultFixture = getFixtureByType(fa, fb, "catapult");
 				if(flags.isAlive())
 				{		
-					flags.incrementCatapultSensor();
+					flags.setQueuedCatapultJump(true);
 					( (UserData) (catapultFixture.getBody().getUserData()) ).key = "catapultWorking";
 				}		
 			}
@@ -263,7 +243,11 @@ public class MyContactListener implements ContactListener
 	//			Fixture fixture = getFixtureByType(fa, fb, "liftField");
 	//			((Alien)gameWorld.player.character).liftField.removeBodyToLift( fixture.getBody() );
 	//		}
-			
+			//bagno
+			if(checkFixturesTypes(fa, fb, "swamp", "footSensor")){
+				if(flags.isCanDie())
+					flags.decrementSwampSensor();
+			}
 			//barrel
 			if(checkFixturesTypes(fa, fb, "footSensor", "barrel_touched")){
 				flags.decrementBarrelSensor();

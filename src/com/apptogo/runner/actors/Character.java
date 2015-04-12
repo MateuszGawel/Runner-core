@@ -626,10 +626,31 @@ public abstract class Character extends Actor{
 			dieBottom();
 			flags.setQueuedDeathBottom(false);
 		}
+		
+		if(flags.isQueuedCatapultJump()){
+			Logger.log(this, "kataupluta");
+			jump(0, 2, 20, 0);
+			flags.setQueuedCatapultJump(false);
+		}
+		
+		if(flags.isQueuedMushroomJump()){
+			Logger.log(this, "Mushroom");
+			jump(1, 2.5f, 10, 0);
+			flags.setQueuedMushroomJump(false);
+		}
 	}
 	
 	private void handleActions(){
 		land();
+		
+		if(flags.getSwampSensor() > 0 && !flags.isSwampSlowedOnce()){
+			slowPlayerBy(0.8f);
+			flags.setSwampSlowedOnce(true);
+		}
+		else if(flags.getSwampSensor() <= 0 && flags.isSwampSlowedOnce()){
+			speedPlayerBy(0.8f);
+			flags.setSwampSlowedOnce(false);
+		}
 	}
 	
 	private void handleStopping(){
