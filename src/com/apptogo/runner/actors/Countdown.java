@@ -35,6 +35,12 @@ public class Countdown extends Obstacle{
 		countdownGo = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdownGo.ogg");
 		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(this);
 		updatePosition = false;	
+		
+		//temp
+		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start();
+		remove();
+		//temp
+		
 		animationManager.createAnimation(new MyAnimation(1f, CountdownAnimationState.NORMAL, animationManager.createFrames(4, "countdown"), false){
 			@Override
 			public void onAnimationFinished(){
@@ -78,8 +84,9 @@ public class Countdown extends Obstacle{
 	}
 	
 	public void startCountdown(){
-		animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
-		setAnimate(true);
+		//wykomentowane zeby nie opozniac
+		//animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
+		//setAnimate(true);
 	}
 	
 

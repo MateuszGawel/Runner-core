@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -22,14 +23,15 @@ public class GravityField extends Obstacle
 	private Vector2[] worldVertices;
 	private GameWorld gameWorld;
 	private Shape shape;
-	
+	private ParticleEffectActor pooledEffectActor;
 	
 	public GravityField(MapObject object, World world, GameWorld gameWorld)
 	{
 		super(object, world, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "gravityField");
 		this.gameWorld = gameWorld;
-
+		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		createGravityEffects(object);
 	}
 	
@@ -65,12 +67,9 @@ public class GravityField extends Obstacle
 		
 		for(int i=0; i<effectsInRow; i++){
 			for(int j=0; j<effectsInColumn; j++){
-				if ( Intersector.isPointInPolygon( new Array(worldVertices), new Vector2(bottomLeft.x+i, bottomLeft.y+j) ) ){
-					ParticleEffectActor effectActor = new ParticleEffectActor("gravityField.p", (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
-					effectActor.scaleBy(1/PPM);
-					effectActor.setPosition(bottomLeft.x+i, bottomLeft.y+j);
-					gameWorld.worldBackgroundGroup.addActor(effectActor);
-					effectActor.start();
+				if ( Intersector.isPointInPolygon( new Array(worldVertices), new Vector2(bottomLeft.x+i, bottomLeft.y+j) ) ){	
+					Logger.log(this, "startuje: " + i + ", " + j + " pozycja: " + (bottomLeft.x+i) + ", " + (bottomLeft.y+j));
+					pooledEffectActor.obtainAndStart(bottomLeft.x+i, bottomLeft.y+j);
 				}
 			}
 		}

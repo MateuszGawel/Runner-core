@@ -56,6 +56,7 @@ public class Bandit extends Character{
         
         customOffsetX = 45.0f / PPM;
         customOffsetY = 30.0f / PPM;
+        this.setOrigin(90/PPM, 80/PPM);
 	}
 	
 	private void initAnimations(){

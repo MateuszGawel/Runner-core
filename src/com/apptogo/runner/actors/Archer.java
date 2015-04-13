@@ -44,6 +44,7 @@ public class Archer extends Character{
         
         customOffsetX = 50.0f / PPM;
         customOffsetY = 20.0f / PPM;
+        this.setOrigin(90/PPM, 70/PPM);
 	}
 	
 	private void addSounds(){

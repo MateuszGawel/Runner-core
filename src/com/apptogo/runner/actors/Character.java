@@ -111,8 +111,6 @@ public abstract class Character extends Actor{
 		
 		flags = new FlagsHandler();
 		flags.setCharacter(this);
-
-		this.setOrigin(90/PPM, 90/PPM);
 	}
 	
 	
@@ -127,7 +125,7 @@ public abstract class Character extends Actor{
     
 	protected void createBody(int startingPosition){
 		bodyMembers = new ArrayList<BodyMember>();
-		Vector2 bodySize = new Vector2(23 / PPM, 55 / PPM);
+		Vector2 bodySize = new Vector2(20 / PPM, 50 / PPM);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		
@@ -168,26 +166,26 @@ public abstract class Character extends Actor{
 	
 	private void createNormalFixtures(FixtureDef fixtureDef, Vector2 bodySize, PolygonShape shape){
 		//wall sensor body
-		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, 1/PPM), 0);
+		shape.setAsBox(0.5f / PPM, 49.5f / PPM, new Vector2(20 / PPM, 1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
 		
 		//sliding fixture
-		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -4/PPM, -32/PPM), 0);
+		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -5/PPM, -30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
 		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor
-		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
+		shape.setAsBox(5 / PPM, 49 / PPM, new Vector2(25 / PPM, 0), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -80 / PPM), 0);
+		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
@@ -199,25 +197,25 @@ public abstract class Character extends Actor{
 		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
 		
 		//standup sensor
-		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, 8/PPM), 0);
+		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, 5/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
 		
 		//head sensor
-		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, 60/PPM), 0);
+		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, 57/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("headSensor") );
 		
 		//Left sensor
-		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, -55/PPM), 0);
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, -52/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("leftRotationSensor") );
 		
 		//Right sensor
-		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, -55/PPM), 0);
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, -52/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
@@ -226,26 +224,26 @@ public abstract class Character extends Actor{
 	private void createMirrorFixtures(FixtureDef fixtureDef, Vector2 bodySize, PolygonShape shape){
 		
 		//wall sensor body
-		shape.setAsBox(0.5f / PPM, 54.5f / PPM, new Vector2(24 / PPM, -1/PPM), 0);
+		shape.setAsBox(0.5f / PPM, 49.5f / PPM, new Vector2(20 / PPM, -1/PPM), 0);
 		fixtureDef = Materials.wallSensorBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensorBody") );
 		
 		//sliding fixture
-		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -4/PPM, 32/PPM), 0);
+		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -5/PPM, 30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
 		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor
-		shape.setAsBox(5 / PPM, 50 / PPM, new Vector2(30 / PPM, 0), 0);
+		shape.setAsBox(5 / PPM, 49 / PPM, new Vector2(25 / PPM, 0), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 	
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 80 / PPM), 0);
+		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 70 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
@@ -254,28 +252,28 @@ public abstract class Character extends Actor{
 		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, 80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
-		//body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
+		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
 		
 		//standup sensor
-		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, -8/PPM), 0);
+		shape.setAsBox(bodySize.x-5/PPM, bodySize.y - 6/PPM, new Vector2(0, -5/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("standupSensor") );
 		
 		//head sensor
-		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, -60/PPM), 0);
+		shape.setAsBox(bodySize.x-5/PPM, 15/PPM, new Vector2(0, -57/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("headSensor") );
 		
 		//Left sensor
-		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, 55/PPM), 0);
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(-25/PPM, 52/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("leftRotationSensor") );
 		
 		//Right sensor
-		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, 55/PPM), 0);
+		shape.setAsBox(5/PPM, 5/PPM, new Vector2(25/PPM, 52/PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("rightRotationSensor") );
@@ -1059,22 +1057,42 @@ public abstract class Character extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) 
 	{
-		batch.draw(currentFrame.getTexture(),  //Texture texture
-				   getX() + ( (((AtlasRegion)currentFrame).offsetX) * 1.1363f / PPM) - customOffsetX, //float x
-                   getY() + ( (((AtlasRegion)currentFrame).offsetY) * 1.1363f / PPM) - customOffsetY, //float y
-                   getOriginX(),  //float originX
-                   getOriginY(),  //float originY
-                   getWidth(),    //float width
-                   getHeight(),   //float height
-                   1,             //float scaleX
-                   1,             //float scaleY
-                   getRotation(), //float rotation
-                   currentFrame.getRegionX(), //int srcX
-                   currentFrame.getRegionY(), //int srcY
-                   currentFrame.getRegionWidth(), //int srcWidth
-                   currentFrame.getRegionHeight(),//int srcHeight 
-                   flipX, //boolean flipX
-                   flipY  //boolean flipY
-                  );
-}
+		AtlasRegion currentRegion = (AtlasRegion)currentFrame;
+		if(gravityModificator == 1)
+			batch.draw(currentFrame.getTexture(),  //Texture texture
+					   getX() + ( (currentRegion.offsetX) * 1.219f / PPM) - customOffsetX, //float x
+	                   getY() + ( (currentRegion.offsetY) * 1.219f / PPM) - customOffsetY, //float y
+	                   getOriginX(),  //float originX
+	                   getOriginY(),  //float originY
+	                   getWidth(),    //float width
+	                   getHeight(),   //float height
+	                   1,             //float scaleX
+	                   1,             //float scaleY
+	                   getRotation(), //float rotation
+	                   currentFrame.getRegionX(), //int srcX
+	                   currentFrame.getRegionY(), //int srcY
+	                   currentFrame.getRegionWidth(), //int srcWidth
+	                   currentFrame.getRegionHeight(),//int srcHeight 
+	                   flipX, //boolean flipX
+	                   flipY  //boolean flipY
+	                  );
+		else
+			batch.draw(currentFrame.getTexture(),  //Texture texture
+					   getX() - ( (currentRegion.originalWidth - currentRegion.offsetX - currentRegion.packedWidth ) * 1.219f / PPM) - customOffsetX, //float x
+	                   getY() - ( (currentRegion.offsetY) * 1.219f / PPM) - customOffsetY, //float y
+	                   getOriginX(),  //float originX
+	                   getOriginY(),  //float originY
+	                   getWidth(),    //float width
+	                   getHeight(),   //float height
+	                   1,             //float scaleX
+	                   1,             //float scaleY
+	                   getRotation(), //float rotation
+	                   currentFrame.getRegionX(), //int srcX
+	                   currentFrame.getRegionY(), //int srcY
+	                   currentFrame.getRegionWidth(), //int srcWidth
+	                   currentFrame.getRegionHeight(),//int srcHeight 
+	                   flipX, //boolean flipX
+	                   flipY  //boolean flipY
+	                  );
+	}
 }

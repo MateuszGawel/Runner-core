@@ -249,13 +249,13 @@ public class CampaignScreen extends BaseScreen
         		{
     	            public void clicked(InputEvent event, float x, float y) 
     	            {
-    	            	player.setCharacterType( CharacterType.ARCHER );//GameWorldType.convertToCharacterType( level.worldType ) );
+    	            	player.setCharacterType( CharacterType.ALIEN );//GameWorldType.convertToCharacterType( level.worldType ) );
     	            	player.save();
     	            	//ScreensManager.getInstance().createLoadingScreen( ScreenType.SCREEN_GAME_SINGLE, level, null ); - odpalenie singla, wykomentowane do testow
     	            	
     	            	Array<Player> players = new Array<Player>();
     	            	Player enemyPlayer1 = new Player("dupek", CharacterType.ARCHER);
-    	            	Player enemyPlayer2 = new Player("cipek", CharacterType.ALIEN);
+    	            	Player enemyPlayer2 = new Player("cipek", CharacterType.BANDIT);
     	            	//Player enemyPlayer3 = new Player("siurek", CharacterType.ARCHER);
     	            	players.add(enemyPlayer1);
     	            	players.add(enemyPlayer2);
