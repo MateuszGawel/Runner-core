@@ -1,6 +1,8 @@
 package com.apptogo.runner.actors;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -40,13 +42,14 @@ public class ParticleEffectActor extends Image {
 			tempArray.add(effect);
 		}
 		particleEffectPool.freeAll(tempArray);
-		
+		super.setWidth(Runner.SCREEN_WIDTH);
+		this.setDebug(true);
 	}
 
 	public void obtainAndStart(float posX, float posY){
 		PooledEffect pooledEffect = particleEffectPool.obtain();
 		pooledEffect.setPosition(posX, posY);
-		super.setPosition(posX, posY);
+		super.setPosition(posX-Runner.SCREEN_WIDTH/PPM, posY);
 		pooledEffects.add(pooledEffect);
 	}
 
@@ -102,18 +105,15 @@ public class ParticleEffectActor extends Image {
 			this.remove();
 		}
 
-		Logger.log(this, "act: " + particleName);
 		//dla poola
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
 		    
-//		    if(character!=null && (character.getBody().getPosition().x - 10 > effect.getEmitters().get(0).getX() || character.getBody().getPosition().x + 15 < effect.getEmitters().get(0).getX())){
-//		    	effect.free();
-//		        pooledEffects.removeIndex(i);
-////		        Logger.log(this, "usuwam efekt");
-//		        Logger.log(this, "wolnych w poolu: " + particleEffectPool.getFree() + " uzytych: " + pooledEffects.size);
-//		    }
+		    if(character!=null && (character.getBody().getPosition().x - 10 > effect.getEmitters().get(0).getX() || character.getBody().getPosition().x + 15 < effect.getEmitters().get(0).getX())){
+		    	effect.free();
+		        pooledEffects.removeIndex(i);
+		    }
 		}
 	}
 
@@ -124,7 +124,6 @@ public class ParticleEffectActor extends Image {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		Logger.log(this, "draw: " + particleName);
 		if(started && !pooled)
 			effect.draw(batch);
 		

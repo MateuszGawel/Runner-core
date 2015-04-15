@@ -82,34 +82,28 @@ public class GravityField extends Obstacle
 				}
 			}
 		}
-		for(int i=positions.size-1; i>=0; i--){
-			Vector2 particlePos = positions.get(i);
-			pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
-			activePositions.add(particlePos);
-			positions.removeIndex(i);
-		}
 	}
 	@Override
 	public void act(float delta){
 		super.act(delta);	
-//		if(pooledEffectActor.getCharacter()==null)
-//			pooledEffectActor.setCharacter(gameWorld.player.character);
-//		Vector2 position = gameWorld.player.character.getBody().getPosition();
-//		for(int i=positions.size-1; i>=0; i--){
-//			Vector2 particlePos = positions.get(i);
-//			if(position.x + 15 > particlePos.x && position.x - 10 < particlePos.x){
-//				pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
-//				activePositions.add(particlePos);
-//				positions.removeIndex(i);
-//				
-//			}
-//		}
-//		for(int i=activePositions.size-1; i>=0; i--){
-//		    if(position.x -10 > activePositions.get(i).x || position.x + 15 < activePositions.get(i).x){
-//		    	positions.add(activePositions.get(i));
-//				activePositions.removeIndex(i);
-//		    }
-//		}
-//		pooledEffectActor.toFront();
+		if(pooledEffectActor.getCharacter()==null)
+			pooledEffectActor.setCharacter(gameWorld.player.character);
+		Vector2 position = gameWorld.player.character.getBody().getPosition();
+		for(int i=positions.size-1; i>=0; i--){
+			Vector2 particlePos = positions.get(i);
+			if(position.x + 15 > particlePos.x && position.x - 10 < particlePos.x){
+				pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
+				activePositions.add(particlePos);
+				positions.removeIndex(i);
+				
+			}
+		}
+		for(int i=activePositions.size-1; i>=0; i--){
+		    if(position.x -10 > activePositions.get(i).x || position.x + 15 < activePositions.get(i).x){
+		    	positions.add(activePositions.get(i));
+				activePositions.removeIndex(i);
+		    }
+		}
+		//pooledEffectActor.toFront();
 	}
 }
