@@ -42,8 +42,6 @@ public class ParticleEffectActor extends Image {
 			tempArray.add(effect);
 		}
 		particleEffectPool.freeAll(tempArray);
-		super.setWidth(Runner.SCREEN_WIDTH);
-		this.setDebug(true);
 	}
 
 	public void obtainAndStart(float posX, float posY){
