@@ -2,12 +2,16 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.ArrayList;
+
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.vars.Materials;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Intersector;
@@ -24,14 +28,17 @@ public class GravityField extends Obstacle
 	private GameWorld gameWorld;
 	private Shape shape;
 	private ParticleEffectActor pooledEffectActor;
+	private Array<Vector2> positions, activePositions;
 	
 	public GravityField(MapObject object, World world, GameWorld gameWorld)
 	{
 		super(object, world, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "gravityField");
 		this.gameWorld = gameWorld;
-		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		pooledEffectActor = new ParticleEffectActor("gravityField.p", 120, 120, 120, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		gameWorld.getWorldStage().addActor(this);
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
+		
 		createGravityEffects(object);
 	}
 	
@@ -63,19 +70,46 @@ public class GravityField extends Obstacle
 		//calculating effects amount
 		int effectsInRow = Math.abs( (int) (topRight.x - bottomLeft.x) );
 		int effectsInColumn = Math.abs( (int) (topRight.y - bottomLeft.y) );
-		
+		positions = new Array<Vector2>();
+		activePositions = new Array<Vector2>();
+		Array<Vector2> worldVert = new Array(worldVertices);
 		
 		for(int i=0; i<effectsInRow; i++){
 			for(int j=0; j<effectsInColumn; j++){
-				if ( Intersector.isPointInPolygon( new Array(worldVertices), new Vector2(bottomLeft.x+i, bottomLeft.y+j) ) ){	
-					Logger.log(this, "startuje: " + i + ", " + j + " pozycja: " + (bottomLeft.x+i) + ", " + (bottomLeft.y+j));
-					pooledEffectActor.obtainAndStart(bottomLeft.x+i, bottomLeft.y+j);
+				Vector2 currentPos = new Vector2(bottomLeft.x+i, bottomLeft.y+j);
+				if ( Intersector.isPointInPolygon( worldVert, currentPos ) ){	
+					positions.add(currentPos);
 				}
 			}
+		}
+		for(int i=positions.size-1; i>=0; i--){
+			Vector2 particlePos = positions.get(i);
+			pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
+			activePositions.add(particlePos);
+			positions.removeIndex(i);
 		}
 	}
 	@Override
 	public void act(float delta){
 		super.act(delta);	
+//		if(pooledEffectActor.getCharacter()==null)
+//			pooledEffectActor.setCharacter(gameWorld.player.character);
+//		Vector2 position = gameWorld.player.character.getBody().getPosition();
+//		for(int i=positions.size-1; i>=0; i--){
+//			Vector2 particlePos = positions.get(i);
+//			if(position.x + 15 > particlePos.x && position.x - 10 < particlePos.x){
+//				pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
+//				activePositions.add(particlePos);
+//				positions.removeIndex(i);
+//				
+//			}
+//		}
+//		for(int i=activePositions.size-1; i>=0; i--){
+//		    if(position.x -10 > activePositions.get(i).x || position.x + 15 < activePositions.get(i).x){
+//		    	positions.add(activePositions.get(i));
+//				activePositions.removeIndex(i);
+//		    }
+//		}
+//		pooledEffectActor.toFront();
 	}
 }

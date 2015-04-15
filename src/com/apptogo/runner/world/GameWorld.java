@@ -233,7 +233,7 @@ public abstract class GameWorld
         worldStage.act(delta);
 		AbilityManager.getInstance().act();
         contactListener.postStep();
-        fpsLogger.log();
+       // fpsLogger.log();
         
     }  
     

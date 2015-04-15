@@ -47,7 +47,7 @@ public class GameWorldRenderer
 	    
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
     	camera.update();
-//    	camera.zoom = 4f;
+//    	camera.zoom = 2f;
 //    	gameWorld.backgroundCamera.zoom = 4f;
     	cullingArea.set(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom); 	
 
@@ -65,6 +65,6 @@ public class GameWorldRenderer
     	//Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
-    	debugRenderer.render(gameWorld.world, camera.combined);
+    	//debugRenderer.render(gameWorld.world, camera.combined);
     }
 }

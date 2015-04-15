@@ -670,7 +670,7 @@ public abstract class Character extends Actor{
 		speed = body.getLinearVelocity().x;
 		if(flags.isCanRun()){
 			if(flags.isOnGround()){
-				body.applyForceToCenter(new Vector2(4500, 0), true); 
+				body.applyForceToCenter(new Vector2(tempRunningModificator * 4500, 0), true); 
 			}
 			else if(this.getBody().getLinearVelocity().x <= 1){
 					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
@@ -923,6 +923,7 @@ public abstract class Character extends Actor{
 		return button;
 	}
 	
+	private int tempRunningModificator = 1;
 	public CharacterButton getTempButton(String buttonName){	
 		CharacterButton button = new CharacterButton(buttonName, Runner.SCREEN_WIDTH - 20, Runner.SCREEN_HEIGHT - 200);	
 		button.addListener(new InputListener() 
@@ -1021,7 +1022,8 @@ public abstract class Character extends Actor{
 			else if(getCharacterType() == CharacterType.ARCHER)
 				character.useAbility(CharacterAbilityType.ARROW);
 			else if(getCharacterType() == CharacterType.ALIEN)
-				character.useAbility(CharacterAbilityType.LIFT);
+				tempRunningModificator*=-1;
+				//character.useAbility(CharacterAbilityType.LIFT);
 		}
 		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
 		//flags.setPowerupSet(false);

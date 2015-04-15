@@ -1,5 +1,6 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -15,17 +16,20 @@ public class ParticleEffectActor extends Image {
 	private boolean started; 
 	public boolean removeAfterComplete;
 	private boolean pooled;
-	
+	private Character character;
 	public ParticleEffectPool particleEffectPool;
-	Array<PooledEffect> pooledEffects = new Array<PooledEffect>();
+	private String particleName;
+	private Array<PooledEffect> pooledEffects = new Array<PooledEffect>();
 	
 	public ParticleEffectActor(String particleName, TextureAtlas atlas) {
 		super();
+		this.particleName = particleName;
 		effect = new ParticleEffect();
 		effect.load(Gdx.files.internal("gfx/game/particles/" + particleName), atlas);	
 	}
 	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool, int initialValue, float effectScale, TextureAtlas atlas){
-		ParticleEffect tempEffect = new ParticleEffect();	
+		ParticleEffect tempEffect = new ParticleEffect();
+		this.particleName = particleName;
 		tempEffect.load(Gdx.files.internal("gfx/game/particles/" + particleName), atlas);
 		tempEffect.scaleEffect(effectScale);
 		particleEffectPool = new ParticleEffectPool(tempEffect, initialPoolCapacity, maxPool);
@@ -45,7 +49,7 @@ public class ParticleEffectActor extends Image {
 		super.setPosition(posX, posY);
 		pooledEffects.add(pooledEffect);
 	}
-	
+
 	@Override
 	public void scaleBy(float scaleFactor){
 		effect.scaleEffect(scaleFactor);
@@ -80,6 +84,7 @@ public class ParticleEffectActor extends Image {
 	{
 		stop();
 		effect.reset();
+		onReset();
 	}
 	
 	public boolean isComplete()
@@ -96,22 +101,34 @@ public class ParticleEffectActor extends Image {
 			effect.dispose();
 			this.remove();
 		}
-		
+
+		Logger.log(this, "act: " + particleName);
 		//dla poola
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
+		    
+//		    if(character!=null && (character.getBody().getPosition().x - 10 > effect.getEmitters().get(0).getX() || character.getBody().getPosition().x + 15 < effect.getEmitters().get(0).getX())){
+//		    	effect.free();
+//		        pooledEffects.removeIndex(i);
+////		        Logger.log(this, "usuwam efekt");
+//		        Logger.log(this, "wolnych w poolu: " + particleEffectPool.getFree() + " uzytych: " + pooledEffects.size);
+//		    }
 		}
 	}
 
+	public void onReset(){
+		
+	}
+	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
+		Logger.log(this, "draw: " + particleName);
 		if(started && !pooled)
 			effect.draw(batch);
 		
 		//dla poola
-		//long startTime = System.nanoTime();
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.draw(batch);
@@ -119,10 +136,15 @@ public class ParticleEffectActor extends Image {
 		        effect.free();
 		        pooledEffects.removeIndex(i);
 		    }
+		    
 		}
-		//long endTime = System.nanoTime();
-		//Logger.log(this, "draw PARTICLI: " + (endTime - startTime));
 	}
 	
 	public ParticleEffect getEffect(){ return this.effect; }
+	public void setCharacter(Character character) {
+		this.character = character;
+	}
+	public Character getCharacter() {
+		return character;
+	}
 }
