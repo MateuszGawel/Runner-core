@@ -209,7 +209,7 @@ public class Bandit extends Character{
 			gameWorld.worldStage.addActor(bodyMember);
 		}
 	}
-
+    
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);

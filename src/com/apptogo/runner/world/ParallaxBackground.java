@@ -39,7 +39,9 @@ public class ParallaxBackground extends Actor{
 	
 	@Override
 	public void act(float delta){
-		currentY = y + (character.getY() - (float)mapSize.y/2/PPM) * yFactor;
+		if(character.getY() < mapSize.y/2/PPM && character.getY() > -mapSize.y/2/PPM){
+			currentY = y + (character.getY() - (float)mapSize.y/2/PPM) * yFactor;
+		}
 		setWidth(textureRegion.getRegionWidth()/PPM);
 		setHeight(textureRegion.getRegionHeight()/PPM);
 		setPosition(0, currentY);
@@ -74,7 +76,7 @@ public class ParallaxBackground extends Actor{
 		}
 		else{
 			drawRegion(batch, offset);
-			if(textureRegion.getRegionX() > textureRegion.getRegionWidth() - Runner.SCREEN_WIDTH){
+			if(textureRegion.getRegionX() > textureRegion.getRegionWidth()*getScaleX() - Runner.SCREEN_WIDTH){
 				offset++;
 			}
 		}

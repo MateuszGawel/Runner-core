@@ -19,7 +19,7 @@ public class ForestWorld extends GameWorld{
 	public static final Vector2 GRAVITY = new Vector2(0f, -80f);
 
 
-	public ParallaxBackground tree1, tree2, tree3;
+	public ParallaxBackground tree1, tree2, tree3, grass;
 	private ForestBackgroundRenderer background;
 	private TextureAtlas atlas;
 	public ForestWorld(String mapPath, Player player)
@@ -39,27 +39,25 @@ public class ForestWorld extends GameWorld{
 		backgroundStage.addActor(background);
 		
 		
-		tree3 = new ParallaxBackground(atlas.findRegion("tree1"), mapSize, 0.3f, -284/mapSize.y, player.character, 0, 80/PPM);
+		tree3 = new ParallaxBackground(atlas.findRegion("trees"), mapSize, 0.3f, -284/mapSize.y, player.character, 0, 180/PPM);
 		tree3.setScale(0.7f);
 		tree3.setDarken(0.8f);
 		backgroundStage.addActor(tree3);
 		
-		tree2 = new ParallaxBackground(atlas.findRegion("tree1"), mapSize, 0.4f, -384/mapSize.y, player.character, 0, -20/PPM);
+		tree2 = new ParallaxBackground(atlas.findRegion("trees"), mapSize, 0.4f, -384/mapSize.y, player.character, 0, 110/PPM);
 		tree2.setScale(0.85f);
 		tree2.setDarken(0.9f);
 		backgroundStage.addActor(tree2);
 
-		tree1 = new ParallaxBackground(atlas.findRegion("tree1"), mapSize, 0.8f, -584/mapSize.y, player.character, 0, -170/PPM);
+		tree1 = new ParallaxBackground(atlas.findRegion("trees"), mapSize, 0.8f, -584/mapSize.y, player.character, 0, 30/PPM);
 		backgroundStage.addActor(tree1);
 		
-		//tree3 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree3.png"), -0.4f, -38/mapSize.y, mapSize, player.character, 0, 200/PPM);
-		//background.addActor(tree3);
-		
-		//tree2 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree2.png"), -0.5f, -89/mapSize.y, mapSize, player.character, 0, 130/PPM);
-		//background.addActor(tree2);
-		
-		//tree1 = new RepeatingParallaxBackground((Texture)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/tree1.png"), -0.8f, -192/mapSize.y, mapSize, player.character, 0, -150/PPM);
-		//mbackground.addActor(tree1);
+		grass = new ParallaxBackground(atlas.findRegion("grass"), mapSize, 0.8f, -584/mapSize.y, player.character, 0, -80/PPM);
+		backgroundStage.addActor(grass);
+		grass = new ParallaxBackground(atlas.findRegion("grass"), mapSize, 0.8f, -584/mapSize.y, player.character, 0, -320/PPM);
+		backgroundStage.addActor(grass);
+		grass = new ParallaxBackground(atlas.findRegion("grass"), mapSize, 0.8f, -584/mapSize.y, player.character, 0, -560/PPM);
+		backgroundStage.addActor(grass);
 	}
 	
 	@Override

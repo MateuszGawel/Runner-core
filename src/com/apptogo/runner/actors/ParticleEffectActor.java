@@ -44,10 +44,10 @@ public class ParticleEffectActor extends Image {
 		particleEffectPool.freeAll(tempArray);
 	}
 
-	public void obtainAndStart(float posX, float posY){
+	public void obtainAndStart(float posX, float posY, float offsetX){
 		PooledEffect pooledEffect = particleEffectPool.obtain();
 		pooledEffect.setPosition(posX, posY);
-		super.setPosition(posX-Runner.SCREEN_WIDTH/PPM, posY);
+		super.setPosition(posX-offsetX, posY);
 		pooledEffects.add(pooledEffect);
 	}
 

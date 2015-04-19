@@ -92,7 +92,7 @@ public class GravityField extends Obstacle
 		for(int i=positions.size-1; i>=0; i--){
 			Vector2 particlePos = positions.get(i);
 			if(position.x + 15 > particlePos.x && position.x - 10 < particlePos.x){
-				pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y);
+				pooledEffectActor.obtainAndStart(particlePos.x, particlePos.y, Runner.SCREEN_WIDTH/2/PPM);
 				activePositions.add(particlePos);
 				positions.removeIndex(i);
 				

@@ -64,7 +64,7 @@ public class Coin extends Obstacle implements Poolable
 					coinsManager.sound.stop();
 					coinsManager.soundId = coinsManager.sound.play(0.3f);	
 					coinsManager.lastTimePlayed = System.nanoTime();
-					coinsManager.pooledEffectActor.obtainAndStart(getX(), getY());
+					coinsManager.pooledEffectActor.obtainAndStart(getX(), getY(), 0);
 				}
 
 				this.remove();

@@ -953,10 +953,8 @@ public abstract class Character extends Actor{
 				@Override
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 				{
-					if(flags.isCanUseAbility()){
-						CharacterAbilityType ability = PowerupType.convertToAbilityType(powerupType, character.getCharacterType());
-						AbilityManager.getInstance().useAbility(character, ability, getAbilityLevel(ability));
-					}
+					if(character.flags.isCanUseAbility()) 
+						character.usePowerup(character.currentPowerupSet);
 						
 					//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
@@ -1022,8 +1020,8 @@ public abstract class Character extends Actor{
 			else if(getCharacterType() == CharacterType.ARCHER)
 				character.useAbility(CharacterAbilityType.ARROW);
 			else if(getCharacterType() == CharacterType.ALIEN)
-				tempRunningModificator*=-1;
-				//character.useAbility(CharacterAbilityType.LIFT);
+				character.useAbility(CharacterAbilityType.LIFT);
+				//tempRunningModificator*=-1;
 		}
 		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
 		//flags.setPowerupSet(false);

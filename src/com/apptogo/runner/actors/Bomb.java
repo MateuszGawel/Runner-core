@@ -2,6 +2,7 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.actors.Mushroom.MushroomAnimationState;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CustomAction;
@@ -30,28 +31,57 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	private boolean exploding;
 	
 	//parameters
-	private int level = 1;
-	private float timeToExplode = 15;
-	private float explosionRange = 2;
+	private int level = 3;
+	private float timeToExplode = 2;
 	
 	private CustomAction explodeAction, explodingAction;
 	public ParticleEffectActor explosionParticle;
-	
+	public ParticleEffectActor explosionParticlelvl1, explosionParticlelvl2, explosionParticlelvl3;
 	public enum BombAnimationState{
 		NORMAL
 	}
 	
-	public Bomb(World world, GameWorld gameWorld){
-		super(new EllipseMapObject(0,0,32,32), world, "bomb", 5, 0.03f, BombAnimationState.NORMAL, "gfx/game/characters/charactersAtlas.pack");
-		explosionParticle = new ParticleEffectActor("explosion.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+	
+	private String getRegionName(){
+		if(level==1)
+			return "bomblvlone";
+		else if(level==2)
+			return "bomblvltwo";	
+		else if(level==3)
+			return "bomblvlthree";
+		else return null;
+	}
+	private float getExplosionRange(){
+		if(level==1)
+			return 2;
+		else if(level==2)
+			return 3;
+		else if(level==3)
+			return 5;
+		else return 0;
+	}
+	private String getExplosionParticleName(){
+		if(level==1)
+			return "explosion_lvl1.p";
+		else if(level==2)
+			return "explosion_lvl2.p";
+		else if(level==3)
+			return "explosion_lvl3.p";
+		else return null;
+	}
+	
+	public Bomb(World world, GameWorld gameWorld, int level){
+		super(new EllipseMapObject(0,0,32,32), world, "gfx/game/characters/charactersAtlas.pack");
+		explosionParticle = new ParticleEffectActor(getExplosionParticleName(), 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
 		createExplosion();
-		
-//		CircleShape shape = new CircleShape();
-//		shape.setRadius(explosionRange);
-//		shape.setPosition(new Vector2(0.25f, 0.25f));
-//		explodeSensor = createFixture(Materials.obstacleSensor, shape, "bombExplosion");
-		//((UserData)explodeSensor.getUserData()).ignoreContact = true;
+		animationManager.createAnimation(new MyAnimation(0.03f, BombAnimationState.NORMAL, animationManager.createFrames(5, getRegionName()), false){
+			@Override
+			public void onAnimationFinished(){
+				animationManager.setCurrentAnimationState(MushroomAnimationState.STATIC);
+				setAnimate(false);
+			}
+		});
 		
 		
 		gameWorld.getWorldStage().addActor(this);
@@ -61,7 +91,6 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	}
 	
     public void init(Character characterOwner) {
-
         body.setTransform(characterOwner.getX()-20/PPM, characterOwner.getY(), 0);
         body.setLinearVelocity(characterOwner.getSpeed()/3, 0);
         body.getFixtureList().get(0).setUserData(new UserData("bomb", characterOwner.playerName));
@@ -81,7 +110,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 				exploding=true;
 				setVisible(false);
 				CustomActionManager.getInstance().registerAction(explodingAction);
-				explosionParticle.obtainAndStart(body.getPosition().x, body.getPosition().y);
+				explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
 			}
 		};
 		
@@ -94,7 +123,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	    	CustomActionManager.getInstance().unregisterAction(explodeAction);
 	    	CustomActionManager.getInstance().registerAction(explodingAction);	
 	    	setVisible(false);
-			explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f);
+			explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
 	    	exploding = true;
     	}
     }
@@ -102,8 +131,9 @@ public class Bomb extends Obstacle implements Poolable, Ability{
     @Override
     public void act(float delta){
     	super.act(delta);
-    	if(exploding){ 		
-    		explodeSensor.setTransform(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
+    	if(exploding){ 		 		
+    		Vector2 offset = new Vector2((float)Math.sqrt(2)*0.25f, 0).setAngle((body.getAngle())*(float)(180/Math.PI)+45);
+    		explodeSensor.setTransform(body.getPosition().x+offset.x, body.getPosition().y+offset.y, body.getAngle());
     	}
     	else if(explodeSensor.getPosition().x > -100)
     		explodeSensor.setTransform(-100, 0, 0);
@@ -119,9 +149,8 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 		bodyDef.type = BodyType.DynamicBody;
 		FixtureDef fixtureDef = Materials.obstacleSensor;
 		CircleShape shape = new CircleShape();
-		shape.setRadius(explosionRange);
 		shape.setPosition(new Vector2(0, 0));
-		
+		shape.setRadius(getExplosionRange());
 		fixtureDef.shape = shape;
 		
 		explodeSensor = world.createBody(bodyDef);
@@ -134,27 +163,5 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 		position.set(-100, 0);
 		body.setTransform(position, 0);
         alive = false;
-	}
-
-	@Override
-	public void setLevel(int level) {
-		this.level = level;
-		
-		switch(level){
-			case 1:
-				timeToExplode = 2;
-				explosionRange = 2;
-				break;
-			case 2:
-				timeToExplode = 3;
-				explosionRange = 3;
-				break;
-			case 3:
-				timeToExplode = 4;
-				explosionRange = 4;
-				break;
-			default:
-				throw new RuntimeException("Wrong ability level: " + level + " is not allowed. Choose 1, 2 or 3");
-		}
 	}
 }

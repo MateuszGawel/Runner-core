@@ -310,6 +310,14 @@ public class MyContactListener implements ContactListener
 			}	
 		}	
 		
+		if(checkFixturesTypes(fa, fb, "nonkilling", "bomb")){
+			float[] impulses = impulse.getNormalImpulses();
+			if(impulses[0] < 10f)
+			{
+				contact.setRestitution(0);
+			}
+		}
+		
 		//dŸwiêk beczki
 		if( checkFixturesTypes(fa, fb, "barrel", "nonkilling")){
 			Body body = getFixtureByType(fa, fb, "barrel").getBody();

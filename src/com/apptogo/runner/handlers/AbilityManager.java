@@ -61,7 +61,7 @@ public class AbilityManager
 
 		for(int i=0; i<abilityLevel; i++){
 			Bomb bomb = bombsPool.obtain();
-			bomb.setLevel(abilityLevel);
+
 			bomb.init(character);
 			activeBombs.add(bomb);
 		}
@@ -93,7 +93,7 @@ public class AbilityManager
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb(world, gameWorld);
+	    	Bomb bomb = new Bomb(world, gameWorld, 1);
 	    	gameWorld.worldStage.addActor(bomb);
 	    	return bomb;
 	    }

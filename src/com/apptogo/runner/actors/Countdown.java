@@ -37,6 +37,9 @@ public class Countdown extends Obstacle{
 		updatePosition = false;	
 		
 		//temp
+		for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.enemies){
+			enemy.character.start();
+		}
 		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start();
 		remove();
 		//temp
