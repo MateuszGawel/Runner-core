@@ -4,7 +4,8 @@ public enum CharacterAbilityType
 {
 	SUPERSPEED,
 	BOMB, ARROW, LIFT,
-	JUMP, SLIDE;
+	JUMP, SLIDE,
+	ABILITY1;
 	
 	static public CharacterAbilityType parseFromString(String key)
 	{

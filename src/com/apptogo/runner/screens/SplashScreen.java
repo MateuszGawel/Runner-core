@@ -10,24 +10,21 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SplashScreen extends BaseScreen
 {		
-	private final boolean SKIP_ANIMATIONS = true;
+	private final boolean SKIP_ANIMATIONS = false;
 	
 	private enum SplashPhase
 	{
@@ -36,7 +33,8 @@ public class SplashScreen extends BaseScreen
 		SCREEN_SHAKEING,
 		START_LOADING,
 		LOADING,
-		FINISHED
+		FINISHED,
+		END
 	}
 	
 	private AssetManager menuAssetManager;
@@ -82,13 +80,10 @@ public class SplashScreen extends BaseScreen
 	
 	@Override
 	public void prepare()
-	{			Logger.log(this, 1);
+	{
 		initializeActions();
 
 		currentPhase = SplashPhase.APPTOGO_LOGO_IN;
-		
-		//!!WORKARROUND - nalezy przerobic animacje tak zeby sobie same znalazly atlas odpowiedni
-		TextureAtlas atlas = (TextureAtlas)ResourcesManager.getInstance().getResource(getScreenClass(), "gfx/splash/splashAtlas.atlas");
 		
 		//creating background
 		backgroundHalo = createImage("ellipse", 0, 0);
@@ -130,8 +125,6 @@ public class SplashScreen extends BaseScreen
 		
 		loadingAnimation = new Loading();
 		setCenterPosition(loadingAnimation, 240);
-		
-		Logger.log(this, 2);
 	}
 	
 	private void initializeActions()
@@ -189,6 +182,8 @@ public class SplashScreen extends BaseScreen
 		if( currentPhase == SplashPhase.FINISHED ) 
 		{
 			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
+			
+			currentPhase = SplashPhase.END;
 		}
 		
 		else if( currentPhase == SplashPhase.APPTOGO_LOGO_IN && appToGoLogo.getActions().size <= 0 )
@@ -246,10 +241,7 @@ public class SplashScreen extends BaseScreen
 		
 		else if(currentPhase == SplashPhase.LOADING && menuAssetManager.update() )
 		{
-			Logger.log(this, "MENU ZALADOWANE");
 			currentPhase = SplashPhase.FINISHED;
-			
-			Logger.log(this, ResourcesManager.getInstance().screenMetaArray.get(2).skinFile );
 		}
 	}
 	

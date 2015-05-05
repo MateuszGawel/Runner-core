@@ -3,7 +3,6 @@ package com.apptogo.runner.world;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

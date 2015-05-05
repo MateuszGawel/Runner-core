@@ -1,8 +1,8 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.enums.PowerupType;
 import com.badlogic.gdx.utils.Array;
-
 
 public class ShopManager 
 {
@@ -24,87 +24,77 @@ public class ShopManager
 	public class ShopItem
 	{
 		public String thumbnailName;
-		public int price;
-		public int maxLevel;
+		
 		public String title;
 		public String description;
 		
-		public ShopItem(String thumbnailPath, String title, String description)
+		public Array<Integer> prices;
+		
+		public int maxLevel;
+		public int currentLevel;
+		
+		public ShopItem(String id)
 		{
-			this.thumbnailName = thumbnailPath;
-			this.title = title;
-			this.description = description;
+			
 		}
 	}
 	
-	Array<ShopItem> powerups;
-	Array<ShopItem> abilities;
-	Array<ShopItem> skins;
+	public class AbilityItem extends ShopItem
+	{
+		CharacterAbilityType id;
+		
+		public AbilityItem(String id) {
+			super(id);
+			// TODO Auto-generated constructor stub
+		}
+	}
+	
+	public class PowerupItem extends ShopItem
+	{
+		PowerupType id;
+		
+		public PowerupItem(String id) {
+			super(id);
+			// TODO Auto-generated constructor stub
+		}
+	}
+	
+	Array<AbilityItem> powerups;
+	Array<PowerupItem> abilities;
 	
 	private ShopManager()
 	{
-		powerups = new Array<ShopItem>();
-		abilities = new Array<ShopItem>();
-		skins = new Array<ShopItem>();   	
+		powerups = new Array<AbilityItem>();
+		abilities = new Array<PowerupItem>();
+		//skins = new Array<ShopItem>();   	
 		
 		//adding powerups
-		this.powerups.add( new ShopItem("item", "Jakis tytul", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul2", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul3", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul4", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul5", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul6", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		this.powerups.add( new ShopItem("item", "Jakis tytul7", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(1000, "item", "Jakis tytul", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(2000, "item", "Jakis tytul2", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(3000, "item", "Jakis tytul3", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(4000, "item", "Jakis tytul4", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(5000, "item", "Jakis tytul5", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(6000, "item", "Jakis tytul6", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
+		//this.powerups.add( new ShopItem(7000, "item", "Jakis tytul7", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
 		
 		//adding abilities
-		
-		//adding skins
 	}	
 	
-	public Array<String> getTextures()
+	public void refreshItems()
 	{
-		Array<String> textures = new Array<String>();
+		powerups = new Array<AbilityItem>();
+		abilities = new Array<PowerupItem>();
 		
-		for(ShopItem item: this.powerups)
-		{
-			if( textures.indexOf(item.thumbnailName, true) == -1 )
-			{
-				textures.add(item.thumbnailName);
-			}
-		}
 		
-		for(ShopItem item: this.abilities)
-		{
-			if( textures.indexOf(item.thumbnailName, true) == -1 )
-			{
-				textures.add(item.thumbnailName);
-			}
-		}
-		
-		for(ShopItem item: this.skins)
-		{
-			if( textures.indexOf(item.thumbnailName, true) == -1 )
-			{
-				textures.add(item.thumbnailName);
-			}
-		}
-		Logger.log(this, textures.size);
-		return textures;
 	}
-	
+		
 	public Array<ShopItem> getPowerups()
 	{
-		return this.powerups;
+		return null;//this.powerups;
 	}
 	
 	public Array<ShopItem> getAbilities()
 	{
-		return this.abilities;
-	}
-	
-	public Array<ShopItem> getSkins()
-	{
-		return this.skins;
-	}
-	
+		return null;//this.abilities;
+	}	
 }

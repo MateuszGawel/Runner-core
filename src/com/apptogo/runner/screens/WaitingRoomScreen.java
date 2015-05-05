@@ -8,12 +8,10 @@ import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
@@ -44,18 +42,13 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	public WaitingRoomScreen(Runner runner)
 	{
 		super(runner);	
-		
-		loadPlayer();
+
 		//NotificationManager.prepareManager( player.getName(), player.getCurrentCharacter() );
-		
-		fadeInOnStart();
-		
+				
 		if( !(WarpController.getInstance().isOnline) )
 		{
-			Logger.log(this, "Jeszcze nie byl online //waiting");
 			//WarpController.getInstance().startApp( player.getName() );
 		}
-		Logger.log(this,  "ustawiam waiting room listener");
 		WarpController.getInstance().setWaitingRoomListener(this);
 		try {
 			WarpClient.getInstance().joinRoomInRange(0, 4, false);
@@ -144,8 +137,6 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
-		Logger.log(this, "³apiê w waitongroom");
-		Logger.log(this, "Ja jestem: " + player.getName() + " przyszed³ update: " + message);
 		try 
 		{
 			JSONObject data = new JSONObject(message);
@@ -154,26 +145,23 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 			if( data.has("INITIAL_NOTIFICATION") )
 			{
 				String enemyName = (String)data.getString("PLAYER_NAME");
-				Logger.log(this, "jest to wiadomosc initial");
+				
 				boolean presentAlready = false;
 
 				if( player.getName().equals(enemyName) )
 				{
-					Logger.log(this, "zaraz zaraz, przecie¿ ten gracz to ja. No nieŸle");
 					presentAlready = true;
 				}
 					
 				for(Player player : enemyPlayers){
-					
-					Logger.log(this, "porownuje: " + player.getName() + " oraz " + enemyName);
-					
+										
 					if(player.getName().equals(enemyName)){
-						Logger.log(this, "juz taki gracz sie raz przedstawial i jest na liscie");
 						presentAlready = true;
 						break;
 					}
 					else
-						Logger.log(this, "nie mam takiego gracza na liscie jeszcze");
+					{
+					}
 				}
 
 				if( !presentAlready )			
@@ -186,12 +174,8 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 					
 					NotificationManager.getInstance().screamMyName();
 				}
-				Logger.log(this, "ostatecznie takich mam graczy na swojej liscie: ");
-				for(Player player : enemyPlayers){
-					Logger.log(this, "gracz: " + player.getName());
-				}
+				
 				if(enemyPlayers.size == 1){
-					Logger.log(this, "OK JEST 2 GRACZY, ODPALAM!");
 					WarpController.getInstance().startGame();
 				}
 			}

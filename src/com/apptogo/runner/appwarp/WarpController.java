@@ -4,7 +4,6 @@ package com.apptogo.runner.appwarp;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-import com.apptogo.runner.logger.Logger;
 import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 import com.shephertz.app42.gaming.multiplayer.client.command.WarpResponseResultCode;
 import com.shephertz.app42.gaming.multiplayer.client.events.LobbyData;
@@ -121,7 +120,6 @@ public class WarpController
 			if(isUDPEnabled)
 			{
 				warpClient.sendUDPUpdatePeers((localUser+"#@"+msg).getBytes(Charset.forName("utf-8")));
-				Logger.log(this, "wiadomosc poszla");
 			}
 			else
 			{
@@ -172,7 +170,6 @@ public class WarpController
 			if( STATE != STARTED )
 			{
 				warpClient.deleteRoom(roomId);
-				Logger.log(this, "USUWAM POKOJ" + roomId);
 			}
 			
 			warpClient.disconnect();
@@ -200,15 +197,12 @@ public class WarpController
 	//---CHAT LISTENER
 	public void onSendChatDone(boolean status)
 	{
-		Logger.log(this, "onSendChatDone: " + status);
 	}
 	//---
 	
 	//---CONNECTION LISTENER
 	public void onConnectDone(boolean status)
-	{
-		Logger.log(this, "onConnectDone: " + status);
-		
+	{		
 		if(status)
 		{
 			warpClient.initUDP();
@@ -225,7 +219,6 @@ public class WarpController
 	}
 	public void onDisconnectDone(boolean status)
 	{
-		Logger.log(this, "onDisconnectDone: " + status);
 	}
 	public void setIsUDPEnabled(boolean isEnabled)
 	{
@@ -235,9 +228,7 @@ public class WarpController
 	
 	//---NOTIFICATION LISTENER
 	public void onUserJoinedRoom(String roomId, String userName)
-	{
-		Logger.log(this, "onUserJoinedRoom: roomId = " + roomId + ", userName = " + userName);
-		
+	{		
 		//warpClient.getLiveRoomInfo(roomId);
 		
 		
@@ -252,7 +243,6 @@ public class WarpController
 	}
 	public void onUserLeftRoom(String roomId, String userName)
 	{
-		Logger.log(this, "onUserLeftRoom: roomId = " + roomId + ", userName = " + userName);
 		if(STATE==STARTED && !localUser.equals(userName))
 		{// Game Started and other user left the room
 			gameListener.onGameFinished(ENEMY_LEFT, true);
@@ -273,9 +263,7 @@ public class WarpController
 		}
 	}
 	public void onUserChangeRoomProperty(String userName, int code)
-	{
-		Logger.log(this, "onUserChangeRoomProperty: userName = " + userName + ", code = " + code);
-		
+	{		
 		if( localUser.equals(userName) == false )
 		{
 			STATE = FINISHED;
@@ -288,15 +276,12 @@ public class WarpController
 	}
 	public void onUserJoinedLobby(LobbyData data, String userName)
 	{
-		Logger.log(this, "onUserJoinedLobby: lobbyName = " + data.getName() + ", maxUsers = " + data.getMaxUsers() + ", userName = " + userName);
 	}
 	//---
 	
 	//---ROOM LISTENER
 	public void onJoinRoomDone(RoomEvent event)
-	{
-		Logger.log(this, "onJoinRoomDone: " + event.getResult());
-		
+	{		
 		if( event.getResult() == WarpResponseResultCode.SUCCESS )
 		{// success case
 			this.roomId = event.getData().getId();
@@ -317,8 +302,6 @@ public class WarpController
 	}
 	public void onSubscribeRoomDone(String roomId)
 	{
-		Logger.log(this, "onSubscribeRoomDone: " + roomId);
-		
 		if( roomId != null )
 		{
 			isConnected = true;
@@ -332,7 +315,6 @@ public class WarpController
 	}
 	public void onGetLiveRoomInfoDone(String[] liveUsers)
 	{
-		Logger.log(this, "onGetLiveRoomInfo: liveUsersCount = " + liveUsers.length);
 		NotificationManager.getInstance().screamMyName();
 		if( liveUsers.length == 3 )
 		{
@@ -347,9 +329,7 @@ public class WarpController
 	
 	//---ZONE LISTENER
 	public void onCreateRoomDone(String roomId)
-	{
-		Logger.log(this, "onCreateRoomDone: " + roomId);
-		
+	{		
 		if( roomId != null )
 		{
 			warpClient.joinRoom(roomId);
@@ -365,11 +345,9 @@ public class WarpController
 	//---LOBBY LISTENER
 	public void onJoinLobbyDone(LobbyData data)
 	{
-		Logger.log(this, "onJoinLobbyDone: name = " + data.getName());
 	}
 	public void onSubscribeLobbyDone(LobbyData data)
 	{
-		Logger.log(this, "onSubscribeLobbyDone: id = " + data.getId());
 	}
 	//---
 }

@@ -8,7 +8,6 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.levels.LevelWorld;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.vars.Box2DVars;
@@ -58,11 +57,8 @@ public class CampaignScreen extends BaseScreen
 	public CampaignScreen(Runner runner)
 	{
 		super(runner);	
-		loadPlayer();
 		
 		levelManager = LevelManager.getInstance();
-	
-		fadeInOnStart();
 	}
 	
 	public void prepare() 
@@ -260,6 +256,7 @@ public class CampaignScreen extends BaseScreen
     	            	players.add(enemyPlayer1);
     	            	players.add(enemyPlayer2);
     	            	//players.add(enemyPlayer3);
+    	            	
     	            	ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, level, players );
     	            }
     	         });
@@ -274,11 +271,8 @@ public class CampaignScreen extends BaseScreen
         	
         	if( ++currentColumnCounter >= maxInRow ) 
     		{
-        		if( ++currentRowCounter > maxInColumn )
-				{
-        			Logger.log(this, "Max liczba level do wyswietlenia to: " + String.valueOf(maxInColumn * maxInRow));
-				}
     			currentColumnCounter = 0;
+    			currentRowCounter++;
     		}
         	        
 	        button.setPosition( buttonX + indent, buttonY - 50.0f );       

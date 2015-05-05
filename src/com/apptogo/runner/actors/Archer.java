@@ -10,7 +10,6 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
@@ -21,8 +20,6 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 
 public class Archer extends Character{
 
@@ -60,8 +57,6 @@ public class Archer extends Character{
 	private void initAnimations(){
 
 		AtlasRegion[] ar = animationManager.createFrames(6, "archer_jump");
-				
-				if(ar == null) Logger.log(this, "DUPA");
 		
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.JUMPING, ar, false){
 			@Override

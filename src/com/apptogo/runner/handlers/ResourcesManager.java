@@ -7,7 +7,6 @@ import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.logger.Logger.LogLevel;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.badlogic.gdx.Gdx;
@@ -29,13 +28,9 @@ public class ResourcesManager
 	public static void create()
 	{		
 		INSTANCE = new ResourcesManager();
-		
-		Logger.log(INSTANCE, "Manager has been created", LogLevel.LOW);
 	}
 	public static void destroy()
-	{
-		Logger.log(INSTANCE, "Manager has been destroyed", LogLevel.LOW);
-		
+	{		
 		INSTANCE = null;
 	}
 	public static ResourcesManager getInstance()
@@ -54,6 +49,9 @@ public class ResourcesManager
 		public AssetManager manager;
 		public ArrayList<String> textures;
 		public ArrayList<String> textureAtlases;
+		
+		public ArrayList<String> ignored;
+		
 		public ArrayList<String> musics;
 		public ArrayList<String> sounds;
 		public String texturesDirectory;
@@ -77,6 +75,9 @@ public class ResourcesManager
 			manager = new AssetManager();
 			textures = new ArrayList<String>();
 			textureAtlases = new ArrayList<String>();
+			
+			ignored = new ArrayList<String>();
+			
 			musics = new ArrayList<String>();
 			sounds = new ArrayList<String>();
 			
@@ -117,17 +118,29 @@ public class ResourcesManager
 		{
 			for(String textureAtlas: this.textureAtlases)
 			{
-				this.manager.load(textureAtlas, TextureAtlas.class);
-				this.manager.finishLoading();
-				
-				if( this.skinAtlas != null && this.skinAtlas.equals( textureAtlas ) )
+				if( !this.ignored.contains(textureAtlas) )
 				{
-					FileHandle skinFileHandle = Gdx.files.internal( this.skinFile );
-					
-					this.skin = new Skin( skinFileHandle, (TextureAtlas)this.manager.get(textureAtlas) );
+					this.manager.load(textureAtlas, TextureAtlas.class);
 				}
 			}
+			
+			if(this.screenClass != ScreenClass.GAME)
+			{
+				this.manager.finishLoading();
+				this.createSkin();
+			}
 		}
+		
+		public void createSkin()
+		{	
+			if( this.skinAtlas != null )
+			{
+				FileHandle skinFileHandle = Gdx.files.internal( this.skinFile );
+				
+				this.skin = new Skin( skinFileHandle, (TextureAtlas)this.manager.get(skinAtlas) );
+			}
+		}
+		
 		public void loadMusics()
 		{			
 			for(String music: this.musics) //tu chyba nie powinien byc string? wyglada mi na niedorobke moja ale bd sie tym martwic jak dojdziemy do dzwiekow
@@ -214,40 +227,7 @@ public class ResourcesManager
 		
 		screenMetaArray.add(gameMeta);
 	}
-	
-	public void adjustResources(GameWorldType worldType, Array<CharacterType> characterTypes, boolean isCampaign)
-	{
-		
-		/*
-		ScreenType desiredScreenType = ScreenType.SCREEN_GAME_SINGLE;
-		
-		if( !isCampaign ) desiredScreenType = ScreenType.SCREEN_GAME_MULTI;
-		
-		for(int i = 0; i < screenMetaArray.size; i++)
-		{		
-			screenMetaArray.get(i).textureAtlases = new ArrayList<String>();
-			if( screenMetaArray.get(i).screenType == desiredScreenType )
-			{
-				screenMetaArray.get(i).textures = new ArrayList<String>();
-				
-				screenMetaArray.get(i).addTextures( GameWorldType.convertToTexturesList( worldType ) );
-				screenMetaArray.get(i).addTextureAtlases( GameWorldType.convertToTextureAtlases( worldType ) );
-
-				if( characterTypes != null)
-				{
-					for(int j = 0; j < characterTypes.size; j++)
-					{			
-						//screenMetaArray.get(i).addTextureAtlases( CharacterType.convertToTextureAtlases( characterTypes.get(j) ) );
-						screenMetaArray.get(i).addTextures( CharacterType.convertToTexturesList( characterTypes.get(j) ) );
-					}
-				}
-				
-				break;
-			}
-			else continue;
-		}*/
-	}
-	
+			
 	//--------- LOADING RESOURCES	
 	public void loadResources(BaseScreen screen)
 	{
@@ -275,6 +255,39 @@ public class ResourcesManager
 			unloadUnnecessary(screenClass);
 		}
 	}
+	
+	public void loadResources(ScreenType screenType, GameWorldType gameWorldType)
+	{			
+		int index = getScreenIndex(ScreenClass.GAME);
+		
+		this.screenMetaArray.get(index).ignored = new ArrayList<String>();
+		
+		if( gameWorldType == GameWorldType.FOREST )
+		{
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/wildWestAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/wildwestBackground.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/spaceAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/spaceBackground.pack" );
+		}
+		else if( gameWorldType == GameWorldType.WILDWEST )
+		{
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/forestAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/forestBackground.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/spaceAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/spaceBackground.pack" );
+		}
+		else if( gameWorldType == GameWorldType.SPACE )
+		{
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/wildWestAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/wildwestBackground.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/forestAtlas.pack" );
+			this.screenMetaArray.get(index).ignored.add( "gfx/game/levels/forestBackground.pack" );
+		}
+		
+		ScreenClass screenClass = ScreenType.convertToScreenClass(screenType);
+		loadResources(screenClass);
+	}
+	
 	
 	public void loadTextures(int index)
 	{
@@ -390,13 +403,9 @@ public class ResourcesManager
 		//     09-16 11:41:33.829: E/AndroidRuntime(6746): FATAL EXCEPTION: GLThread 17
 		//     09-16 11:41:33.829: E/AndroidRuntime(6746): com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException: Cannot run tasks on an executor that has been shutdown (disposed)
 		//do sprawdzenia w wolnej chwili
-		
-		int unloadedAssets = 0;
-		
+				
 		for(ScreenMeta screenMeta: screenMetaArray)
 		{
-			unloadedAssets += screenMeta.manager.getLoadedAssets();
-			
 			screenMeta.manager.clear();
 			//screenMeta.manager.dispose();
 			
@@ -565,7 +574,7 @@ public class ResourcesManager
 	{
 		return getScreenIndex( ScreenType.convertToScreenClass(screenType) );
 	}
-	private int getScreenIndex(ScreenClass screenClass)
+	public int getScreenIndex(ScreenClass screenClass)
 	{
 		int index = -1;
 		

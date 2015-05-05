@@ -3,7 +3,6 @@ package com.apptogo.runner.listeners;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
@@ -100,8 +99,6 @@ public class MyContactListener implements ContactListener
 				
 				Fixture f = getFixtureByType(fa, fb, "barrel");
 				( (UserData)f.getUserData() ).key = "barrel_touched";
-				
-				Logger.log(this, "+ BARREL SENSOR = " + flags.getBarrelSensor() );
 			}
 	//		if(checkFixturesTypes(fa, fb, "leftRotationSensor", "nonkilling")){
 	//			player.character.incrementLeftRotationSensor();
@@ -251,8 +248,6 @@ public class MyContactListener implements ContactListener
 			//barrel
 			if(checkFixturesTypes(fa, fb, "footSensor", "barrel_touched")){
 				flags.decrementBarrelSensor();
-				
-				Logger.log(this, "- BARREL SENSOR = " + flags.getBarrelSensor() );
 			}
 			//gravity field
 			if(checkFixturesTypes(fa, fb, "gravityField", "mainBody")){
@@ -304,7 +299,6 @@ public class MyContactListener implements ContactListener
 			
 			if(impulses[0] > 0.2f)
 			{
-				Logger.log(this, "impulse; " + impulses[0]);
 				Fixture fixture = getFixtureByType(fa, fb, "arrow");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}	

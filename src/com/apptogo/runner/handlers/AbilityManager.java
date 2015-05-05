@@ -1,6 +1,5 @@
 package com.apptogo.runner.handlers;
 
-import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;

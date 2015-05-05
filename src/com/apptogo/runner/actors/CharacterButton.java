@@ -1,8 +1,6 @@
 package com.apptogo.runner.actors;
 
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 

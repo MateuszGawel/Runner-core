@@ -1,9 +1,6 @@
 package com.apptogo.runner.enums;
 
 import com.apptogo.runner.actors.CharacterButton;
-import com.apptogo.runner.handlers.ResourcesManager;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
 public enum PowerupType

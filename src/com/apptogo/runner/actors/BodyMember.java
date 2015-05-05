@@ -5,11 +5,9 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import java.util.Random;
 
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;

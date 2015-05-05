@@ -4,7 +4,6 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.CoinsManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapObject;

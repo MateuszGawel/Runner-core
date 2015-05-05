@@ -1,10 +1,10 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.animation.Loading;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -49,7 +49,7 @@ public class LoadingScreen extends BaseScreen
 	}
 	
 	public void step()
-	{	
+	{
 		if( !loadingLabelIsAdded && ( (TimeUtils.millis() - timeStart) > 750 ) )
 		{
 			loadingLabel.setVisible(true);
@@ -60,12 +60,9 @@ public class LoadingScreen extends BaseScreen
 			loadingLabelIsAdded = true;
 		}
 		
-		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
+		if( resourcesManager.getAssetManager(screenToLoad).update() )
 		{
-			if( resourcesManager.getAssetManager(screenToLoad).update() )
-			{
-				ScreensManager.getInstance().createScreen(screenToLoad);
-			}
+			ScreensManager.getInstance().createScreen(screenToLoad);
 		}
 	}
 	

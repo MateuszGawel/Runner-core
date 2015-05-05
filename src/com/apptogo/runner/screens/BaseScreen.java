@@ -8,21 +8,16 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -44,8 +39,7 @@ public abstract class BaseScreen implements Screen
 	protected int currentWindowWidth, currentWindowHeight;
 	protected LanguageManager languageManager;
 	protected Image background;
-	protected Texture backgroundTexture;
-	
+
 	protected Settings settings;
 	
 	protected Stage menuStage;
@@ -63,14 +57,11 @@ public abstract class BaseScreen implements Screen
 	
 	protected float delta;
 	
-	protected Player player; //to jest wazne - musi byc dostep do playera juz na poziomie menu - chcemy miec o nim info w menu
+	protected Player player;
 	
-	protected Actor fadeButton;
-	public boolean fadeOutScreen;
-	public boolean fadeInScreen;
-	public boolean isFadedOut;
-	protected float currentFadeOutLevel;
-	protected float currentFadeInLevel;
+	protected Actor fade;
+	AlphaAction fadeOutAction;
+	AlphaAction fadeInAction;
 	
 	protected ScreenType screenToLoadAfterFadeOut;
 	
@@ -80,7 +71,7 @@ public abstract class BaseScreen implements Screen
 	public abstract ScreenType getSceneType();
 	public abstract void step();
 	public abstract void prepare();
-	public String getLangString(String key){ return languageManager.getString(key);	}
+	public String getLangString(String key){ return languageManager.getString(key);	}	
 	
 	protected BaseScreen(Runner runner) 
 	{
@@ -92,14 +83,8 @@ public abstract class BaseScreen implements Screen
 		
 		this.languageManager = LanguageManager.getInstance();
 		
-		//Logger.log(this, settings.getLanguage());
-		
 		this.languageManager.setCurrentLanguage( settings.getLanguage() );		
-	}
-	
-	/** Powoduje zaladowanie playera z pamieci - powinno byc wywolywane tam, gdzie potrzeba dostepu do playera! */
-	protected void loadPlayer()
-	{
+		
 		this.player = Player.load();
 	}
 	
@@ -121,9 +106,8 @@ public abstract class BaseScreen implements Screen
 			menuFadeStage.setViewport( fadeViewport );
 			
 			skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
-			if(skin==null) Logger.log(this, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			
-			initializeFadeOutButton();
+			initializeFade();
 			
 			Gdx.input.setInputProcessor(menuStage);
 			
@@ -151,6 +135,26 @@ public abstract class BaseScreen implements Screen
 		}
 	}
 	
+	private void initializeFade() 
+	{
+		fadeOutAction = new AlphaAction();
+		fadeOutAction.setAlpha(1.0f);
+		fadeOutAction.setDuration(0.3f);
+		
+		fadeInAction = new AlphaAction();
+		fadeInAction.setAlpha(0f);
+		fadeInAction.setDuration(0.3f);
+		
+		fade = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "black") );
+
+		fade.getColor().a = 0.99f;
+		fade.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		fade.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
+		fade.addAction(fadeInAction);
+				
+	    menuFadeStage.addActor(fade);
+	}
+	
 	@Override
 	public void render(float delta) 
 	{
@@ -162,8 +166,10 @@ public abstract class BaseScreen implements Screen
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			this.step();
 			
-			handleFadingOutScreen();
-			handleFadingInScreen();
+			if( fade.getColor().a >= 1 && screenToLoadAfterFadeOut != null )
+			{
+				ScreensManager.getInstance().createLoadingScreen( screenToLoadAfterFadeOut );
+			}
 			
 			backgroundViewport.update(currentWindowWidth, currentWindowHeight);
 			menuBackgroundStage.act();   
@@ -202,7 +208,7 @@ public abstract class BaseScreen implements Screen
 	}
 	
 	protected void setBackground(String regionName)
-	{		Logger.log(this, "&&&&&&&&&&&& USTAWIAM BACKGROUND");
+	{
 		background = new Image ( ResourcesManager.getInstance().getAtlasRegion( getScreenClass(), regionName) );
 		
 		background.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
@@ -224,90 +230,13 @@ public abstract class BaseScreen implements Screen
 	{
 		this.menuFadeStage.addActor(actor);
 	}
-	
-	protected void initializeFadeOutButton()
-	{		
-		fadeButton = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "black") );
-
-		fadeButton.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-		fadeButton.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
 		
-		fadeButton.setVisible(false);
-		fadeButton.toBack();
-		
-		currentFadeOutLevel = 0.0f;
-		currentFadeInLevel = 1.0f;
-		
-		isFadedOut = false;
-		
-	    menuFadeStage.addActor(fadeButton);
-	}
-		
-	public void handleFadingOutScreen()
-	{
-		if(fadeOutScreen)
-		{Logger.log(this, "1 FO | " + currentFadeOutLevel);
-			if( currentFadeOutLevel < 1.0f )
-			{Logger.log(this, "2 FO");
-				isFadedOut = false;
-				currentFadeOutLevel += 0.1f;
-				
-				AlphaAction fadeOutAction = new AlphaAction();
-				fadeOutAction.setAlpha(currentFadeOutLevel);
-				
-				fadeButton.setVisible(true);
-				fadeButton.toFront();
-				fadeButton.addAction(fadeOutAction);
-			}
-			else
-			{Logger.log(this, "3 FO");
-				isFadedOut = true;
-				currentFadeOutLevel = 0.0f;
-				fadeOutScreen = false;
-				
-				if( screenToLoadAfterFadeOut != null )
-				{
-					ScreensManager.getInstance().createLoadingScreen( screenToLoadAfterFadeOut );
-				}
-			}
-		}
-	}
-	
-	protected void handleFadingInScreen()
-	{
-		if(fadeInScreen)
-		{
-			if( currentFadeInLevel > 0.0f )
-			{
-				currentFadeInLevel -= 0.1f;
-				
-				AlphaAction fadeInAction = new AlphaAction();
-				fadeInAction.setAlpha(currentFadeInLevel);
-				
-				fadeButton.setVisible(true);
-				fadeButton.toFront();
-				fadeButton.addAction(fadeInAction);
-			}
-			else
-			{
-				fadeButton.setVisible(false);
-				currentFadeInLevel = 1.0f;
-				fadeInScreen = false;
-			}
-		}
-	}
-	
 	protected void loadScreenAfterFadeOut( ScreenType screenType )
-	{Logger.log(this, "LOADUJEMY PO FADEOUCIE");
-		screenToLoadAfterFadeOut = screenType;
-		fadeOutScreen = true;
-	}
-	
-	protected void fadeInOnStart()
 	{
-		fadeInScreen = true;
+		fade.addAction( fadeOutAction );		
+		screenToLoadAfterFadeOut = screenType;
 	}
-	
+		
 	protected Image createImage(String imageName, float x, float y)
 	{
 		return createImage(imageName, x, y, TextureFilter.Linear, TextureFilter.Linear);

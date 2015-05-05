@@ -69,11 +69,9 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 
 	
 	private void handleReadyToRun(Player sender){
-		Logger.log(this, "jest to wiadomosc readytorun");
 
 		if( gameWorld.player.getName().equals(sender.getName()) )
 		{
-			Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
 			return;
 		}
 		else if(sender.readyToRun){
@@ -91,7 +89,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 		}
 		
 		startLabel.remove();
-		Logger.log(this, "OK 2 GRACZY SIE POLACZYLO DO GRY! MOZNA ODPALAC ODLICZANIE");
 		Countdown countdown = new Countdown(gameWorld);
 		countdown.startCountdown();
 		
@@ -107,10 +104,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 		CustomActionManager.getInstance().registerAction(new CustomAction(1f, 4, gameWorld.player.character) {
 			@Override
 			public void perform() {
-				if(timeElapsed < 4)
-					Logger.log(this, "ODLICZAM: " + (4 - timeElapsed));
-				else if(timeElapsed == 4){
-					Logger.log(this, "ODLICZAM: GO!!!!");
+				if(timeElapsed == 4){
 					((Character)args[0]).start(); 
 				}
 					
@@ -121,7 +115,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 	@Override
 	public void onGameUpdateReceived(String message) 
 	{
-		Logger.log(this, "≥apiÍ w gamescreenulti");
 		try 
 		{
 			JSONObject data = new JSONObject(message);
@@ -133,7 +126,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 			try
 			{
 				sender = gameWorld.getEnemy(enemyName);
-				Logger.log(this, "Dostalem wiadomosc od: " + enemyName + " tresc: " + data);
 			}
 			catch(PlayerDoesntExistException e)
 			{
@@ -142,7 +134,6 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 
 			if( gameWorld.player.getName().equals(enemyName) )
 			{
-				Logger.log(this, "zaraz zaraz, przecieø ten gracz to ja. No nieüle");
 				return;
 			}
 			else if( data.has("READY_TO_RUN") && (boolean)data.getBoolean("READY_TO_RUN") ) 

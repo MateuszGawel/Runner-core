@@ -4,7 +4,6 @@ import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
@@ -59,8 +58,6 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		super(runner);
 		
-		loadPlayer();
-
 		this.level = levelToLoad;
 		this.enemies = enemiesList;
 		
@@ -124,8 +121,7 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	protected void createGui()
-	{		
-		Logger.log(this, gameWorld.player.character.getCharacterType().toString() + "JumpButton");
+	{
 		gameGuiStage.addActor( gameWorld.player.character.getJumpButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton") );
 		gameGuiStage.addActor( gameWorld.player.character.getSlideButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "SlideButton") );
 		gameGuiStage.addActor(gameWorld.player.character.getTempButton(gameWorld.player.character.getCharacterType().toString().toLowerCase() + "JumpButton"));

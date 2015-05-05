@@ -5,16 +5,11 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -35,9 +30,7 @@ public class WildWestWorld extends GameWorld{
 		super(mapPath, player, GameWorldType.WILDWEST);
 		super.world.setGravity(GRAVITY);
 		TextureAtlas atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/levels/wildwestBackground.pack");
-		
-		Logger.log(this, "TWORZENIE GS REGIONOW");
-		
+				
 		sandRegion = atlas.findRegion("sand");
 		mountainsRegion = atlas.findRegion("mountains");
 		rocksRegion = atlas.findRegion("rocks");

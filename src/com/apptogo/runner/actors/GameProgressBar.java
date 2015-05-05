@@ -1,7 +1,6 @@
 package com.apptogo.runner.actors;
 
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.ForestWorld;
@@ -9,7 +8,6 @@ import com.apptogo.runner.world.GameWorld;
 import com.apptogo.runner.world.SpaceWorld;
 import com.apptogo.runner.world.WildWestWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;

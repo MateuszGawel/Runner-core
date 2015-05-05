@@ -3,16 +3,17 @@ package com.apptogo.runner.screens;
 import com.apptogo.runner.animation.CharacterAnimation;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ShopManager;
 import com.apptogo.runner.handlers.ShopManager.ShopItem;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -29,14 +30,11 @@ public class ShopScreen extends BaseScreen
 	Button backButton;
 	
 	private Widget shopWidget;
+	private InfoWidget descriptionWidget;
 		
 	public ShopScreen(Runner runner)
 	{
-		super(runner);	
-		
-		loadPlayer();
-		
-		fadeInOnStart();
+		super(runner);
 	}
 	
 	public void prepare() 
@@ -51,10 +49,13 @@ public class ShopScreen extends BaseScreen
             	loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
             }
          });
+               
+        descriptionWidget = new InfoWidget("bleble"); //Widget(Align.center, Align.center, 0, WidgetType.SMALL, WidgetFadingType.NONE, true);
         
         createShopWidget();
         
         addToScreen( shopWidget.actor() );
+        addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
 	}
 	
@@ -91,35 +92,61 @@ public class ShopScreen extends BaseScreen
         Table table = new Table();
         table.debug();
         
-        //table.setSize(640.0f, 920.0f);
-        //able.setPosition(-320.0f, -300.0f);
-        
         for(ShopItem item : ShopManager.getInstance().getPowerups())
         {
         	table.row().pad(0, 0, 0, 0);
         	table.add().width(50).height(200);
         	
-        	Image image = createImage("item", 0, 0);
+        	Image image = createImage(item.thumbnailName, 0, 0);
         	image.setSize(150, 150);
-        	Label title = new Label("Super hipnotyzer",  skin, "default"); title.setWrap(true);
-        	Label cash = new Label("3000$",  skin, "default"); cash.setWrap(true);
+        	
+        	Label title = new Label(item.title,  skin, "default"); title.setWrap(true);
+        	Label cash = new Label(String.valueOf(1),  skin, "default"); cash.setWrap(true);
         	Label itDes = new Label(item.description,  skin, "default"); itDes.setWrap(true);
         	
         	table.add(image).width(150).height(150).center();
         	table.add().width(25).height(200);
         	
+        	//stars
+        	Group starsGroup = new Group();
+        	starsGroup.setSize(400, 60);
+        	
+        	for(int i = 0; i < item.maxLevel; i++)
+        	{
+        		if(i < item.currentLevel)
+        		{
+        			starsGroup.addActor( this.createImage("starSmallFull", (i*50)+((i+1) * 10), 16) );
+        		}
+        		else
+        		{
+        			starsGroup.addActor( this.createImage("starSmallEmpty", (i*50)+((i+1) * 10), 16) );
+        		}
+        	}
+        	        	
+        	Group tbg = new Group();
+        	tbg.setSize(150, 200);
+        	
+        	TextButton tb = new TextButton("det", this.skin);
+        	tb.setSize(100, 100);
+        	tb.setPosition(25, 50);
+        	
+        	tb.addListener( descriptionWidget.toggleWidgetListener );
+        	
+        	tbg.addActor(tb);
+        	
+        	
         	Table descTable = new Table();
         	descTable.debug();
         	
-        	descTable.add(title).width(400).height(100);
+        	descTable.add(title).width(400).height(80);
         	descTable.row();
         	descTable.add(cash).width(400).height(40);
         	descTable.row();
-        	descTable.add().width(400).height(60);
+        	descTable.add(starsGroup).width(400).height(80);
         	
         	table.add(descTable).width(400).height(200);
         	
-        	table.add().width(150).height(200);
+        	table.add(tbg).width(150).height(200);
         	table.add().width(50).height(200);
         	
         	//table.row();

@@ -1,7 +1,6 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.appwarp.WarpController;
-import com.apptogo.runner.enums.FontType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
@@ -30,11 +29,7 @@ public class RegisterScreen extends BaseScreen
 	
 	public RegisterScreen(Runner runner)
 	{
-		super(runner);	
-		
-		loadPlayer();
-		
-		fadeInOnStart();
+		super(runner);
 	}
 	
 	public void prepare() 

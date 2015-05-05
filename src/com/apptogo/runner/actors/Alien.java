@@ -9,7 +9,6 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;

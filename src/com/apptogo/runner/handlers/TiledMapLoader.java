@@ -21,7 +21,6 @@ import com.apptogo.runner.actors.Powerup;
 import com.apptogo.runner.actors.RockBig;
 import com.apptogo.runner.actors.RockSmall;
 import com.apptogo.runner.actors.Swamp;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -422,7 +421,6 @@ public class TiledMapLoader
 				
 				if(type!=null)
 				{
-					Logger.log(this, "TYPE: " + type);
 					UserData userData = new UserData( "obstacle" );
 					if(type.equals("killingBottom"))
 						userData.killingBottom = true;

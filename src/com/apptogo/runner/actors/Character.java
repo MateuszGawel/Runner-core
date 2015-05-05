@@ -15,7 +15,6 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenClass;
-import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -23,7 +22,6 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -31,12 +29,11 @@ import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -44,7 +41,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
@@ -138,7 +134,6 @@ public abstract class Character extends Actor{
 		float shapeWidth = Box2DVars.getShapeWidth(shape);
 		float shapeHeight = Box2DVars.getShapeHeight(shape);
 		
-		Logger.log(this, "Player body width: " + shapeWidth);
 		UserData userData = new UserData("mainBody");
 		userData.bodyWidth = shapeWidth;
 		userData.bodyHeight = shapeHeight;
@@ -626,13 +621,11 @@ public abstract class Character extends Actor{
 		}
 		
 		if(flags.isQueuedCatapultJump()){
-			Logger.log(this, "kataupluta");
 			jump(0, 2, 20, 0);
 			flags.setQueuedCatapultJump(false);
 		}
 		
 		if(flags.isQueuedMushroomJump()){
-			Logger.log(this, "Mushroom");
 			jump(1, 2.5f, 10, 0);
 			flags.setQueuedMushroomJump(false);
 		}

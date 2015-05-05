@@ -1,7 +1,5 @@
 package com.apptogo.runner.vars;
 
-import com.apptogo.runner.exception.UnknownShapeTypeException;
-import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -44,7 +42,7 @@ public class Box2DVars {
 					maxX = vertex.x;
 				}
 			}
-			Logger.log("String", "RETURNED : " + (maxX - minX));
+
 			return (maxX - minX);
 		}
 		else if( shape instanceof ChainShape )
@@ -106,7 +104,7 @@ public class Box2DVars {
 					maxY = vertex.y;
 				}
 			}
-			Logger.log("String", "RETURNED : " + (maxY - minY));
+
 			return (maxY - minY);
 		}
 		else if( shape instanceof ChainShape )

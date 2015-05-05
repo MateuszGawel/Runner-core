@@ -8,7 +8,6 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Contact;
 import com.apptogo.runner.widget.DialogWidget;
@@ -64,14 +63,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	    
 	public MultiplayerScreen(Runner runner)
 	{
-		super(runner);	
-		loadPlayer();
-		
-		fadeInOnStart();
+		super(runner);
 		
 		if( !(WarpController.getInstance().isOnline) )
 		{
-			Logger.log(this, "odpalam");
 			WarpController.getInstance().startApp( player.getName() );
 		}
 		WarpController.getInstance().setMultiplayerScreenListener(this);
@@ -399,9 +394,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	}
 
 	@Override
-	public void onGameUpdateReceived(String message) {
-		Logger.log(this, "przyszed³ update ale zly listener");
-		
+	public void onGameUpdateReceived(String message) {		
 	}
 
 

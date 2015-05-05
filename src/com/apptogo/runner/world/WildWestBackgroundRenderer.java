@@ -1,8 +1,6 @@
 package com.apptogo.runner.world;
 
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
-import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.GameScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;

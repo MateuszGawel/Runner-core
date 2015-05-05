@@ -3,7 +3,6 @@ package com.apptogo.runner.actors;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.GameScreen;
@@ -97,14 +96,8 @@ public class Countdown extends Obstacle{
 	public void act(float delta) {
 		super.act(delta);
 		
-		Logger.log(this, "WIDTH: " + currentFrame.getRegionWidth());
-		Logger.log(this, "HEIGHT: " + currentFrame.getRegionHeight());
-		
         setWidth(currentFrame.getRegionWidth());
         setHeight(currentFrame.getRegionHeight());
 		setPosition(Runner.SCREEN_WIDTH/2 - currentFrame.getRegionWidth()/2, Runner.SCREEN_HEIGHT/2 - currentFrame.getRegionHeight()/2);
-	
-		Logger.log(this, "WIDTH TH: " + this.getWidth());
-		Logger.log(this, "HEIGHT TH: " + this.getHeight());
 	}
 }

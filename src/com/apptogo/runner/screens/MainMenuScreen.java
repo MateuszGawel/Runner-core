@@ -1,7 +1,5 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.actors.Animation;
-import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
@@ -70,13 +68,10 @@ public class MainMenuScreen extends BaseScreen
 		
 	public MainMenuScreen(Runner runner)
 	{
-		super(runner);	
-		loadPlayer();
+		super(runner);
 		
 		//to jest wyjatek - generalnie nie uzywamy unload() tylko definiujemy reguly w handlerze (unloadUnnecessary)
 		ResourcesManager.getInstance().unloadAllResources( ScreenClass.SPLASH );
-		
-		fadeInOnStart();
 	}
 	
 	@Override

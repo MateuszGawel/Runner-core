@@ -6,6 +6,7 @@ import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ResourcesManager.ScreenMeta;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TipManager;
 import com.apptogo.runner.levels.Level;
@@ -39,11 +40,11 @@ public class LoadingGameScreen extends BaseScreen
         this.levelToLoad = levelToLoad;
         this.players = players;
 
-        resourcesManager.loadResources(screenToLoad);
+        resourcesManager.loadResources(screenToLoad, levelToLoad.worldType);
 	}
 	
 	public void prepare() 
-	{
+	{		
 		//jesli cos sie stanie z tlem przy ladowaniu to tu jest pewnie wina
 		if( levelToLoad != null )
 		{
@@ -60,7 +61,7 @@ public class LoadingGameScreen extends BaseScreen
 		tipLabel = new Label(tip, skin, "default");
 		setCenterPosition(tipLabel, -320.0f);
 		tipLabel.setVisible(true);
-		Logger.log(this, ResourcesManager.getInstance().getAssetManager(ScreenClass.STILL).getDiagnostics() );
+		
 		loadingAnimation = new Loading();
 		setCenterPosition(loadingAnimation, -240);
 		loadingAnimation.setVisible(true);
@@ -71,13 +72,13 @@ public class LoadingGameScreen extends BaseScreen
 	}
 	
 	public void step()
-	{			
-		if( resourcesManager.getAssetManager(screenToLoad).update() ) 
+	{
+		if( resourcesManager.getAssetManager(screenToLoad).update() )
 		{
-			if( resourcesManager.getAssetManager(screenToLoad).update() )
-			{
-				ScreensManager.getInstance().createGameScreen(screenToLoad, levelToLoad, players);
-			}
+			ScreenMeta screenMeta = resourcesManager.screenMetaArray.get( resourcesManager.getScreenIndex(ScreenClass.GAME) );
+			screenMeta.createSkin();
+				
+			ScreensManager.getInstance().createGameScreen(screenToLoad, levelToLoad, players);
 		}
 	}
 	
