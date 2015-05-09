@@ -22,6 +22,7 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -338,7 +339,7 @@ public abstract class Character extends Actor{
 		flags.setDoubleJumped(true);
 	}
 	
-	private void lift(){
+	private void lift(int level){
 		if(flags.isCanBeLifted()){
 			flags.setBoostedOnce(false);
 			if(flags.isSliding())
@@ -346,10 +347,28 @@ public abstract class Character extends Actor{
 			flags.setSliding(false);
 			flags.setJumped(true);
 			layFixtures(false);
-	
-			float y = (float) sqrt(-world.getGravity().y * 8);
-			float x = body.getLinearVelocity().x;
-			body.setLinearVelocity(-10, y * gravityModificator);
+			
+			Vector2 force = new Vector2();
+			switch(level){
+				case 1:
+					force = new Vector2(-10, (float) sqrt(-world.getGravity().y * 8));
+					break;
+				case 2:
+					force = new Vector2(-15, (float) sqrt(-world.getGravity().y * 10));
+					break;
+				case 3:
+					force = new Vector2(-20, (float) sqrt(-world.getGravity().y * 12));
+					break;
+			}
+			body.setLinearVelocity(force);
+			flags.setLifted(true);
+			customActionManager.registerAction(new CustomAction(1f) {
+				@Override
+				public void perform() {
+					//flags.setLifted(false);
+					//to moze powodowac bug kiedy z jakeigos powodu land sie nie odpali. Flage Lifted trzeba bedzie wtedy resetowac gdzies indziej.
+				}
+			});
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			
 			if(stepSoundPlayed){
@@ -385,6 +404,7 @@ public abstract class Character extends Actor{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 					flags.update();
 				}
+				flags.setLifted(false);
 			}
 			if(!flags.isSliding())
 				sounds.get(CharacterSound.LAND).play(0.3f);
@@ -600,9 +620,9 @@ public abstract class Character extends Actor{
 			boostAfterLand();
 		}
 		
-		if(flags.isQueuedLift()){
-			lift();
-			flags.setQueuedLift(false);
+		if(flags.getQueuedLift() > 0){
+			lift(flags.getQueuedLift());
+			flags.setQueuedLift(0);
 		}
 		
 		if(flags.isQueuedDeathDismemberment()){

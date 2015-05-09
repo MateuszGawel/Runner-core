@@ -11,6 +11,7 @@ public class UserData
 
 	//powerup
 	public String powerup;
+	public int abilityLevel;
 	
 	//coin
 	public boolean collected;

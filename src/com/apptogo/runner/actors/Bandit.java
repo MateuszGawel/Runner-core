@@ -174,7 +174,7 @@ public class Bandit extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		AbilityManager.getInstance().useAbility(character, abilityType, 1);
+		AbilityManager.getInstance().useAbility(character, abilityType, 3);
 	}
 	
 

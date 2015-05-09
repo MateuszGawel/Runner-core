@@ -169,4 +169,8 @@ public class MyAnimation extends Animation{
 		return this.frameNumber;
 	}
 	public Object getAnimationState(){ return this.animationState; }
+
+	public void setAnimationFinished(boolean animationFinished) {
+		this.animationFinished = animationFinished;
+	}
 }

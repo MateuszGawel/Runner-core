@@ -1,10 +1,14 @@
 package com.apptogo.runner.handlers;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.LiftField;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -43,6 +47,7 @@ public class AbilityManager
 				shootArrow(character, abilityLevel);
 				break;
 			case LIFT:
+				useLift(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -60,8 +65,8 @@ public class AbilityManager
 
 		for(int i=0; i<abilityLevel; i++){
 			Bomb bomb = bombsPool.obtain();
-
-			bomb.init(character);
+			//niestety w tym momencie ustawienie tego levelu nic nie robi bo bomba jest poolowana i wiele spraw ustalana jest przy tworzeniu. Nie chce tego przerabiac dopoki nie bedzie ustalonego sposobu implementacji levelu zeby potem nei przepisywac
+			bomb.init(character, abilityLevel);
 			activeBombs.add(bomb);
 		}
 	}
@@ -75,12 +80,53 @@ public class AbilityManager
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
 		}
 
-		for(int i=0; i<abilityLevel*5; i++){
-			Arrow arrow = arrowsPool.obtain();
-			//arrow.setLevel(abilityLevel);
-			arrow.init(character, i);
-			activeArrows.add(arrow);
+		switch(abilityLevel){
+		case 1:
+			for(int i=0; i<5; i++){
+				Arrow arrow = arrowsPool.obtain();
+				arrow.init(character, i, abilityLevel);
+				activeArrows.add(arrow);
+			}
+			break;
+		case 2:
+			for(int i=0; i<8; i++){
+				for(int j=0; j<2; j++){
+					Arrow arrow = arrowsPool.obtain();
+					arrow.init(character, i, abilityLevel);
+					activeArrows.add(arrow);
+				}
+			}
+			break;
+		case 3:
+			for(int i=0; i<8; i++){
+				for(int j=0; j<3; j++){
+					Arrow arrow = arrowsPool.obtain();
+					arrow.init(character, i, abilityLevel);
+					activeArrows.add(arrow);
+				}
+			}
+			break;
 		}
+
+        CustomActionManager.getInstance().registerAction(new CustomAction(abilityLevel*5*0.1f, 1, character) {		
+			@Override
+			public void perform() {
+				((Character)args[0]).animationManager.getCurrentAnimation().setAnimationFinished(true);
+			}
+		});
+	}
+    
+	public void useLift(Character character, int abilityLevel)
+	{
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+		}
+		LiftField liftField = liftFieldsPool.obtain();
+		liftField.init(character, abilityLevel);
+		activeLiftFields.add(liftField);
 	}
 	
 	public void act(){
@@ -92,7 +138,7 @@ public class AbilityManager
     private final Pool<Bomb> bombsPool = new Pool<Bomb>() {
 	    @Override
 	    protected Bomb newObject() {
-	    	Bomb bomb = new Bomb(world, gameWorld, 1);
+	    	Bomb bomb = new Bomb(world, gameWorld);
 	    	gameWorld.worldStage.addActor(bomb);
 	    	return bomb;
 	    }
@@ -108,6 +154,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<LiftField> activeLiftFields = new Array<LiftField>();
+    private final Pool<LiftField> liftFieldsPool = new Pool<LiftField>() {
+	    @Override
+	    protected LiftField newObject() {
+	    	LiftField liftField = new LiftField(world, gameWorld);
+	    	gameWorld.worldStage.addActor(liftField);
+	    	return liftField;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -119,6 +175,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeArrows.get(i).alive == false) {
                 arrowsPool.free(activeArrows.removeIndex(i));
+            }
+        }
+        len = activeLiftFields.size;
+        for (int i = len; --i >= 0;) {
+            if (activeLiftFields.get(i).alive == false) {
+            	liftFieldsPool.free(activeLiftFields.removeIndex(i));
             }
         }
 	}

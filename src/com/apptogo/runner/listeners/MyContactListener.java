@@ -177,7 +177,7 @@ public class MyContactListener implements ContactListener
 				String liftFieldOwner = ((UserData)liftFixture.getUserData()).playerName;
 				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ liftFieldOwner!=player.getName())
-					player.character.flags.setQueuedLift(true);
+					player.character.flags.setQueuedLift(((UserData)liftFixture.getUserData()).abilityLevel);
 			}
 		}
 		

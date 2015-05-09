@@ -292,7 +292,7 @@ public class Obstacle extends Actor{
         if(currentFrame != null){
 	        setWidth(currentFrame.getRegionWidth() / PPM);
 	        setHeight(currentFrame.getRegionHeight() / PPM);
-			setOrigin(-offsetX, -offsetY);
+			//setOrigin(-offsetX, -offsetY);
         }
 
         if(handleSoundVolume)

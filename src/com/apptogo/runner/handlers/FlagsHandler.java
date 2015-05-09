@@ -10,7 +10,7 @@ public class FlagsHandler {
 	
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
-	private boolean queuedLift;
+	private int queuedLift;
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
@@ -51,7 +51,8 @@ public class FlagsHandler {
 	private boolean jumped;
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
-
+	private boolean lifted;
+	
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
 	
@@ -113,7 +114,7 @@ public class FlagsHandler {
 			else
 				onGround = false;
 			
-			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag)
+			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag && !lifted)
 				canRun = true;
 			else
 				canRun = false;
@@ -445,11 +446,11 @@ public class FlagsHandler {
 		this.gravityRotationSwitch = gravityRotationSwitch;
 	}
 
-	public boolean isQueuedLift() {
+	public int getQueuedLift() {
 		return queuedLift;
 	}
 
-	public void setQueuedLift(boolean queuedLift) {
+	public void setQueuedLift(int queuedLift) {
 		this.queuedLift = queuedLift;
 	}
 
@@ -678,5 +679,13 @@ public class FlagsHandler {
 
 	public Character getCharacter() {
 		return character;
+	}
+
+	public boolean isLifted() {
+		return lifted;
+	}
+
+	public void setLifted(boolean lifted) {
+		this.lifted = lifted;
 	}
 }
