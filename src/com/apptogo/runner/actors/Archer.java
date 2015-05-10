@@ -145,7 +145,7 @@ public class Archer extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		AbilityManager.getInstance().useAbility(character, abilityType, 2);
+		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}
 	
 	public void createBodyMembers(){

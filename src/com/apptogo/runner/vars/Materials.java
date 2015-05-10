@@ -28,6 +28,8 @@ public class Materials {
 	public static FixtureDef arrowSensor;
 	public static FixtureDef fieldBody;
 	public static FixtureDef barrelBody;
+	public static FixtureDef snaresBody;
+	public static FixtureDef snaresSensor;
 	
 	static
 	{
@@ -52,6 +54,8 @@ public class Materials {
 		arrowBody = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		arrowSensor = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
 		fieldBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT), true);
+		snaresBody = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN), false);
+		snaresSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
 		
 	}
 	

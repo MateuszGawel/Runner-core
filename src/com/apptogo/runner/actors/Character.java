@@ -339,6 +339,19 @@ public abstract class Character extends Actor{
 		flags.setDoubleJumped(true);
 	}
 	
+	private void snare(int level){
+		if(flags.isCanBeSnared()){
+			flags.setSnared(true);
+			body.setLinearVelocity(2,0);
+			customActionManager.registerAction(new CustomAction(level) {
+				@Override
+				public void perform() {
+					flags.setSnared(false);
+				}
+			});
+		}
+	}
+	
 	private void lift(int level){
 		if(flags.isCanBeLifted()){
 			flags.setBoostedOnce(false);
@@ -623,6 +636,11 @@ public abstract class Character extends Actor{
 		if(flags.getQueuedLift() > 0){
 			lift(flags.getQueuedLift());
 			flags.setQueuedLift(0);
+		}
+		
+		if(flags.getQueuedSnare() > 0){
+			snare(flags.getQueuedSnare());
+			flags.setQueuedSnare(0);
 		}
 		
 		if(flags.isQueuedDeathDismemberment()){
@@ -1031,7 +1049,7 @@ public abstract class Character extends Actor{
 			if(getCharacterType() == CharacterType.BANDIT)
 				character.useAbility(CharacterAbilityType.BOMB);
 			else if(getCharacterType() == CharacterType.ARCHER)
-				character.useAbility(CharacterAbilityType.ARROW);
+				character.useAbility(CharacterAbilityType.SNARES);
 			else if(getCharacterType() == CharacterType.ALIEN)
 				character.useAbility(CharacterAbilityType.LIFT);
 				//tempRunningModificator*=-1;

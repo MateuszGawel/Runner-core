@@ -6,6 +6,7 @@ import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.LiftField;
+import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.userdata.UserData;
@@ -48,6 +49,9 @@ public class AbilityManager
 				break;
 			case LIFT:
 				useLift(character, abilityLevel);
+				break;
+			case SNARES:
+				useSnares(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -127,6 +131,17 @@ public class AbilityManager
 		LiftField liftField = liftFieldsPool.obtain();
 		liftField.init(character, abilityLevel);
 		activeLiftFields.add(liftField);
+	}
+	
+	public void useSnares(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+		}
+		Snares snares = new Snares(world, gameWorld);
+		snares.init(character, abilityLevel);
 	}
 	
 	public void act(){

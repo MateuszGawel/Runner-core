@@ -3,6 +3,7 @@ package com.apptogo.runner.listeners;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
@@ -178,6 +179,15 @@ public class MyContactListener implements ContactListener
 				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ liftFieldOwner!=player.getName())
 					player.character.flags.setQueuedLift(((UserData)liftFixture.getUserData()).abilityLevel);
+			}
+			
+			if(checkFixturesTypes(fa, fb, "mainBody", "snares")){
+				Fixture snaresFixture = getFixtureByType(fa, fb, "snares");
+				String snaresOwner = ((UserData)snaresFixture.getUserData()).playerName;
+				if(/*player.character.flags.isMe() &&*/ snaresOwner!=player.getName() && player.character.flags.isCanBeSnared() && !((UserData)snaresFixture.getUserData()).active){
+					((UserData)snaresFixture.getUserData()).active = true;
+					player.character.flags.setQueuedSnare(((UserData)snaresFixture.getUserData()).abilityLevel);
+				}
 			}
 		}
 		

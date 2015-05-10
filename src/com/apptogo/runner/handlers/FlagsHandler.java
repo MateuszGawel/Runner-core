@@ -11,6 +11,7 @@ public class FlagsHandler {
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
 	private int queuedLift;
+	private int queuedSnare;
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
@@ -44,6 +45,7 @@ public class FlagsHandler {
 	private boolean dieBottom;
 	private boolean dieTop;
 	private boolean canRun;
+	private boolean canBeSnared;
 	private boolean dieDismemberment;
 	private boolean shouldFly;
 	private boolean stopFlyingAction;
@@ -52,6 +54,7 @@ public class FlagsHandler {
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
 	private boolean lifted;
+	private boolean snared;
 	
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
@@ -114,7 +117,7 @@ public class FlagsHandler {
 			else
 				onGround = false;
 			
-			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag && !lifted)
+			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag && !lifted && !snared)
 				canRun = true;
 			else
 				canRun = false;
@@ -183,6 +186,11 @@ public class FlagsHandler {
 				canBeLifted = true;
 			else 
 				canBeLifted = false;
+			
+			if(alive && !immortal)
+				canBeSnared = true;
+			else 
+				canBeSnared = false;
 //		else
 //		{
 //			canBegin = false;                  
@@ -687,5 +695,29 @@ public class FlagsHandler {
 
 	public void setLifted(boolean lifted) {
 		this.lifted = lifted;
+	}
+
+	public boolean isSnared() {
+		return snared;
+	}
+
+	public void setSnared(boolean snared) {
+		this.snared = snared;
+	}
+
+	public int getQueuedSnare() {
+		return queuedSnare;
+	}
+
+	public void setQueuedSnare(int queuedSnare) {
+		this.queuedSnare = queuedSnare;
+	}
+
+	public boolean isCanBeSnared() {
+		return canBeSnared;
+	}
+
+	public void setCanBeSnared(boolean canBeSnared) {
+		this.canBeSnared = canBeSnared;
 	}
 }
