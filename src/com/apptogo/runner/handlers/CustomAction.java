@@ -33,7 +33,9 @@ public abstract class CustomAction {
 	}
 	
 	public abstract void perform();
-	
+	public void onFinish(){
+		
+	}
 	public void act(float delta){
 		if(delta <= 0.1)
 			stateTime += delta;
@@ -44,6 +46,7 @@ public abstract class CustomAction {
 			perform();
 			if(loops > 0 && loopCount >= loops){
 				this.finished = true;
+				onFinish();
 			}	
 		}
 	}

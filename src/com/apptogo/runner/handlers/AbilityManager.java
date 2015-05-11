@@ -3,14 +3,17 @@ package com.apptogo.runner.handlers;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Arrow;
+import com.apptogo.runner.actors.BlackHole;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.LiftField;
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.userdata.UserData;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -37,6 +40,8 @@ public class AbilityManager
 	public void init(World world, GameWorld gameWorld){
 		this.world = world;
 		this.gameWorld = gameWorld;
+		blackHoleInParticleEffectActor = new ParticleEffectActor("blackHoleIn.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		gameWorld.getWorldStage().addActor(blackHoleInParticleEffectActor);
 	}
 	
 	public void useAbility(Character character, CharacterAbilityType abilityType, int abilityLevel){
@@ -52,6 +57,9 @@ public class AbilityManager
 				break;
 			case SNARES:
 				useSnares(character, abilityLevel);
+				break;
+			case BLACKHOLE:
+				useBlackHole(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -144,6 +152,12 @@ public class AbilityManager
 		snares.init(character, abilityLevel);
 	}
 	
+	public void useBlackHole(Character character, int abilityLevel){
+		BlackHole blackHole = blackHolesPool.obtain();
+		blackHole.init(character, abilityLevel);
+		activeBlackHoles.add(blackHole);
+	}
+	
 	public void act(){
 		freePools();
 	}
@@ -179,6 +193,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<BlackHole> activeBlackHoles = new Array<BlackHole>();
+    private final Pool<BlackHole> blackHolesPool = new Pool<BlackHole>() {
+	    @Override
+	    protected BlackHole newObject() {
+	    	BlackHole blackHole = new BlackHole(world, gameWorld);
+	    	gameWorld.worldStage.addActor(blackHole);
+	    	return blackHole;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -198,5 +222,14 @@ public class AbilityManager
             	liftFieldsPool.free(activeLiftFields.removeIndex(i));
             }
         }
+        len = activeBlackHoles.size;
+        for (int i = len; --i >= 0;) {
+            if (activeBlackHoles.get(i).alive == false) {
+            	blackHolesPool.free(activeBlackHoles.removeIndex(i));
+            }
+        }
 	}
+	
+	//----PARTICLES----//
+	public ParticleEffectActor blackHoleInParticleEffectActor;
 }

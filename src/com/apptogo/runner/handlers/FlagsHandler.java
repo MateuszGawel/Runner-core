@@ -3,6 +3,8 @@ package com.apptogo.runner.handlers;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.logger.Logger;
+import com.badlogic.gdx.math.Vector2;
 
 public class FlagsHandler {
 	
@@ -12,6 +14,7 @@ public class FlagsHandler {
 	private boolean queuedJump;
 	private int queuedLift;
 	private int queuedSnare;
+	private Vector2 queuedBlackHoleTeleport;
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
@@ -46,6 +49,7 @@ public class FlagsHandler {
 	private boolean dieTop;
 	private boolean canRun;
 	private boolean canBeSnared;
+	private boolean canBeBlackHoleTeleported;
 	private boolean dieDismemberment;
 	private boolean shouldFly;
 	private boolean stopFlyingAction;
@@ -191,6 +195,11 @@ public class FlagsHandler {
 				canBeSnared = true;
 			else 
 				canBeSnared = false;
+			
+			if(alive && !immortal)
+				canBeBlackHoleTeleported = true;
+			else 
+				canBeBlackHoleTeleported = false;
 //		else
 //		{
 //			canBegin = false;                  
@@ -719,5 +728,21 @@ public class FlagsHandler {
 
 	public void setCanBeSnared(boolean canBeSnared) {
 		this.canBeSnared = canBeSnared;
+	}
+
+	public Vector2 getQueuedBlackHoleTeleport() {
+		return queuedBlackHoleTeleport;
+	}
+
+	public void setQueuedBlackHoleTeleport(Vector2 queuedBlackHoleTeleport) {
+		this.queuedBlackHoleTeleport = queuedBlackHoleTeleport;
+	}
+
+	public boolean isCanBeBlackHoleTeleported() {
+		return canBeBlackHoleTeleported;
+	}
+
+	public void setCanBeBlackHoleTeleported(boolean canBeBlackHoleTeleported) {
+		this.canBeBlackHoleTeleported = canBeBlackHoleTeleported;
 	}
 }

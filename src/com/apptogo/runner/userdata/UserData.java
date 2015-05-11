@@ -18,6 +18,7 @@ public class UserData
 	
 	//obstacle
 	public boolean active;
+	public boolean alive;
 	public boolean playSound;
 	public boolean killingBottom;
 	public boolean killingTop;

@@ -15,6 +15,7 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenClass;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -643,6 +644,19 @@ public abstract class Character extends Actor{
 			flags.setQueuedSnare(0);
 		}
 		
+		if(flags.getQueuedBlackHoleTeleport() != null){
+			AbilityManager.getInstance().blackHoleInParticleEffectActor.obtainAndStart(body.getPosition().x, body.getPosition().y, 0);		
+			AbilityManager.getInstance().blackHoleInParticleEffectActor.toFront();
+			customActionManager.registerAction(new CustomAction(0.5f, 1, flags.getQueuedBlackHoleTeleport()) {				
+				@Override
+				public void perform() {
+					body.setTransform(new Vector2((Vector2)args[0]), 0);
+				}
+			});
+			flags.setQueuedBlackHoleTeleport(null);
+
+		}
+		
 		if(flags.isQueuedDeathDismemberment()){
 			dieDismemberment();
 			flags.setQueuedDeathDismemberment(false);
@@ -1051,7 +1065,7 @@ public abstract class Character extends Actor{
 			else if(getCharacterType() == CharacterType.ARCHER)
 				character.useAbility(CharacterAbilityType.SNARES);
 			else if(getCharacterType() == CharacterType.ALIEN)
-				character.useAbility(CharacterAbilityType.LIFT);
+				character.useAbility(CharacterAbilityType.BLACKHOLE);
 				//tempRunningModificator*=-1;
 		}
 		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
