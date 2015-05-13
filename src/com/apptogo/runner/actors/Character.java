@@ -15,6 +15,7 @@ import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenClass;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
@@ -22,6 +23,7 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -338,7 +340,20 @@ public abstract class Character extends Actor{
 		flags.setDoubleJumped(true);
 	}
 	
-	private void lift(){
+	private void snare(int level){
+		if(flags.isCanBeSnared()){
+			flags.setSnared(true);
+			body.setLinearVelocity(2,0);
+			customActionManager.registerAction(new CustomAction(level) {
+				@Override
+				public void perform() {
+					flags.setSnared(false);
+				}
+			});
+		}
+	}
+	
+	private void lift(int level){
 		if(flags.isCanBeLifted()){
 			flags.setBoostedOnce(false);
 			if(flags.isSliding())
@@ -346,10 +361,28 @@ public abstract class Character extends Actor{
 			flags.setSliding(false);
 			flags.setJumped(true);
 			layFixtures(false);
-	
-			float y = (float) sqrt(-world.getGravity().y * 8);
-			float x = body.getLinearVelocity().x;
-			body.setLinearVelocity(-10, y * gravityModificator);
+			
+			Vector2 force = new Vector2();
+			switch(level){
+				case 1:
+					force = new Vector2(-10, (float) sqrt(-world.getGravity().y * 8));
+					break;
+				case 2:
+					force = new Vector2(-15, (float) sqrt(-world.getGravity().y * 10));
+					break;
+				case 3:
+					force = new Vector2(-20, (float) sqrt(-world.getGravity().y * 12));
+					break;
+			}
+			body.setLinearVelocity(force);
+			flags.setLifted(true);
+			customActionManager.registerAction(new CustomAction(1f) {
+				@Override
+				public void perform() {
+					//flags.setLifted(false);
+					//to moze powodowac bug kiedy z jakeigos powodu land sie nie odpali. Flage Lifted trzeba bedzie wtedy resetowac gdzies indziej.
+				}
+			});
 			animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
 			
 			if(stepSoundPlayed){
@@ -385,6 +418,7 @@ public abstract class Character extends Actor{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.LANDINGIDLE);
 					flags.update();
 				}
+				flags.setLifted(false);
 			}
 			if(!flags.isSliding())
 				sounds.get(CharacterSound.LAND).play(0.3f);
@@ -600,9 +634,27 @@ public abstract class Character extends Actor{
 			boostAfterLand();
 		}
 		
-		if(flags.isQueuedLift()){
-			lift();
-			flags.setQueuedLift(false);
+		if(flags.getQueuedLift() > 0){
+			lift(flags.getQueuedLift());
+			flags.setQueuedLift(0);
+		}
+		
+		if(flags.getQueuedSnare() > 0){
+			snare(flags.getQueuedSnare());
+			flags.setQueuedSnare(0);
+		}
+		
+		if(flags.getQueuedBlackHoleTeleport() != null){
+			AbilityManager.getInstance().blackHoleInParticleEffectActor.obtainAndStart(body.getPosition().x, body.getPosition().y, 0);		
+			AbilityManager.getInstance().blackHoleInParticleEffectActor.toFront();
+			customActionManager.registerAction(new CustomAction(0.5f, 1, flags.getQueuedBlackHoleTeleport()) {				
+				@Override
+				public void perform() {
+					body.setTransform(new Vector2((Vector2)args[0]), 0);
+				}
+			});
+			flags.setQueuedBlackHoleTeleport(null);
+
 		}
 		
 		if(flags.isQueuedDeathDismemberment()){
@@ -1011,9 +1063,9 @@ public abstract class Character extends Actor{
 			if(getCharacterType() == CharacterType.BANDIT)
 				character.useAbility(CharacterAbilityType.BOMB);
 			else if(getCharacterType() == CharacterType.ARCHER)
-				character.useAbility(CharacterAbilityType.ARROW);
+				character.useAbility(CharacterAbilityType.SNARES);
 			else if(getCharacterType() == CharacterType.ALIEN)
-				character.useAbility(CharacterAbilityType.LIFT);
+				character.useAbility(CharacterAbilityType.BLACKHOLE);
 				//tempRunningModificator*=-1;
 		}
 		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc

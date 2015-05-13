@@ -23,10 +23,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-public class Bomb extends Obstacle implements Poolable, Ability{
+public class Bomb extends Obstacle implements Poolable{
 
 	public boolean alive;
-	private Body explodeSensor;
+	private Body currentExplodeSensor;
+	private Body explodeSensorOne, explodeSensorTwo, explodeSensorThree;
 	private boolean exploding;
 	
 	//parameters
@@ -34,10 +35,10 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	private float timeToExplode = 2;
 	
 	private CustomAction explodeAction, explodingAction;
-	public ParticleEffectActor explosionParticle;
-	public ParticleEffectActor explosionParticlelvl1, explosionParticlelvl2, explosionParticlelvl3;
+	public ParticleEffectActor currentExplosionParticle;
+	public ParticleEffectActor explosionParticleOne, explosionParticleTwo, explosionParticleThree;
 	public enum BombAnimationState{
-		NORMAL
+		LVL1, LVL2, LVL3
 	}
 	
 	
@@ -48,52 +49,89 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 			return "bomblvltwo";	
 		else if(level==3)
 			return "bomblvlthree";
-		else return null;
-	}
-	private float getExplosionRange(){
-		if(level==1)
-			return 2;
-		else if(level==2)
-			return 3;
-		else if(level==3)
-			return 5;
-		else return 0;
-	}
-	private String getExplosionParticleName(){
-		if(level==1)
-			return "explosion_lvl1.p";
-		else if(level==2)
-			return "explosion_lvl2.p";
-		else if(level==3)
-			return "explosion_lvl3.p";
-		else return null;
+		else return "bomblvlone";
 	}
 	
-	public Bomb(World world, GameWorld gameWorld, int level){
-		super(new EllipseMapObject(0,0,32,32), world, "gfx/game/characters/charactersAtlas.pack");
-		explosionParticle = new ParticleEffectActor(getExplosionParticleName(), 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+	private ParticleEffectActor getParticleEffectActor(){
+		switch(level){
+			case 1:
+				return explosionParticleOne;
+			case 2:
+				return explosionParticleTwo;
+			case 3:
+				return explosionParticleThree;
+			default:
+				return explosionParticleOne;
+			
+		}
+	}
+	
+	private Body getExplosionSensor(){
+		switch(level){
+			case 1:
+				return explodeSensorOne;
+			case 2:
+				return explodeSensorTwo;
+			case 3:
+				return explodeSensorThree;
+			default:
+				return explodeSensorOne;
+			
+		}
+	}
+	
+	private void setAnimationState(){
+		switch(level){
+			case 1:
+				animationManager.setCurrentAnimationState(BombAnimationState.LVL1);
+				break;
+			case 2:
+				animationManager.setCurrentAnimationState(BombAnimationState.LVL2);
+				break;
+			case 3:
+				animationManager.setCurrentAnimationState(BombAnimationState.LVL3);
+				break;
+		}
+	}
+	
+	public Bomb(World world, GameWorld gameWorld){
+		super(new EllipseMapObject(0,0,20,20), world, "gfx/game/characters/charactersAtlas.pack");
+		
+		this.gameWorld = gameWorld;
+		setOffset(-6/PPM, -6/PPM);
+		if(this.level == 1)
+			setOrigin(3/PPM, 4/PPM);
+		else
+			setOrigin(6/PPM, 6/PPM);
+		explosionParticleOne = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		explosionParticleTwo = new ParticleEffectActor("explosion_lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		explosionParticleThree = new ParticleEffectActor("explosion_lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
-		createExplosion();
-		animationManager.createAnimation(new MyAnimation(0.03f, BombAnimationState.NORMAL, animationManager.createFrames(5, getRegionName()), false){
-			@Override
-			public void onAnimationFinished(){
-				animationManager.setCurrentAnimationState(MushroomAnimationState.STATIC);
-				setAnimate(false);
-			}
-		});
+		createExplosions();
+		
+		animationManager.createAnimation(new MyAnimation(0.1f, BombAnimationState.LVL1, animationManager.createFrames(5, "bomblvl1"), true));
+		animationManager.createAnimation(new MyAnimation(0.1f, BombAnimationState.LVL2, animationManager.createFrames(5, "bomblvl2"), true));
+		animationManager.createAnimation(new MyAnimation(0.1f, BombAnimationState.LVL3, animationManager.createFrames(5, "bomblvl3"), true));
+		
+		
 		
 		
 		gameWorld.getWorldStage().addActor(this);
-		gameWorld.getWorldStage().addActor(explosionParticle);
-		animationManager.setCurrentAnimationState(BombAnimationState.NORMAL);
+		
+		
 		currentFrame = animationManager.animate(0f);
 	}
 	
-    public void init(Character characterOwner) {
+    public void init(Character characterOwner, int level) {
+    	this.level = level;
+    	
         body.setTransform(characterOwner.getX()-20/PPM, characterOwner.getY(), 0);
+        gameWorld.getWorldStage().addActor(getParticleEffectActor());
+        setAnimationState();
         body.setLinearVelocity(characterOwner.getSpeed()/3, 0);
         body.getFixtureList().get(0).setUserData(new UserData("bomb", characterOwner.playerName));
-        explodeSensor.getFixtureList().get(0).setUserData(new UserData("bombExplosion", characterOwner.playerName));
+        getExplosionSensor().getFixtureList().get(0).setUserData(new UserData("bombExplosion", characterOwner.playerName));
         alive = true;
         setVisible(true);
         explodingAction = new CustomAction(0.5f) {	
@@ -109,7 +147,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 				exploding=true;
 				setVisible(false);
 				CustomActionManager.getInstance().registerAction(explodingAction);
-				explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
+				getParticleEffectActor().obtainAndStart(body.getPosition().x+10/PPM, body.getPosition().y+10/PPM, 0);
 			}
 		};
 		
@@ -122,7 +160,7 @@ public class Bomb extends Obstacle implements Poolable, Ability{
 	    	CustomActionManager.getInstance().unregisterAction(explodeAction);
 	    	CustomActionManager.getInstance().registerAction(explodingAction);	
 	    	setVisible(false);
-			explosionParticle.obtainAndStart(body.getPosition().x+0.25f, body.getPosition().y+0.25f, 0);
+	    	getParticleEffectActor().obtainAndStart(body.getPosition().x+10/PPM, body.getPosition().y+10/PPM, 0);
 	    	exploding = true;
     	}
     }
@@ -131,11 +169,11 @@ public class Bomb extends Obstacle implements Poolable, Ability{
     public void act(float delta){
     	super.act(delta);
     	if(exploding){ 		 		
-    		Vector2 offset = new Vector2((float)Math.sqrt(2)*0.25f, 0).setAngle((body.getAngle())*(float)(180/Math.PI)+45);
-    		explodeSensor.setTransform(body.getPosition().x+offset.x, body.getPosition().y+offset.y, body.getAngle());
+    		Vector2 offset = new Vector2((float)Math.sqrt(2)*10/PPM, 0).setAngle((body.getAngle())*(float)(180/Math.PI)+45);
+    		getExplosionSensor().setTransform(body.getPosition().x+offset.x, body.getPosition().y+offset.y, body.getAngle());
     	}
-    	else if(explodeSensor.getPosition().x > -100)
-    		explodeSensor.setTransform(-100, 0, 0);
+    	else if(getExplosionSensor().getPosition().x > -100)
+    		getExplosionSensor().setTransform(-100, 0, 0);
     	
     	if(((UserData)body.getUserData()).collected){
     		explode();
@@ -143,24 +181,39 @@ public class Bomb extends Obstacle implements Poolable, Ability{
     	}
     }
     
-    private void createExplosion(){
+    private void createExplosions(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		FixtureDef fixtureDef = Materials.obstacleSensor;
 		CircleShape shape = new CircleShape();
 		shape.setPosition(new Vector2(0, 0));
-		shape.setRadius(getExplosionRange());
+		shape.setRadius(2);
 		fixtureDef.shape = shape;
 		
-		explodeSensor = world.createBody(bodyDef);
-		explodeSensor.createFixture(fixtureDef);
-		explodeSensor.setTransform(-100, 0, 0);
+		explodeSensorOne = world.createBody(bodyDef);
+		explodeSensorOne.createFixture(fixtureDef);
+		explodeSensorOne.setTransform(-100, 0, 0);
+		
+		shape.setRadius(3);
+		explodeSensorTwo = world.createBody(bodyDef);
+		explodeSensorTwo.createFixture(fixtureDef);
+		explodeSensorTwo.setTransform(-100, 0, 0);
+		
+		shape.setRadius(5);
+		explodeSensorThree = world.createBody(bodyDef);
+		explodeSensorThree.createFixture(fixtureDef);
+		explodeSensorThree.setTransform(-100, 0, 0);
     }
     
 	@Override
 	public void reset() {
 		position.set(-100, 0);
 		body.setTransform(position, 0);
+		getParticleEffectActor().remove();
         alive = false;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

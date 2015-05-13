@@ -11,12 +11,14 @@ public class UserData
 
 	//powerup
 	public String powerup;
+	public int abilityLevel;
 	
 	//coin
 	public boolean collected;
 	
 	//obstacle
 	public boolean active;
+	public boolean alive;
 	public boolean playSound;
 	public boolean killingBottom;
 	public boolean killingTop;

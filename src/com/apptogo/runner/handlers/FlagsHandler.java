@@ -3,6 +3,8 @@ package com.apptogo.runner.handlers;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.logger.Logger;
+import com.badlogic.gdx.math.Vector2;
 
 public class FlagsHandler {
 	
@@ -10,7 +12,9 @@ public class FlagsHandler {
 	
 	//ZAKOLEJKOWANE AKCJE
 	private boolean queuedJump;
-	private boolean queuedLift;
+	private int queuedLift;
+	private int queuedSnare;
+	private Vector2 queuedBlackHoleTeleport;
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
@@ -44,6 +48,8 @@ public class FlagsHandler {
 	private boolean dieBottom;
 	private boolean dieTop;
 	private boolean canRun;
+	private boolean canBeSnared;
+	private boolean canBeBlackHoleTeleported;
 	private boolean dieDismemberment;
 	private boolean shouldFly;
 	private boolean stopFlyingAction;
@@ -51,7 +57,9 @@ public class FlagsHandler {
 	private boolean jumped;
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
-
+	private boolean lifted;
+	private boolean snared;
+	
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
 	
@@ -113,7 +121,7 @@ public class FlagsHandler {
 			else
 				onGround = false;
 			
-			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag)
+			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag && !lifted && !snared)
 				canRun = true;
 			else
 				canRun = false;
@@ -182,6 +190,16 @@ public class FlagsHandler {
 				canBeLifted = true;
 			else 
 				canBeLifted = false;
+			
+			if(alive && !immortal)
+				canBeSnared = true;
+			else 
+				canBeSnared = false;
+			
+			if(alive && !immortal)
+				canBeBlackHoleTeleported = true;
+			else 
+				canBeBlackHoleTeleported = false;
 //		else
 //		{
 //			canBegin = false;                  
@@ -445,11 +463,11 @@ public class FlagsHandler {
 		this.gravityRotationSwitch = gravityRotationSwitch;
 	}
 
-	public boolean isQueuedLift() {
+	public int getQueuedLift() {
 		return queuedLift;
 	}
 
-	public void setQueuedLift(boolean queuedLift) {
+	public void setQueuedLift(int queuedLift) {
 		this.queuedLift = queuedLift;
 	}
 
@@ -678,5 +696,53 @@ public class FlagsHandler {
 
 	public Character getCharacter() {
 		return character;
+	}
+
+	public boolean isLifted() {
+		return lifted;
+	}
+
+	public void setLifted(boolean lifted) {
+		this.lifted = lifted;
+	}
+
+	public boolean isSnared() {
+		return snared;
+	}
+
+	public void setSnared(boolean snared) {
+		this.snared = snared;
+	}
+
+	public int getQueuedSnare() {
+		return queuedSnare;
+	}
+
+	public void setQueuedSnare(int queuedSnare) {
+		this.queuedSnare = queuedSnare;
+	}
+
+	public boolean isCanBeSnared() {
+		return canBeSnared;
+	}
+
+	public void setCanBeSnared(boolean canBeSnared) {
+		this.canBeSnared = canBeSnared;
+	}
+
+	public Vector2 getQueuedBlackHoleTeleport() {
+		return queuedBlackHoleTeleport;
+	}
+
+	public void setQueuedBlackHoleTeleport(Vector2 queuedBlackHoleTeleport) {
+		this.queuedBlackHoleTeleport = queuedBlackHoleTeleport;
+	}
+
+	public boolean isCanBeBlackHoleTeleported() {
+		return canBeBlackHoleTeleported;
+	}
+
+	public void setCanBeBlackHoleTeleported(boolean canBeBlackHoleTeleported) {
+		this.canBeBlackHoleTeleported = canBeBlackHoleTeleported;
 	}
 }

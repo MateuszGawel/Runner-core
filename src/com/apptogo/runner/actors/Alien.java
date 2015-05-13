@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.screens.BaseScreen;
@@ -24,7 +25,6 @@ public class Alien extends Character{
 	private World world;
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.LIFT;
-	public LiftField liftField;
 	
 	public Alien(World world, GameWorld gameWorld, int startingPosition, String playerName){
 		super(world, "gfx/game/characters/characters.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton", playerName);
@@ -33,8 +33,7 @@ public class Alien extends Character{
 		this.world = world;
 		createBody(startingPosition);
 
-        liftField = new LiftField(this, world, playerName, gameWorld);
-        gameWorld.getBackgroundStage().addActor(liftField);
+
         addSounds();
         
         customOffsetX = 55.0f / PPM;
@@ -184,18 +183,7 @@ public class Alien extends Character{
 	@Override
 	public void useAbility(CharacterAbilityType abilityType)
 	{
-		if( abilityType == CharacterAbilityType.LIFT ) ((Alien)character).useLift();
-	}
-	
-	public void useLift()
-	{
-		if(!flags.isOnGround()){
-			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
-		}
-		else{
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
-		}
-		liftField.init();
+		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}
 
 	@Override

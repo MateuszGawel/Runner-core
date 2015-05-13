@@ -3,9 +3,11 @@ package com.apptogo.runner.listeners;
 import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -177,7 +179,29 @@ public class MyContactListener implements ContactListener
 				String liftFieldOwner = ((UserData)liftFixture.getUserData()).playerName;
 				//moja umiejetnosc na mnie ma sie nie wykonac
 				if(/*player.character.flags.isMe() &&*/ liftFieldOwner!=player.getName())
-					player.character.flags.setQueuedLift(true);
+					player.character.flags.setQueuedLift(((UserData)liftFixture.getUserData()).abilityLevel);
+			}
+			//wnyki
+			if(checkFixturesTypes(fa, fb, "mainBody", "snares")){
+				Fixture snaresFixture = getFixtureByType(fa, fb, "snares");
+				String snaresOwner = ((UserData)snaresFixture.getUserData()).playerName;
+				if(/*player.character.flags.isMe() &&*/ snaresOwner!=player.getName() && player.character.flags.isCanBeSnared() && !((UserData)snaresFixture.getUserData()).active){
+					((UserData)snaresFixture.getUserData()).active = true;
+					player.character.flags.setQueuedSnare(((UserData)snaresFixture.getUserData()).abilityLevel);
+				}
+			}
+			//czarna dziura
+			if(checkFixturesTypes(fa, fb, "mainBody", "blackhole")){
+				Fixture blackholeFixture = getFixtureByType(fa, fb, "blackhole");
+				String blackholeOwner = ((UserData)blackholeFixture.getUserData()).playerName;
+				
+				Vector2 hitPlayerPosition = new Vector2(player.character.getBody().getPosition());
+				Vector2 blackholeOwnerPosition = new Vector2(findPlayerByName(blackholeOwner).character.getBody().getPosition());
+				if(/*player.character.flags.isMe() &&*/ blackholeOwner!=player.getName() && player.character.flags.isCanBeBlackHoleTeleported() && !((UserData)blackholeFixture.getUserData()).active && ((UserData)blackholeFixture.getUserData()).alive){
+					findPlayerByName(blackholeOwner).character.flags.setQueuedBlackHoleTeleport(hitPlayerPosition);
+					player.character.flags.setQueuedBlackHoleTeleport(blackholeOwnerPosition);
+					((UserData)blackholeFixture.getUserData()).active = true;
+				}
 			}
 		}
 		
