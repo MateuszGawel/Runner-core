@@ -39,7 +39,8 @@ public class Alien extends Character{
         customOffsetX = 55.0f / PPM;
         customOffsetY = 27.0f / PPM;
         this.setOrigin(90/PPM, 77/PPM);
-       
+        
+        this.specialAbilities.add(CharacterAbilityType.BLACKHOLE);
 	}
 	
 	private void addSounds(){
@@ -181,7 +182,7 @@ public class Alien extends Character{
 	}
 	
 	@Override
-	public void useAbility(CharacterAbilityType abilityType)
+	public void useSuperAbility(CharacterAbilityType abilityType)
 	{
 		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}

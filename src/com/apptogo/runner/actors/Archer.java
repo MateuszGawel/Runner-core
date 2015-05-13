@@ -40,6 +40,8 @@ public class Archer extends Character{
         customOffsetX = 50.0f / PPM;
         customOffsetY = 20.0f / PPM;
         this.setOrigin(90/PPM, 70/PPM);
+        
+        this.specialAbilities.add(CharacterAbilityType.SNARES);
 	}
 	
 	private void addSounds(){
@@ -143,7 +145,7 @@ public class Archer extends Character{
 	}
 	
 	@Override
-	public void useAbility(CharacterAbilityType abilityType)
+	public void useSuperAbility(CharacterAbilityType abilityType)
 	{
 		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}

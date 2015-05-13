@@ -13,7 +13,6 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CoinsManager;
@@ -93,6 +92,9 @@ public abstract class Character extends Actor{
 	private final int superSpeedLevel = 1;
 	private final int abilityOneLevel = 1;
 	
+	//
+	Array<CharacterAbilityType> specialAbilities;
+	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
 		this.world = world;
@@ -109,6 +111,8 @@ public abstract class Character extends Actor{
 		
 		flags = new FlagsHandler();
 		flags.setCharacter(this);
+		
+		specialAbilities = new Array<CharacterAbilityType>();
 	}
 	
 	
@@ -599,7 +603,7 @@ public abstract class Character extends Actor{
 		});
 	}
 	
-	abstract public void useAbility(CharacterAbilityType abilityType);
+	abstract public void useSuperAbility(CharacterAbilityType abilityType);
 	
 	public void slowPlayerBy(float percent){
 		if(!(percent < 0 || percent > 1))
@@ -990,8 +994,12 @@ public abstract class Character extends Actor{
 	}
 	
 	public Array<CharacterButton> initializePowerupButtons(){	
-		for( final PowerupType powerupType: new Array<PowerupType>(PowerupType.values()) ){
-			CharacterButton button = PowerupType.convertToPowerupButton(powerupType, this.getCharacterType());
+		for( final CharacterAbilityType powerupType: new Array<CharacterAbilityType>(CharacterAbilityType.values()) ){
+			
+			CharacterButton button = CharacterAbilityType.convertToPowerupButton(powerupType, this.getCharacterType());
+			
+			if(button == null) continue;
+			
 			button.setUserObject(powerupType);
 			button.addListener(new InputListener() 
 			{
@@ -999,7 +1007,7 @@ public abstract class Character extends Actor{
 			    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 				{
 					if(character.flags.isCanUseAbility()) 
-						character.usePowerup(character.currentPowerupSet);
+						character.useAbility(character.currentAbilitySet);
 						
 					//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
@@ -1051,47 +1059,43 @@ public abstract class Character extends Actor{
 //		return this.powerupButtons;
 //	}
 	
-	public void usePowerup(PowerupType powerupType) 
+	public void useAbility(CharacterAbilityType powerupType) 
 	{
-		if( powerupType == PowerupType.SUPERSPEED )
+		if( powerupType == CharacterAbilityType.SUPERSPEED )
 		{
 			character.superRun();
-			removePowerup(PowerupType.SUPERSPEED);
+			removePowerup(CharacterAbilityType.SUPERSPEED);
 		}
-		else if( powerupType == PowerupType.ABILITY1 )
+		else if( powerupType.toString().contains("SUPER_ABILITY_") )
 		{
-			if(getCharacterType() == CharacterType.BANDIT)
-				character.useAbility(CharacterAbilityType.BOMB);
-			else if(getCharacterType() == CharacterType.ARCHER)
-				character.useAbility(CharacterAbilityType.SNARES);
-			else if(getCharacterType() == CharacterType.ALIEN)
-				character.useAbility(CharacterAbilityType.BLACKHOLE);
-				//tempRunningModificator*=-1;
+			int abilityIndex = Integer.parseInt( powerupType.toString().substring(14, 15) );
+			
+			character.useSuperAbility( this.specialAbilities.get( abilityIndex - 1 ) );
 		}
 		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
 		//flags.setPowerupSet(false);
 	}
 
-	public PowerupType currentPowerupSet; //zmienna pomocnicza do sterowania klawiatura
-	public void setPowerup(PowerupType powerupType) 
+	public CharacterAbilityType currentAbilitySet; //zmienna pomocnicza do sterowania klawiatura
+	public void setPowerup(CharacterAbilityType abilityType) 
 	{
-		currentPowerupSet = powerupType;
+		currentAbilitySet = abilityType;
 		for(CharacterButton button: powerupButtons){
-			if( ( (PowerupType)button.getUserObject() ) == powerupType ){
+			if( ( (CharacterAbilityType)button.getUserObject() ) == abilityType ){
 				button.setVisible(true);
 			}
 		}
-		flags.setPowerupSet(true);
+		flags.setAbilitySet(true);
 	}
 	
-	public void removePowerup(PowerupType powerupType) 
+	public void removePowerup(CharacterAbilityType abilityType) 
 	{
 		for(CharacterButton button: powerupButtons){
-			if( ( (PowerupType)button.getUserObject() ) == powerupType ){
+			if( ( (CharacterAbilityType)button.getUserObject() ) == abilityType ){
 				button.setVisible(false);
 			}
 		}
-		flags.setPowerupSet(false);
+		flags.setAbilitySet(false);
 	}
 	
 	public void incrementCoinCounter(){ 

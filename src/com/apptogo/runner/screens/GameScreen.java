@@ -4,8 +4,8 @@ import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
-import com.apptogo.runner.enums.PowerupType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
 import com.apptogo.runner.handlers.CoinsManager;
@@ -131,7 +131,7 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			gameGuiStage.addActor(powerupButton);
 		}
-		gameWorld.player.character.setPowerup(PowerupType.ABILITY1);
+		gameWorld.player.character.setPowerup(CharacterAbilityType.SUPER_ABILITY_1);
 		
 		createGameProgressBar();
 	}
@@ -212,7 +212,7 @@ public abstract class GameScreen extends BaseScreen{
 			if( Gdx.input.isKeyPressed(Keys.A) && !currentPlayerInput.abilityPressed)
 			{
 				if(currentPlayerInput.character.flags.isCanUseAbility()) 
-					currentPlayerInput.character.usePowerup( currentPlayerInput.character.currentPowerupSet );
+					currentPlayerInput.character.useAbility( currentPlayerInput.character.currentAbilitySet );
 				currentPlayerInput.abilityPressed = true;
 			}
 			else if(!Gdx.input.isKeyPressed(Keys.A) && currentPlayerInput.abilityPressed)

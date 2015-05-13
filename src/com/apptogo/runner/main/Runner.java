@@ -7,11 +7,11 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.handlers.ShopManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.handlers.TipManager;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.news.NewsManager;
+import com.apptogo.runner.shop.ShopManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 

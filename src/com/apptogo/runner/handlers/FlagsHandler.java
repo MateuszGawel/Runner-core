@@ -372,7 +372,7 @@ public class FlagsHandler {
 		this.queuedMushroomJump = queuedMushroomJump;
 	}
 
-	public void setPowerupSet(boolean powerupSet) {
+	public void setAbilitySet(boolean powerupSet) {
 		this.powerupSet = powerupSet;
 		
 	}

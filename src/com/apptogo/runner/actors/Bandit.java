@@ -51,6 +51,8 @@ public class Bandit extends Character{
         customOffsetX = 45.0f / PPM;
         customOffsetY = 30.0f / PPM;
         this.setOrigin(90/PPM, 80/PPM);
+        
+        this.specialAbilities.add(CharacterAbilityType.BOMB);
 	}
 	
 	private void initAnimations(){
@@ -172,7 +174,7 @@ public class Bandit extends Character{
 	}
 	
 	@Override
-	public void useAbility(CharacterAbilityType abilityType)
+	public void useSuperAbility(CharacterAbilityType abilityType)
 	{
 		AbilityManager.getInstance().useAbility(character, abilityType, 3);
 	}

@@ -1,9 +1,8 @@
 package com.apptogo.runner.listeners;
 
-import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
@@ -53,7 +52,7 @@ public class MyContactListener implements ContactListener
 					Fixture fixture = getFixtureByType(fa, fb, "powerup");
 					
 					String powerupKey = ((UserData)fixture.getUserData()).powerup;
-					player.character.setPowerup( PowerupType.parseFromString(powerupKey) );
+					player.character.setPowerup( CharacterAbilityType.parseFromString(powerupKey) );
 	
 					( (UserData) (fixture.getBody().getUserData()) ).key = "inactive";
 				}

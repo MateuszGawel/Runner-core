@@ -5,11 +5,11 @@ import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.handlers.ShopManager;
-import com.apptogo.runner.handlers.ShopManager.ShopItem;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.widget.DialogWidget;
-import com.apptogo.runner.widget.InfoWidget;
+import com.apptogo.runner.shop.ShopItem;
+import com.apptogo.runner.shop.ShopManager;
+import com.apptogo.runner.widget.ShopWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
@@ -31,7 +31,7 @@ public class ShopScreen extends BaseScreen
 	Button backButton;
 	
 	private Widget shopWidget;
-	private InfoWidget descriptionWidget;
+	private ShopWidget descriptionWidget;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -51,7 +51,7 @@ public class ShopScreen extends BaseScreen
             }
          });
                
-        descriptionWidget = new InfoWidget(""); //Widget(Align.center, Align.center, 0, WidgetType.SMALL, WidgetFadingType.NONE, true);
+        descriptionWidget = new ShopWidget(); //Widget(Align.center, Align.center, 0, WidgetType.SMALL, WidgetFadingType.NONE, true);
         
         createShopWidget();
         
@@ -133,8 +133,18 @@ public class ShopScreen extends BaseScreen
         	tb.addListener(new ClickListener() {
                 public void clicked(InputEvent event, float x, float y) 
                 {
-                	descriptionWidget.setMessage( item.description );
+                	descriptionWidget.setItem( item );
                 	descriptionWidget.toggleWidget();
+                	
+                	descriptionWidget.setListener(new ClickListener() {
+            	        public void clicked(InputEvent event, float x, float y) 
+            	        {
+            	        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
+            	        	{
+            	        		descriptionWidget.shakePrice();
+            	        	}
+            	        }
+            	    });
                 }
              });
         	

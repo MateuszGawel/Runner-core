@@ -183,7 +183,7 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				if( !(data.getString("ABILITY_TYPE").equals("")) )
 				{
 					CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-					sender.character.useAbility(abilityType);
+					sender.character.useSuperAbility(abilityType);
 				}
 			}
 			//mala uwaga
