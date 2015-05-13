@@ -7,7 +7,7 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
 
 public class Statistics
-{	
+{	/*
 	private HashMap<String, Integer> gameLevels;
 	private HashMap<CharacterAbilityType, Integer> abilities;
 	private int coins;
@@ -57,7 +57,7 @@ public class Statistics
 	{
 		return this.gameLevels;
 	}
-	/*ta funkcja ma sens wtedy kiedy przenosimy logike obliczania gwiazdek do campaignScreena ale czy to ma sens? takie rozwiazanie np praktycznie wymusza liniowa zaleznosc pkt od gwiazdek*/
+	
 	public int getWorldStars(LevelWorld levelWorld)
 	{
 		int score = 0;
@@ -131,5 +131,5 @@ public class Statistics
 			this.diamonds -= howMuch;
 			return true;
 		}
-	}
+	}*/
 }

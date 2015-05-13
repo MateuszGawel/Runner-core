@@ -8,6 +8,7 @@ import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ShopManager;
 import com.apptogo.runner.handlers.ShopManager.ShopItem;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.widget.DialogWidget;
 import com.apptogo.runner.widget.InfoWidget;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
@@ -50,7 +51,7 @@ public class ShopScreen extends BaseScreen
             }
          });
                
-        descriptionWidget = new InfoWidget("bleble"); //Widget(Align.center, Align.center, 0, WidgetType.SMALL, WidgetFadingType.NONE, true);
+        descriptionWidget = new InfoWidget(""); //Widget(Align.center, Align.center, 0, WidgetType.SMALL, WidgetFadingType.NONE, true);
         
         createShopWidget();
         
@@ -92,7 +93,7 @@ public class ShopScreen extends BaseScreen
         Table table = new Table();
         table.debug();
         
-        for(ShopItem item : ShopManager.getInstance().getPowerups())
+        for(final ShopItem item : ShopManager.getInstance().getShopItems( player ))
         {
         	table.row().pad(0, 0, 0, 0);
         	table.add().width(50).height(200);
@@ -100,9 +101,8 @@ public class ShopScreen extends BaseScreen
         	Image image = createImage(item.thumbnailName, 0, 0);
         	image.setSize(150, 150);
         	
-        	Label title = new Label(item.title,  skin, "default"); title.setWrap(true);
-        	Label cash = new Label(String.valueOf(1),  skin, "default"); cash.setWrap(true);
-        	Label itDes = new Label(item.description,  skin, "default"); itDes.setWrap(true);
+        	Label title = new Label(item.title,  skin, "default");
+        	Label cash = new Label(String.valueOf( item.prices.get( item.currentLevel - 1 ) ),  skin, "default");
         	
         	table.add(image).width(150).height(150).center();
         	table.add().width(25).height(200);
@@ -129,8 +129,14 @@ public class ShopScreen extends BaseScreen
         	TextButton tb = new TextButton("det", this.skin);
         	tb.setSize(100, 100);
         	tb.setPosition(25, 50);
-        	
-        	tb.addListener( descriptionWidget.toggleWidgetListener );
+        	        	
+        	tb.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) 
+                {
+                	descriptionWidget.setMessage( item.description );
+                	descriptionWidget.toggleWidget();
+                }
+             });
         	
         	tbg.addActor(tb);
         	
@@ -148,24 +154,6 @@ public class ShopScreen extends BaseScreen
         	
         	table.add(tbg).width(150).height(200);
         	table.add().width(50).height(200);
-        	
-        	//table.row();
-        	//table.add().width(800).height(75).colspan(4);
-        	//table.row();
-        	        	
-        	/*
-        	Table innerTable = new Table();
-        	innerTable.debug();
-        	
-        	innerTable.add(title).width(390).height(50);
-        	innerTable.row();
-        	innerTable.add(itDes).width(390).height(150);
-        	
-        	table.add(innerTable).width(390).height(200).pad(15, 20, 15, 10);
-        		
-        	table.add().width(80).height(200).pad(15,  0, 15, 20);
-        	
-        	table.row();*/
         }
                 
         Container<ScrollPane> container = createScroll(table, 800.0f, 420.0f, true);

@@ -1,7 +1,7 @@
 package com.apptogo.runner.handlers;
 
 import com.apptogo.runner.enums.CharacterAbilityType;
-import com.apptogo.runner.enums.PowerupType;
+import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.utils.Array;
 
 public class ShopManager 
@@ -23,6 +23,8 @@ public class ShopManager
 	
 	public class ShopItem
 	{
+		public CharacterAbilityType abilityType;
+		
 		public String thumbnailName;
 		
 		public String title;
@@ -33,68 +35,51 @@ public class ShopManager
 		public int maxLevel;
 		public int currentLevel;
 		
-		public ShopItem(String id)
+		public ShopItem(CharacterAbilityType abilityType, String thumbnailName, String title, String description, Integer[] prices, Player player)
 		{
+			this.abilityType = abilityType;
+			this.thumbnailName = thumbnailName;
+			this.title = title;
+			this.description = description;
+						
+			this.prices = new Array<Integer>(prices);
 			
+			this.maxLevel = this.prices.size;
+			this.currentLevel = player.getAbilityLevel(this.abilityType);
 		}
 	}
-	
-	public class AbilityItem extends ShopItem
-	{
-		CharacterAbilityType id;
 		
-		public AbilityItem(String id) {
-			super(id);
-			// TODO Auto-generated constructor stub
-		}
-	}
-	
-	public class PowerupItem extends ShopItem
-	{
-		PowerupType id;
-		
-		public PowerupItem(String id) {
-			super(id);
-			// TODO Auto-generated constructor stub
-		}
-	}
-	
-	Array<AbilityItem> powerups;
-	Array<PowerupItem> abilities;
+	Array<ShopItem> items;
 	
 	private ShopManager()
 	{
-		powerups = new Array<AbilityItem>();
-		abilities = new Array<PowerupItem>();
-		//skins = new Array<ShopItem>();   	
-		
-		//adding powerups
-		//this.powerups.add( new ShopItem(1000, "item", "Jakis tytul", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(2000, "item", "Jakis tytul2", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(3000, "item", "Jakis tytul3", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(4000, "item", "Jakis tytul4", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(5000, "item", "Jakis tytul5", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(6000, "item", "Jakis tytul6", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		//this.powerups.add( new ShopItem(7000, "item", "Jakis tytul7", "Przydlugawy opis tylko na potrzeby prezentacji, nie majacy nic wspolnego z tym itemem. Po prostu chce zobaczyc jak to wyglada.") );
-		
-		//adding abilities
+
 	}	
 	
-	public void refreshItems()
+	public Array<ShopItem> getShopItems(Player player)
 	{
-		powerups = new Array<AbilityItem>();
-		abilities = new Array<PowerupItem>();
+		items = new Array<ShopItem>();
 		
+		this.items.add( new ShopItem(CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!1", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!2", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!3", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!4", new Integer[]{100, 200, 300}, player)  );
 		
-	}
-		
-	public Array<ShopItem> getPowerups()
-	{
-		return null;//this.powerups;
+		return items;
 	}
 	
-	public Array<ShopItem> getAbilities()
+	public boolean buyShopItem(ShopItem shopItem, Player player)
 	{
-		return null;//this.abilities;
-	}	
+		int itemLevel = player.getAbilityLevel( shopItem.abilityType );
+		
+		if( shopItem.prices.get( itemLevel - 1 ) <= player.coins && itemLevel < shopItem.maxLevel )
+		{
+			player.coins -= shopItem.prices.get( itemLevel - 1 );
+			player.abilities.put(shopItem.abilityType, itemLevel + 1);
+			
+			return true;
+		}
+		
+		return false;
+	}
 }

@@ -68,11 +68,12 @@ public class SaveManager
 	}
 	
 	public Player loadPlayer()
-	{			
-		//Player player = new Player("cycek", CharacterType.BANDIT); //tutaj ustawiam sobie imie zebym mogl testowac na 1 kompie
-		//player.save();
+	{
 		Json json = new Json();
-
+		
+		//po jakiejkolwiek zmianie klasy Player odkomentowujemy ponizsza linijke na jedno uruchomienie! 
+		//save( new Player() );
+		
 		if( save.getString("PLAYER", "").equals("") )
 		{
 			save( new Player() );

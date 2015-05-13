@@ -143,7 +143,7 @@ public class CampaignScreen extends BaseScreen
         arrows.add(previousWorldButton);
         arrows.add(nextWorldButton);
         
-        int achievedStarsCount = player.statistics.getWorldStars(levelWorld);
+        int achievedStarsCount = player.getWorldStars(levelWorld);
         
         label = new Label(levelWorld.label + "   " + String.valueOf( achievedStarsCount ) + "/36" , skin, "gameWorldLabel");
         label.setPosition((Runner.SCREEN_WIDTH/Box2DVars.PPM) / 2.0f - ( label.getWidth() / 2.0f ) + (worldsCount * Runner.SCREEN_WIDTH), 250.0f);
@@ -296,7 +296,7 @@ public class CampaignScreen extends BaseScreen
 		float margin = 0.0f;
 		float startX = ( button.getWidth() - (3 * starWidth) - (3 * margin) ) / 2.0f;
 		
-		int score = player.statistics.getLevelScore(level);
+		int score = player.getLevelScore(level);
 		
 		if( score >= 100 && score < 200 )
 		{

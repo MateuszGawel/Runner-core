@@ -47,4 +47,9 @@ public class InfoWidget extends Widget
 	{
 		label.setText( text );
 	}
+
+	public void setMessage(String message) 
+	{
+		label.setText(message);
+	}
 }
