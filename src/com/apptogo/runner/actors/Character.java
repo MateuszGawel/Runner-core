@@ -93,7 +93,7 @@ public abstract class Character extends Actor{
 	private final int abilityOneLevel = 1;
 	
 	//
-	Array<CharacterAbilityType> specialAbilities;
+	public Array<CharacterAbilityType> specialAbilities;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
 	{
@@ -1059,6 +1059,7 @@ public abstract class Character extends Actor{
 //		return this.powerupButtons;
 //	}
 	
+	//uwaga tu wywolujemy konkretna funkcje przy wspolnych abilities lub rzutujemy na konkretna przy specjalnych
 	public void useAbility(CharacterAbilityType powerupType) 
 	{
 		if( powerupType == CharacterAbilityType.SUPERSPEED )
@@ -1066,13 +1067,16 @@ public abstract class Character extends Actor{
 			character.superRun();
 			removePowerup(CharacterAbilityType.SUPERSPEED);
 		}
-		else if( powerupType.toString().contains("SUPER_ABILITY_") )
-		{
-			int abilityIndex = Integer.parseInt( powerupType.toString().substring(14, 15) );
+		//ponizsze wyglada na komplikacje ale w ten sposob przerzutuje sobie ability np archera na ability bandita
+		else if( powerupType == CharacterAbilityType.BOMB || powerupType == CharacterAbilityType.ARROW || powerupType == CharacterAbilityType.BLACKHOLE )
+		{			
+			CharacterAbilityType ability = this.specialAbilities.get( 0 );
 			
-			character.useSuperAbility( this.specialAbilities.get( abilityIndex - 1 ) );
+			character.useSuperAbility( ability );
+			//ponizsze odkomentowac po testach
+			//removePowerup(ability);
 		}
-		//removePowerup(PowerupType.ABILITY1); - to jest wykomentowane do testów ale ma tu byc
+		//to odkomentowac po testach
 		//flags.setPowerupSet(false);
 	}
 

@@ -8,11 +8,12 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
+import com.apptogo.runner.logger.Logger;
 
 public class Player 
 {
 	public HashMap<String, Integer> gameLevels;
-	public HashMap<CharacterAbilityType, Integer> abilities;
+	public HashMap<String, Integer> abilities;
 	
 	public int coins, diamonds;
 	
@@ -37,14 +38,14 @@ public class Player
 		characterType = CharacterType.BANDIT;
 		
 		this.gameLevels = new HashMap<String, Integer>();
-		this.abilities = new HashMap<CharacterAbilityType, Integer>();
+		this.abilities = new HashMap<String, Integer>();
 		
 		for(CharacterAbilityType characterAbilityType: CharacterAbilityType.values())
 		{
-			abilities.put(characterAbilityType, 1);
+			abilities.put(characterAbilityType.toString(), 1);
 		}
 		
-		this.coins = 0;
+		this.coins = 1000000;
 		this.diamonds = 0;
 	}
 	
@@ -105,7 +106,7 @@ public class Player
 	
 	public int getAbilityLevel(CharacterAbilityType characterAbilityType)
 	{
-		return abilities.get(characterAbilityType);
+		return abilities.get(characterAbilityType.toString()).intValue();
 	}
 	
 	public String getName() 
@@ -150,6 +151,8 @@ public class Player
 		copyOfThis.characterType = this.characterType;
 		copyOfThis.character = null;
 		copyOfThis.abilities = this.abilities;
+		
+		copyOfThis.coins = this.coins;
 		
 		SaveManager.getInstance().save( copyOfThis );
 	}

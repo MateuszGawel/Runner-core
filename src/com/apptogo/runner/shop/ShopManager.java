@@ -1,6 +1,7 @@
 package com.apptogo.runner.shop;
 
 import com.apptogo.runner.enums.CharacterAbilityType;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.utils.Array;
 
@@ -31,11 +32,14 @@ public class ShopManager
 	public Array<ShopItem> getShopItems(Player player)
 	{
 		items = new Array<ShopItem>();
+
+		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "item", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "item", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.LIFT, "item", "LIFT", "Straight to the sky!", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "item", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "item", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
 		
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!1", new Integer[]{100, 200, 300}, player)  );
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!2", new Integer[]{100, 200, 300}, player)  );
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!3", new Integer[]{100, 200, 300}, player)  );
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "Bomb", "A little black sphere that will rock your socks!4", new Integer[]{100, 200, 300}, player)  );
 		
 		return items;
 	}
@@ -44,10 +48,14 @@ public class ShopManager
 	{
 		int itemLevel = player.getAbilityLevel( shopItem.abilityType );
 		
-		if( shopItem.prices.get( itemLevel - 1 ) <= player.coins && itemLevel < shopItem.maxLevel )
+		if( itemLevel < shopItem.maxLevel && shopItem.prices.get( itemLevel ) <= player.coins )
 		{
-			player.coins -= shopItem.prices.get( itemLevel - 1 );
-			player.abilities.put(shopItem.abilityType, itemLevel + 1);
+			player.coins -= shopItem.prices.get( itemLevel );
+			player.abilities.put(shopItem.abilityType.toString(), itemLevel + 1);
+			
+			Logger.log(this, "WRZUCAM LEVEL : " + player.getAbilityLevel(shopItem.abilityType));
+			
+			player.save();
 			
 			return true;
 		}

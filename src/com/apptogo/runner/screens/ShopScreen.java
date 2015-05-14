@@ -32,6 +32,8 @@ public class ShopScreen extends BaseScreen
 	
 	private Widget shopWidget;
 	private ShopWidget descriptionWidget;
+	
+	private Label coinLabel;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -55,9 +57,13 @@ public class ShopScreen extends BaseScreen
         
         createShopWidget();
         
+        coinLabel = new Label("coins: " + String.valueOf(player.coins), skin, "coinLabel");
+        coinLabel.setPosition(320, 320);
+        
         addToScreen( shopWidget.actor() );
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
+        addToScreen(coinLabel);
 	}
 	
 	private void createShopWidget()
@@ -142,6 +148,10 @@ public class ShopScreen extends BaseScreen
             	        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
             	        	{
             	        		descriptionWidget.shakePrice();
+            	        	}
+            	        	else
+            	        	{
+            	        		coinLabel.setText("coins: " + String.valueOf(player.coins));
             	        	}
             	        }
             	    });

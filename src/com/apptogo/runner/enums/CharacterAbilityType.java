@@ -6,9 +6,7 @@ import com.badlogic.gdx.utils.Array;
 public enum CharacterAbilityType
 {
 	SUPERSPEED,
-	BOMB, ARROW, LIFT, SNARES, BLACKHOLE,
-	JUMP, SLIDE,
-	SUPER_ABILITY_1;
+	BOMB, ARROW, LIFT, SNARES, BLACKHOLE;
 	
 	public static Array<CharacterAbilityType> values;
 	
@@ -35,6 +33,7 @@ public enum CharacterAbilityType
 		else return null;
 	}
 	
+	//uwaga nie ma znaczenia co zwroci - w character sobie zadba o to zeby przerzutowac umiejetnosc
 	public static CharacterAbilityType getRandom() 
 	{
 		double random = Math.random();
@@ -50,40 +49,24 @@ public enum CharacterAbilityType
 	{
 		CharacterButton button = null;
 
-		if(abilityType == CharacterAbilityType.SUPERSPEED)
+		if(characterType == CharacterType.BANDIT)
 		{
-			if(characterType == CharacterType.BANDIT)
-			{
-				button = new CharacterButton("banditSuperSpeedButton", 20, 200);
-			}
-			else if(characterType == CharacterType.ARCHER)
-			{
-				button = new CharacterButton("archerSuperSpeedButton", 20, 200);
-			}
-			else if(characterType == CharacterType.ALIEN)
-			{
-				button = new CharacterButton("alienSuperSpeedButton", 20, 200);
-			}
+			if(abilityType == CharacterAbilityType.SUPERSPEED) button = new CharacterButton("banditSuperSpeedButton", 20, 200);
+			if(abilityType == CharacterAbilityType.BOMB      ) button = new CharacterButton("banditBombAbilityButton", 20, 200);
 		}
-		else if(abilityType == CharacterAbilityType.SUPER_ABILITY_1)
+		else if(characterType == CharacterType.ARCHER) //podmienic snares
 		{
-			if(characterType == CharacterType.BANDIT)
-			{
-				button = new CharacterButton("banditBombAbilityButton", 20, 200);
-			}
-			else if(characterType == CharacterType.ARCHER)
-			{
-				button = new CharacterButton("archerArrowAbilityButton", 20, 200);
-			}
-			else if(characterType == CharacterType.ALIEN)
-			{
-				button = new CharacterButton("alienLiftAbilityButton", 20, 200);
-			}
+			if(abilityType == CharacterAbilityType.SUPERSPEED) button = new CharacterButton("archerSuperSpeedButton", 20, 200);
+			if(abilityType == CharacterAbilityType.ARROW     ) button = new CharacterButton("archerArrowAbilityButton", 20, 200);
+			if(abilityType == CharacterAbilityType.SNARES    ) button = new CharacterButton("archerArrowAbilityButton", 20, 200);
 		}
-		else
+		else if(characterType == CharacterType.ALIEN) //podmienic blackhole
 		{
-			button = null;
+			if(abilityType == CharacterAbilityType.SUPERSPEED) button = new CharacterButton("alienSuperSpeedButton", 20, 200);
+			if(abilityType == CharacterAbilityType.LIFT      ) button = new CharacterButton("alienLiftAbilityButton", 20, 200);
+			if(abilityType == CharacterAbilityType.BLACKHOLE ) button = new CharacterButton("alienLiftAbilityButton", 20, 200);
 		}
+		
 		return button;
 	}
 }
