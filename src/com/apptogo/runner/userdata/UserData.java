@@ -1,5 +1,7 @@
 package com.apptogo.runner.userdata;
 
+import com.badlogic.gdx.math.Vector2;
+
 
 public class UserData 
 {
@@ -8,7 +10,8 @@ public class UserData
 	//player
 	public String playerName;
 	public boolean ignoreContact;
-
+	public Vector2 previousPosition;
+	
 	//powerup
 	public String powerup;
 	public int abilityLevel;

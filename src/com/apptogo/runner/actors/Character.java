@@ -22,7 +22,6 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -30,6 +29,7 @@ import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -87,6 +87,7 @@ public abstract class Character extends Actor{
 	private int coinCounter;
 	
 	protected boolean blinkShow = false;
+	private PooledEffect blackHoleInEffect;
 	
 	//ABILITY LEVELS - na sztywno ale to bedzie zaczytywane z chmury
 	private final int superSpeedLevel = 1;
@@ -648,17 +649,40 @@ public abstract class Character extends Actor{
 			flags.setQueuedSnare(0);
 		}
 		
-		if(flags.getQueuedBlackHoleTeleport() != null){
-			AbilityManager.getInstance().blackHoleInParticleEffectActor.obtainAndStart(body.getPosition().x, body.getPosition().y, 0);		
+		if(flags.getQueuedTeleportToBody() != null){
+			AbilityManager.getInstance().blackHoleOutParticleEffectActor.setDebug(true);
+			blackHoleInEffect = AbilityManager.getInstance().blackHoleInParticleEffectActor.obtainAndStart(body.getPosition().x, body.getPosition().y, 0, false);	
 			AbilityManager.getInstance().blackHoleInParticleEffectActor.toFront();
-			customActionManager.registerAction(new CustomAction(0.5f, 1, flags.getQueuedBlackHoleTeleport()) {				
+			customActionManager.registerAction(new CustomAction(0.5f, 1, flags.getQueuedTeleportToBody()) {				
 				@Override
 				public void perform() {
-					body.setTransform(new Vector2((Vector2)args[0]), 0);
+					
+					Body teleportToBody = (Body)args[0];
+					Vector2 newPos = teleportToBody.getPosition();
+					
+					if(flags.isMe()){
+						AbilityManager.getInstance().blackHoleOutParticleEffectActor.setPosition(newPos.x, newPos.y);
+						((UserData)getBody().getUserData()).previousPosition = new Vector2(getBody().getPosition());
+						body.setTransform(newPos, 0);
+					}
+					else{
+						body.setTransform(((UserData)teleportToBody.getUserData()).previousPosition, 0);
+					}
+					
+					flags.setTeleport(true);
+					
+					blackHoleInEffect = null;
+					AbilityManager.getInstance().blackHoleOutParticleEffectActor.obtainAndStart(newPos.x, newPos.y, 0, false);
 				}
 			});
-			flags.setQueuedBlackHoleTeleport(null);
-
+			flags.setQueuedTeleportToBody(null);
+		}
+		if(blackHoleInEffect != null){
+			if(flags.isMe()){
+				AbilityManager.getInstance().blackHoleInParticleEffectActor.setPosition(body.getPosition().x, body.getPosition().y);
+			}
+			blackHoleInEffect.setPosition(body.getPosition().x, body.getPosition().y);
+			
 		}
 		
 		if(flags.isQueuedDeathDismemberment()){

@@ -15,6 +15,7 @@ public class ParallaxBackground extends Actor{
 	private float xFactor = 0;
 	private float yFactor = 0;
 	private Character character;
+	private Vector2 position;
 	private float x, y;
 	private Vector2 mapSize;
 	private float currentY;
@@ -34,6 +35,7 @@ public class ParallaxBackground extends Actor{
 		this.xFactor = xFactor;
 		this.yFactor = yFactor;
 		this.mapSize = mapSize;
+		position = new Vector2(character.getBody().getPosition());
 	}
 	
 	@Override
@@ -44,6 +46,8 @@ public class ParallaxBackground extends Actor{
 		setWidth(textureRegion.getRegionWidth()/PPM);
 		setHeight(textureRegion.getRegionHeight()/PPM);
 		setPosition(0, currentY);
+		
+		position = position.lerp(character.getBody().getPosition(), 0.3f);
 	}
 	
 	private float alpha = 1;
@@ -51,12 +55,12 @@ public class ParallaxBackground extends Actor{
 	private void drawRegion(Batch batch, float offSet){
 	
 		
-		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - (offset-1)*textureRegion.getRegionWidth()));
+		textureRegion.setRegionX((int)(position.x*PPM*xFactor - (offset-1)*textureRegion.getRegionWidth()));
 		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
 		batch.setColor(darken, darken, darken, alpha);
 		batch.draw(textureRegion, getX(), getY(), 0, 0, getWidth(), getHeight(), getScaleX(), getScaleY(), 0);
 		
-		textureRegion.setRegionX((int)(character.getBody().getPosition().x*PPM*xFactor - offset*textureRegion.getRegionWidth()));
+		textureRegion.setRegionX((int)(position.x*PPM*xFactor - offset*textureRegion.getRegionWidth()));
 		textureRegion.setU2(textureRegion.getU() + initialRegionWidth / (float)textureRegion.getTexture().getWidth());
 		batch.setColor(darken, darken, darken, alpha);
 		batch.draw(textureRegion, getX(), getY(), 0, 0, getWidth(), getHeight(), getScaleX(), getScaleY(), 0);
@@ -68,7 +72,7 @@ public class ParallaxBackground extends Actor{
 		super.draw(batch, parentAlpha); 
 
 		if(xFactor == 0){
-			percent = character.getBody().getPosition().x / (mapSize.x/PPM);		
+			percent = position.x / (mapSize.x/PPM);		
 			textureRegion.setRegionX((int)((textureRegion.getRegionWidth()-Runner.SCREEN_WIDTH) * percent));
 			textureRegion.setRegionWidth(initialRegionWidth);	
 			batch.draw(textureRegion, getX(), getY(), getWidth(), getHeight());

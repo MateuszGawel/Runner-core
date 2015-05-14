@@ -197,8 +197,11 @@ public class MyContactListener implements ContactListener
 				Vector2 hitPlayerPosition = new Vector2(player.character.getBody().getPosition());
 				Vector2 blackholeOwnerPosition = new Vector2(findPlayerByName(blackholeOwner).character.getBody().getPosition());
 				if(/*player.character.flags.isMe() &&*/ blackholeOwner!=player.getName() && player.character.flags.isCanBeBlackHoleTeleported() && !((UserData)blackholeFixture.getUserData()).active && ((UserData)blackholeFixture.getUserData()).alive){
-					findPlayerByName(blackholeOwner).character.flags.setQueuedBlackHoleTeleport(hitPlayerPosition);
-					player.character.flags.setQueuedBlackHoleTeleport(blackholeOwnerPosition);
+//					findPlayerByName(blackholeOwner).character.flags.setQueuedBlackHoleTeleport(hitPlayerPosition);
+//					player.character.flags.setQueuedBlackHoleTeleport(blackholeOwnerPosition);
+//					
+					findPlayerByName(blackholeOwner).character.flags.setQueuedTeleportToBody(player.character.getBody());
+					player.character.flags.setQueuedTeleportToBody(findPlayerByName(blackholeOwner).character.getBody());
 					((UserData)blackholeFixture.getUserData()).active = true;
 				}
 			}

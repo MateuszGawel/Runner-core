@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 public class GameWorldRenderer 
@@ -34,14 +35,28 @@ public class GameWorldRenderer
 	}
 	
 
-	
-    public void render()
+	private Vector3 lerpStart;
+    public void render(float delta)
     {  	
     	//ustawienia kamery
-	    camera.position.set(
-	            Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
-	            Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
-	            0);
+    	if(gameWorld.player.character.flags.isTeleport()){
+    		//Logger.log(this, "NO LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
+    		camera.position.set(
+				Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
+				Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
+				0);
+    	}
+    	else{
+    		if(lerpStart == null)
+    			lerpStart = new Vector3(camera.position.x, camera.position.y, 0);
+
+    		camera.position.set(lerpStart.lerp(new Vector3(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.player.character.getBody().getPosition().y + 1, 0), 0.3f));
+    		//Logger.log(this, "LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
+    		if((Math.abs(camera.position.x - (gameWorld.player.character.getBody().getPosition().x+2)) < 0.1) && (Math.abs(camera.position.y - (gameWorld.player.character.getBody().getPosition().y + 1)) < 0.1)){
+    			lerpStart = null;
+    			gameWorld.player.character.flags.setTeleport(false);
+    		}
+    	}
 	    
 		gameWorld.backgroundCamera.position.set(Runner.SCREEN_WIDTH/2/PPM, Runner.SCREEN_HEIGHT/2/PPM, 0); 
     	camera.update();

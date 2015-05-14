@@ -148,7 +148,7 @@ public abstract class GameScreen extends BaseScreen{
 		handleCoinLabel();
 		gameWorld.update(delta);
 		worldRenderer.resize(currentWindowWidth, currentWindowHeight);
-		worldRenderer.render();
+		worldRenderer.render(delta);
 		Input.update();
 	}
 	

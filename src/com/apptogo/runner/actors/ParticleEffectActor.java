@@ -1,5 +1,6 @@
 package com.apptogo.runner.actors;
 
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -19,6 +20,7 @@ public class ParticleEffectActor extends Image {
 	public ParticleEffectPool particleEffectPool;
 	private String particleName;
 	private Array<PooledEffect> pooledEffects = new Array<PooledEffect>();
+	private boolean culling = true;
 	
 	public ParticleEffectActor(String particleName, TextureAtlas atlas) {
 		super();
@@ -29,6 +31,7 @@ public class ParticleEffectActor extends Image {
 	public ParticleEffectActor(String particleName, int initialPoolCapacity, int maxPool, int initialValue, float effectScale, TextureAtlas atlas){
 		ParticleEffect tempEffect = new ParticleEffect();
 		this.particleName = particleName;
+		setSize(2,2);
 		tempEffect.load(Gdx.files.internal("gfx/game/particles/" + particleName), atlas);
 		tempEffect.scaleEffect(effectScale);
 		particleEffectPool = new ParticleEffectPool(tempEffect, initialPoolCapacity, maxPool);
@@ -45,6 +48,14 @@ public class ParticleEffectActor extends Image {
 		PooledEffect pooledEffect = particleEffectPool.obtain();
 		pooledEffect.setPosition(posX, posY);
 		super.setPosition(posX-offsetX, posY);
+		pooledEffects.add(pooledEffect);
+		return pooledEffect;
+	}
+	
+	public PooledEffect obtainAndStart(float posX, float posY, float offsetX, boolean moveActor){
+		PooledEffect pooledEffect = particleEffectPool.obtain();
+		pooledEffect.setPosition(posX, posY);
+		if(moveActor) super.setPosition(posX-offsetX, posY);
 		pooledEffects.add(pooledEffect);
 		return pooledEffect;
 	}
@@ -107,13 +118,18 @@ public class ParticleEffectActor extends Image {
 		    PooledEffect effect = pooledEffects.get(i);
 		    effect.update(delta);
 		    
-		    if(character!=null && (character.getBody().getPosition().x - 10 > effect.getEmitters().get(0).getX() || character.getBody().getPosition().x + 15 < effect.getEmitters().get(0).getX())){
+		    if(culling && character!=null && (character.getBody().getPosition().x - 10 > effect.getEmitters().get(0).getX() || character.getBody().getPosition().x + 15 < effect.getEmitters().get(0).getX())){
 		    	effect.free();
 		        pooledEffects.removeIndex(i);
 		    }
 		}
 	}
 
+	public void freeEffect(PooledEffect effect){
+		effect.free();
+        pooledEffects.removeValue(effect, true);
+	}
+	
 	public void onReset(){
 		
 	}
@@ -123,7 +139,6 @@ public class ParticleEffectActor extends Image {
 		super.draw(batch, parentAlpha);
 		if(started && !pooled)
 			effect.draw(batch);
-		
 		//dla poola
 		for (int i = pooledEffects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = pooledEffects.get(i);
@@ -142,5 +157,11 @@ public class ParticleEffectActor extends Image {
 	}
 	public Character getCharacter() {
 		return character;
+	}
+	public boolean isCulling() {
+		return culling;
+	}
+	public void setCulling(boolean culling) {
+		this.culling = culling;
 	}
 }

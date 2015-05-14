@@ -42,6 +42,9 @@ public class AbilityManager
 		this.gameWorld = gameWorld;
 		blackHoleInParticleEffectActor = new ParticleEffectActor("blackHoleIn.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
 		gameWorld.getWorldStage().addActor(blackHoleInParticleEffectActor);
+		
+		blackHoleOutParticleEffectActor = new ParticleEffectActor("blackHoleOut.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		gameWorld.getWorldStage().addActor(blackHoleOutParticleEffectActor);
 	}
 	
 	public void useAbility(Character character, CharacterAbilityType abilityType, int abilityLevel){
@@ -232,4 +235,5 @@ public class AbilityManager
 	
 	//----PARTICLES----//
 	public ParticleEffectActor blackHoleInParticleEffectActor;
+	public ParticleEffectActor blackHoleOutParticleEffectActor;
 }
