@@ -211,7 +211,12 @@ public class BlackHole extends Actor implements Poolable{
 	public void reset() {
 		getCurrentBody().setTransform(-100, 0, 0);
         alive = false;
-        getParticleEffect().freeEffect((PooledEffect)pooledEffect);
+        ParticleEffectActor effectActor = getParticleEffect();
+        
+        if( effectActor != null)
+        {
+        	effectActor.freeEffect((PooledEffect)pooledEffect);
+        }
 	}
 
 	public void setLevel(int level) {

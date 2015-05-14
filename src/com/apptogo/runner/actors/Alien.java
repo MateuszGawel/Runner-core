@@ -184,7 +184,7 @@ public class Alien extends Character{
 	@Override
 	public void useSuperAbility(CharacterAbilityType abilityType)
 	{
-		AbilityManager.getInstance().useAbility(character, abilityType, 1);
+		AbilityManager.getInstance().useAbility(character, abilityType, 3);
 	}
 
 	@Override
