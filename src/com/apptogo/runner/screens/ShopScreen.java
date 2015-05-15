@@ -1,11 +1,11 @@
 package com.apptogo.runner.screens;
 
-import com.apptogo.runner.animation.CharacterAnimation;
+import java.util.Random;
+
 import com.apptogo.runner.appwarp.WarpController;
-import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -69,31 +69,7 @@ public class ShopScreen extends BaseScreen
 	private void createShopWidget()
 	{
 		shopWidget = new Widget(Align.center, -360.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
-		
-		TextButton cat1B = new TextButton("C1", skin, "categoryTab");
-		cat1B.setSize(230.0f, 75.0f);
-		cat1B.setPosition(-350.0f, 70.0f);
-		
-		TextButton cat2B = new TextButton("C2", skin, "categoryTab");
-		cat2B.setSize(230.0f, 75.0f);
-		cat2B.setPosition(-90.0f, 70.0f);
-		
-		TextButton cat3B = new TextButton("C3", skin, "categoryTab");
-		cat3B.setSize(230.0f, 75.0f);
-		cat3B.setPosition(170.0f, 70.0f);
-		
-		//shopWidget.addTabButton(1, cat1B);
-		//shopWidget.addTabButton(2, cat2B);
-		//shopWidget.addTabButton(3, cat3B);
-		
-		CharacterAnimation alienCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ALIEN, -600.0f, -20.0f, true);
-		CharacterAnimation archerCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.ARCHER, -600.0f, -180.0f, true);
-		CharacterAnimation banditCharacterAnimation = CharacterType.convertToCharacterAnimation(CharacterType.BANDIT, -600.0f, -340.0f, true);
-		
-		shopWidget.addActorToTab(alienCharacterAnimation, 2);
-		shopWidget.addActorToTab(archerCharacterAnimation, 2);
-		shopWidget.addActorToTab(banditCharacterAnimation, 2);
-				
+	
 		shopWidget.setCurrentTab(1);
 		
         Table table = new Table();
@@ -136,27 +112,7 @@ public class ShopScreen extends BaseScreen
         	tb.setSize(100, 100);
         	tb.setPosition(25, 50);
         	        	
-        	tb.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) 
-                {
-                	descriptionWidget.setItem( item );
-                	descriptionWidget.toggleWidget();
-                	
-                	descriptionWidget.setListener(new ClickListener() {
-            	        public void clicked(InputEvent event, float x, float y) 
-            	        {
-            	        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
-            	        	{
-            	        		descriptionWidget.shakePrice();
-            	        	}
-            	        	else
-            	        	{
-            	        		coinLabel.setText("coins: " + String.valueOf(player.coins));
-            	        	}
-            	        }
-            	    });
-                }
-             });
+        	tb.addListener( getBuyListener(item) );
         	
         	tbg.addActor(tb);
         	
@@ -183,6 +139,37 @@ public class ShopScreen extends BaseScreen
         shopWidget.addActorToTab(container, 1);
         
         shopWidget.toggleWidget(); 
+	}
+	
+	private ClickListener getBuyListener(final ShopItem item)
+	{
+		ClickListener listener = new ClickListener() 
+		{
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	descriptionWidget.setItem( item );
+            	descriptionWidget.toggleWidget();
+            	
+            	descriptionWidget.setListener(new ClickListener() 
+            	{
+			        public void clicked(InputEvent event, float x, float y) 
+			        {
+			        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
+			        	{
+			        		descriptionWidget.shakePrice();
+			        	}
+			        	else
+			        	{
+			        		descriptionWidget.toggleWidget();
+		
+			        		coinLabel.setText("coins: " + String.valueOf(player.coins));
+			        	}
+			        }
+			    });
+            }
+		};
+	    
+	    return listener;
 	}
 		
 	public void step()

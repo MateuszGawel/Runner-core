@@ -89,14 +89,11 @@ public abstract class Character extends Actor{
 	protected boolean blinkShow = false;
 	private PooledEffect blackHoleInEffect;
 	
-	//ABILITY LEVELS - na sztywno ale to bedzie zaczytywane z chmury
-	private final int superSpeedLevel = 1;
-	private final int abilityOneLevel = 1;
-	
+	HashMap<String, Integer> abilities;
 	//
 	public Array<CharacterAbilityType> specialAbilities;
 	
-	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName)
+	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName, HashMap<String, Integer> abilities)
 	{
 		this.world = world;
 		animationManager = new AnimationManager();//(atlasName);
@@ -107,6 +104,8 @@ public abstract class Character extends Actor{
 		this.slideButtonStyleName = slideButtonStyleName;
 		this.slowButtonStyleName = slowButtonStyleName;
 		powerupButtons = new Array<CharacterButton>();
+		
+		this.abilities = abilities;
 		
 		addSounds();
 		
@@ -604,7 +603,10 @@ public abstract class Character extends Actor{
 		});
 	}
 	
-	abstract public void useSuperAbility(CharacterAbilityType abilityType);
+	public void useSuperAbility(CharacterAbilityType abilityType, int abilityLevel)
+	{
+		AbilityManager.getInstance().useAbility(character, abilityType, abilityLevel);
+	}
 	
 	public void slowPlayerBy(float percent){
 		if(!(percent < 0 || percent > 1))
@@ -1043,21 +1045,6 @@ public abstract class Character extends Actor{
 		return powerupButtons;
 	}
 	
-	private int getAbilityLevel(CharacterAbilityType ability){
-		switch(ability){
-		case ARROW:
-			return abilityOneLevel;
-		case BOMB:
-			return abilityOneLevel;
-		case LIFT:
-			return abilityOneLevel;
-		case SUPERSPEED:
-			return superSpeedLevel;
-		default:
-			return 0;
-		
-		}
-	}
 //	
 //	public Array<Button> initializePowerupButtons()
 //	{
@@ -1096,7 +1083,7 @@ public abstract class Character extends Actor{
 		{			
 			CharacterAbilityType ability = this.specialAbilities.get( 0 );
 			
-			character.useSuperAbility( ability );
+			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
 			//ponizsze odkomentowac po testach
 			//removePowerup(ability);
 		}

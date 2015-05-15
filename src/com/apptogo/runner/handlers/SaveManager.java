@@ -72,7 +72,7 @@ public class SaveManager
 		Json json = new Json();
 		
 		//po jakiejkolwiek zmianie klasy Player odkomentowujemy ponizsza linijke na jedno uruchomienie! 
-//		save( new Player() );
+		save( new Player() );
 		
 		if( save.getString("PLAYER", "").equals("") )
 		{

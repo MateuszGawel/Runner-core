@@ -183,7 +183,9 @@ public class GameScreenMulti extends GameScreen implements WarpListener
 				if( !(data.getString("ABILITY_TYPE").equals("")) )
 				{
 					CharacterAbilityType abilityType = CharacterAbilityType.parseFromString( data.getString("ABILITY_TYPE") );
-					sender.character.useSuperAbility(abilityType);
+					
+					//uwaga w tej linijce nie jestem pewien czy ten sender ma abilities uzupelnione!
+					sender.character.useSuperAbility(abilityType, sender.abilities.get( abilityType.toString() ));
 				}
 			}
 			//mala uwaga

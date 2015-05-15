@@ -152,7 +152,7 @@ public abstract class GameWorld
 		int randomPosition = availablePosition.get(index);
 		availablePosition.removeIndex(index);
 		
-		this.player.character = createCharacter( this.player.getCharacterType(), randomPosition, this.player.getName());
+		this.player.character = createCharacter( this.player.getCharacterType(), randomPosition, this.player);
 		((UserData)this.player.character.getBody().getUserData()).playerName = this.player.getName();
 		this.player.character.flags.setMe(true);
 		
@@ -254,7 +254,7 @@ public abstract class GameWorld
 		int index = randomGenerator.nextInt(availablePosition.size);
 		int randomPosition = availablePosition.get(index);
 		availablePosition.removeIndex(index);
-		enemy.character = createCharacter( enemy.getCharacterType(), randomPosition, enemy.getName());
+		enemy.character = createCharacter( enemy.getCharacterType(), randomPosition, enemy);
 		
 		((UserData)enemy.character.getBody().getUserData()).playerName = enemy.getName();
 		enemies.add( enemy );
@@ -281,8 +281,8 @@ public abstract class GameWorld
     	return this.enemies.get(index);
     }
     
-    private Character createCharacter(CharacterType characterType, int startingPosition, String playerName)
+    private Character createCharacter(CharacterType characterType, int startingPosition, Player player)
     {
-    	return CharacterType.convertToCharacter(characterType, world, this, startingPosition, playerName);
+    	return CharacterType.convertToCharacter(characterType, world, this, startingPosition, player);
     }
 }

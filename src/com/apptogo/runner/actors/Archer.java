@@ -2,6 +2,8 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.HashMap;
+
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
@@ -27,8 +29,8 @@ public class Archer extends Character{
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.ARROW;
 	
-	public Archer(World world, GameWorld gameWorld, int startingPosition, String playerName){
-		super(world, "gfx/game/characters/characters.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName);
+	public Archer(World world, GameWorld gameWorld, int startingPosition, String playerName, HashMap<String, Integer> abilities){
+		super(world, "gfx/game/characters/characters.pack", "archerJumpButton", "archerSlideButton", "archerSlowButton", playerName, abilities);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
@@ -142,12 +144,6 @@ public class Archer extends Character{
 		animationManager.createAnimation(8, 0.03f, "archer_slide", CharacterAnimationState.SLIDING, true);
 		animationManager.createAnimation(9, 0.03f, "archer_diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "archer_dietop", CharacterAnimationState.DIEINGTOP, false);
-	}
-	
-	@Override
-	public void useSuperAbility(CharacterAbilityType abilityType)
-	{
-		AbilityManager.getInstance().useAbility(character, abilityType, 1);
 	}
 	
 	public void createBodyMembers(){

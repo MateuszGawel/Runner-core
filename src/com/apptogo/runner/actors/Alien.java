@@ -2,6 +2,8 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.HashMap;
+
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
@@ -26,8 +28,8 @@ public class Alien extends Character{
 	private GameWorld gameWorld;
 	public CharacterAbilityType defaultAbility = CharacterAbilityType.LIFT;
 	
-	public Alien(World world, GameWorld gameWorld, int startingPosition, String playerName){
-		super(world, "gfx/game/characters/characters.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton", playerName);
+	public Alien(World world, GameWorld gameWorld, int startingPosition, String playerName, HashMap<String, Integer> abilities){
+		super(world, "gfx/game/characters/characters.pack", "alienJumpButton", "alienSlideButton", "alienSlowButton", playerName, abilities);
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
@@ -181,12 +183,6 @@ public class Alien extends Character{
 		}
 	}
 	
-	@Override
-	public void useSuperAbility(CharacterAbilityType abilityType)
-	{
-		AbilityManager.getInstance().useAbility(character, abilityType, 3);
-	}
-
 	@Override
 	public void act(float delta) {
     	super.act(delta);

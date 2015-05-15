@@ -5,6 +5,7 @@ import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -49,19 +50,19 @@ public enum CharacterType
 		return null;
 	}
 	
-	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld, int startingPosition, String playerName)
+	static public Character convertToCharacter(CharacterType characterType, World world, GameWorld gameWorld, int startingPosition, Player player)
 	{
 		if( characterType == BANDIT )
 		{
-			return new Bandit(world, gameWorld, startingPosition, playerName);
+			return new Bandit(world, gameWorld, startingPosition, player.getName(), player.abilities);
 		}
 		else if( characterType == ARCHER )
 		{
-			return new Archer(world, gameWorld, startingPosition, playerName);
+			return new Archer(world, gameWorld, startingPosition, player.getName(), player.abilities);
 		}
 		else if( characterType == ALIEN )
 		{
-			return new Alien(world, gameWorld, startingPosition, playerName);
+			return new Alien(world, gameWorld, startingPosition, player.getName(), player.abilities);
 		}
 		
 		return null;
