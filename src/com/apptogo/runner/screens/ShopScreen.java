@@ -1,11 +1,9 @@
 package com.apptogo.runner.screens;
 
-import java.util.Random;
-
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.handlers.CustomAction;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -34,6 +32,8 @@ public class ShopScreen extends BaseScreen
 	private ShopWidget descriptionWidget;
 	
 	private Label coinLabel;
+	
+	private Table table;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -72,73 +72,71 @@ public class ShopScreen extends BaseScreen
 	
 		shopWidget.setCurrentTab(1);
 		
-        Table table = new Table();
+        table = new Table();
         table.debug();
+                
+        fillTable();
+                
+        Container<ScrollPane> container = createScroll(table, 800.0f, 633.0f, true);
+        container.debug();
+        container.setPosition(-400.0f, -350.0f);
         
-        for(final ShopItem item : ShopManager.getInstance().getShopItems( player ))
+        shopWidget.addActorToTab(container, 1);
+        
+        shopWidget.toggleWidget(); 
+	}
+	
+	private void fillTable()
+	{
+		for(final ShopItem item : ShopManager.getInstance().getShopItems( player ))
         {
         	table.row().pad(0, 0, 0, 0);
-        	table.add().width(50).height(200);
         	
         	Image image = createImage(item.thumbnailName, 0, 0);
         	image.setSize(150, 150);
         	
+        	table.add(image).width(150).height(150).pad(15, 30, 15, 10);
+        	
+        	//description + stars
+        	Group descriptionGroup = new Group();
+        	
         	Label title = new Label(item.title,  skin, "default");
-        	Label cash = new Label(String.valueOf( item.prices.get( item.currentLevel - 1 ) ),  skin, "default");
+        	title.setPosition(10, 100);
+        	title.setWrap(true);
         	
-        	table.add(image).width(150).height(150).center();
-        	table.add().width(25).height(200);
-        	
-        	//stars
-        	Group starsGroup = new Group();
-        	starsGroup.setSize(400, 60);
+        	descriptionGroup.addActor( title );
         	
         	for(int i = 0; i < item.maxLevel; i++)
         	{
         		if(i < item.currentLevel)
         		{
-        			starsGroup.addActor( this.createImage("starSmallFull", (i*50)+((i+1) * 10), 16) );
+        			descriptionGroup.addActor( this.createImage("starSmallFull", (i*50)+((i+1) * 10), 10) );
         		}
         		else
         		{
-        			starsGroup.addActor( this.createImage("starSmallEmpty", (i*50)+((i+1) * 10), 16) );
+        			descriptionGroup.addActor( this.createImage("starSmallEmpty", (i*50)+((i+1) * 10), 10) );
         		}
         	}
+        	
+        	table.add(descriptionGroup).width(340).height(150).pad(15, 15, 15, 15);
+        	
+        	Group buyGroup = new Group();
+        	
+        	TextButton buyButton = new TextButton("BUY", this.skin);
+        	buyButton.setSize(120, 90);
+        	buyButton.setPosition(35, 45);
+        	
+        	buyButton.addListener(getBuyListener(item));
+        	
+        	buyGroup.addActor(buyButton);
         	        	
-        	Group tbg = new Group();
-        	tbg.setSize(150, 200);
+        	Label cost = new Label(item.getCostLabel(),  skin, "default");
+        	cost.setPosition(95 - cost.getWidth()/2, 10);
         	
-        	TextButton tb = new TextButton("det", this.skin);
-        	tb.setSize(100, 100);
-        	tb.setPosition(25, 50);
-        	        	
-        	tb.addListener( getBuyListener(item) );
+        	buyGroup.addActor(cost);
         	
-        	tbg.addActor(tb);
-        	
-        	
-        	Table descTable = new Table();
-        	descTable.debug();
-        	
-        	descTable.add(title).width(400).height(80);
-        	descTable.row();
-        	descTable.add(cash).width(400).height(40);
-        	descTable.row();
-        	descTable.add(starsGroup).width(400).height(80);
-        	
-        	table.add(descTable).width(400).height(200);
-        	
-        	table.add(tbg).width(150).height(200);
-        	table.add().width(50).height(200);
+        	table.add(buyGroup).width(190).height(150).pad(15, 15, 15, 35);
         }
-                
-        Container<ScrollPane> container = createScroll(table, 800.0f, 420.0f, true);
-        container.debug();
-        container.setPosition(-400.0f, -360.0f);
-        
-        shopWidget.addActorToTab(container, 1);
-        
-        shopWidget.toggleWidget(); 
 	}
 	
 	private ClickListener getBuyListener(final ShopItem item)
@@ -159,10 +157,13 @@ public class ShopScreen extends BaseScreen
 			        		descriptionWidget.shakePrice();
 			        	}
 			        	else
-			        	{
-			        		descriptionWidget.toggleWidget();
-		
+			        	{		
 			        		coinLabel.setText("coins: " + String.valueOf(player.coins));
+			        		
+			        		table.clear();
+			        		fillTable();
+			        		
+			        		descriptionWidget.toggleWidget();
 			        	}
 			        }
 			    });

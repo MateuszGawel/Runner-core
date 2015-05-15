@@ -52,9 +52,7 @@ public class ShopManager
 		{
 			player.coins -= shopItem.prices.get( itemLevel );
 			player.abilities.put(shopItem.abilityType.toString(), itemLevel + 1);
-			
-			Logger.log(this, "WRZUCAM LEVEL : " + player.getAbilityLevel(shopItem.abilityType));
-			
+						
 			player.save();
 			
 			return true;

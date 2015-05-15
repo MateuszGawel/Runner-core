@@ -36,4 +36,20 @@ public class ShopItem
 		this.maxLevel = this.prices.size;
 		this.currentLevel = player.getAbilityLevel(this.abilityType);
 	}
+	
+	public String getCostLabel()
+	{
+		String value = null;
+    	
+    	if( this.currentLevel >= this.prices.size )
+    	{
+    		value = "MAX LEVEL";
+    	}
+    	else
+    	{
+    		value = String.valueOf( this.prices.get( this.currentLevel ) );
+    	}
+    	
+    	return value;
+	}
 }

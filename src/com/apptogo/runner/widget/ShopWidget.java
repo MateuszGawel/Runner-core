@@ -3,6 +3,7 @@ package com.apptogo.runner.widget;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.shop.ShopItem;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -56,8 +57,12 @@ public class ShopWidget extends Widget
 	{
 		this.label.setText(item.description);
 		
-		this.priceLabel.setText( String.valueOf( item.prices.get( item.currentLevel - 1 ) ) );
-		this.priceLabel.setX(290 - priceLabel.getWidth()/2.0f);
+		priceLabel.remove();
+		
+		priceLabel = new Label(item.getCostLabel(), skin, "dialogLabel");
+		priceLabel.setPosition(310 - priceLabel.getWidth()/2, -100);
+		
+		this.addActor(priceLabel);
 		
 		this.item = item;
 	}
@@ -65,6 +70,7 @@ public class ShopWidget extends Widget
 	//butItem potrzebuje playera dlatego listener bedzie nadawany z ShopScreen
 	public void setListener(ClickListener listener)
 	{
+		okButton.clearListeners();
 		okButton.addListener(listener);
 	}
 	
