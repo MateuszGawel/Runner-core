@@ -15,6 +15,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -442,7 +443,11 @@ public class ResourcesManager
 		{
 			if( atlas.findRegion(textureName) != null )
 			{
-				return atlas.findRegion(textureName);
+				AtlasRegion ar = atlas.findRegion(textureName);
+				
+				ar.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+				
+				return ar; 
 			}
 		}
 

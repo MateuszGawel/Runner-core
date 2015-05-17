@@ -39,7 +39,7 @@ public class GameWorldRenderer
     public void render(float delta)
     {  	
     	//ustawienia kamery
-    	if(gameWorld.player.character.flags.isTeleport()){
+    	if(true || gameWorld.player.character.flags.isTeleport()){
     		//Logger.log(this, "NO LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
     		camera.position.set(
 				Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),

@@ -29,12 +29,13 @@ public class ShopWidget extends Widget
 
 	public ShopWidget()
 	{
-		super(Align.center, Align.center, 0f, WidgetType.SMALL, WidgetFadingType.NONE, true);
+		super(Align.center, 600, 760, WidgetType.SMALL, WidgetFadingType.TOP_TO_BOTTOM, true);
+		this.setEasing( Interpolation.elasticOut );
 				
 		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.MENU );
 		
 		okButton = new Button(skin, "yesButton");
-		okButton.setPosition(270, -50.0f);
+		okButton.setPosition(270, 760 - 50.0f);
 		
 		label = new Label("", skin, "dialogLabel");
 		label.setWrap(true);
@@ -44,7 +45,7 @@ public class ShopWidget extends Widget
 		
 		table = new Table(skin);
 		table.setSize(520.0f, 400.0f);
-		table.setPosition(-350.0f, -200.0f);
+		table.setPosition(-350.0f, 760 - 200.0f);
 		
 		table.add(label).width(520.0f);
 		
@@ -60,7 +61,7 @@ public class ShopWidget extends Widget
 		priceLabel.remove();
 		
 		priceLabel = new Label(item.getCostLabel(), skin, "dialogLabel");
-		priceLabel.setPosition(310 - priceLabel.getWidth()/2, -100);
+		priceLabel.setPosition(310 - priceLabel.getWidth()/2, 760 - 100);
 		
 		this.addActor(priceLabel);
 		
