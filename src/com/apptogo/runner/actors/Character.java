@@ -604,11 +604,6 @@ public abstract class Character extends Actor{
 		});
 	}
 	
-	public void useSuperAbility(CharacterAbilityType abilityType, int abilityLevel)
-	{
-		AbilityManager.getInstance().useAbility(character, abilityType, abilityLevel);
-	}
-	
 	public void slowPlayerBy(float percent){
 		if(!(percent < 0 || percent > 1))
 			playerSlowAmmount += playerSpeedLimit * percent;
@@ -1022,7 +1017,6 @@ public abstract class Character extends Actor{
 	
 	public Array<CharacterButton> initializePowerupButtons(){	
 		for( final CharacterAbilityType powerupType: new Array<CharacterAbilityType>(CharacterAbilityType.values()) ){
-			
 			CharacterButton button = CharacterAbilityType.convertToPowerupButton(powerupType, this.getCharacterType());
 			
 			if(button == null) continue;
@@ -1071,7 +1065,7 @@ public abstract class Character extends Actor{
 //		return this.powerupButtons;
 //	}
 	
-	//uwaga tu wywolujemy konkretna funkcje przy wspolnych abilities lub rzutujemy na konkretna przy specjalnych
+
 	public void useAbility(CharacterAbilityType powerupType) 
 	{
 		if( powerupType == CharacterAbilityType.SUPERSPEED )
@@ -1079,20 +1073,33 @@ public abstract class Character extends Actor{
 			character.superRun();
 			removePowerup(CharacterAbilityType.SUPERSPEED);
 		}
-		//ponizsze wyglada na komplikacje ale w ten sposob przerzutuje sobie ability np archera na ability bandita
-		else if( powerupType == CharacterAbilityType.BOMB || powerupType == CharacterAbilityType.ARROW || powerupType == CharacterAbilityType.BLACKHOLE )
+		else if( powerupType == CharacterAbilityType.BOMB || powerupType == CharacterAbilityType.ARROW || powerupType == CharacterAbilityType.LIFT )
 		{			
-			CharacterAbilityType ability = this.specialAbilities.get( 0 );
-			
+			CharacterAbilityType ability = this.specialAbilities.get( 0 );		
 			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
-			//ponizsze odkomentowac po testach
 			//removePowerup(ability);
 		}
-		//to odkomentowac po testach
+		else if( powerupType == CharacterAbilityType.OIL || powerupType == CharacterAbilityType.SNARES || powerupType == CharacterAbilityType.FORCEFIELD )
+		{			
+			CharacterAbilityType ability = this.specialAbilities.get( 1 );		
+			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
+			//removePowerup(ability);
+		}
+		else if( powerupType == CharacterAbilityType.LASSO || powerupType == CharacterAbilityType.BOAR || powerupType == CharacterAbilityType.BLACKHOLE )
+		{			
+			CharacterAbilityType ability = this.specialAbilities.get( 2 );		
+			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
+			//removePowerup(ability);
+		}
 		//flags.setPowerupSet(false);
 	}
-
-	public CharacterAbilityType currentAbilitySet; //zmienna pomocnicza do sterowania klawiatura
+	
+	public void useSuperAbility(CharacterAbilityType abilityType, int abilityLevel)
+	{
+		AbilityManager.getInstance().useAbility(character, abilityType, abilityLevel);
+	}
+	
+	public CharacterAbilityType currentAbilitySet;
 	public void setPowerup(CharacterAbilityType abilityType) 
 	{
 		currentAbilitySet = abilityType;

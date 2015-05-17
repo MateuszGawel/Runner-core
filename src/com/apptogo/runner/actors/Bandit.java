@@ -55,6 +55,8 @@ public class Bandit extends Character{
         this.setOrigin(90/PPM, 80/PPM);
         
         this.specialAbilities.add(CharacterAbilityType.BOMB);
+        this.specialAbilities.add(CharacterAbilityType.OIL);
+        this.specialAbilities.add(CharacterAbilityType.LASSO);
 	}
 	
 	private void initAnimations(){

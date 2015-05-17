@@ -6,6 +6,7 @@ import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.BlackHole;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.LiftField;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
@@ -63,6 +64,9 @@ public class AbilityManager
 				break;
 			case BLACKHOLE:
 				useBlackHole(character, abilityLevel);
+				break;
+			case FORCEFIELD:
+				useForceField(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -156,9 +160,27 @@ public class AbilityManager
 	}
 	
 	public void useBlackHole(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+		}
 		BlackHole blackHole = blackHolesPool.obtain();
 		blackHole.init(character, abilityLevel);
 		activeBlackHoles.add(blackHole);
+	}
+	
+	public void useForceField(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+		}
+		ForceField forceField = forceFieldsPool.obtain();
+		forceField.init(character, abilityLevel);
+		activeForceFields.add(forceField);
 	}
 	
 	public void act(){
@@ -206,6 +228,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<ForceField> activeForceFields = new Array<ForceField>();
+    private final Pool<ForceField> forceFieldsPool = new Pool<ForceField>() {
+	    @Override
+	    protected ForceField newObject() {
+	    	ForceField forceFiel = new ForceField(world, gameWorld);
+	    	gameWorld.worldStage.addActor(forceFiel);
+	    	return forceFiel;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -229,6 +261,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeBlackHoles.get(i).alive == false) {
             	blackHolesPool.free(activeBlackHoles.removeIndex(i));
+            }
+        }
+        len = activeForceFields.size;
+        for (int i = len; --i >= 0;) {
+            if (activeForceFields.get(i).alive == false) {
+            	forceFieldsPool.free(activeForceFields.removeIndex(i));
             }
         }
 	}

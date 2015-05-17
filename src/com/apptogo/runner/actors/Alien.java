@@ -42,6 +42,8 @@ public class Alien extends Character{
         customOffsetY = 27.0f / PPM;
         this.setOrigin(90/PPM, 77/PPM);
         
+        this.specialAbilities.add(CharacterAbilityType.LIFT);
+        this.specialAbilities.add(CharacterAbilityType.FORCEFIELD);
         this.specialAbilities.add(CharacterAbilityType.BLACKHOLE);
 	}
 	
