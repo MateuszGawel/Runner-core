@@ -22,6 +22,7 @@ import com.apptogo.runner.handlers.FlagsHandler;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
@@ -665,16 +666,16 @@ public abstract class Character extends Actor{
 					if(flags.isMe()){
 						AbilityManager.getInstance().blackHoleOutParticleEffectActor.setPosition(newPos.x, newPos.y);
 						((UserData)getBody().getUserData()).previousPosition = new Vector2(getBody().getPosition());
+						AbilityManager.getInstance().blackHoleOutParticleEffectActor.obtainAndStart(getBody().getPosition().x, getBody().getPosition().y, 0, false);
 						body.setTransform(newPos, 0);
 					}
 					else{
 						body.setTransform(((UserData)teleportToBody.getUserData()).previousPosition, 0);
+						AbilityManager.getInstance().blackHoleOutParticleEffectActor.obtainAndStart(newPos.x, newPos.y, 0, false);
 					}
-					
 					flags.setTeleport(true);
 					
 					blackHoleInEffect = null;
-					AbilityManager.getInstance().blackHoleOutParticleEffectActor.obtainAndStart(newPos.x, newPos.y, 0, false);
 				}
 			});
 			flags.setQueuedTeleportToBody(null);

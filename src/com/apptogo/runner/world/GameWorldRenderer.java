@@ -2,6 +2,7 @@ package com.apptogo.runner.world;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
@@ -39,7 +40,7 @@ public class GameWorldRenderer
     public void render(float delta)
     {  	
     	//ustawienia kamery
-    	if(gameWorld.player.character.flags.isTeleport()){
+    	if(!gameWorld.player.character.flags.isTeleport()){
     		//Logger.log(this, "NO LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
     		camera.position.set(
 				Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
