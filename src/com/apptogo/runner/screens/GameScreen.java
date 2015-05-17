@@ -131,8 +131,7 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			gameGuiStage.addActor(powerupButton);
 		}
-		gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.first() );
-		
+		gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(2) );
 		createGameProgressBar();
 	}
 	

@@ -8,7 +8,7 @@ public abstract class CustomAction {
 	 * czyli to co ma sie stac po uplynieciu delaya
 	 */
 	
-	private float stateTime = 0;
+	protected float stateTime = 0;
 	protected float timeElapsed = 0;
 	private float delay;
 	private boolean finished;
@@ -36,7 +36,13 @@ public abstract class CustomAction {
 	public void onFinish(){
 		
 	}
+	
+	public void additionalTask(){
+		
+	}
+	
 	public void act(float delta){
+		additionalTask();
 		if(delta <= 0.1)
 			stateTime += delta;
 

@@ -7,6 +7,7 @@ import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -85,7 +86,7 @@ public class BlackHole extends Actor implements Poolable{
 		case 2:
 			return 23;
 		case 3:
-			return 13;
+			return 27;
 		default:
 			return 20;
 			
@@ -150,15 +151,14 @@ public class BlackHole extends Actor implements Poolable{
     	}
     	
     	
-    	despawnAction = new CustomAction(4.f, 1) {
-			
+    	despawnAction = new CustomAction(3.f, 1) {
 			@Override
 			public void perform() {
 				registerReset();
 			}
 		};
-    	
     	CustomActionManager.getInstance().registerAction(despawnAction);
+    	CustomActionManager.getInstance().prepareActions();
     }
     
     private void registerReset(){
@@ -179,8 +179,7 @@ public class BlackHole extends Actor implements Poolable{
 			}
 		});
     }
-    //unregister despawn nie dziala
-    //nie pojawia sie teleport wroga, pewnie pozycja zla
+
     @Override
     public void act(float delta){
     	super.act(delta);

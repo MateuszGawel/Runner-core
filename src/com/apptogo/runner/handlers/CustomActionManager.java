@@ -46,6 +46,13 @@ public class CustomActionManager {
 		}
 	}
 
+	public void prepareActions(){
+		for(CustomAction action : actionsCreated){
+			actions.add(action);
+		}
+		actionsCreated.clear();
+	}
+	
 	public void act(float delta){
 		handleActions(delta);
 		

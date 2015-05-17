@@ -43,7 +43,9 @@ public class Archer extends Character{
         customOffsetY = 20.0f / PPM;
         this.setOrigin(90/PPM, 70/PPM);
         
+        this.specialAbilities.add(CharacterAbilityType.ARROW);
         this.specialAbilities.add(CharacterAbilityType.SNARES);
+        this.specialAbilities.add(CharacterAbilityType.BOAR);
 	}
 	
 	private void addSounds(){
