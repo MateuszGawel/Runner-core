@@ -86,7 +86,7 @@ public class BlackHole extends Actor implements Poolable{
 		case 2:
 			return 23;
 		case 3:
-			return 13;
+			return 27;
 		default:
 			return 20;
 			
