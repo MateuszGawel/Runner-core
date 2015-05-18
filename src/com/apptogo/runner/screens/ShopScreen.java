@@ -87,7 +87,7 @@ public class ShopScreen extends BaseScreen
 		coinCounterEffectActor.setPosition(coinLabel.getX() -20, 330);
 		addToScreen( coinCounterEffectActor );
 		
-		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
+		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
 		addToScreen( starExplodeEffectActor );
         
         addToScreen( shopWidget.actor() );
