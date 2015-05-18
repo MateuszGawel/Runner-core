@@ -60,7 +60,8 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private InfoWidget confirmWidget;
     
-    private Animation currentCharacterAnimation;
+	private Animation currentCharacterAnimation;
+	private Animation shopButtonAnimation;
 	    
 	public MultiplayerScreen(Runner runner)
 	{
@@ -158,6 +159,12 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		moveToRankButton.setVisible(true);
 		
 		group.setPosition(-Runner.SCREEN_WIDTH, 0.0f);
+		
+		shopButtonAnimation = new Animation("shop", 2, 1f, CharacterAnimationState.IDLE, true, true);
+		shopButtonAnimation.setPosition(420, -350);
+		shopButtonAnimation.setVisible(true);
+		
+		addToScreen(shopButtonAnimation);
 		
 		addToScreen(group);
 				
