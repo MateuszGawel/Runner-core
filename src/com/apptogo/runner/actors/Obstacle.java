@@ -331,8 +331,8 @@ public class Obstacle extends Actor{
 					   getOriginY(), 
 					   frameWidth,
 					   frameHeight, 
-					   1, 
-					   1, 
+					   getScaleX(), 
+					   getScaleY(), 
 					   getRotation());
 		}
 	}

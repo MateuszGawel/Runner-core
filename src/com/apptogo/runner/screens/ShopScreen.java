@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.ExplicitGroup;
 
 public class ShopScreen extends BaseScreen
 {		
@@ -78,13 +79,12 @@ public class ShopScreen extends BaseScreen
         coinLabel.setPosition(350, 320);
         
         
-        coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
-		coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth() / 2.0f, 330);
+        coinCounterEffectActor = new ParticleEffectActor("losecoins.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
+		coinCounterEffectActor.setPosition(coinLabel.getX() -20, 330);
 		addToScreen( coinCounterEffectActor );
 		
 		
-		starExplodeEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
-		starExplodeEffectActor.setVisible(false);
+		starExplodeEffectActor = new ParticleEffectActor("starGained.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
 		addToScreen( starExplodeEffectActor );
         
         
@@ -208,6 +208,7 @@ public class ShopScreen extends BaseScreen
 			        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
 			        	{
 			        		descriptionWidget.shakePrice();
+			        		starExplodeEffectActor.reset();		
 			        	}
 			        	else
 			        	{
@@ -221,7 +222,7 @@ public class ShopScreen extends BaseScreen
 			        		newStar.setOrigin(Align.center);
 			        		newStar.addAction( getSequence() );
 			        		parentGroup.addActor(newStar);
-			        					        		
+			        		starExplodeEffectActor.start();		
 			        		descriptionWidget.toggleWidget();
 			        	}
 			        }
@@ -236,20 +237,22 @@ public class ShopScreen extends BaseScreen
 	private void handleCountdown()
 	{
 		int value = Integer.parseInt( coinLabel.getText().toString() );
-		
 		if( value > player.coins )
 		{
-			if( !coinCounterEffectActor.isStarted() )
+			if(coinCounterEffectActor.isComplete()){
+				coinCounterEffectActor.getEffect().disallowCompletion();
+				coinCounterEffectActor.reset();
 				coinCounterEffectActor.start();
+			}
 			
-			if( value - 10 <= player.coins )
+			if( value - 1 <= player.coins )
 			{
 				coinLabel.setText(String.valueOf(player.coins));
-				coinCounterEffectActor.stop();
+				coinCounterEffectActor.getEffect().allowCompletion();
 			}
 			else
 			{
-				coinLabel.setText(String.valueOf(value - 10));
+				coinLabel.setText(String.valueOf(value - 1));
 			}
 		}
 	}
