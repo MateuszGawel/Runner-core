@@ -162,8 +162,6 @@ public class ResourcesManager
 
 	public Array<ScreenMeta> screenMetaArray;
 		
-	public TextureAtlas ATLAS = new TextureAtlas("gfx/splash/splashAtlas.atlas");
-	
 	public ResourcesManager() 
 	{
 		screenMetaArray = new Array<ScreenMeta>();
@@ -171,8 +169,7 @@ public class ResourcesManager
 		//ASSETS FOR SPLASH
 		ScreenMeta splashMeta = new ScreenMeta(ScreenClass.SPLASH);
 		
-		splashMeta.addTextureAtlas("gfx/splash/splashAtlas.atlas", true);
-		splashMeta.setSkinFile("gfx/splash/splashAtlas.json");
+		splashMeta.addTextureAtlas("gfx/splash/splashAtlas.pack");
 		
 		screenMetaArray.add(splashMeta);
 		
@@ -180,7 +177,7 @@ public class ResourcesManager
 		ScreenMeta stillMeta = new ScreenMeta(ScreenClass.STILL);
 		
 		stillMeta.addTextureAtlas( "gfx/still/stillBackgroundAtlas.atlas" );
-		stillMeta.addTextureAtlas( "gfx/still/stillAtlas.atlas", true );
+		stillMeta.addTextureAtlas( "gfx/still/stillAtlas.pack", true );
 		stillMeta.setSkinFile("gfx/still/stillAtlas.json");
 				
 		screenMetaArray.add(stillMeta);
@@ -191,20 +188,8 @@ public class ResourcesManager
 		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas0.atlas" );
 		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas1.atlas" );
 		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.atlas" );
-		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.atlas", true );
-		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");
-		
-		
-		
-		
-		
-		//wywalic! tylko do testow z particlami w shopscreen
-		menuMeta.addTextureAtlas( "gfx/game/characters/charactersAtlas.pack" );
-		
-		
-		
-		
-		
+		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.pack", true );
+		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");	
 								
 		screenMetaArray.add(menuMeta);
 		
@@ -564,7 +549,7 @@ public class ResourcesManager
 					return manager.get(filename);
 				}
 				catch(Exception ex){
-					Logger.log(this, "can't load asset");
+					Logger.log(this, "can't load asset " + filename);
 					return null;
 				}
 			}
