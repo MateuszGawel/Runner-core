@@ -1,12 +1,16 @@
 package com.apptogo.runner.screens;
 
+import static com.apptogo.runner.vars.Box2DVars.PPM;
+
 import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -83,10 +87,8 @@ public class ShopScreen extends BaseScreen
 		coinCounterEffectActor.setPosition(coinLabel.getX() -20, 330);
 		addToScreen( coinCounterEffectActor );
 		
-		
-		starExplodeEffectActor = new ParticleEffectActor("starGained.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
+		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
 		addToScreen( starExplodeEffectActor );
-        
         
         addToScreen( shopWidget.actor() );
         addToScreen( descriptionWidget.actor() );
@@ -208,7 +210,6 @@ public class ShopScreen extends BaseScreen
 			        	if( !ShopManager.getInstance().buyShopItem(descriptionWidget.item, player) )
 			        	{
 			        		descriptionWidget.shakePrice();
-			        		starExplodeEffectActor.reset();		
 			        	}
 			        	else
 			        	{
@@ -222,7 +223,7 @@ public class ShopScreen extends BaseScreen
 			        		newStar.setOrigin(Align.center);
 			        		newStar.addAction( getSequence() );
 			        		parentGroup.addActor(newStar);
-			        		starExplodeEffectActor.start();		
+			        		starExplodeEffectActor.obtainAndStart(100, 100, 0);
 			        		descriptionWidget.toggleWidget();
 			        	}
 			        }
