@@ -37,7 +37,7 @@ public class LoadingScreen extends BaseScreen
 	{
 		String loading = getLangString("loadingLabel");
 				
-		loadingLabel = new Label( loading, skin, "default");
+		loadingLabel = new Label( loading, skin, "loadingSmall");
 		setCenterPosition(loadingLabel, 10.0f);
 		loadingLabel.setVisible(false);
 				

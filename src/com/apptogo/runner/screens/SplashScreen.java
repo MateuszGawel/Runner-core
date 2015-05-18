@@ -23,8 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class SplashScreen extends BaseScreen
-{		
-	private final boolean SKIP_ANIMATIONS = true;
+{
+	private final boolean SKIP_ANIMATIONS = false;
 	
 	private enum SplashPhase
 	{
@@ -81,6 +81,8 @@ public class SplashScreen extends BaseScreen
 	@Override
 	public void prepare()
 	{
+		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.STILL );
+		
 		initializeActions();
 
 		currentPhase = SplashPhase.APPTOGO_LOGO_IN;
@@ -120,7 +122,7 @@ public class SplashScreen extends BaseScreen
 		addToScreen(appToGoLogo);
 
 		//creating loading controls
-		loadingLabel = new Label("loading", skin, "default");
+		loadingLabel = new Label("loading", skin, "loadingSmall");
 		setCenterPosition(loadingLabel, 270);
 		
 		loadingAnimation = new Loading();

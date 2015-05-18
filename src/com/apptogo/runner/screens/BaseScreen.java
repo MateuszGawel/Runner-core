@@ -145,11 +145,11 @@ public abstract class BaseScreen implements Screen
 		fadeInAction.setAlpha(0f);
 		fadeInAction.setDuration(0.3f);
 		
-		fade = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "black") );
+		fade = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "blackNonTransparent") );
 
 		fade.getColor().a = 0.99f;
-		fade.setSize(Runner.SCREEN_WIDTH*2, Runner.SCREEN_HEIGHT*2);
-		fade.setPosition(-Runner.SCREEN_WIDTH/1.0f, -Runner.SCREEN_HEIGHT/1.0f);
+		fade.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		fade.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
 		fade.addAction(fadeInAction);
 				
 	    menuFadeStage.addActor(fade);
