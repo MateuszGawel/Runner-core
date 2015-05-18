@@ -193,6 +193,18 @@ public class ResourcesManager
 		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.atlas" );
 		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.atlas", true );
 		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");
+		
+		
+		
+		
+		
+		//wywalic! tylko do testow z particlami w shopscreen
+		menuMeta.addTextureAtlas( "gfx/game/characters/charactersAtlas.pack" );
+		
+		
+		
+		
+		
 								
 		screenMetaArray.add(menuMeta);
 		

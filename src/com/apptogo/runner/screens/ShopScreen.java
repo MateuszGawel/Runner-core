@@ -1,9 +1,12 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.appwarp.WarpController;
+import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -12,8 +15,13 @@ import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -23,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 
 public class ShopScreen extends BaseScreen
 {		
@@ -34,6 +43,11 @@ public class ShopScreen extends BaseScreen
 	private Label coinLabel;
 	
 	private Table table;
+	
+	private Animation coinAnimation;
+	
+	ParticleEffectActor coinCounterEffectActor;
+	ParticleEffectActor starExplodeEffectActor;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -57,13 +71,28 @@ public class ShopScreen extends BaseScreen
         
         createShopWidget();
         
-        coinLabel = new Label("coins: " + String.valueOf(player.coins), skin, "coinLabel");
-        coinLabel.setPosition(320, 320);
+        coinAnimation = new Animation("coin", 16, 0.03f, CharacterAnimationState.IDLE, true, true); // CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
+        coinAnimation.setPosition(315, 328);
+        
+        coinLabel = new Label(String.valueOf(player.coins), skin, "coinLabel");
+        coinLabel.setPosition(350, 320);
+        
+        
+        coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
+		coinCounterEffectActor.setPosition(coinLabel.getX() + coinLabel.getWidth() / 2.0f, 330);
+		addToScreen( coinCounterEffectActor );
+		
+		
+		starExplodeEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
+		starExplodeEffectActor.setVisible(false);
+		addToScreen( starExplodeEffectActor );
+        
         
         addToScreen( shopWidget.actor() );
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
         addToScreen(coinLabel);
+        addToScreen(coinAnimation);
 	}
 	
 	private void createShopWidget()
@@ -98,6 +127,7 @@ public class ShopScreen extends BaseScreen
         	table.add(image).width(150).height(150).pad(15, 30, 15, 10);
         	
         	//description + stars
+        	Array<Image> stars = new Array<Image>();
         	Group descriptionGroup = new Group();
         	
         	Label title = new Label(item.title,  skin, "default");
@@ -108,14 +138,20 @@ public class ShopScreen extends BaseScreen
         	
         	for(int i = 0; i < item.maxLevel; i++)
         	{
+        		Image star = null;
+        		
         		if(i < item.currentLevel)
-        		{
-        			descriptionGroup.addActor( this.createImage("starSmallFull", (i*50)+((i+1) * 10), 10) );
+        		{        			
+        			star = this.createImage("starSmallFull", (i*50)+((i+1) * 10), 10);
         		}
         		else
         		{
-        			descriptionGroup.addActor( this.createImage("starSmallEmpty", (i*50)+((i+1) * 10), 10) );
+        			star = this.createImage("starSmallEmpty", (i*50)+((i+1) * 10), 10);	
         		}
+        		
+    			stars.add(star);
+    			
+        		descriptionGroup.addActor( star );
         	}
         	
         	table.add(descriptionGroup).width(340).height(150).pad(15, 15, 15, 15);
@@ -126,7 +162,7 @@ public class ShopScreen extends BaseScreen
         	buyButton.setSize(120, 90);
         	buyButton.setPosition(35, 45);
         	
-        	buyButton.addListener(getBuyListener(item));
+        	buyButton.addListener(getBuyListener(item, stars));
         	
         	buyGroup.addActor(buyButton);
         	        	
@@ -139,7 +175,24 @@ public class ShopScreen extends BaseScreen
         }
 	}
 	
-	private ClickListener getBuyListener(final ShopItem item)
+	private SequenceAction getSequence()
+	{
+		ScaleToAction scaleAction = new ScaleToAction();
+		scaleAction.setScale(1.5f);
+		scaleAction.setDuration(1.5f);
+		scaleAction.setInterpolation(Interpolation.bounceOut);
+		
+		ScaleToAction scaleDownAction = new ScaleToAction();
+		scaleDownAction.setScale(1);
+		scaleDownAction.setDuration(1);
+		scaleDownAction.setInterpolation(Interpolation.circleIn);
+		
+		SequenceAction sequence = new SequenceAction(scaleAction, scaleDownAction);
+		
+		return sequence;
+	}
+	
+	private ClickListener getBuyListener(final ShopItem item, final Array<Image> stars)
 	{
 		ClickListener listener = new ClickListener() 
 		{
@@ -157,12 +210,18 @@ public class ShopScreen extends BaseScreen
 			        		descriptionWidget.shakePrice();
 			        	}
 			        	else
-			        	{		
-			        		coinLabel.setText("coins: " + String.valueOf(player.coins));
+			        	{
+			        		int starIndex = item.currentLevel - 1;
 			        		
-			        		table.clear();
-			        		fillTable();
+			        		Group parentGroup = stars.get( starIndex ).getParent();
 			        		
+			        		stars.get( starIndex ).setVisible(false);
+			        		
+			        		Image newStar = createImage("starSmallFull", stars.get( starIndex ).getX(), stars.get( starIndex ).getY());
+			        		newStar.setOrigin(Align.center);
+			        		newStar.addAction( getSequence() );
+			        		parentGroup.addActor(newStar);
+			        					        		
 			        		descriptionWidget.toggleWidget();
 			        	}
 			        }
@@ -173,9 +232,33 @@ public class ShopScreen extends BaseScreen
 	    return listener;
 	}
 		
+	//nieoptymalne i chujowe to trzeba zrobic madrzej ale na razie chce zeby byl odpowiedni efekt
+	private void handleCountdown()
+	{
+		int value = Integer.parseInt( coinLabel.getText().toString() );
+		
+		if( value > player.coins )
+		{
+			if( !coinCounterEffectActor.isStarted() )
+				coinCounterEffectActor.start();
+			
+			if( value - 10 <= player.coins )
+			{
+				coinLabel.setText(String.valueOf(player.coins));
+				coinCounterEffectActor.stop();
+			}
+			else
+			{
+				coinLabel.setText(String.valueOf(value - 10));
+			}
+		}
+	}
+	
 	public void step()
 	{
 		handleInput();
+		
+		handleCountdown();
 	}
 	
 	@Override

@@ -55,6 +55,8 @@ public class ShopManager
 						
 			player.save();
 			
+			shopItem.currentLevel++;
+			
 			return true;
 		}
 		
