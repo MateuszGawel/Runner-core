@@ -6,6 +6,7 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.screens.GameScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -277,22 +278,33 @@ public class Obstacle extends Actor{
 	}
 	@Override
 	public void act(float delta){
-		if(body != null){
+		if(body != null)
+		{
 			setPosition(body.getPosition().x + offsetX, body.getPosition().y + offsetY);
 			setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+			
+			if(currentFrame != null)
+	        {
+		        setWidth(currentFrame.getRegionWidth() / PPM);
+		        setHeight(currentFrame.getRegionHeight() / PPM);
+	        }
 		}
 		else if(updatePosition)
-			setPosition(position.x + offsetX, position.y + offsetY);  
-        
+		{
+			setPosition(position.x + offsetX, position.y + offsetY);
+		}
+		else
+		{
+			if(currentFrame != null)
+	        {
+		        setWidth(currentFrame.getRegionWidth());
+		        setHeight(currentFrame.getRegionHeight());
+	        }
+		}
+		
         if(animationManager != null)
         {
         	currentFrame = animationManager.animate(delta);
-        }
-        
-        if(currentFrame != null){
-	        setWidth(currentFrame.getRegionWidth() / PPM);
-	        setHeight(currentFrame.getRegionHeight() / PPM);
-			//setOrigin(-offsetX, -offsetY);
         }
 
         if(handleSoundVolume)

@@ -164,6 +164,15 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		shopButtonAnimation.setPosition(420, -350);
 		shopButtonAnimation.setVisible(true);
 		
+		shopButtonAnimation.addListener(new ClickListener()
+		{
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				loadScreenAfterFadeOut(ScreenType.SCREEN_SHOP);
+            }
+		});		
+		
+		
 		addToScreen(shopButtonAnimation);
 		
 		addToScreen(group);

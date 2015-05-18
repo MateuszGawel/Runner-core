@@ -1,16 +1,12 @@
 package com.apptogo.runner.screens;
 
-import static com.apptogo.runner.vars.Box2DVars.PPM;
-
 import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -19,9 +15,9 @@ import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
@@ -36,7 +32,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.ExplicitGroup;
 
 public class ShopScreen extends BaseScreen
 {		
@@ -181,12 +176,12 @@ public class ShopScreen extends BaseScreen
 	{
 		ScaleToAction scaleAction = new ScaleToAction();
 		scaleAction.setScale(1.5f);
-		scaleAction.setDuration(1.5f);
+		scaleAction.setDuration(0.7f);
 		scaleAction.setInterpolation(Interpolation.bounceOut);
 		
 		ScaleToAction scaleDownAction = new ScaleToAction();
 		scaleDownAction.setScale(1);
-		scaleDownAction.setDuration(1);
+		scaleDownAction.setDuration(0.3f);
 		scaleDownAction.setInterpolation(Interpolation.circleIn);
 		
 		SequenceAction sequence = new SequenceAction(scaleAction, scaleDownAction);
@@ -223,7 +218,11 @@ public class ShopScreen extends BaseScreen
 			        		newStar.setOrigin(Align.center);
 			        		newStar.addAction( getSequence() );
 			        		parentGroup.addActor(newStar);
-			        		starExplodeEffectActor.obtainAndStart(100, 100, 0);
+			        				        		
+			        		Vector2 newStarPosition = newStar.localToStageCoordinates( new Vector2( newStar.getOriginX(), newStar.getOriginY() ) );
+			        		
+			        		starExplodeEffectActor.obtainAndStart( newStarPosition.x, newStarPosition.y, 0);
+			        		
 			        		descriptionWidget.toggleWidget();
 			        	}
 			        }

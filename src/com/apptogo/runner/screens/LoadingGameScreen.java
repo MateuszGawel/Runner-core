@@ -58,7 +58,7 @@ public class LoadingGameScreen extends BaseScreen
 		
 		String tip = TipManager.getInstance().getTip( levelToLoad.worldType );
 				
-		tipLabel = new Label(tip, skin, "default");
+		tipLabel = new Label(tip, skin, "loadingSmall");
 		setCenterPosition(tipLabel, -320.0f);
 		tipLabel.setVisible(true);
 		

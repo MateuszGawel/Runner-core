@@ -16,6 +16,8 @@ public class Animation extends Obstacle
 		
 		this.createAnimation(frameRegionName, framesCount, frameDuration, animationState, loop);
 		
+		this.setWidth( this.animationManager.getCurrentAnimation().getKeyFrame(0).getRegionWidth() );
+		
 		setAnimate(true);
 	}
 	
