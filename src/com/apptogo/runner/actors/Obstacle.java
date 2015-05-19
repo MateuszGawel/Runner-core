@@ -87,7 +87,7 @@ public class Obstacle extends Actor{
 	
 	public Obstacle(MapObject object, World world, String regionName, String atlasPath){	
 		this(object, world, atlasPath);	
-		this.currentFrame = ((TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), atlasPath)).findRegion(regionName);
+		this.currentFrame = ResourcesManager.getInstance().getAtlasRegion(regionName);
 		animationManager = null;
 	}
 	

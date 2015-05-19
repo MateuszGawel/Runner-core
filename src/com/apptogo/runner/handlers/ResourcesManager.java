@@ -176,7 +176,7 @@ public class ResourcesManager
 		//ASSETS FOR STILL [ALWAYS LOADED]
 		ScreenMeta stillMeta = new ScreenMeta(ScreenClass.STILL);
 		
-		stillMeta.addTextureAtlas( "gfx/still/stillBackgroundAtlas.atlas" );
+		stillMeta.addTextureAtlas( "gfx/still/stillBackgroundAtlas.pack" );
 		stillMeta.addTextureAtlas( "gfx/still/stillAtlas.pack", true );
 		stillMeta.setSkinFile("gfx/still/stillAtlas.json");
 				
@@ -185,9 +185,9 @@ public class ResourcesManager
 		//ASSETS FOR MENU
 		ScreenMeta menuMeta = new ScreenMeta(ScreenClass.MENU);
 		
-		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas0.atlas" );
-		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas1.atlas" );
-		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.atlas" );
+		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas0.pack" );
+		menuMeta.addTextureAtlas( "gfx/menu/backgroundAtlas1.pack" );
+		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.pack" );
 		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.pack", true );
 		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");	
 								
@@ -196,9 +196,10 @@ public class ResourcesManager
 		//ASSETS FOR GAME
 		ScreenMeta gameMeta = new ScreenMeta(ScreenClass.GAME);
 		
+		gameMeta.addTextureAtlas("gfx/game/characters/countdownAtlas.pack");
 		gameMeta.addTextureAtlas("gfx/game/characters/charactersAtlas.pack", true);
 		gameMeta.setSkinFile("gfx/game/characters/charactersAtlas.json");
-				
+		
 		gameMeta.addTextureAtlas( "gfx/game/levels/wildWestAtlas.pack" );
 		gameMeta.addTextureAtlas( "gfx/game/levels/forestAtlas.pack" );
 		gameMeta.addTextureAtlas( "gfx/game/levels/spaceAtlas.pack" );

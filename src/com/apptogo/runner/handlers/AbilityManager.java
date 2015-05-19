@@ -13,6 +13,7 @@ import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
@@ -41,10 +42,10 @@ public class AbilityManager
 	public void init(World world, GameWorld gameWorld){
 		this.world = world;
 		this.gameWorld = gameWorld;
-		blackHoleInParticleEffectActor = new ParticleEffectActor("blackHoleIn.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		blackHoleInParticleEffectActor = new ParticleEffectActor("blackHoleIn.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreenClass.GAME, "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(blackHoleInParticleEffectActor);
 		
-		blackHoleOutParticleEffectActor = new ParticleEffectActor("blackHoleOut.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		blackHoleOutParticleEffectActor = new ParticleEffectActor("blackHoleOut.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreenClass.GAME, "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(blackHoleOutParticleEffectActor);
 	}
 	

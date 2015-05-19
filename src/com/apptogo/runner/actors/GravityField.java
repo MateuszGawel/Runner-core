@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
@@ -31,7 +32,7 @@ public class GravityField extends Obstacle
 		super(object, world, GameWorldType.convertToAtlasPath(gameWorld.gameWorldType));
 		createBody(BodyType.StaticBody, Materials.obstacleSensor, "gravityField");
 		this.gameWorld = gameWorld;
-		pooledEffectActor = new ParticleEffectActor("gravityField.p", 120, 120, 120, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		pooledEffectActor = new ParticleEffectActor("gravityField.p", 120, 120, 120, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreenClass.GAME, "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(this);
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		

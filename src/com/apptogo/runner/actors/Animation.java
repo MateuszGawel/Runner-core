@@ -1,6 +1,7 @@
 package com.apptogo.runner.actors;
 
 import com.apptogo.runner.animation.MyAnimation;
+import com.apptogo.runner.logger.Logger;
 
 public class Animation extends Obstacle
 {
@@ -15,7 +16,7 @@ public class Animation extends Obstacle
 		this.framesCount = framesCount;
 		
 		this.createAnimation(frameRegionName, framesCount, frameDuration, animationState, loop);
-		
+
 		this.setWidth( this.animationManager.getCurrentAnimation().getKeyFrame(0).getRegionWidth() );
 		
 		setAnimate(true);

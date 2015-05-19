@@ -6,6 +6,7 @@ import com.apptogo.runner.actors.Coin;
 import com.apptogo.runner.actors.CoinField;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -69,7 +70,7 @@ public class CoinsManager
 		}
 		coinsPool.freeAll(coins);
 		
-		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		pooledEffectActor = new ParticleEffectActor("coins.p", 70, 70, 70, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreenClass.GAME, "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(pooledEffectActor);
 		pooledEffectActor.setZIndex(2);
 		

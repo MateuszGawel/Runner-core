@@ -80,16 +80,17 @@ public class ShopScreen extends BaseScreen
         
         coinCounterEffectActor = new ParticleEffectActor("losecoins.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
 		coinCounterEffectActor.setPosition(coinLabel.getX() -20, 330);
-		addToScreen( coinCounterEffectActor );
 		
 		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
-		addToScreen( starExplodeEffectActor );
-        
+		        
         addToScreen( shopWidget.actor() );
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
         addToScreen(coinLabel);
         addToScreen(coinAnimation);
+        
+        addToScreen( coinCounterEffectActor );
+		addToScreen( starExplodeEffectActor );
 	}
 	
 	private void createShopWidget()
@@ -103,9 +104,9 @@ public class ShopScreen extends BaseScreen
                 
         fillTable();
                 
-        Container<ScrollPane> container = createScroll(table, 800.0f, 633.0f, true);
+        Container<ScrollPane> container = createScroll(table, 690.0f, 520.0f, true);
         container.debug();
-        container.setPosition(-400.0f, -350.0f);
+        container.setPosition(-340.0f, -310.0f);
         
         shopWidget.addActorToTab(container, 1);
         
@@ -119,16 +120,16 @@ public class ShopScreen extends BaseScreen
         	table.row().pad(0, 0, 0, 0);
         	
         	Image image = createImage(item.thumbnailName, 0, 0);
-        	image.setSize(150, 150);
+        	image.setSize(120, 120);
         	
-        	table.add(image).width(150).height(150).pad(15, 30, 15, 10);
+        	table.add(image).width(120).height(120).pad(30, 30, 30, 10);
         	
         	//description + stars
         	Array<Image> stars = new Array<Image>();
         	Group descriptionGroup = new Group();
         	
-        	Label title = new Label(item.title,  skin, "default");
-        	title.setPosition(10, 100);
+        	Label title = new Label(item.title,  skin, "coinLabel");
+        	title.setPosition(10, 90);
         	title.setWrap(true);
         	
         	descriptionGroup.addActor( title );
@@ -151,7 +152,7 @@ public class ShopScreen extends BaseScreen
         		descriptionGroup.addActor( star );
         	}
         	
-        	table.add(descriptionGroup).width(340).height(150).pad(15, 15, 15, 15);
+        	table.add(descriptionGroup).width(250).height(150).pad(15, 15, 15, 15);
         	
         	Group buyGroup = new Group();
         	
@@ -168,7 +169,7 @@ public class ShopScreen extends BaseScreen
         	
         	buyGroup.addActor(cost);
         	
-        	table.add(buyGroup).width(190).height(150).pad(15, 15, 15, 35);
+        	table.add(buyGroup).width(190).height(150).pad(15, 15, 15, 45);
         }
 	}
 	

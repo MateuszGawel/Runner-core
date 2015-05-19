@@ -160,7 +160,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		group.setPosition(-Runner.SCREEN_WIDTH, 0.0f);
 		
-		shopButtonAnimation = new Animation("shop", 2, 1f, CharacterAnimationState.IDLE, true, true);
+		shopButtonAnimation = new Animation("shopButton", 2, 1f, CharacterAnimationState.IDLE, true, true);
 		shopButtonAnimation.setPosition(420, -350);
 		shopButtonAnimation.setVisible(true);
 		
