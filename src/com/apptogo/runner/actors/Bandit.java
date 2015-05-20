@@ -46,7 +46,7 @@ public class Bandit extends Character{
 		this.world = world;
 		createBody(startingPosition);
 		
-		//createBodyMembers();
+		createBodyMembers();
 		 
         addSounds();
         
@@ -177,25 +177,30 @@ public class Bandit extends Character{
 		animationManager.createAnimation(9, 0.03f, "bandit_dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
 	
-	public void createBodyMembers(){
+	public void createBodyMembers()
+	{
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(20/PPM);
-		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/banditHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, circleShape, "banditHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
 		
 		PolygonShape polygonShape = new PolygonShape();
 		polygonShape.setAsBox(15/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditTorso.png", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
+		
+		BodyMember torso = new BodyMember(this, world, polygonShape, "banditTorso", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians);
+		
+		bodyMembers.add(torso);
+		
 		polygonShape.setAsBox(5/PPM, 10/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditLeg.png", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditLeg.png", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditFoot.png", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditFoot.png", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditArm.png", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditArm.png", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditHand.png", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditHand.png", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody()));
 		polygonShape.setAsBox(5/PPM, 15/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/banditBag.png", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditBag", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians, torso.getBody()));
 		
 		for(BodyMember bodyMember : bodyMembers){
 			gameWorld.worldStage.addActor(bodyMember);
