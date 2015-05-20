@@ -11,6 +11,7 @@ import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -52,7 +53,7 @@ public class BodyMember extends Actor
 		body.setTransform(-100, 0, 0);
 	}
 	
-	public BodyMember(Character player, World world, String path, Shape shape, Body jointBody)
+	public BodyMember(Character player, World world, String path, Shape shape, Body jointBody, Vector2 anchorA, Vector2 anchorB)
 	{
 		this(player, world, path, shape);
 		
@@ -60,8 +61,8 @@ public class BodyMember extends Actor
 		jointDef.bodyA = body;
 		jointDef.bodyB = jointBody;
 		
-		jointDef.localAnchorA.set(-0.2f, 0);
-		jointDef.localAnchorB.set(0, 0);
+		jointDef.localAnchorA.set( anchorA );
+		jointDef.localAnchorB.set( anchorB );
 		
 		jointDef.length = 0;
 		
@@ -75,15 +76,15 @@ public class BodyMember extends Actor
 		this(player, world, path, shape);
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
-		this.angle = angle;
+		this.angle = 0;//angle;
 	}
 	
-	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody)
+	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB)
 	{
-		this(player, world, path, shape, jointBody);
+		this(player, world, path, shape, jointBody, anchorA, anchorB);
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
-		this.angle = angle;
+		this.angle = 0;//angle;
 	}
 	
 	public Body getBody()
@@ -97,7 +98,7 @@ public class BodyMember extends Actor
     	
     	if(applyForce)
     	{
-	        body.applyForce(5, 5, random.nextInt(20)-10/PPM, random.nextInt(20)-10/PPM, true);
+	        body.applyForce(90, 45, 0, 0, true); //random.nextInt(20)-10/PPM, random.nextInt(20)-10/PPM, true);
     	}
     	
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);

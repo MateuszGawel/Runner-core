@@ -196,8 +196,10 @@ public class ResourcesManager
 		//ASSETS FOR GAME
 		ScreenMeta gameMeta = new ScreenMeta(ScreenClass.GAME);
 		
+		gameMeta.addTextureAtlas("gfx/game/characters/guiAtlas.pack", true);
+		
 		gameMeta.addTextureAtlas("gfx/game/characters/countdownAtlas.pack");
-		gameMeta.addTextureAtlas("gfx/game/characters/charactersAtlas.pack", true);
+		gameMeta.addTextureAtlas("gfx/game/characters/charactersAtlas.pack");
 		gameMeta.setSkinFile("gfx/game/characters/charactersAtlas.json");
 		
 		gameMeta.addTextureAtlas( "gfx/game/levels/wildWestAtlas.pack" );

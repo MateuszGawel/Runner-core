@@ -9,7 +9,6 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.screens.BaseScreen;
@@ -17,6 +16,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -191,16 +191,30 @@ public class Bandit extends Character{
 		bodyMembers.add(torso);
 		
 		polygonShape.setAsBox(5/PPM, 10/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody()));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody()));
+		
+		float top = 5/PPM;
+		float center = 0;
+		float bottom = -5/PPM;
+		
+		BodyMember rightLeg = new BodyMember(this, world, polygonShape, "banditLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(0.1f, -12/PPM));
+		BodyMember leftLeg = new BodyMember(this, world, polygonShape, "banditLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(-0.1f, -12/PPM));
+		BodyMember rightFoot = new BodyMember(this, world, polygonShape, "banditFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0, top), new Vector2(0, bottom));
+		BodyMember leftFoot  = new BodyMember(this, world, polygonShape, "banditFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0, top), new Vector2(0, bottom));
+		BodyMember rightArm = new BodyMember(this, world, polygonShape, "banditArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(0.1f, center));
+		BodyMember leftArm  = new BodyMember(this, world, polygonShape, "banditArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(-0.1f, center));
+		BodyMember rightHand = new BodyMember(this, world, polygonShape, "banditHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0, top), new Vector2(0, bottom));
+		BodyMember leftHand  = new BodyMember(this, world, polygonShape, "banditHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0, top), new Vector2(0, bottom));
+		
+		bodyMembers.add(rightLeg);
+		bodyMembers.add(leftLeg);
+		bodyMembers.add(rightFoot);
+		bodyMembers.add(leftFoot);
+		bodyMembers.add(rightArm);
+		bodyMembers.add(leftArm);
+		bodyMembers.add(rightHand);
+		bodyMembers.add(leftHand);
 		polygonShape.setAsBox(5/PPM, 15/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditBag", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians, torso.getBody()));
+		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditBag", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
 		
 		for(BodyMember bodyMember : bodyMembers){
 			gameWorld.worldStage.addActor(bodyMember);

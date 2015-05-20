@@ -4,7 +4,6 @@ import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
-import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
@@ -96,7 +95,7 @@ public abstract class GameScreen extends BaseScreen{
 	
 	protected void createCoinLabel(){
 		coinLabelCounter = 0;
-		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/charactersAtlas.pack"));
+		coinCounterEffectActor = new ParticleEffectActor("coinCounter.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/game/characters/guiAtlas.pack"));
 
 		coinLabel = new Label("0", skin, "coin");
 		coinLabel.setPosition(40, Runner.SCREEN_HEIGHT - 100);
