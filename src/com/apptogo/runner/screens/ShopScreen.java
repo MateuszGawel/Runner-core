@@ -28,10 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
 
 public class ShopScreen extends BaseScreen
 {		
@@ -100,12 +101,12 @@ public class ShopScreen extends BaseScreen
 		shopWidget.setCurrentTab(1);
 		
         table = new Table();
-        table.debug();
+        //table.debug();
                 
         fillTable();
                 
         Container<ScrollPane> container = createScroll(table, 690.0f, 520.0f, true);
-        container.debug();
+        //container.debug();
         container.setPosition(-340.0f, -310.0f);
         
         shopWidget.addActorToTab(container, 1);
@@ -113,16 +114,30 @@ public class ShopScreen extends BaseScreen
         shopWidget.toggleWidget(); 
 	}
 	
+	boolean backgr = true;
+	
 	private void fillTable()
 	{
 		for(final ShopItem item : ShopManager.getInstance().getShopItems( player ))
         {
-        	table.row().pad(0, 0, 0, 0);
+        	table.row().pad(10, 0, 0, 0);
+        	
+        	Table t = new Table();
+        	
+        	if( backgr ) 
+    		{
+        		t.setBackground( new TextureRegionDrawable( ResourcesManager.getInstance().getAtlasRegion("widgetBlack") ) );
+        		backgr = false;
+    		}
+        	else 
+        	{
+        		backgr = true;
+        	}
         	
         	Image image = createImage(item.thumbnailName, 0, 0);
-        	image.setSize(120, 120);
+        	image.setScaling(Scaling.none);
         	
-        	table.add(image).width(120).height(120).pad(30, 30, 30, 10);
+        	t.add(image).width(120).height(120).pad(30, 30, 30, 10);
         	
         	//description + stars
         	Array<Image> stars = new Array<Image>();
@@ -152,12 +167,11 @@ public class ShopScreen extends BaseScreen
         		descriptionGroup.addActor( star );
         	}
         	
-        	table.add(descriptionGroup).width(250).height(150).pad(15, 15, 15, 15);
+        	t.add(descriptionGroup).width(250).height(150).pad(15, 15, 15, 15);
         	
         	Group buyGroup = new Group();
         	
-        	TextButton buyButton = new TextButton("BUY", this.skin);
-        	buyButton.setSize(120, 90);
+        	Button buyButton = new Button(this.skin, "buyButton");
         	buyButton.setPosition(35, 45);
         	
         	buyButton.addListener(getBuyListener(item, stars));
@@ -169,7 +183,9 @@ public class ShopScreen extends BaseScreen
         	
         	buyGroup.addActor(cost);
         	
-        	table.add(buyGroup).width(190).height(150).pad(15, 15, 15, 45);
+        	t.add(buyGroup).width(190).height(150).pad(15, 15, 15, 45);
+        	
+        	table.add(t);
         }
 	}
 	

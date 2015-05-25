@@ -181,7 +181,7 @@ public class Bandit extends Character{
 	{
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(20/PPM);
-		bodyMembers.add(new BodyMember(this, world, circleShape, "banditHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
+		
 		
 		PolygonShape polygonShape = new PolygonShape();
 		polygonShape.setAsBox(15/PPM, 25/PPM);
@@ -190,20 +190,23 @@ public class Bandit extends Character{
 		
 		bodyMembers.add(torso);
 		
+		
+		bodyMembers.add(new BodyMember(this, world, circleShape, "banditHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0,0), new Vector2(0, 1)));
+		
 		polygonShape.setAsBox(5/PPM, 10/PPM);
 		
 		float top = 5/PPM;
 		float center = 0;
 		float bottom = -5/PPM;
 		
-		BodyMember rightLeg = new BodyMember(this, world, polygonShape, "banditLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(0.1f, -12/PPM));
-		BodyMember leftLeg = new BodyMember(this, world, polygonShape, "banditLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(-0.1f, -12/PPM));
-		BodyMember rightFoot = new BodyMember(this, world, polygonShape, "banditFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0, top), new Vector2(0, bottom));
-		BodyMember leftFoot  = new BodyMember(this, world, polygonShape, "banditFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0, top), new Vector2(0, bottom));
-		BodyMember rightArm = new BodyMember(this, world, polygonShape, "banditArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(0.1f, center));
-		BodyMember leftArm  = new BodyMember(this, world, polygonShape, "banditArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, top), new Vector2(-0.1f, center));
-		BodyMember rightHand = new BodyMember(this, world, polygonShape, "banditHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0, top), new Vector2(0, bottom));
-		BodyMember leftHand  = new BodyMember(this, world, polygonShape, "banditHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0, top), new Vector2(0, bottom));
+		BodyMember rightLeg = new BodyMember(this, world, polygonShape, "banditLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, 1), new Vector2(1, -1));
+		BodyMember leftLeg = new BodyMember(this, world, polygonShape, "banditLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, 1), new Vector2(-1, -1));
+		BodyMember rightFoot = new BodyMember(this, world, polygonShape, "banditFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0, 1), new Vector2(0, -1));
+		BodyMember leftFoot  = new BodyMember(this, world, polygonShape, "banditFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0, 1), new Vector2(0, -1));
+		BodyMember rightArm = new BodyMember(this, world, polygonShape, "banditArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, 1), new Vector2(1, 0));
+		BodyMember leftArm  = new BodyMember(this, world, polygonShape, "banditArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0, 1), new Vector2(-1, 0));
+		BodyMember rightHand = new BodyMember(this, world, polygonShape, "banditHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0, 1), new Vector2(0, -1));
+		BodyMember leftHand  = new BodyMember(this, world, polygonShape, "banditHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0, 1), new Vector2(0, -1));
 		
 		bodyMembers.add(rightLeg);
 		bodyMembers.add(leftLeg);

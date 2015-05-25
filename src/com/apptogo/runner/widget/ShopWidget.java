@@ -34,8 +34,8 @@ public class ShopWidget extends Widget
 				
 		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.MENU );
 		
-		okButton = new Button(skin, "yesButton");
-		okButton.setPosition(270, 760 - 50.0f);
+		okButton = new Button(skin, "buyButton");
+		okButton.setPosition(250, 760 - 50.0f);
 		
 		label = new Label("", skin, "dialogLabel");
 		label.setWrap(true);

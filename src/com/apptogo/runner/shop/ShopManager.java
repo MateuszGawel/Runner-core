@@ -33,12 +33,12 @@ public class ShopManager
 	{
 		items = new Array<ShopItem>();
 
-		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "item", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "item", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "item", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.LIFT, "item", "LIFT", "Straight to the sky!", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "item", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "item", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "shop_arrow", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "shop_bomb", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "shop_arrow", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.LIFT, "shop_bomb", "LIFT", "Straight to the sky!", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "shop_arrow", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  ); 
+		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "shop_bomb", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
 		
 		
 		return items;

@@ -14,7 +14,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
@@ -30,15 +32,31 @@ public class BodyMember extends Actor
 	
 	boolean applyForce = true;
 		
-	public BodyMember(Character player, World world, String path, Shape shape)
+	public BodyMember(Character player, World world, String path, Shape shapes)
 	{
 		this.player = player;
+		
+		Shape shape = null;
+		
+		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path);
+		
+		if( path.toLowerCase().contains("head") )
+		{
+			shape = new CircleShape();
+			((CircleShape)shape).setRadius( (Math.min(this.currentFrame.getRegionWidth(), this.currentFrame.getRegionHeight())/2.0f) /PPM);
+		}
+		else
+		{
+			shape = new PolygonShape();
+			((PolygonShape)shape).setAsBox( (this.currentFrame.getRegionWidth()/2.0f)/PPM, (this.currentFrame.getRegionHeight()/2.0f)/PPM);
+		}
 		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 				
 		UserData userData = new UserData("bodyMember");
 		userData.bodyWidth = Box2DVars.getShapeWidth(shape);
+		userData.bodyHeight = Box2DVars.getShapeHeight(shape);
 		
 		FixtureDef fixtureDef;
 		fixtureDef = Materials.bodyMemberBody;
@@ -49,7 +67,6 @@ public class BodyMember extends Actor
 		body.createFixture(fixtureDef).setUserData( userData );
 		body.setUserData( userData );
 		
-		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path);
 		body.setTransform(-100, 0, 0);
 	}
 	
@@ -61,10 +78,16 @@ public class BodyMember extends Actor
 		jointDef.bodyA = body;
 		jointDef.bodyB = jointBody;
 		
+		anchorA.x *= ((UserData)this.body.getUserData()).bodyWidth / 2.0f;
+		anchorB.x *= ((UserData)jointBody.getUserData()).bodyWidth / 2.0f;
+		
+		anchorA.y *= ((UserData)this.body.getUserData()).bodyHeight / 2.0f;
+		anchorB.y *= ((UserData)this.body.getUserData()).bodyHeight / 2.0f;
+		
 		jointDef.localAnchorA.set( anchorA );
 		jointDef.localAnchorB.set( anchorB );
 		
-		jointDef.length = 0;
+		jointDef.length = 0.01f;
 		
 		world.createJoint(jointDef);
 		
@@ -96,10 +119,10 @@ public class BodyMember extends Actor
     {
     	body.setTransform(player.getX() + offsetX, player.getY() + offsetY + 1.5f, angle);
     	
-    	if(applyForce)
-    	{
+    	//if(applyForce)
+    	//{
 	        body.applyForce(90, 45, 0, 0, true); //random.nextInt(20)-10/PPM, random.nextInt(20)-10/PPM, true);
-    	}
+    	//}
     	
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
     }
