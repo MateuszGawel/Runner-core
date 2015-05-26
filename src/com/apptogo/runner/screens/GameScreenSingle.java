@@ -56,9 +56,9 @@ public class GameScreenSingle extends GameScreen
 			}
 		});
 		
-		//createFinishWidget();
+		createFinishWidget();
 		
-		//gameGuiStage.addActor( finishWidget.actor() );
+		gameGuiStage.addActor( finishWidget.actor() );
 	}
 	
 	private void createFinishWidget()

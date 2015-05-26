@@ -96,7 +96,7 @@ public class Widget
 		this.window = new Group();
 		this.window.setTransform(false);
 		
-		blackOut = new Image( ResourcesManager.getInstance().getAtlasRegion("widgetBlack") );
+		blackOut = new Image( ResourcesManager.getInstance().getAtlasRegion("blackNonTransparent") );
 		blackOut.setSize(4096.0f, 4096.0f);
 		blackOut.setPosition( -2048.0f, -2048.0f);
 		
@@ -115,22 +115,20 @@ public class Widget
 			widgetBackground.setPosition(x, y);
 		}
 		
-		closeWidget = new Image( ResourcesManager.getInstance().getAtlasRegion("closeWidget") );
-		closeWidget.setPosition( x + width - 100.0f, y + height - 100.0f);
-		closeWidget.addListener( hideWidgetListener );
-		
-		if( !showCloseButton )
+		if( showCloseButton )
 		{
-			closeWidget.setVisible(false);
+			closeWidget = new Image( ResourcesManager.getInstance().getAtlasRegion("closeWidget") );
+			closeWidget.setPosition( x + width - 100.0f, y + height - 100.0f);
+			closeWidget.addListener( hideWidgetListener );
+			
+			this.window.addActor(closeWidget);
 		}
 		
 		if(widgetBackground != null)
 		{
 			this.window.addActor(widgetBackground);
 		}
-		
-		this.window.addActor(closeWidget);
-		
+				
 		if( this.fadeInType == WidgetFadingType.ALPHA_ANIMATION || this.fadeInType == WidgetFadingType.NONE)
 		{
 			window.setVisible(false);
