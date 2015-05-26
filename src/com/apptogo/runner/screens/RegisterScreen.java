@@ -2,13 +2,18 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.ScreenType;
+import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.widget.Widget;
+import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
@@ -16,13 +21,13 @@ public class RegisterScreen extends BaseScreen
 {		
 	Button backButton;
 	
+	private Widget registerWidget;
+	
 	Label notLoggedLabel;
-	Label informationLabel;
-	Label additionalInformationLabel;
 	
 	Label nameLabel;
 	Label passwordLabel;
-	Label submitButton;
+	TextButton submitButton;
 	
 	TextField nameTextField;
 	TextField passwordTextField;
@@ -33,7 +38,9 @@ public class RegisterScreen extends BaseScreen
 	}
 	
 	public void prepare() 
-	{		
+	{
+		setBackground("mainMenuScreenBackground");
+		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
         backButton.addListener(new ClickListener() {
@@ -43,30 +50,27 @@ public class RegisterScreen extends BaseScreen
             }
          });
         
-        notLoggedLabel = new Label( getLangString("youreNotLoggedIn"), skin, "default");
-    	setCenterPosition(notLoggedLabel, 240.0f);
+        registerWidget = new Widget(Align.center, -360.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
+        registerWidget.toggleWidget();
         
-        informationLabel = new Label( getLangString("giveYourAccountInformations"), skin, "default");
-        setCenterPosition(informationLabel, 170.0f);
+        notLoggedLabel = new Label( "LOGIN / CREATE ACCOUNT", skin, "coinLabelBig");
+    	setCenterPosition(notLoggedLabel, 100.0f);
+    	
+        nameLabel = new Label( getLangString("name") + ":", skin, "coinLabel");
+        nameLabel.setPosition( -120.0f - nameLabel.getWidth(), -10f);
         
-        additionalInformationLabel = new Label( getLangString("accountWillBeCreatedIfItIsNot"), skin, "default");
-        setCenterPosition(additionalInformationLabel, 120.0f);
-        
-        nameLabel = new Label( getLangString("name") + ":", skin, "default");
-        nameLabel.setPosition( -220.0f - nameLabel.getWidth(), -25.0f);
-        
-        passwordLabel = new Label( getLangString("password") + ":", skin, "default");
-        passwordLabel.setPosition( -220.0f - passwordLabel.getWidth(), -125.0f);
+        passwordLabel = new Label( getLangString("password") + ":", skin, "coinLabel");
+        passwordLabel.setPosition( -120.0f - passwordLabel.getWidth(), -110.0f);
         
 		nameTextField = new TextField("", skin, "default");
-		nameTextField.setSize(510f, 50f);
-		nameTextField.setPosition(-200.0f, -20.0f);
+		nameTextField.setSize(410f, 50f);
+		nameTextField.setPosition(-100.0f, -5.0f);
 		nameTextField.setOnlyFontChars(true);
 		nameTextField.setMaxLength(18);
 		
 		passwordTextField = new TextField("", skin, "default");
-		passwordTextField.setSize(510f, 50f);
-		passwordTextField.setPosition(-200.0f, -120.0f);
+		passwordTextField.setSize(410f, 50f);
+		passwordTextField.setPosition(-100.0f, -105.0f);
 		passwordTextField.setOnlyFontChars(true);
 		passwordTextField.setMaxLength(18);
 		passwordTextField.setPasswordCharacter('*');
@@ -75,8 +79,9 @@ public class RegisterScreen extends BaseScreen
 		nameTextField.getStyle().background.setLeftWidth( 10.0f );
 		passwordTextField.getStyle().background.setLeftWidth( 10.0f );
 		
-		submitButton = new Label( getLangString("login"), skin, "default");
-		submitButton.setPosition( -(submitButton.getWidth() / 2.0f), -300.0f);
+		submitButton = new TextButton( getLangString("login"), skin, "default");
+		submitButton.setSize(220, 120);
+		setCenterPosition(submitButton, -280);
 		submitButton.addListener(new ClickListener(){
 			
 			public void clicked(InputEvent event, float x, float y) 
@@ -94,9 +99,12 @@ public class RegisterScreen extends BaseScreen
 		});
 		
 		addToScreen(backButton);
+		
+		addToScreen(registerWidget.actor());
+		
 		addToScreen(notLoggedLabel);
-		addToScreen(informationLabel);
-		addToScreen(additionalInformationLabel);
+		//addToScreen(informationLabel);
+		//addToScreen(additionalInformationLabel);
 		addToScreen(nameLabel);
 		addToScreen(passwordLabel);
 		addToScreen(nameTextField);

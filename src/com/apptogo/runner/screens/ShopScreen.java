@@ -111,7 +111,7 @@ public class ShopScreen extends BaseScreen
         
         shopWidget.addActorToTab(container, 1);
         
-        shopWidget.toggleWidget(); 
+        shopWidget.toggleWidget();
 	}
 	
 	boolean backgr = true;

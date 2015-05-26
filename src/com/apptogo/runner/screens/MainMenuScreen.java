@@ -131,10 +131,14 @@ public class MainMenuScreen extends BaseScreen
 		
 		chainsDecoration = createImage("chainsDecoration", 100, -290);
 
-		logoImage = createImage("logoMenu", -387.0f, 150.0f);
+		logoImage = createImage("logoMenu", 0, 0);
+		logoImage.getColor().a = 0.8f;
+		setCenterPosition(logoImage, 150f);
 		
 		languageChangeDialog = new DialogWidget("", null, null);
-              
+        
+		addToScreen(logoImage);
+		
 		addToScreen(settingsButton);
 		addToScreen(newContent);
 		
@@ -146,7 +150,6 @@ public class MainMenuScreen extends BaseScreen
         addToScreen(joinRandomRoomButton);
         addToScreen(multiplayerButton);
         addToScreen(chainsDecoration);
-        addToScreen(logoImage);
         
         addToScreen(settingsWidget.actor());
         //addToScreen(languageChangeDialog.actor()); 
