@@ -73,24 +73,26 @@ public class ShopScreen extends BaseScreen
         createShopWidget();
         
         coinAnimation = new Animation("coin", 16, 0.03f, CharacterAnimationState.IDLE, true, true); // CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
-        coinAnimation.setPosition(315, 328);
+        coinAnimation.setPosition(315, 333);
         
         coinLabel = new Label(String.valueOf(player.coins), skin, "coinLabel");
         coinLabel.setPosition(350, 320);
         
         
         coinCounterEffectActor = new ParticleEffectActor("losecoins.p", (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
-		coinCounterEffectActor.setPosition(coinLabel.getX() -20, 330);
+		coinCounterEffectActor.setPosition(coinLabel.getX() -25, 334);
 		
 		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
 		        
         addToScreen( shopWidget.actor() );
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
+        
+        addToScreen( coinCounterEffectActor );
+        
         addToScreen(coinLabel);
         addToScreen(coinAnimation);
         
-        addToScreen( coinCounterEffectActor );
 		addToScreen( starExplodeEffectActor );
 	}
 	
