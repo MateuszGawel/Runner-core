@@ -217,20 +217,14 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         table.setSize(640.0f, 320.0f);
         table.setPosition(-320.0f, -300.0f);
         
-        table.add().width(32 * 02).height(32 * 02).center().top();
-        table.add().width(32 * 18).height(32 * 02).center().top().colspan(2);
+        Label playerName = new Label(player.getName(), skin, "coinLabel");
         
+        table.add(playerName).width(32 * 20).height(32 * 02).colspan(2).pad(0, 0, 32, 0);
+                
         table.row();
-        table.add().width(32 * 20).height(32 * 01).colspan(3);
-        
-        table.row();
-        table.add().width(32 * 02).height(32 * 06).center().top();
-        table.add().width(32 * 02).height(32 * 06).center().top();
-        table.add().width(32 * 16).height(32 * 06).center().top();
-        
-        table.row();
-        table.add().width(32 * 04).height(32 * 01).center().top().colspan(2);
-        table.add().width(32 * 16).height(32 * 01).center().top();
+        table.add().width(50).height(50).pad(21,7,21,7);
+        table.add().width(16*32).height(50).pad(21,0,21,0);
+
 		
 		profileWidget.addActor(table);
 			
