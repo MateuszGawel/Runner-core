@@ -106,7 +106,7 @@ public class SplashScreen extends BaseScreen
 		setCenterPosition(groupLogo, -200);
 				
 		groupLetter = new Animation("d", 16, 0.03f, CharacterAnimationState.RUNNING, true, false);
-		groupLetter.setPosition(-370, -110);
+		groupLetter.setPosition(-420, -330);
 		
 		dashAndSmashLogo.addActor(groupLogo);
 		dashAndSmashLogo.addActor(groupLetter);

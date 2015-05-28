@@ -3,7 +3,7 @@ package com.apptogo.runner.screens;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.apptogo.runner.animation.CharacterAnimation;
+import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.appwarp.WarpListener;
@@ -187,7 +187,8 @@ public class WaitingRoomScreen extends BaseScreen implements WarpListener
 	{
 		if( currentPlayersCount < 4 )
 		{
-			CharacterAnimation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y, true);
+			Animation playerAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), true);
+			playerAnimation.setPosition(playerAnimationPosition.get(currentPlayersCount).x, playerAnimationPosition.get(currentPlayersCount).y);
 			
 			Label playerNameLabel = new Label(player.getName(), skin, "default");
 			playerNameLabel.setPosition(playerAnimationPosition.get(currentPlayersCount).x - (playerNameLabel.getWidth() / 2.0f) + 100.0f, playerAnimationPosition.get(currentPlayersCount).y - 50.0f);

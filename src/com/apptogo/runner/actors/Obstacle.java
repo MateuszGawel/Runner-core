@@ -324,10 +324,16 @@ public class Obstacle extends Actor{
 			float frameWidth = currentFrame.getRegionWidth();
 			float frameHeight = currentFrame.getRegionHeight();
 			
+			float frameOffsetX = (((AtlasRegion)currentFrame).offsetX);
+			float frameOffsetY = (((AtlasRegion)currentFrame).offsetY);
+			
 			if( isGameObstacle )
 			{
 				frameWidth /= PPM;
 				frameHeight /= PPM;
+				
+				frameOffsetX /= PPM;
+				frameOffsetY /= PPM;
 			}
 
 			if(scaleFrames)
@@ -337,8 +343,8 @@ public class Obstacle extends Actor{
 			}
 			
 			batch.draw(currentFrame, 
-					   getX() + ( (((AtlasRegion)currentFrame).offsetX) / PPM ), 
-					   getY() + ( (((AtlasRegion)currentFrame).offsetY) / PPM ), 
+					   getX() + frameOffsetX, 
+					   getY() + frameOffsetY, 
 					   getOriginX(), 
 					   getOriginY(), 
 					   frameWidth,

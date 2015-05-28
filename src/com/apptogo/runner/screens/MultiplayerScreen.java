@@ -8,6 +8,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
+import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Contact;
@@ -62,6 +63,8 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
     
 	private Animation currentCharacterAnimation;
 	private Animation shopButtonAnimation;
+	
+	Image ground;
 	    
 	public MultiplayerScreen(Runner runner)
 	{
@@ -199,39 +202,100 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		handleInput();
 	}
 		
+	private void refreshCurrentCharacterAnimation()
+	{
+		if(currentCharacterAnimation != null) currentCharacterAnimation.remove();
+		if(ground != null) ground.remove();
+		
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), false);
+		currentCharacterAnimation.setPosition(-240, -225);
+		currentCharacterAnimation.setVisible(true);
+        
+		ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -200.0f, -260.0f);
+		ground.setWidth(128.0f);
+		
+		profileWidget.addActor(ground);
+        profileWidget.addActor(currentCharacterAnimation);
+	}
+	
 	private void createProfileWidget()
 	{
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
         profileWidget.showWidget();     
         		
-		currentCharacterAnimation = new Animation("alien_idle", 10, 0.03f, CharacterAnimationState.IDLE, true, true); // CharacterType.convertToCharacterAnimation(player.getCharacterType(), -340.0f, -220.0f, true);
-		currentCharacterAnimation.setPosition(0, 0);
-		currentCharacterAnimation.setVisible(true);
-        
-		Image ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -320.0f, -260.0f);
-		ground.setWidth(128.0f);		        
+			        
 		
         Table table = new Table();
-        table.debug();
+        //table.debug();
         
-        table.setSize(640.0f, 320.0f);
-        table.setPosition(-320.0f, -300.0f);
+        table.setSize(680.0f, 334.0f);
+        table.setPosition(-340.0f, -300.0f);
         
         Label playerName = new Label(player.getName(), skin, "coinLabel");
         
-        table.add(playerName).width(32 * 20).height(32 * 02).colspan(2).pad(0, 0, 32, 0);
-                
+        table.add(playerName).width(32 * 20).height(32 * 02).colspan(2).pad(0, 40, 20, 0);
+        
+        final Image alienHead = new Image( ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead") );
+        final Image archerHead = new Image( ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead") );
+        final Image banditHead = new Image( ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead") );
+        
+        alienHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
+			player.setCharacterType(CharacterType.ALIEN);
+			player.save();
+			refreshCurrentCharacterAnimation();
+			
+			alienHead.getColor().a = 1f;
+			archerHead.getColor().a = 0.7f;
+			banditHead.getColor().a = 0.7f;
+        }});
+        
+        
+        archerHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
+			player.setCharacterType(CharacterType.ARCHER);
+			player.save();
+			refreshCurrentCharacterAnimation();
+
+			alienHead.getColor().a = 0.7f;
+			archerHead.getColor().a = 1f;
+			banditHead.getColor().a = 0.7f;
+        }});
+        
+        
+        
+        banditHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
+			player.setCharacterType(CharacterType.BANDIT);
+			player.save();
+			refreshCurrentCharacterAnimation();
+			
+			alienHead.getColor().a = 0.7f;
+			archerHead.getColor().a = 0.7f;
+			banditHead.getColor().a = 1f;
+        }});
+        
+        int size = 70;
+        
+        alienHead.setSize(size, size);
+        archerHead.setSize(size, size);
+        banditHead.setSize(size, size);
+        
         table.row();
-        table.add().width(50).height(50).pad(21,7,21,7);
-        table.add().width(16*32).height(50).pad(21,0,21,0);
+        table.add(alienHead).width(size).height(size).pad(5,7,5,7);
+        table.add().width(16*32).height(size).pad(5,40,5,0);
+        
+        table.row();
+        table.add(archerHead).width(size).height(size).pad(5,7,5,7);
+        table.add().width(16*32).height(size).pad(5,40,5,0);
+        
+        table.row();
+        table.add(banditHead).width(size).height(size).pad(5,7,5,7);
+        table.add().width(16*32).height(size).pad(5,40,5,0);
 
 		
 		profileWidget.addActor(table);
-			
-        profileWidget.addActor(ground);
-        profileWidget.addActor(currentCharacterAnimation);
-        
+		        
         profileWidget.showWidget();
+        
+        refreshCurrentCharacterAnimation();
 	}
 	
 	private void createFriendsWidget()
@@ -316,7 +380,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		rankWidget.toggleWidget(); 
         
         Table table = new Table();
-        table.debug();
+        //table.debug();
         
         table.setSize(640.0f, 320.0f);
         table.setPosition(-320.0f, -300.0f);

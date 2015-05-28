@@ -190,10 +190,7 @@ public class ResourcesManager
 		menuMeta.addTextureAtlas( "gfx/menu/widgetAtlas.pack" );
 		menuMeta.addTextureAtlas( "gfx/menu/menuAtlas.pack", true );
 		menuMeta.setSkinFile("gfx/menu/menuAtlas.json");	
-		
-		//wywalic!!
-		menuMeta.addTextureAtlas("gfx/game/characters/guiAtlas.pack");
-								
+										
 		screenMetaArray.add(menuMeta);
 		
 		//ASSETS FOR GAME

@@ -1,6 +1,7 @@
 package com.apptogo.runner.enums;
 
 import com.apptogo.runner.actors.Alien;
+import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.actors.Archer;
 import com.apptogo.runner.actors.Bandit;
 import com.apptogo.runner.actors.Character;
@@ -105,19 +106,40 @@ public enum CharacterType
 		return null;
 	}
 	
-	static public CharacterAnimation convertToCharacterAnimation(CharacterType characterType, float x, float y, boolean running)
+	static public Animation convertToCharacterAnimation(CharacterType characterType, boolean running)
 	{
 		if( characterType == BANDIT )
 		{
-			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
+			if(running)
+			{
+				return new Animation("bandit_run", 18, 0.03f, CharacterAnimationState.IDLE, true, true);
+			}
+			else
+			{
+				return new Animation("bandit_idle", 22, 0.06f, CharacterAnimationState.IDLE, true, true);
+			}
 		}
 		else if( characterType == ARCHER )
 		{
-			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
+			if(running)
+			{
+				return new Animation("archer_run", 18, 0.03f, CharacterAnimationState.IDLE, true, true);
+			}
+			else
+			{
+				return new Animation("archer_idle", 21, 0.06f, CharacterAnimationState.IDLE, true, true);
+			}
 		}
 		else if( characterType == ALIEN )
 		{
-			return new CharacterAnimation("gfx/game/characters/characters.pack", x, y, running);
+			if(running)
+			{
+				return new Animation("alien_run", 18, 0.03f, CharacterAnimationState.IDLE, true, true);
+			}
+			else
+			{
+				return new Animation("alien_idle", 21, 0.06f, CharacterAnimationState.IDLE, true, true);
+			}
 		}
 
 		return null;
