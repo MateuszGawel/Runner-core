@@ -208,10 +208,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		if(ground != null) ground.remove();
 		
 		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), false);
-		currentCharacterAnimation.setPosition(-240, -225);
+		currentCharacterAnimation.setPosition(-200, -225);
 		currentCharacterAnimation.setVisible(true);
         
-		ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -200.0f, -260.0f);
+		ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -170.0f, -260.0f);
 		ground.setWidth(128.0f);
 		
 		profileWidget.addActor(ground);
@@ -220,6 +220,63 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	
 	private void createProfileWidget()
 	{
+		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
+		profileWidget.showWidget();
+		
+		Table t = new Table();
+		t.setSize(680, 300);
+		setCenterPosition(t, -285);
+		
+		//t.debug();
+		
+		final Image alienHead = new Image( ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead") );
+        final Image archerHead = new Image( ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead") );
+        final Image banditHead = new Image( ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead") );
+		
+		Table t2 = new Table();
+		t2.setSize(140, 300);
+		//t2.debug();
+		
+		t2.add(alienHead).size(95).pad(0, 0, 0, 45);
+		t2.row();
+		t2.add(archerHead).size(95).pad(7, 45, 7, 0);
+		t2.row();
+		t2.add(banditHead).size(95).pad(0, 0, 0, 45);
+		
+		Table t3 = new Table();
+		t3.setSize(440, 300);
+		//t3.debug();
+		
+		t3.add( new Label( player.getName(), skin, "coinLabelBig" ) ).width(440).height(40).colspan(3);
+		t3.row();
+		t3.add().width(440).height(20).colspan(3);
+		t3.row();
+		t3.add().width(140).height(60).pad(30,0,0,0);
+		t3.add( new Label( "Total:", skin, "medium") ).width(140).height(60).pad(30,0,0,0);
+		t3.add( new Label( "13'25\"", skin, "medium") ).width(160).height(40).pad(50,0,0,0);
+		t3.row();
+		t3.add().width(140).height(60);
+		t3.add( new Label( "Wins:", skin, "medium") ).width(140).height(60);
+		t3.add( new Label( "39", skin, "medium") ).width(160).height(40).pad(20,0,0,0);
+		t3.row();
+		t3.add().width(140).height(60).pad(0,0,30,0);
+		t3.add( new Label( "Stars:", skin, "medium") ).width(140).height(60).pad(0,0,30,0);
+		t3.add( new Label( "35 / 60", skin, "medium") ).width(160).height(40).pad(20,0,30,0);
+		
+		t.add(t2).width(140).height(300);
+		t.add().width(100).height(300);
+		t.add(t3).width(440).height(300);
+		
+		
+		profileWidget.addActor(t);
+		
+		refreshCurrentCharacterAnimation();
+		/*
+		
+		
+		
+		
+		
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
         profileWidget.showWidget();     
         		
@@ -238,7 +295,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         final Image alienHead = new Image( ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead") );
         final Image archerHead = new Image( ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead") );
         final Image banditHead = new Image( ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead") );
-        
+        */
         alienHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
 			player.setCharacterType(CharacterType.ALIEN);
 			player.save();
@@ -271,7 +328,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			archerHead.getColor().a = 0.7f;
 			banditHead.getColor().a = 1f;
         }});
-        
+        /*
         int size = 70;
         
         alienHead.setSize(size, size);
@@ -291,11 +348,11 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         table.add().width(16*32).height(size).pad(5,40,5,0);
 
 		
-		profileWidget.addActor(table);
+		//profileWidget.addActor(table);
 		        
         profileWidget.showWidget();
         
-        refreshCurrentCharacterAnimation();
+        refreshCurrentCharacterAnimation();*/
 	}
 	
 	private void createFriendsWidget()
