@@ -6,10 +6,13 @@ import com.apptogo.runner.logger.Logger;
 public class Animation extends Obstacle
 {
 	private int framesCount;
+	public String frameRegionName;
 	
 	public Animation(String frameRegionName, int framesCount, float frameDuration, Object animationState, boolean start, boolean loop)
 	{
 		super();
+		
+		this.frameRegionName = frameRegionName;
 		
 		isGameObstacle = false;
 		

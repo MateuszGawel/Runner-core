@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -64,7 +65,11 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 	private Animation currentCharacterAnimation;
 	private Animation shopButtonAnimation;
 	
+	private Actor changeAnimationActor;
+	
 	Image ground;
+	
+	Array<Image> headImages = new Array<Image>();
 	    
 	public MultiplayerScreen(Runner runner)
 	{
@@ -113,7 +118,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		moveToRankButton.addListener(moveToRankListener);
 		
 		confirmationDialog = new DialogWidget("", null, null);
-		
+				
 		createFriendsWidget();
 		createProfileWidget();
 		
@@ -160,7 +165,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		moveToMainLeftButton.setVisible(false);
 		moveToRankButton.setVisible(true);
-		
+				
 		group.setPosition(-Runner.SCREEN_WIDTH, 0.0f);
 		
 		shopButtonAnimation = new Animation("shopButton", 2, 1f, CharacterAnimationState.IDLE, true, true);
@@ -202,20 +207,50 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		handleInput();
 	}
 		
-	private void refreshCurrentCharacterAnimation()
+	private void refreshHeads()
+	{
+		for(Image head : headImages) 
+		{
+			if( (CharacterType)head.getUserObject() == player.getCharacterType() )
+			{
+				head.getColor().a = 1;
+			}
+			else
+			{
+				head.getColor().a = 0.3f;
+			}
+		}
+	}
+	
+	private void refreshCurrentCharacterAnimation(boolean running)
 	{
 		if(currentCharacterAnimation != null) currentCharacterAnimation.remove();
 		if(ground != null) ground.remove();
 		
-		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), false);
-		currentCharacterAnimation.setPosition(-200, -225);
+		currentCharacterAnimation = CharacterType.convertToCharacterAnimation(player.getCharacterType(), running);
+		
+		if( player.getCharacterType() == CharacterType.BANDIT)
+		{
+			currentCharacterAnimation.setPosition(-200, -225);
+		}
+		else if( player.getCharacterType() == CharacterType.ARCHER)
+		{
+			currentCharacterAnimation.setPosition(-208, -219);
+		}
+		else //ALIEN
+		{
+			currentCharacterAnimation.setPosition(-217, -222);
+		}
+		
 		currentCharacterAnimation.setVisible(true);
-        
+		
 		ground = createImage( CharacterType.convertToGroundPath( player.getCharacterType() ) , -170.0f, -260.0f);
 		ground.setWidth(128.0f);
 		
 		profileWidget.addActor(ground);
         profileWidget.addActor(currentCharacterAnimation);
+        
+        changeAnimationActor.toFront();
 	}
 	
 	private void createProfileWidget()
@@ -223,136 +258,85 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
 		profileWidget.showWidget();
 		
-		Table t = new Table();
-		t.setSize(680, 300);
-		setCenterPosition(t, -285);
-		
-		//t.debug();
-		
+		//heads
 		final Image alienHead = new Image( ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead") );
         final Image archerHead = new Image( ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead") );
         final Image banditHead = new Image( ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead") );
 		
-		Table t2 = new Table();
-		t2.setSize(140, 300);
-		//t2.debug();
-		
-		t2.add(alienHead).size(95).pad(0, 0, 0, 45);
-		t2.row();
-		t2.add(archerHead).size(95).pad(7, 45, 7, 0);
-		t2.row();
-		t2.add(banditHead).size(95).pad(0, 0, 0, 45);
-		
-		Table t3 = new Table();
-		t3.setSize(440, 300);
-		//t3.debug();
-		
-		t3.add( new Label( player.getName(), skin, "coinLabelBig" ) ).width(440).height(40).colspan(3);
-		t3.row();
-		t3.add().width(440).height(20).colspan(3);
-		t3.row();
-		t3.add().width(140).height(60).pad(30,0,0,0);
-		t3.add( new Label( "Total:", skin, "medium") ).width(140).height(60).pad(30,0,0,0);
-		t3.add( new Label( "13'25\"", skin, "medium") ).width(160).height(40).pad(50,0,0,0);
-		t3.row();
-		t3.add().width(140).height(60);
-		t3.add( new Label( "Wins:", skin, "medium") ).width(140).height(60);
-		t3.add( new Label( "39", skin, "medium") ).width(160).height(40).pad(20,0,0,0);
-		t3.row();
-		t3.add().width(140).height(60).pad(0,0,30,0);
-		t3.add( new Label( "Stars:", skin, "medium") ).width(140).height(60).pad(0,0,30,0);
-		t3.add( new Label( "35 / 60", skin, "medium") ).width(160).height(40).pad(20,0,30,0);
-		
-		t.add(t2).width(140).height(300);
-		t.add().width(100).height(300);
-		t.add(t3).width(440).height(300);
-		
-		
-		profileWidget.addActor(t);
-		
-		refreshCurrentCharacterAnimation();
-		/*
-		
-		
-		
-		
-		
-		profileWidget = new Widget(Align.center, -350.0f, 0.0f, WidgetType.MEDIUM, WidgetFadingType.NONE, false);
-        profileWidget.showWidget();     
-        		
-			        
-		
-        Table table = new Table();
-        //table.debug();
+        alienHead.setUserObject(CharacterType.ALIEN);
+        archerHead.setUserObject(CharacterType.ARCHER);
+        banditHead.setUserObject(CharacterType.BANDIT);
         
-        table.setSize(680.0f, 334.0f);
-        table.setPosition(-340.0f, -300.0f);
+        headImages = new Array<Image>( new Image[]{alienHead, archerHead, banditHead} );
         
-        Label playerName = new Label(player.getName(), skin, "coinLabel");
+        ClickListener headListener = new ClickListener() 
+        {
+        	public void clicked(InputEvent event, float x, float y)
+        	{
+				player.setCharacterType( (CharacterType)event.getTarget().getUserObject() );
+				player.save();
+				
+				refreshCurrentCharacterAnimation( !currentCharacterAnimation.frameRegionName.contains("idle") );
+				refreshHeads();	
+        	}
+        };
         
-        table.add(playerName).width(32 * 20).height(32 * 02).colspan(2).pad(0, 40, 20, 0);
-        
-        final Image alienHead = new Image( ResourcesManager.getInstance().getAtlasRegion("alienProgressBarHead") );
-        final Image archerHead = new Image( ResourcesManager.getInstance().getAtlasRegion("archerProgressBarHead") );
-        final Image banditHead = new Image( ResourcesManager.getInstance().getAtlasRegion("banditProgressBarHead") );
-        */
-        alienHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
-			player.setCharacterType(CharacterType.ALIEN);
-			player.save();
-			refreshCurrentCharacterAnimation();
-			
-			alienHead.getColor().a = 1f;
-			archerHead.getColor().a = 0.7f;
-			banditHead.getColor().a = 0.7f;
+        alienHead.addListener(headListener);
+        archerHead.addListener(headListener);
+        banditHead.addListener(headListener);
+                
+		Table headTable = new Table();
+		headTable.setSize(140, 300);
+		
+		headTable.add(alienHead).size(95).pad(0, 0, 0, 45);
+		headTable.row();
+		headTable.add(archerHead).size(95).pad(7, 45, 7, 0);
+		headTable.row();
+		headTable.add(banditHead).size(95).pad(0, 0, 0, 45);
+		
+		//summary
+		Table summaryTable = new Table();
+		summaryTable.setSize(440, 300);
+		
+		summaryTable.add( new Label( player.getName(), skin, "coinLabelBig" ) ).width(440).height(40).colspan(3);
+		summaryTable.row();
+		summaryTable.add().width(440).height(20).colspan(3);
+		summaryTable.row();
+		summaryTable.add().width(140).height(60).pad(30,0,0,0);
+		summaryTable.add( new Label( "Total:", skin, "medium") ).width(140).height(60).pad(30,0,0,0);
+		summaryTable.add( new Label( "13'25\"", skin, "coinLabel") ).width(160).height(40).pad(50,0,0,0);
+		summaryTable.row();
+		summaryTable.add().width(140).height(60);
+		summaryTable.add( new Label( "Wins:", skin, "medium") ).width(140).height(60);
+		summaryTable.add( new Label( "39", skin, "coinLabel") ).width(160).height(40).pad(20,0,0,0);
+		summaryTable.row();
+		summaryTable.add().width(140).height(60).pad(0,0,30,0);
+		summaryTable.add( new Label( "Stars:", skin, "medium") ).width(140).height(60).pad(0,0,30,0);
+		summaryTable.add( new Label( "35 / 60", skin, "coinLabel") ).width(160).height(40).pad(20,0,30,0);
+		
+		//main table
+		Table table = new Table();
+		table.setSize(680, 300);
+		setCenterPosition(table, -285);
+		
+		table.add(headTable).width(140).height(300);
+		table.add().width(100).height(300);
+		table.add(summaryTable).width(440).height(300);
+		
+		//changeHead actor
+		changeAnimationActor = new Actor();
+		changeAnimationActor.setSize(130, 200);
+		changeAnimationActor.setPosition(-170.0f, -260.0f);
+		
+		changeAnimationActor.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
+			refreshCurrentCharacterAnimation( currentCharacterAnimation.frameRegionName.contains("idle") );
         }});
         
-        
-        archerHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
-			player.setCharacterType(CharacterType.ARCHER);
-			player.save();
-			refreshCurrentCharacterAnimation();
-
-			alienHead.getColor().a = 0.7f;
-			archerHead.getColor().a = 1f;
-			banditHead.getColor().a = 0.7f;
-        }});
-        
-        
-        
-        banditHead.addListener(new ClickListener() {public void clicked(InputEvent event, float x, float y){ 
-			player.setCharacterType(CharacterType.BANDIT);
-			player.save();
-			refreshCurrentCharacterAnimation();
-			
-			alienHead.getColor().a = 0.7f;
-			archerHead.getColor().a = 0.7f;
-			banditHead.getColor().a = 1f;
-        }});
-        /*
-        int size = 70;
-        
-        alienHead.setSize(size, size);
-        archerHead.setSize(size, size);
-        banditHead.setSize(size, size);
-        
-        table.row();
-        table.add(alienHead).width(size).height(size).pad(5,7,5,7);
-        table.add().width(16*32).height(size).pad(5,40,5,0);
-        
-        table.row();
-        table.add(archerHead).width(size).height(size).pad(5,7,5,7);
-        table.add().width(16*32).height(size).pad(5,40,5,0);
-        
-        table.row();
-        table.add(banditHead).width(size).height(size).pad(5,7,5,7);
-        table.add().width(16*32).height(size).pad(5,40,5,0);
-
+		profileWidget.addActor(table);
+		profileWidget.addActor(changeAnimationActor);
 		
-		//profileWidget.addActor(table);
-		        
-        profileWidget.showWidget();
-        
-        refreshCurrentCharacterAnimation();*/
+		refreshHeads();
+		refreshCurrentCharacterAnimation( false );
 	}
 	
 	private void createFriendsWidget()

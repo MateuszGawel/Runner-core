@@ -8,7 +8,6 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
@@ -19,11 +18,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -293,6 +295,19 @@ public abstract class BaseScreen implements Screen
 	protected void setCenterPosition(Actor actor, float y)
 	{
 		actor.setPosition(-(actor.getWidth() / 2.0f), y);
+	}
+	
+	protected RepeatAction getBlinkAction(float maxAlpha, float minAlpha, float duration)
+	{
+		AlphaAction showAction = new AlphaAction();
+		showAction.setAlpha(maxAlpha);
+		showAction.setDuration(duration);
+		
+		AlphaAction hideAction = new AlphaAction();
+		hideAction.setAlpha(minAlpha);
+		hideAction.setDuration(duration);
+		
+		return Actions.forever( new SequenceAction(showAction, hideAction) );
 	}
 	
 	protected ScreenClass getScreenClass()

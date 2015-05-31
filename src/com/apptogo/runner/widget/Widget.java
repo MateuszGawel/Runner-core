@@ -97,6 +97,7 @@ public class Widget
 		this.window.setTransform(false);
 		
 		blackOut = new Image( ResourcesManager.getInstance().getAtlasRegion("blackNonTransparent") );
+		blackOut.getColor().a = 0.5f;
 		blackOut.setSize(4096.0f, 4096.0f);
 		blackOut.setPosition( -2048.0f, -2048.0f);
 		

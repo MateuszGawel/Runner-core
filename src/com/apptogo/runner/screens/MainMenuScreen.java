@@ -135,6 +135,8 @@ public class MainMenuScreen extends BaseScreen
 		logoImage.getColor().a = 0.8f;
 		setCenterPosition(logoImage, 150f);
 		
+		logoImage.addAction( this.getBlinkAction(1f, 0.5f, 2) );
+		
 		languageChangeDialog = new DialogWidget("", null, null);
         
 		addToScreen(logoImage);
@@ -325,26 +327,28 @@ public class MainMenuScreen extends BaseScreen
         Array<News> newsArray = NewsManager.getInstance().getNewsArray();
       
         Table newsfeedTable = new Table();
-       
+               
         for(News news: newsArray)
         {
         	Label date = new Label(news.date, skin, "default");
         	
-        	newsfeedTable.add(date).width(700.0f).left().pad(50, 0, 0, 0);
+        	newsfeedTable.add(date).width(670.0f).left().pad(50, 20, 0, 10);
         	newsfeedTable.row();
         	
         	Label topic = new Label(news.topic, skin, "default");
         	topic.setWrap(true);
         	
-        	newsfeedTable.add(topic).width(700.0f).left().pad(10, 0, 0, 0);
+        	newsfeedTable.add(topic).width(670.0f).left().pad(10, 20, 0, 10);
         	newsfeedTable.row();
         	
         	Label message = new Label(news.message, skin, "default");
         	message.setWrap(true);
         	
-        	newsfeedTable.add(message).width(700.0f).left().pad(20, 0, 0, 0);
+        	newsfeedTable.add(message).width(670.0f).left().pad(20, 20, 0, 10);
         	newsfeedTable.row();
         }    
+        
+        //newsfeedTable.debug();
                 
         Container<ScrollPane> newsFeedContainer = createScroll(newsfeedTable, 700.0f, 400.0f, true);
         newsFeedContainer.setPosition(-200.0f, 720.0f);
