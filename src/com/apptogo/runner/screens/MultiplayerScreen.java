@@ -293,24 +293,24 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		headTable.add(archerHead).size(95).pad(7, 45, 7, 0);
 		headTable.row();
 		headTable.add(banditHead).size(95).pad(0, 0, 0, 45);
-		
+
 		//summary
 		Table summaryTable = new Table();
-		summaryTable.setSize(440, 300);
-		
-		summaryTable.add( new Label( player.getName(), skin, "coinLabelBig" ) ).width(440).height(40).colspan(3);
+		summaryTable.setSize(465, 300);
+
+		summaryTable.add( new Label( /*player.getName()*/ "ANTONIO", skin, "coinLabelBig" ) ).width(465).height(40).colspan(3);
 		summaryTable.row();
-		summaryTable.add().width(440).height(20).colspan(3);
+		summaryTable.add().width(465).height(20).colspan(3);
 		summaryTable.row();
-		summaryTable.add().width(140).height(60).pad(30,0,0,0);
+		summaryTable.add().width(165).height(60).pad(30,0,0,0);
 		summaryTable.add( new Label( "Total:", skin, "medium") ).width(140).height(60).pad(30,0,0,0);
 		summaryTable.add( new Label( "13'25\"", skin, "coinLabel") ).width(160).height(40).pad(50,0,0,0);
 		summaryTable.row();
-		summaryTable.add().width(140).height(60);
+		summaryTable.add().width(165).height(60);
 		summaryTable.add( new Label( "Wins:", skin, "medium") ).width(140).height(60);
 		summaryTable.add( new Label( "39", skin, "coinLabel") ).width(160).height(40).pad(20,0,0,0);
 		summaryTable.row();
-		summaryTable.add().width(140).height(60).pad(0,0,30,0);
+		summaryTable.add().width(165).height(60).pad(0,0,30,0);
 		summaryTable.add( new Label( "Stars:", skin, "medium") ).width(140).height(60).pad(0,0,30,0);
 		summaryTable.add( new Label( "35 / 60", skin, "coinLabel") ).width(160).height(40).pad(20,0,30,0);
 		
@@ -318,10 +318,10 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		Table table = new Table();
 		table.setSize(680, 300);
 		setCenterPosition(table, -285);
-		
+
 		table.add(headTable).width(140).height(300);
-		table.add().width(100).height(300);
-		table.add(summaryTable).width(440).height(300);
+		table.add().width(75).height(300);
+		table.add(summaryTable).width(465).height(300);
 		
 		//changeHead actor
 		changeAnimationActor = new Actor();
@@ -401,7 +401,6 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		TextField searchTextField = new TextField("", skin, "default");
 		searchTextField.setSize(500.0f, 35.0f);
-		searchTextField.getStyle().fontColor = new Color(0,0,0,1);
 		setCenterPosition(searchTextField, 1090.0f);
 		searchTextField.setX( searchTextField.getX() - 95.0f );
 		searchTextField.setMaxLength(18);

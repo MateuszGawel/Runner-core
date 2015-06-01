@@ -3,11 +3,13 @@ package com.apptogo.runner.screens;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -63,6 +65,10 @@ public class RegisterScreen extends BaseScreen
         passwordLabel.setPosition( -120.0f - passwordLabel.getWidth(), -110.0f);
         
 		nameTextField = new TextField("", skin, "default");
+		
+		nameTextField.getStyle().background.setLeftWidth(10);
+		nameTextField.getStyle().background.setBottomHeight(10);
+		
 		nameTextField.setSize(410f, 50f);
 		nameTextField.setPosition(-100.0f, -5.0f);
 		nameTextField.setOnlyFontChars(true);
@@ -75,9 +81,6 @@ public class RegisterScreen extends BaseScreen
 		passwordTextField.setMaxLength(18);
 		passwordTextField.setPasswordCharacter('*');
 		passwordTextField.setPasswordMode(true);
-		
-		nameTextField.getStyle().background.setLeftWidth( 10.0f );
-		passwordTextField.getStyle().background.setLeftWidth( 10.0f );
 		
 		submitButton = new TextButton( getLangString("login"), skin, "default");
 		submitButton.setSize(220, 120);
