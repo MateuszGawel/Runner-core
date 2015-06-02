@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -49,6 +50,8 @@ public class ShopScreen extends BaseScreen
 	
 	ParticleEffectActor coinCounterEffectActor;
 	ParticleEffectActor starExplodeEffectActor;
+	
+	TextButton signboard;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -83,8 +86,15 @@ public class ShopScreen extends BaseScreen
 		coinCounterEffectActor.setPosition(coinLabel.getX() -25, 334);
 		
 		starExplodeEffectActor = new ParticleEffectActor("starGained.p", 1, 4, 1, 1, (TextureAtlas)ResourcesManager.getInstance().getResource(this, "gfx/menu/menuAtlas.pack"));
-		        
+		       
+		signboard = new TextButton("SHOP", skin, "signboard"); // createImage("signboard", 0, 0);
+		setCenterPosition(signboard, 175);
+		
+		
         addToScreen( shopWidget.actor() );
+        
+        addToScreen(signboard);
+        
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
         
