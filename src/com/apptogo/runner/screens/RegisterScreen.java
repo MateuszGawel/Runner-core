@@ -3,13 +3,13 @@ package com.apptogo.runner.screens;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,8 +25,6 @@ public class RegisterScreen extends BaseScreen
 	
 	private Widget registerWidget;
 	
-	Label notLoggedLabel;
-	
 	Label nameLabel;
 	Label passwordLabel;
 	TextButton submitButton;
@@ -36,6 +34,11 @@ public class RegisterScreen extends BaseScreen
 	
 	TextButton signboard;
 	
+	OrthographicCamera camera;
+	
+	boolean cameraFocused = false;
+	boolean focusCamera = false;
+	
 	public RegisterScreen(Runner runner)
 	{
 		super(runner);
@@ -44,6 +47,8 @@ public class RegisterScreen extends BaseScreen
 	public void prepare() 
 	{
 		setBackground("mainMenuScreenBackground");
+		
+		camera = (OrthographicCamera) this.menuStage.getCamera();
 		
 		backButton = new Button( skin, "back");
         backButton.setPosition( -580f, 240f );
@@ -56,15 +61,12 @@ public class RegisterScreen extends BaseScreen
         
         registerWidget = new Widget(Align.center, -360.0f, 0.0f, WidgetType.BLACKBIG, WidgetFadingType.NONE, false);
         registerWidget.toggleWidget();
-        
-        notLoggedLabel = new Label( "LOGIN / CREATE ACCOUNT", skin, "coinLabelBig");
-    	setCenterPosition(notLoggedLabel, 100.0f);
-    	
+            	
         nameLabel = new Label( getLangString("name") + ":", skin, "coinLabel");
-        nameLabel.setPosition( -120.0f - nameLabel.getWidth(), -10f);
+        nameLabel.setPosition( -120.0f - nameLabel.getWidth(), 60f);
         
         passwordLabel = new Label( getLangString("password") + ":", skin, "coinLabel");
-        passwordLabel.setPosition( -120.0f - passwordLabel.getWidth(), -110.0f);
+        passwordLabel.setPosition( -120.0f - passwordLabel.getWidth(), -50.0f);
         
 		nameTextField = new TextField("", skin, "default");
 		
@@ -72,21 +74,62 @@ public class RegisterScreen extends BaseScreen
 		nameTextField.getStyle().background.setBottomHeight(10);
 		
 		nameTextField.setSize(410f, 50f);
-		nameTextField.setPosition(-100.0f, -5.0f);
+		nameTextField.setPosition(-100.0f, 55.0f);
 		nameTextField.setOnlyFontChars(true);
 		nameTextField.setMaxLength(18);
 		
 		passwordTextField = new TextField("", skin, "default");
 		passwordTextField.setSize(410f, 50f);
-		passwordTextField.setPosition(-100.0f, -105.0f);
+		passwordTextField.setPosition(-100.0f, -45.0f);
 		passwordTextField.setOnlyFontChars(true);
 		passwordTextField.setMaxLength(18);
 		passwordTextField.setPasswordCharacter('*');
 		passwordTextField.setPasswordMode(true);
 		
+		ClickListener unfocusListener = new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				if(cameraFocused)
+				{
+					focusCamera = true;
+				}
+            }
+		};
+		
+		registerWidget.actor().addListener(unfocusListener);
+		background.addListener(unfocusListener);
+		nameLabel.addListener(unfocusListener);
+		passwordLabel.addListener(unfocusListener);
+		
+		
+		nameTextField.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				if(!cameraFocused)
+				{
+					focusCamera = true;
+				}
+            }
+		});
+		
+		passwordTextField.addListener(new ClickListener(){
+			
+			public void clicked(InputEvent event, float x, float y) 
+            {
+				if(!cameraFocused)
+				{
+					focusCamera = true;
+				}
+            }
+		});
+		
+		
+		
 		submitButton = new TextButton( getLangString("login"), skin, "default");
-		submitButton.setSize(220, 120);
-		setCenterPosition(submitButton, -280);
+		submitButton.setSize(220, 140);
+		setCenterPosition(submitButton, -240);
 		submitButton.addListener(new ClickListener(){
 			
 			public void clicked(InputEvent event, float x, float y) 
@@ -103,6 +146,9 @@ public class RegisterScreen extends BaseScreen
 			
 		});
 		
+		Label infoLabel = new Label("If you do not have account it will be created", skin, "default");
+		setCenterPosition(infoLabel, -300);
+		
 		signboard = new TextButton("REGISTER", skin, "signboard"); // createImage("signboard", 0, 0);
 		setCenterPosition(signboard, 175);
 		
@@ -112,9 +158,7 @@ public class RegisterScreen extends BaseScreen
 		
 		addToScreen(signboard);
 		
-		addToScreen(notLoggedLabel);
-		//addToScreen(informationLabel);
-		//addToScreen(additionalInformationLabel);
+		addToScreen(infoLabel);
 		addToScreen(nameLabel);
 		addToScreen(passwordLabel);
 		addToScreen(nameTextField);
@@ -150,13 +194,57 @@ public class RegisterScreen extends BaseScreen
 	public void step()
 	{
 		handleInput();
+		
+		if(focusCamera && !cameraFocused)
+		{
+			handleCamera(true);
+		}
+		else if(focusCamera && cameraFocused)
+		{
+			handleCamera(false);
+		}
+	}
+	
+	private void handleCamera(boolean focus)
+	{
+		Vector2 target;
+		float cameraViewWidth = this.camera.frustum.planePoints[1].x - this.camera.frustum.planePoints[0].x;
+		
+		if(focus)
+		{
+			target = new Vector2(0, -150);
+		}
+		else
+		{
+			target = new Vector2(0,0);
+		}
+		
+		if((camera.position.x != target.x || camera.position.y != target.y))
+		{
+			this.camera.position.x += (-camera.position.x + target.x ) * 0.1f;
+			this.camera.position.y += (-camera.position.y + target.y ) * 0.1f;
+		}
+		if(Math.abs(camera.position.x - target.x) < 0.2f && Math.abs(camera.position.y - target.y) < 0.2f)
+		{
+			cameraFocused = focus;
+			focusCamera = false;
+		}
+		
+		if(focus && cameraViewWidth > 900)
+		{
+			this.camera.zoom -= 0.02;
+		}
+		else if(!focus && cameraViewWidth < runner.SCREEN_WIDTH)
+		{
+			this.camera.zoom += 0.02;
+		}
 	}
 	
 	@Override
 	public void handleInput() 
 	{
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
-		{
+		{			
 			WarpController.getInstance().stopApp();
 			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 		}

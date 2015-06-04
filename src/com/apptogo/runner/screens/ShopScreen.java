@@ -2,12 +2,12 @@ package com.apptogo.runner.screens;
 
 import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.actors.ParticleEffectActor;
+import com.apptogo.runner.actors.SlotMachine;
 import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -106,6 +106,19 @@ public class ShopScreen extends BaseScreen
         addToScreen(coinAnimation);
         
 		addToScreen( starExplodeEffectActor );
+		
+		Image backMachine = createImage("blackNonTransparent", -464, 0);
+		backMachine.setSize(256, 384);
+		
+		addToScreen(backMachine);
+		
+		SlotMachine machine = new SlotMachine("slot", 6);
+		machine.setPosition(-400, 0);
+		
+		Image machineS = createImage("machineSlot", -464, 0);
+		
+		addToScreen(machine);
+		addToScreen(machineS);
 	}
 	
 	private void createShopWidget()
@@ -226,16 +239,7 @@ public class ShopScreen extends BaseScreen
 		{
             public void clicked(InputEvent event, float x, float y) 
             {            	
-            	float percent = (table.getHeight() - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y) / table.getHeight();
-            	Logger.log(this, container.getScrollY());
-            	Logger.log(this, container.getScrollY() - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y);
-            	Logger.log(this, "-------");
-            	//event.getTarget().getParent().debug();
-            	//container.setScrollPercentY(percent);
-            	
-            	container.scrollTo(0, event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y, 0, 0);
-            	
-            	//container.setScrollY( (table.getHeight() - container.getScrollY()) - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y );
+            	container.setScrollY( table.getHeight() - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,event.getTarget().getHeight()) ).y - 150 );
             	
             	descriptionWidget.setItem( item );
             	descriptionWidget.toggleWidget();
@@ -298,11 +302,10 @@ public class ShopScreen extends BaseScreen
 			}
 		}
 	}
-	
+
 	public void step()
 	{
 		handleInput();
-		
 		handleCountdown();
 	}
 	
