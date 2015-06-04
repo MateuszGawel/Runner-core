@@ -7,6 +7,7 @@ import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.shop.ShopItem;
 import com.apptogo.runner.shop.ShopManager;
@@ -23,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -52,6 +52,8 @@ public class ShopScreen extends BaseScreen
 	ParticleEffectActor starExplodeEffectActor;
 	
 	TextButton signboard;
+	
+	ScrollPane container;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -117,10 +119,10 @@ public class ShopScreen extends BaseScreen
                 
         fillTable();
                 
-        Container<ScrollPane> container = createScroll(table, 690.0f, 520.0f, true);
+        container = createScroll(table, 690.0f, 520.0f, true);
         //container.debug();
         container.setPosition(-340.0f, -310.0f);
-        
+                
         shopWidget.addActorToTab(container, 1);
         
         shopWidget.toggleWidget();
@@ -223,7 +225,18 @@ public class ShopScreen extends BaseScreen
 		ClickListener listener = new ClickListener() 
 		{
             public void clicked(InputEvent event, float x, float y) 
-            {
+            {            	
+            	float percent = (table.getHeight() - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y) / table.getHeight();
+            	Logger.log(this, container.getScrollY());
+            	Logger.log(this, container.getScrollY() - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y);
+            	Logger.log(this, "-------");
+            	//event.getTarget().getParent().debug();
+            	//container.setScrollPercentY(percent);
+            	
+            	container.scrollTo(0, event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y, 0, 0);
+            	
+            	//container.setScrollY( (table.getHeight() - container.getScrollY()) - event.getTarget().localToAscendantCoordinates(table, new Vector2(0,0) ).y );
+            	
             	descriptionWidget.setItem( item );
             	descriptionWidget.toggleWidget();
             	

@@ -388,7 +388,7 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 			contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,144,0,94);
 		}
 					
-		Container<ScrollPane> contactsContainer = createScroll(contactsScrollTable, 920.0f, 328.0f, true);
+		ScrollPane contactsContainer = createScroll(contactsScrollTable, 920.0f, 328.0f, true);
 		
 		contactsTable.row();
 		contactsTable.add(contactsContainer).colspan(4);

@@ -350,7 +350,7 @@ public class MainMenuScreen extends BaseScreen
         
         //newsfeedTable.debug();
                 
-        Container<ScrollPane> newsFeedContainer = createScroll(newsfeedTable, 700.0f, 400.0f, true);
+        ScrollPane newsFeedContainer = createScroll(newsfeedTable, 700.0f, 400.0f, true);
         newsFeedContainer.setPosition(-200.0f, 720.0f);
         
         settingsWidget.addActorToTab(newsfeed, 2);

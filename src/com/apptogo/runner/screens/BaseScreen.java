@@ -270,7 +270,7 @@ public abstract class BaseScreen implements Screen
 		return image;
 	}
 	
-	protected Container<ScrollPane> createScroll(Table table, float width, float height, boolean vertical)
+	protected ScrollPane createScroll(Table table, float width, float height, boolean vertical)
 	{
 		final ScrollPane scroller = new ScrollPane(table, skin);
 		
@@ -284,12 +284,9 @@ public abstract class BaseScreen implements Screen
 		}
 		
         scroller.setFadeScrollBars(false);
+        scroller.setSize(width, height);
         
-        Container<ScrollPane> container = new Container<ScrollPane>();
-        container.setSize(width, height);
-        container.setActor(scroller);
-        
-        return container;
+        return scroller;
 	}
 			
 	protected void setCenterPosition(Actor actor, float y)

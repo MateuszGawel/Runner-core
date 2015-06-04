@@ -34,6 +34,8 @@ public class RegisterScreen extends BaseScreen
 	TextField nameTextField;
 	TextField passwordTextField;
 	
+	TextButton signboard;
+	
 	public RegisterScreen(Runner runner)
 	{
 		super(runner);
@@ -101,9 +103,14 @@ public class RegisterScreen extends BaseScreen
 			
 		});
 		
+		signboard = new TextButton("REGISTER", skin, "signboard"); // createImage("signboard", 0, 0);
+		setCenterPosition(signboard, 175);
+		
 		addToScreen(backButton);
 		
 		addToScreen(registerWidget.actor());
+		
+		addToScreen(signboard);
 		
 		addToScreen(notLoggedLabel);
 		//addToScreen(informationLabel);
