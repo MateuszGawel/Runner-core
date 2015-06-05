@@ -4,22 +4,22 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.actors.Emoticon;
 import com.apptogo.runner.enums.CharacterType;
+import com.apptogo.runner.enums.EmoticonType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class WaitingRoomScreen extends BaseScreen
@@ -71,112 +71,56 @@ public class WaitingRoomScreen extends BaseScreen
         
         addToScreen(backButton);
         
-        int y = -300;
-        int margin = 75;
-        
-        Texture t1 = new Texture( Gdx.files.internal("gfx/e1.png") );
-        t1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        final Image e1 = new Image( t1 );
-        e1.setPosition(-32-64-64-margin-margin, y);
-        
-        e1.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	showCloud(player, e1);
-            }
-        });
-        
-        Texture t2 = new Texture( Gdx.files.internal("gfx/e2.png") );
-        t2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        final Image e2 = new Image( t2 );
-        e2.setPosition(-32-64-margin, y);
-               
-        e2.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	showCloud(player, e2);
-            }
-        });
-        
-        Texture t3 = new Texture( Gdx.files.internal("gfx/e3.png") );
-        t3.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        final Image e3 = new Image( t3 );
-        e3.setPosition(-32, y);
-        
-        e3.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	showCloud(player, e3);
-            }
-        });
-        
-        Texture t4 = new Texture( Gdx.files.internal("gfx/e4.png") );
-        t4.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        final Image e4 = new Image( t4 );
-        e4.setPosition(-32+64+margin, y);
-        
-        e4.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	showCloud(player, e4);
-            }
-        });
-        
-        Texture t5 = new Texture( Gdx.files.internal("gfx/e5.png") );
-        t5.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        final Image e5 = new Image( t5 );
-        e5.setPosition(-32+64+64+margin+margin, y);
-        
-        e5.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) 
-            {
-            	showCloud(player, e5);
-            }
-        });
-        
-        addToScreen(e1);
-        addToScreen(e2);
-        addToScreen(e3);
-        addToScreen(e4);
-        addToScreen(e5);
+        addToScreen(getButtons());
 	}
 	
-	private void showCloud(Player p, Image e)
+	public Group getButtons()
 	{
-		Group g = players.get(p);
+		Group buttons = new Group();
 		
-		for(Actor a : g.getChildren())
+		int count = EmoticonType.values().length;
+		float width = (new TextButton("", skin, "westWildCampaignButton")).getWidth();
+		
+		for(int i = 0; i < EmoticonType.values().length; i++)
 		{
-			if(a.getUserObject() == "cloud")
-			{	
-				//Image e = new Image(ee.getDrawable());
-				e.setPosition(g.getX() + a.getX() + a.getWidth() / 2.0f - e.getWidth() / 2.0f, g.getY() +  a.getY() + a.getHeight() / 2.0f - e.getHeight() / 2.0f);
-				e.toFront();
-				
-				a.clearActions();
-				a.getColor().a = 0;
-				
-				AlphaAction action1 = new AlphaAction();
-				action1.setDuration(0.5f);
-				action1.setAlpha(1);
-				
-				AlphaAction action2 = new AlphaAction();
-				action2.setDuration(2);
-				action2.setAlpha(1);
-				
-				AlphaAction action3 = new AlphaAction();
-				action3.setDuration(0.5f);
-				action3.setAlpha(0);
-
-				SequenceAction s = new SequenceAction(action1, action2, action3);
-				
-				a.addAction(s);
-				
-				break;
-			}
+			float x = -(count * width + (count-1) * 80)/2f + i * width + i * 80;
+			
+			EmoticonType emoticonType = EmoticonType.values()[i];
+			
+			final TextButton button = new TextButton("", skin, "westWildCampaignButton");
+			button.setPosition(x, -350);
+			
+			button.addListener(getEmoticonListener(emoticonType));
+			
+			final Image image = EmoticonType.convertToImage(emoticonType);
+			image.setPosition(x + (button.getWidth() - image.getWidth()) / 2f, -350 + (button.getHeight() - image.getHeight()) / 2f);
+			image.setTouchable(Touchable.disabled);
+			
+			buttons.addActor(button);
+			buttons.addActor(image);
 		}
+		
+		return buttons;
 	}
 	
+	private ClickListener getEmoticonListener(final EmoticonType emoticonType)
+	{
+		ClickListener listener = new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) 
+            {
+            	for(Actor actor : players.get(player).getChildren())
+            	{
+            		if(actor instanceof Emoticon)
+            		{
+            			((Emoticon) actor).show(emoticonType);
+            		}
+            	}
+            }
+        };
+		
+		return listener;
+	}
+		
 	private void refreshPlayers()
 	{
 		int counter = 0;
@@ -218,27 +162,18 @@ public class WaitingRoomScreen extends BaseScreen
 	        
 	        Label name = new Label(p.getName(), skin, "medium");
 	        name.setPosition(ground.getWidth() / 2.0f - name.getWidth() / 2.0f, -65);
-	        
-	        Texture t = new Texture( Gdx.files.internal("gfx/cloud.png") );
-	        t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-	        
-	        Image cloud = new Image( t );
-	        cloud.setPosition(ground.getWidth() / 2.0f - cloud.getWidth() / 2.0f, 200);
-	        cloud.getColor().a = 0;
-	        cloud.setUserObject("cloud");
+	        	        
+	        Emoticon emoticon = new Emoticon();
+	        emoticon.setPosition((ground.getWidth() - emoticon.getWidth()) / 2f, 220);
 	        
 	        group.addActor(ground);
 	        group.addActor(characterAnimation);
 	        group.addActor(name);
-	        group.addActor(cloud);
+	        group.addActor(emoticon);
 		}
 		else
 		{
-			Texture t = new Texture( Gdx.files.internal("gfx/none.png") );
-			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-			
-			Image none = new Image( t );
-			none.setPosition(15, 30);				
+			Image none = this.createImage("none", 15, 30);
 			
 			Label name = new Label("waiting", skin, "medium");
 	        name.setPosition(none.getWidth() / 2.0f - name.getWidth() / 2.0f + none.getX() / 2.0f, -65);

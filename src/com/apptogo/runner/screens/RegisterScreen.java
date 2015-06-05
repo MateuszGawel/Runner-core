@@ -125,8 +125,6 @@ public class RegisterScreen extends BaseScreen
             }
 		});
 		
-		
-		
 		submitButton = new TextButton( getLangString("login"), skin, "default");
 		submitButton.setSize(220, 140);
 		setCenterPosition(submitButton, -240);

@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 public class SlotMachine extends Group
 {
-	enum phase
+	enum SlotMachinePhase
 	{
 		GO,
 		LAST,
@@ -29,7 +30,9 @@ public class SlotMachine extends Group
 
 	Array<Float> speeds;
 	
-	phase p = phase.GO;
+	SlotMachinePhase phase = SlotMachinePhase.END;
+	
+	public String value = null;
 		
 	public SlotMachine(String frameRegionName, int framesCount)
 	{
@@ -48,6 +51,14 @@ public class SlotMachine extends Group
 			this.addActor(slots.peek());
 		}
 
+		width = slots.first().getWidth();
+		height = slots.first().getHeight();
+		
+		this.setSize(width, height * 3);
+	}
+	
+	void reset()
+	{
 		slots.shuffle();
 		
 		speeds = new Array<Float>();
@@ -57,17 +68,29 @@ public class SlotMachine extends Group
 			speeds.add( (float)Math.sin(i) );
 		}
 		
-		width = slots.first().getWidth();
-		height = slots.first().getHeight();
+		value = null;
 		
-		this.setSize(width, height * 3);
-		
-		MoveToAction action = new MoveToAction();
-		action.setPosition(0, height*2);
-		action.setDuration(speed);
-		
-		slots.first().addAction(action);
 		currentSlotIndex = 0;
+	}
+	
+	public void start(float delay)
+	{
+		if(phase == SlotMachinePhase.END)
+		{
+			reset();
+			
+			MoveToAction delayAction = new MoveToAction();
+			delayAction.setPosition(0, 0);
+			delayAction.setDuration(delay);
+			
+			MoveToAction action = new MoveToAction();
+			action.setPosition(0, height*2);
+			action.setDuration(speed);
+			
+			slots.first().addAction( new SequenceAction(delayAction, action) );
+			
+			phase = SlotMachinePhase.GO;
+		}
 	}
 	
 	@Override
@@ -75,7 +98,7 @@ public class SlotMachine extends Group
 	{
 		super.act(delta);
 		
-		if( this.p != phase.END )
+		if( this.phase != SlotMachinePhase.END )
 		{
 			if( slots.get(currentSlotIndex).getY() >= this.height )
 			{
@@ -91,11 +114,11 @@ public class SlotMachine extends Group
 					
 					MoveToAction action = new MoveToAction();
 					
-					if(this.p == phase.LAST)
+					if(this.phase == SlotMachinePhase.LAST)
 					{
 						action.setPosition(0, height);
 						
-						p = phase.END;
+						phase = SlotMachinePhase.END;
 					}
 					else
 					{
@@ -103,7 +126,7 @@ public class SlotMachine extends Group
 						
 						if(speeds.size == 2) //bo jeszcze jedna akcja do samej gory + jedna do polowy
 						{
-							this.p = phase.LAST;
+							this.phase = SlotMachinePhase.LAST;
 						}
 					}
 					
@@ -117,7 +140,7 @@ public class SlotMachine extends Group
 		{
 			for(Image slot : slots)
 			{
-				if( slot.getY() == this.height ) Logger.log(this, slot.getName() );
+				if( slot.getY() == this.height ) value = slot.getName();
 			}
 		}
 		

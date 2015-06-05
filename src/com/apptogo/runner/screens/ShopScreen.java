@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -54,6 +55,8 @@ public class ShopScreen extends BaseScreen
 	TextButton signboard;
 	
 	ScrollPane container;
+	
+	Group group;
 		
 	public ShopScreen(Runner runner)
 	{
@@ -93,10 +96,78 @@ public class ShopScreen extends BaseScreen
 		setCenterPosition(signboard, 175);
 		
 		
-        addToScreen( shopWidget.actor() );
+		Image backMachine = createImage("blackNonTransparent", 0, 0);
+		backMachine.setSize(700, 600);
+		setCenterPosition(backMachine, -350);
+		
+		backMachine.setX( backMachine.getX() + Runner.SCREEN_WIDTH );
+				
+		final SlotMachine machine = new SlotMachine("slot", 6);
+		machine.setPosition(Runner.SCREEN_WIDTH-195, -120);
+		
+		final SlotMachine machine2 = new SlotMachine("slot", 6);
+		machine2.setPosition(machine.getX()+128, -120);
+		
+		final SlotMachine machine3 = new SlotMachine("slot", 6);
+		machine3.setPosition(machine2.getX()+128, -120);
+		
+		Image machineS = createImage("machineSlot", 0, 0);
+		
+		setCenterPosition(machineS, -350);
+		machineS.setX( machineS.getX() + Runner.SCREEN_WIDTH );
+		
+		machineS.addListener(
+				
+				new ClickListener() {
+		            public void clicked(InputEvent event, float x, float y) 
+		            {
+		            	machine.start(0);
+		            	machine2.start(0.1f);
+		            	machine3.start(0.25f);
+		            }
+		         }
+				
+				);
+		
+		group = new Group();
+		
+		final Button moveToLeftButton = new Button(skin, "campaignArrowLeft");
+		final Button moveToRightButton = new Button(skin, "campaignArrowRight");
+		
+		ClickListener moveToLeftListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
+			group.addAction( getMoveAction(0, 0.0f) );
+			moveToLeftButton.setVisible(false);
+			moveToRightButton.setVisible(true);
+		} };
+		
+		ClickListener moveToRightListener = new ClickListener() { public void clicked(InputEvent event, float x, float y){ 
+			group.addAction( getMoveAction(-Runner.SCREEN_WIDTH, 0.0f) );
+			moveToLeftButton.setVisible(true);
+			moveToRightButton.setVisible(false);
+		} };
+		
+		moveToLeftButton.setPosition(-570.0f + Runner.SCREEN_WIDTH, -100.0f);
+		moveToLeftButton.addListener(moveToLeftListener);
+
+		moveToRightButton.setPosition(470.0f, -100.0f);
+		moveToRightButton.addListener(moveToRightListener);
+		
+		
+		group.addActor(moveToLeftButton);
+		group.addActor(moveToRightButton);
+		
+		group.addActor(backMachine);
+		group.addActor(machine);
+		group.addActor(machine2);
+		group.addActor(machine3);
+		group.addActor(machineS);
+		
+        group.addActor( shopWidget.actor() );
         
-        addToScreen(signboard);
-        
+        group.addActor(signboard);
+                
+        group.addActor( starExplodeEffectActor );
+		
         addToScreen( descriptionWidget.actor() );
         addToScreen(backButton);
         
@@ -105,20 +176,16 @@ public class ShopScreen extends BaseScreen
         addToScreen(coinLabel);
         addToScreen(coinAnimation);
         
-		addToScreen( starExplodeEffectActor );
-		
-		Image backMachine = createImage("blackNonTransparent", -464, 0);
-		backMachine.setSize(256, 384);
-		
-		addToScreen(backMachine);
-		
-		SlotMachine machine = new SlotMachine("slot", 6);
-		machine.setPosition(-400, 0);
-		
-		Image machineS = createImage("machineSlot", -464, 0);
-		
-		addToScreen(machine);
-		addToScreen(machineS);
+        addToScreen(group);
+	}
+	
+	private MoveToAction getMoveAction(float x, float y)
+	{
+		MoveToAction moveToAction = new MoveToAction();
+    	moveToAction.setPosition(x, y);
+    	moveToAction.setDuration(0.2f);
+    	
+    	return moveToAction;
 	}
 	
 	private void createShopWidget()
