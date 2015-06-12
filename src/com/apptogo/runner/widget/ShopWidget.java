@@ -21,6 +21,7 @@ public class ShopWidget extends Widget
 	private Skin skin;
 	
 	private Label label;
+	private Label titileLabel;
 	private Label priceLabel;
 	
 	private Button okButton;
@@ -35,20 +36,28 @@ public class ShopWidget extends Widget
 		skin = ResourcesManager.getInstance().getUiSkin( ScreenClass.MENU );
 		
 		okButton = new Button(skin, "buyButton");
-		okButton.setPosition(250, 760 - 50.0f);
+		okButton.setPosition(220, 760 - 30.0f);
 		
 		label = new Label("", skin, "dialogLabel");
 		label.setWrap(true);
+		label.setAlignment(Align.topLeft);
+		label.getColor().a = 0.7f;
 		
-		priceLabel = new Label("", skin, "dialogLabel");
-		priceLabel.setY(-80);
+		titileLabel = new Label("", skin, "woodBig");
+		
+		priceLabel = new Label("", skin, "coinLabel");
+		priceLabel.setWidth(250);
+		priceLabel.setAlignment(Align.center);
+		priceLabel.setPosition(150, 760 - 70);
 		
 		table = new Table(skin);
-		table.setSize(520.0f, 400.0f);
-		table.setPosition(-350.0f, 760 - 200.0f);
+		table.setSize(520.0f, 280.0f);
+		table.setPosition(-350.0f, 760 - 140.0f);
 		
-		table.add(label).width(520.0f);
-		
+		table.add(titileLabel).width(520.0f).height(80);
+		table.row();
+		table.add(label).width(520.0f).height(200);
+
 		this.addActor(okButton);
 		this.addActor(priceLabel);
         this.addActor(table);
@@ -57,11 +66,9 @@ public class ShopWidget extends Widget
 	public void setItem(ShopItem item)
 	{
 		this.label.setText(item.description);
+		this.titileLabel.setText(item.title);
 		
-		priceLabel.remove();
-		
-		priceLabel = new Label(item.getCostLabel(), skin, "dialogLabel");
-		priceLabel.setPosition(310 - priceLabel.getWidth()/2, 760 - 100);
+		priceLabel.setText(item.getCostLabel());
 		
 		this.addActor(priceLabel);
 		

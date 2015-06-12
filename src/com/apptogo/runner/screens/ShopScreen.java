@@ -1,6 +1,7 @@
 package com.apptogo.runner.screens;
 
 import com.apptogo.runner.actors.Animation;
+import com.apptogo.runner.actors.Bulb;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.SlotMachine;
 import com.apptogo.runner.appwarp.WarpController;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -94,27 +96,72 @@ public class ShopScreen extends BaseScreen
 		       
 		signboard = new TextButton("SHOP", skin, "signboard"); // createImage("signboard", 0, 0);
 		setCenterPosition(signboard, 175);
+		signboard.setTouchable(Touchable.disabled);
 		
-		
-		Image backMachine = createImage("blackNonTransparent", 0, 0);
-		backMachine.setSize(700, 600);
-		setCenterPosition(backMachine, -350);
+		Image backMachine = createImage("whiteNonTransparent", 0, 0);
+		backMachine.setSize(700, 500);
+		setCenterPosition(backMachine, -250);
 		
 		backMachine.setX( backMachine.getX() + Runner.SCREEN_WIDTH );
 				
-		final SlotMachine machine = new SlotMachine("slot", 6);
-		machine.setPosition(Runner.SCREEN_WIDTH-195, -120);
-		
-		final SlotMachine machine2 = new SlotMachine("slot", 6);
-		machine2.setPosition(machine.getX()+128, -120);
-		
-		final SlotMachine machine3 = new SlotMachine("slot", 6);
-		machine3.setPosition(machine2.getX()+128, -120);
-		
-		Image machineS = createImage("machineSlot", 0, 0);
+		Image machineS = createImage("slotMachine", 0, 0);
 		
 		setCenterPosition(machineS, -350);
 		machineS.setX( machineS.getX() + Runner.SCREEN_WIDTH );
+		
+		final SlotMachine machine = new SlotMachine("slot", 6);
+		machine.setPosition(machineS.getX() + 174, machineS.getHeight() - 332 - 350 - 150);
+		
+		final SlotMachine machine2 = new SlotMachine("slot", 6);
+		machine2.setPosition(machineS.getX() + 345, machineS.getHeight() - 333 - 350 - 150);
+		
+		final SlotMachine machine3 = new SlotMachine("slot", 6);
+		machine3.setPosition(machineS.getX() + 516, machineS.getHeight() - 332 - 350 - 150);
+		
+		Image shadow = createImage("slotMachineShadow", machine.getX(), machine.getY() + 150);
+		Image shadow2 = createImage("slotMachineShadow", machine2.getX(), machine2.getY() + 150);
+		Image shadow3 = createImage("slotMachineShadow", machine3.getX(), machine3.getY() + 150);
+		
+		Image frame = createImage("slotMachineFrame", machine.getX() - 9, machine.getY() - 9 + 150);
+		Image frame2 = createImage("slotMachineFrame", machine2.getX() - 9, machine2.getY() - 9 + 150);
+		Image frame3 = createImage("slotMachineFrame", machine3.getX() - 9, machine3.getY() - 9 + 150);
+		
+		Image slotDisplay = createImage("slotMachineDisplay", 0, 0);
+		setCenterPosition(slotDisplay, -200);
+		slotDisplay.setX( slotDisplay.getX() + runner.SCREEN_WIDTH );
+		
+		Bulb bulb = new Bulb(shadow.getX() - 57 - 40, machineS.getY() + 370);
+		Bulb bulb2 = new Bulb(shadow.getX() - 57 - 40, machineS.getY() + 310);
+		Bulb bulb3 = new Bulb(shadow3.getX() + 150 + 40, machineS.getY() + 370);
+		Bulb bulb4 = new Bulb(shadow3.getX() + 150 + 40, machineS.getY() + 310);
+		Bulb bulb5 = new Bulb(shadow.getX() - 57 - 40, machineS.getY() + 170);
+		Bulb bulb6 = new Bulb(shadow3.getX() + 150 + 40, machineS.getY() + 170);
+		
+		Label message = new Label("play for free", skin, "coinLabel");
+		setCenterPosition(message, -175);
+		message.setX( message.getX() + runner.SCREEN_WIDTH );
+		message.addAction(getBlinkAction(1, 0, 0.4f));
+		
+		Table winTable = new Table();
+		winTable.setSize(700, 100);
+		//winTable.debug();
+		winTable.setPosition(-350 + runner.SCREEN_WIDTH, -320);
+				
+		winTable.add( getImage("slotMiniature4") ).width( 60).height(40).pad(5, 15, 5, 10);
+		winTable.add( new Label("100$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 10);
+		winTable.add( getImage("slotMiniature5") ).width( 60).height(40).pad(5, 10, 5, 10);
+		winTable.add( new Label("300$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 10);
+		winTable.add( getImage("slotMiniature3") ).width( 60).height(40).pad(5, 10, 5, 10);
+		winTable.add( new Label("600$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 15);
+		
+		winTable.row();
+		
+		winTable.add( getImage("slotMiniature2") ).width( 60).height(40).pad(5, 15, 5, 10);
+		winTable.add( new Label("1000$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 10);
+		winTable.add( getImage("slotMiniature1") ).width( 60).height(40).pad(5, 10, 5, 10);
+		winTable.add( new Label("1500$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 10);
+		winTable.add( getImage("slotMiniature0") ).width( 60).height(40).pad(5, 10, 5, 10);
+		winTable.add( new Label("2000$", skin, "woodSmall") ).width(140).height(35).pad(5,  0, 10, 15);
 		
 		machineS.addListener(
 				
@@ -152,7 +199,6 @@ public class ShopScreen extends BaseScreen
 		moveToRightButton.setPosition(470.0f, -100.0f);
 		moveToRightButton.addListener(moveToRightListener);
 		
-		
 		group.addActor(moveToLeftButton);
 		group.addActor(moveToRightButton);
 		
@@ -160,7 +206,28 @@ public class ShopScreen extends BaseScreen
 		group.addActor(machine);
 		group.addActor(machine2);
 		group.addActor(machine3);
+		group.addActor(shadow);
+		group.addActor(shadow2);
+		group.addActor(shadow3);
 		group.addActor(machineS);
+		group.addActor(frame);
+		group.addActor(frame2);
+		group.addActor(frame3);
+		group.addActor(bulb);
+		group.addActor(bulb2);
+		group.addActor(bulb3);
+		group.addActor(bulb4);
+		group.addActor(bulb5);
+		group.addActor(bulb6);
+		group.addActor(slotDisplay);
+		group.addActor(winTable);
+		group.addActor(message);
+		/*group.addActor(createImage("coin3", -193 + runner.SCREEN_WIDTH, -263));
+		group.addActor(createImage("coin3", 42 + runner.SCREEN_WIDTH, -263));
+		group.addActor(createImage("coin3", 273 + runner.SCREEN_WIDTH, -263));
+		group.addActor(createImage("coin3", -168 + runner.SCREEN_WIDTH, -313));
+		group.addActor(createImage("coin3", 57 + runner.SCREEN_WIDTH, -313));
+		group.addActor(createImage("coin3", 295 + runner.SCREEN_WIDTH, -313));*/
 		
         group.addActor( shopWidget.actor() );
         
@@ -177,6 +244,14 @@ public class ShopScreen extends BaseScreen
         addToScreen(coinAnimation);
         
         addToScreen(group);
+	}
+	
+	private Image getImage(String name)
+	{
+		Image image = createImage(name, 0, 0);
+		image.setScaling(Scaling.none);
+		
+		return image;
 	}
 	
 	private MoveToAction getMoveAction(float x, float y)

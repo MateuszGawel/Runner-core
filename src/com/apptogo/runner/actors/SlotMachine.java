@@ -38,7 +38,7 @@ public class SlotMachine extends Group
 	{
 		super();
 		
-		this.debug();
+		//this.debug();
 		
 		slots = new Array<Image>();
 		
@@ -50,11 +50,15 @@ public class SlotMachine extends Group
 			slots.peek().setPosition(0, 0);
 			this.addActor(slots.peek());
 		}
+		
+		slots.shuffle();
 
 		width = slots.first().getWidth();
 		height = slots.first().getHeight();
 		
 		this.setSize(width, height * 3);
+		
+		slots.first().setPosition(0, height);
 	}
 	
 	void reset()

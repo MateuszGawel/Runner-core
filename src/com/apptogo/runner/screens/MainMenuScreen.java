@@ -13,13 +13,14 @@ import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -66,6 +67,8 @@ public class MainMenuScreen extends BaseScreen
 	private Image newContent;
 	private Image chainsDecoration;	
 	private Image logoImage;
+	private Image logoCloudLeftImage;
+	private Image logoCloudRightImage;
 		
 	public MainMenuScreen(Runner runner)
 	{
@@ -128,17 +131,48 @@ public class MainMenuScreen extends BaseScreen
         
 		newContent = createImage("newIcon", -450, 230);
 		newContent.setVisible( NewsManager.getInstance().isNewContent() );
+		newContent.setOrigin(Align.center);
+		newContent.addAction( this.getFlipAction(4f) );
 		
 		chainsDecoration = createImage("chainsDecoration", 100, -290);
 
 		logoImage = createImage("logoMenu", 0, 0);
 		logoImage.getColor().a = 0.8f;
-		setCenterPosition(logoImage, 150f);
+		setCenterPosition(logoImage, 180f);
+				
+		logoCloudLeftImage = createImage("logoMenuCloudRight", 0, 0);
+		logoCloudLeftImage.getColor().a = 0.8f;
+		logoCloudLeftImage.setPosition(logoImage.getX() - 148, logoImage.getY() - 50);
 		
-		logoImage.addAction( this.getBlinkAction(1f, 0.5f, 2) );
+		MoveToAction moveLeft = new MoveToAction();
+		moveLeft.setPosition( logoCloudLeftImage.getX() - 100, logoCloudLeftImage.getY() );
+		moveLeft.setDuration(11);
+		
+		MoveToAction moveRight = new MoveToAction();
+		moveRight.setPosition( logoCloudLeftImage.getX(), logoCloudLeftImage.getY() );
+		moveRight.setDuration(10.4f);
+		
+		logoCloudLeftImage.addAction( Actions.forever( new SequenceAction(moveLeft, moveRight) ) ); 
+		
+		logoCloudRightImage = createImage("logoMenuCloudLeft", 0, 0);
+		logoCloudRightImage.setPosition(logoImage.getX() + 300, logoImage.getY() + 5);
+		
+		MoveToAction moveRight2 = new MoveToAction();
+		moveRight2.setPosition( logoCloudRightImage.getX() + 100, logoCloudRightImage.getY() );
+		moveRight2.setDuration(12.2f);
+		
+		MoveToAction moveLeft2 = new MoveToAction();
+		moveLeft2.setPosition( logoCloudRightImage.getX(), logoCloudRightImage.getY() );
+		moveLeft2.setDuration(12.5f);
+		
+		logoCloudRightImage.addAction( Actions.forever( new SequenceAction(moveRight2, moveLeft2) ) );
+		
+		logoImage.addAction( this.getBlinkAction(0.8f, 0.6f, 2) );
 		
 		languageChangeDialog = new DialogWidget("", null, null);
         
+		addToScreen(logoCloudRightImage);
+		addToScreen(logoCloudLeftImage);
 		addToScreen(logoImage);
 		
 		addToScreen(settingsButton);

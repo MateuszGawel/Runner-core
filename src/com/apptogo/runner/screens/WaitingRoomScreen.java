@@ -28,6 +28,9 @@ public class WaitingRoomScreen extends BaseScreen
 
 	private LinkedHashMap<Player, Group> players;
 	
+	TextButton sign;
+	Player tmp2;
+	
 	public WaitingRoomScreen(Runner runner)
 	{
 		super(runner);	
@@ -46,6 +49,10 @@ public class WaitingRoomScreen extends BaseScreen
             }
         });
         
+        sign = new TextButton("waiting", skin, "signboard");
+        sign.getLabel().addAction( this.getBlinkAction(1, 0.5f, 0.5f) );
+        setCenterPosition(sign, 200);
+        
         players = new LinkedHashMap<Player, Group>();
         
         Group playerGroup = createGroup( player );
@@ -54,7 +61,7 @@ public class WaitingRoomScreen extends BaseScreen
         tmp.setCharacterType( CharacterType.ALIEN );
         tmp.setName("MARCIN");
         
-        Player tmp2 = new Player();
+        tmp2 = new Player();
         tmp2.setCharacterType( CharacterType.ARCHER );
         tmp2.setName("TOMASZ");
         
@@ -66,10 +73,11 @@ public class WaitingRoomScreen extends BaseScreen
         players.put(tmp, createGroup( null ));
         players.put(tmp2, createGroup( tmp2 ));
         players.put(tmp3, createGroup( tmp3 ));
+                
+        addToScreen(backButton);
+        addToScreen(sign);
         
         refreshPlayers();
-        
-        addToScreen(backButton);
         
         addToScreen(getButtons());
 	}
@@ -108,7 +116,7 @@ public class WaitingRoomScreen extends BaseScreen
 		ClickListener listener = new ClickListener(){
             public void clicked(InputEvent event, float x, float y) 
             {
-            	for(Actor actor : players.get(player).getChildren())
+            	for(Actor actor : players.get(tmp2).getChildren())
             	{
             		if(actor instanceof Emoticon)
             		{

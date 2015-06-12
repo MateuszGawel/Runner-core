@@ -33,13 +33,15 @@ public class ShopManager
 	{
 		items = new Array<ShopItem>();
 
-		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "shop_arrow", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );
-		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "shop_bomb", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "shop_arrow", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.LIFT, "shop_bomb", "LIFT", "Straight to the sky!", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "shop_arrow", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  ); 
-		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "shop_bomb", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
-		
+		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "shop_arrow", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "shop_blackhole", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "shop_bomb", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.DEATH, "shop_death", "DEATH", "Powerful weapon that will kill everyone", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.FORCEFIELD, "shop_forcefield", "FORCEFIELD", "Kick everyone in your area", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.LIFT, "shop_lift", "LIFT", "Straight to the sky!", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.SHIELD, "shop_shield", "SHIELD", "The only way you are protected when it is hot", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "shop_snares", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "shop_superspeed", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );	
 		
 		return items;
 	}

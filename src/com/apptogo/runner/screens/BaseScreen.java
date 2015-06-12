@@ -19,12 +19,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -305,6 +307,20 @@ public abstract class BaseScreen implements Screen
 		hideAction.setDuration(duration);
 		
 		return Actions.forever( new SequenceAction(showAction, hideAction) );
+	}
+	
+	protected RepeatAction getFlipAction(float pause)
+	{
+		RotateByAction action = new RotateByAction();
+		action.setAmount(360);
+		action.setInterpolation(Interpolation.elasticOut);
+		action.setDuration(2f);
+		
+		RotateByAction delayAction = new RotateByAction();
+		delayAction.setAmount(0);
+		delayAction.setDuration(pause);
+		
+		return Actions.forever( new SequenceAction(delayAction, action) );
 	}
 	
 	protected ScreenClass getScreenClass()
