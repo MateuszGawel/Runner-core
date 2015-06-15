@@ -132,7 +132,7 @@ public class MainMenuScreen extends BaseScreen
 		newContent = createImage("newIcon", -450, 230);
 		newContent.setVisible( NewsManager.getInstance().isNewContent() );
 		newContent.setOrigin(Align.center);
-		newContent.addAction( this.getFlipAction(4f) );
+		newContent.addAction( this.getFlipAction(3f) );
 		
 		chainsDecoration = createImage("chainsDecoration", 100, -290);
 

@@ -24,7 +24,7 @@ public class Contact implements Comparable<Contact>
 		}
 		else
 		{
-			return 0;
+			return this.name.compareTo(contact.name);
 		}
 	}
 }

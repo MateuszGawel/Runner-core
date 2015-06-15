@@ -4,6 +4,7 @@ import com.apptogo.runner.appwarp.WarpController;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.widget.Widget;
 import com.apptogo.runner.widget.Widget.WidgetFadingType;
 import com.badlogic.gdx.Gdx;
@@ -27,7 +28,7 @@ public class RegisterScreen extends BaseScreen
 	
 	Label nameLabel;
 	Label passwordLabel;
-	TextButton submitButton;
+	Button submitButton;
 	
 	TextField nameTextField;
 	TextField passwordTextField;
@@ -63,26 +64,26 @@ public class RegisterScreen extends BaseScreen
         registerWidget.toggleWidget();
             	
         nameLabel = new Label( getLangString("name") + ":", skin, "coinLabel");
-        nameLabel.setPosition( -120.0f - nameLabel.getWidth(), 60f);
+        nameLabel.setPosition( -100.0f - nameLabel.getWidth(), 52f);
         
         passwordLabel = new Label( getLangString("password") + ":", skin, "coinLabel");
-        passwordLabel.setPosition( -120.0f - passwordLabel.getWidth(), -50.0f);
+        passwordLabel.setPosition( -100.0f - passwordLabel.getWidth(), -48.0f);
         
 		nameTextField = new TextField("", skin, "default");
 		
 		nameTextField.getStyle().background.setLeftWidth(10);
 		nameTextField.getStyle().background.setBottomHeight(10);
 		
-		nameTextField.setSize(410f, 50f);
-		nameTextField.setPosition(-100.0f, 55.0f);
+		nameTextField.setSize(360f, 50f);
+		nameTextField.setPosition(-80.0f, 55.0f);
 		nameTextField.setOnlyFontChars(true);
-		nameTextField.setMaxLength(18);
+		nameTextField.setMaxLength(9);
 		
 		passwordTextField = new TextField("", skin, "default");
-		passwordTextField.setSize(410f, 50f);
-		passwordTextField.setPosition(-100.0f, -45.0f);
+		passwordTextField.setSize(360f, 50f);
+		passwordTextField.setPosition(-80.0f, -45.0f);
 		passwordTextField.setOnlyFontChars(true);
-		passwordTextField.setMaxLength(18);
+		passwordTextField.setMaxLength(9);
 		passwordTextField.setPasswordCharacter('*');
 		passwordTextField.setPasswordMode(true);
 		
@@ -97,37 +98,30 @@ public class RegisterScreen extends BaseScreen
             }
 		};
 		
-		registerWidget.actor().addListener(unfocusListener);
-		background.addListener(unfocusListener);
-		nameLabel.addListener(unfocusListener);
-		passwordLabel.addListener(unfocusListener);
-		
-		
-		nameTextField.addListener(new ClickListener(){
+		ClickListener focusListener = new ClickListener(){
 			
 			public void clicked(InputEvent event, float x, float y) 
-            {
+	        {
 				if(!cameraFocused)
 				{
 					focusCamera = true;
 				}
-            }
-		});
+	        }
+		};
 		
-		passwordTextField.addListener(new ClickListener(){
-			
-			public void clicked(InputEvent event, float x, float y) 
-            {
-				if(!cameraFocused)
-				{
-					focusCamera = true;
-				}
-            }
-		});
+		if( Box2DVars.ZOOM_CAMERA_IN_REGISTER_SCREEN )
+		{
+			registerWidget.actor().addListener(unfocusListener);
+			background.addListener(unfocusListener);
+			nameLabel.addListener(unfocusListener);
+			passwordLabel.addListener(unfocusListener);
+				
+			nameTextField.addListener(focusListener);
+			passwordTextField.addListener(focusListener);
+		}
 		
-		submitButton = new TextButton( getLangString("login"), skin, "default");
-		submitButton.setSize(220, 140);
-		setCenterPosition(submitButton, -240);
+		submitButton = new Button(skin, "login");
+		setCenterPosition(submitButton, -200);
 		submitButton.addListener(new ClickListener(){
 			
 			public void clicked(InputEvent event, float x, float y) 
@@ -145,7 +139,7 @@ public class RegisterScreen extends BaseScreen
 		});
 		
 		Label infoLabel = new Label("If you do not have account it will be created", skin, "default");
-		setCenterPosition(infoLabel, -300);
+		setCenterPosition(infoLabel, -280);
 		
 		signboard = new TextButton("REGISTER", skin, "signboard"); // createImage("signboard", 0, 0);
 		setCenterPosition(signboard, 175);

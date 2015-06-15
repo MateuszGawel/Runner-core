@@ -320,7 +320,7 @@ public abstract class BaseScreen implements Screen
 		delayAction.setAmount(0);
 		delayAction.setDuration(pause);
 		
-		return Actions.forever( new SequenceAction(delayAction, action) );
+		return Actions.forever( new SequenceAction(action, delayAction) );
 	}
 	
 	protected ScreenClass getScreenClass()

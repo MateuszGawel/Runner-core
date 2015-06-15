@@ -286,19 +286,19 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
         banditHead.addListener(headListener);
                 
 		Table headTable = new Table();
-		headTable.setSize(140, 300);
-		
-		headTable.add(alienHead).size(95).pad(0, 0, 0, 45);
+		headTable.setSize(120, 300);
+		//headTable.debug();
+		headTable.add(alienHead).size(95).pad(0, 0, 0, 25);
 		headTable.row();
-		headTable.add(archerHead).size(95).pad(7, 45, 7, 0);
+		headTable.add(archerHead).size(95).pad(7, 0, 7, 25);
 		headTable.row();
-		headTable.add(banditHead).size(95).pad(0, 0, 0, 45);
+		headTable.add(banditHead).size(95).pad(0, 0, 0, 25);
 
 		//summary
 		Table summaryTable = new Table();
 		summaryTable.setSize(465, 300);
-
-		summaryTable.add( new Label( /*player.getName()*/ "ANTONIO", skin, "coinLabelBig" ) ).width(465).height(40).colspan(3);
+		//summaryTable.debug();
+		summaryTable.add( new Label( player.getName(), skin, "coinLabelBig" ) ).width(465).height(40).colspan(3);
 		summaryTable.row();
 		summaryTable.add().width(465).height(20).colspan(3);
 		summaryTable.row();
@@ -316,10 +316,11 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		
 		//main table
 		Table table = new Table();
+		//table.debug();
 		table.setSize(680, 300);
 		setCenterPosition(table, -285);
 
-		table.add(headTable).width(140).height(300);
+		table.add(headTable).width(120).height(300);
 		table.add().width(75).height(300);
 		table.add(summaryTable).width(465).height(300);
 		
@@ -347,70 +348,112 @@ public class MultiplayerScreen extends BaseScreen implements WarpListener
 		friendsWidget.addTabButton(1, "contactsTab");
 		friendsWidget.addTabButton(2, "findFriendsTab");
 		
-		Array<Contact> contactsArray = new Array<Contact>();
-		contactsArray.add( new Contact("Contact1", false) );
-		contactsArray.add( new Contact("Contact2", true) );
-		contactsArray.add( new Contact("Contact3", false) );
-		contactsArray.add( new Contact("Contact4", true) );
-		contactsArray.add( new Contact("Contact5", true) );	
-		contactsArray.add( new Contact("Contact6", true) );
-		contactsArray.add( new Contact("Contact7", false) );
-		contactsArray.add( new Contact("Contact8", true) );
-		contactsArray.add( new Contact("Contact9", true) );	
+		//player.friends.addAll("Maciej", "Miet", "Franciszek", "Michal", "Ola", "Piotrek");
 		
-		contactsArray.sort();
-		
-		Table contactsTable = new Table();
-		contactsTable.setSize(920.0f, 370.0f);	
-		contactsTable.setPosition(-460.0f, 750.0f);
-		
-		Label nameTitle = new Label("Name", skin, "default");
-		nameTitle.setAlignment(Align.center);
-		
-		Label statusTitle = new Label("Status", skin, "default");
-		statusTitle.setAlignment(Align.center);
-		
-		contactsTable.add().width(130.0f).height(50.0f).center().pad(0,0,0,0);
-		contactsTable.add(nameTitle).width(500.0f).height(50.0f).colspan(2).center().pad(0,0,0,30);
-		contactsTable.add(statusTitle).width(210.0f).height(50.0f).center().pad(0,50,0,0);
-		
-		Table contactsScrollTable = new Table();
-		
-		for(final Contact contact: contactsArray)
+		if( player.friends.size > 0 )
 		{
-			CheckBox check = new CheckBox("", skin);
-			Label name = new Label( contact.name, skin, "default");
+			Array<Contact> contactsArray = new Array<Contact>();
 			
-			contactsScrollTable.row();
-			contactsScrollTable.add(check).width(50.0f).height(50.0f).center().pad(30,0,0,80);
-			contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,0,0,18);
-			contactsScrollTable.add(name).width(450.0f).height(50.0f).center().pad(30,0,0,30);
-			contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,144,0,94);
-		}
-					
-		ScrollPane contactsContainer = createScroll(contactsScrollTable, 920.0f, 328.0f, true);
-		
-		contactsTable.row();
-		contactsTable.add(contactsContainer).colspan(4);
+			for(String friend: player.friends)
+			{
+				boolean online = false;
+				//if( isOnline(friend) )
+				if( friend.compareTo("online") >= 0 )
+				{
+					online = true;
+				}
 				
-		Label inviteLabel = new Label("Invite!", skin, "default");
-		setCenterPosition(inviteLabel, 660.0f);
+				contactsArray.add( new Contact(friend, online) );
+			}
+			
+			contactsArray.sort();
+			
+			Table contactsTable = new Table();
+			//contactsTable.debug();
+			contactsTable.setSize(820.0f, 340.0f);	
+			contactsTable.setPosition(-410.0f, 770.0f);
+			
+			Label nameTitle = new Label("Name", skin, "coinLabel");
+			nameTitle.setAlignment(Align.center);
+			
+			Label statusTitle = new Label("Status", skin, "coinLabel");
+			statusTitle.setAlignment(Align.center);
+			
+			contactsTable.add().width(130.0f).height(50.0f).center().pad(0,0,10,0);
+			contactsTable.add(nameTitle).width(450.0f).height(50.0f).colspan(2).center().pad(0,0,10,30);
+			contactsTable.add(statusTitle).width(210.0f).height(50.0f).center().pad(0,0,10,0);
+			
+			Table contactsScrollTable = new Table();
+			//contactsScrollTable.debug();
+			for(final Contact contact: contactsArray)
+			{
+				CheckBox check = new CheckBox("", skin);
+				Label name = new Label( contact.name, skin, "woodMedium");
+				
+				contactsScrollTable.row();
+				contactsScrollTable.add(check).width(50.0f).height(50.0f).center().pad(30,50,0,30);
+				contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,0,0,18);
+				contactsScrollTable.add(name).width(400.0f).height(50.0f).center().pad(30,0,0,30);
+				contactsScrollTable.add().width(32.0f).height(32.0f).center().pad(39,94,0,94);
+			}
+						
+			ScrollPane contactsContainer = createScroll(contactsScrollTable, 820.0f, 290.0f, true);
+			
+			contactsTable.row();
+			contactsTable.add(contactsContainer).colspan(4);
+					
+			Button inviteButton = new Button(skin, "invite");
+			setCenterPosition(inviteButton, 660.0f);
+			
+			friendsWidget.addActorToTab(contactsTable, 1);
+			friendsWidget.addActorToTab(inviteButton, 1);
+		}
+		else
+		{
+			Image aloneImage = createImage("alone", 100, 700);
+			
+			Label dontHaveLabel = new Label("You do not have any friends yet...", skin, "woodMedium");
+			
+			dontHaveLabel.setPosition(-500, 1020);
+			
+			Label findLabel = new Label("Find them now!", skin, "coinLabelBig");
+			
+			findLabel.setPosition(-450, 900);
+			
+			Button goToFindButton = new Button(skin, "search");
+			goToFindButton.setPosition(findLabel.getX() + (findLabel.getWidth()-goToFindButton.getWidth())/2f, 790);
+			goToFindButton.addListener( friendsWidget.getChangeWidgetTabListener(2) );
+			
+			friendsWidget.addActorToTab(aloneImage, 1);
+			friendsWidget.addActorToTab(dontHaveLabel, 1);
+			friendsWidget.addActorToTab(findLabel, 1);
+			friendsWidget.addActorToTab(goToFindButton, 1);
+		}
 		
-		friendsWidget.addActorToTab(contactsTable, 1);
-		friendsWidget.addActorToTab(inviteLabel, 1);
+		Label searchName = new Label("name:", skin, "coinLabel");
 		
 		TextField searchTextField = new TextField("", skin, "default");
-		searchTextField.setSize(500.0f, 35.0f);
-		setCenterPosition(searchTextField, 1090.0f);
-		searchTextField.setX( searchTextField.getX() - 95.0f );
-		searchTextField.setMaxLength(18);
 		
+		searchTextField.getStyle().background.setLeftWidth(10);
+		searchTextField.getStyle().background.setBottomHeight(10);
 		
+		searchTextField.setSize(360f, 50f);
+		setCenterPosition(searchTextField, 1040.0f);
+		searchTextField.setX( searchTextField.getX() - 100.0f + 20 + searchName.getWidth() / 2f );
+		searchTextField.setOnlyFontChars(true);
+		searchTextField.setMaxLength(9);
+		
+		searchName.setPosition(searchTextField.getX() - 20 - searchName.getWidth(), searchTextField.getY() - 5);
+		
+		Button searchButton = new Button(skin, "search");
+		searchButton.setPosition(searchTextField.getX() + searchTextField.getWidth() + 40, searchTextField.getY() - 20);
 		
 		CheckBox hideMeCheckBox = new CheckBox(" Hide me from others", skin, "default");
 		hideMeCheckBox.setPosition(-400f, 1090f);
 		
-		friendsWidget.addActorToTab(searchTextField, 2);		
+		friendsWidget.addActorToTab(searchName, 2);
+		friendsWidget.addActorToTab(searchTextField, 2);	
+		friendsWidget.addActorToTab(searchButton, 2);
 		friendsWidget.setCurrentTab(1);
 	}
 	

@@ -12,6 +12,10 @@ public class Box2DVars {
 	public static final boolean DRAW_DEBUG = true;
 	public static double ZERO_GROUND_POSITION = 655.0348/PPM;
 	
+	//niezbyt szczesliwe miejsce ale zoomowac chcemy tylko na tel wiec potrzebujemy
+	//flagi ktora ustawiamy w launch androida na true :)
+	public static boolean ZOOM_CAMERA_IN_REGISTER_SCREEN = false;
+	
 	public static final short BIT_CHARACTER = 2;
 	public static final short BIT_CHARACTER_SENSOR = 8;
 	public static final short BIT_WORLD_OBJECT = 32;

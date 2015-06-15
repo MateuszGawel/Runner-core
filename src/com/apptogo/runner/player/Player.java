@@ -8,7 +8,7 @@ import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
-import com.apptogo.runner.logger.Logger;
+import com.badlogic.gdx.utils.Array;
 
 public class Player 
 {
@@ -16,6 +16,8 @@ public class Player
 	public HashMap<String, Integer> abilities;
 	
 	public int coins, diamonds;
+	
+	public Array<String> friends;
 	
 	public boolean slidePressed; //pomocnicza
 	public boolean jumpPressed; //pomocnicza
@@ -47,6 +49,8 @@ public class Player
 		
 		this.coins = 1000000;
 		this.diamonds = 0;
+		
+		friends = new Array<String>();
 	}
 	
 	public Player(String name, CharacterType characterType)
@@ -134,6 +138,29 @@ public class Player
 	public void setCharacterType(CharacterType currentCharacter) 
 	{
 		this.characterType = currentCharacter;
+	}
+	
+	public boolean addFriend(String friendName)
+	{
+		if( friends.indexOf(friendName, false) == -1 )
+		{
+			friends.add(friendName);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	public boolean removeFriend(String friendName)
+	{
+		if( friends.indexOf(friendName, false) == -1 )
+		{
+			return false;	
+		}
+		
+		friends.removeIndex( friends.indexOf(friendName, false) );
+		
+		return true;
 	}
 	
 	static public Player load()
