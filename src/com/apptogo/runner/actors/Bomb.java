@@ -98,14 +98,16 @@ public class Bomb extends Obstacle implements Poolable{
 		super(new EllipseMapObject(0,0,20,20), world, "gfx/game/characters/charactersAtlas.pack");
 		
 		this.gameWorld = gameWorld;
-		setOffset(-6/PPM, -6/PPM);
-		if(this.level == 1)
-			setOrigin(3/PPM, 4/PPM);
-		else
-			setOrigin(6/PPM, 6/PPM);
-		explosionParticleOne = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
-		explosionParticleTwo = new ParticleEffectActor("explosion_lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
-		explosionParticleThree = new ParticleEffectActor("explosion_lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		setOffset(-10/PPM, -8/PPM);
+		
+
+//		explosionParticleOne = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+//		explosionParticleTwo = new ParticleEffectActor("explosion_lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+//		explosionParticleThree = new ParticleEffectActor("explosion_lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		explosionParticleOne = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+		explosionParticleTwo = new ParticleEffectActor("explosion_lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+		explosionParticleThree = new ParticleEffectActor("explosion_lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+
 		
 		createBody(BodyType.DynamicBody, Materials.bombBody, "bomb");
 		createExplosions();
@@ -126,6 +128,11 @@ public class Bomb extends Obstacle implements Poolable{
     public void init(Character characterOwner, int level) {
     	this.level = level;
     	
+		if(this.level == 1)
+			setOrigin(6/PPM, 5/PPM);
+		else
+			setOrigin(10/PPM, 8/PPM);
+		
         body.setTransform(characterOwner.getX()-20/PPM, characterOwner.getY(), 0);
         gameWorld.getWorldStage().addActor(getParticleEffectActor());
         setAnimationState();

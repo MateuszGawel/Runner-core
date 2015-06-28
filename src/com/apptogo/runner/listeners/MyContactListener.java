@@ -89,6 +89,9 @@ public class MyContactListener implements ContactListener
 			if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
 				flags.incrementWallSensor();
 			}
+			if(checkFixturesTypes(fa, fb, "wallSensor", "forceField")){
+				flags.incrementWallSensor();
+			}
 			if(checkFixturesTypes(fa, fb, "standupSensor", "nonkilling")){
 				flags.incrementStandupSensor();
 			}
@@ -234,6 +237,9 @@ public class MyContactListener implements ContactListener
 				flags.decrementFootSensor();
 			}
 			if(checkFixturesTypes(fa, fb, "wallSensor", "nonkilling")){
+				flags.decrementWallSensor();
+			}
+			if(checkFixturesTypes(fa, fb, "wallSensor", "forceField")){
 				flags.decrementWallSensor();
 			}
 			if(checkFixturesTypes(fa, fb, "jumpSensor", "nonkilling")){

@@ -1029,7 +1029,6 @@ public abstract class Character extends Actor{
 				{
 					if(character.flags.isCanUseAbility()) 
 						character.useAbility(character.currentAbilitySet);
-						
 					//tutaj powinna byc wyslana notyfikacja z typem umiejetnosci, wlascicielem i pozycja odpalenia
 			        return true;
 			    }

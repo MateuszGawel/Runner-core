@@ -71,15 +71,13 @@ public class Snares extends Actor{
 		body.setUserData( userData );
 		
 		
-		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL1, animationManager.createFrames(8, "snares"), false));	
-		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL2, animationManager.createFrames(8, "snares"), false));	
-		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL3, animationManager.createFrames(8, "snares"), false));	
+		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL1, animationManager.createFrames(8, "snareslvl1"), false));	
+		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL2, animationManager.createFrames(8, "snareslvl2"), false));	
+		animationManager.createAnimation(new MyAnimation(0.02f, SnaresAnimationState.LVL3, animationManager.createFrames(8, "snareslvl3"), false));	
 		setAnimationState();
-		
 		gameWorld.getWorldStage().addActor(this);
 		
 		
-		currentRegion = (AtlasRegion)animationManager.animate(0f);
 	}
 	
 	
@@ -89,7 +87,7 @@ public class Snares extends Actor{
     	((UserData)body.getFixtureList().get(1).getUserData()).playerName = characterOwner.playerName;
         body.setTransform(characterOwner.getX()-10/PPM, characterOwner.getY()+50/PPM, 0);
         setAnimationState();
-		
+        currentRegion = (AtlasRegion)animationManager.animate(0f);
     }
     
     
@@ -116,7 +114,7 @@ public class Snares extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentRegion, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentRegion, getX(), getY()+10/PPM, getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 	
 	public void setLevel(int level) {

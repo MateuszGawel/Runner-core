@@ -59,9 +59,9 @@ public class LiftField extends Actor{
 		
 		fieldBody.setTransform(-100f, 0, 0);
 			
-		effectActorOne = new ParticleEffectActor("liftField-lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
-		effectActorTwo = new ParticleEffectActor("liftField-lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
-		effectActorThree = new ParticleEffectActor("liftField-lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		effectActorOne = new ParticleEffectActor("liftField-lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+		effectActorTwo = new ParticleEffectActor("liftField-lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+		effectActorThree = new ParticleEffectActor("liftField-lvl3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
 		
 		
 		gameWorld.getBackgroundStage().addActor(this);

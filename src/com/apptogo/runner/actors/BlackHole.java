@@ -121,11 +121,11 @@ public class BlackHole extends Actor implements Poolable{
 		bodyLvl3 = world.createBody(bodyDef);
 		bodyLvl3.createFixture(fixtureDef).setUserData(userData);
 		
-		particleLvl2 = new ParticleEffectActor("blackHole2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		particleLvl2 = new ParticleEffectActor("blackHole2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
 		particleLvl2.setCulling(false);
 		gameWorld.getWorldStage().addActor(particleLvl2);
 		
-		particleLvl3 = new ParticleEffectActor("blackHole3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), GameWorldType.convertToAtlasPath(gameWorld.gameWorldType)));
+		particleLvl3 = new ParticleEffectActor("blackHole3.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(particleLvl3);
 		particleLvl3.setCulling(false);
 		

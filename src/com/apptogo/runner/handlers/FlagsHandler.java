@@ -130,12 +130,12 @@ public class FlagsHandler {
 			else
 				shouldChangeToRunningState = false;
 			
-			if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0 && swampSensor<=0)
+			if((jumpSensor > 0 || wallSensor > 0) && alive && began && !finished && headSensor<=0 && swampSensor<=0 && !snared)
 				canJump = true;
 			else
 				canJump = false;
 			
-			if(!canJump && !doubleJumped && alive && began && !finished && swampSensor<=0)
+			if(!canJump && !doubleJumped && alive && began && !finished && swampSensor<=0 && !snared)
 				canDoubleJump = true;
 			else
 				canDoubleJump = false;
