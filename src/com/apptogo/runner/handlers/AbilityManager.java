@@ -4,6 +4,7 @@ import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.BlackHole;
+import com.apptogo.runner.actors.Boar;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.ForceField;
@@ -12,7 +13,6 @@ import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
-import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -68,6 +68,9 @@ public class AbilityManager
 				break;
 			case FORCEFIELD:
 				useForceField(character, abilityLevel);
+				break;
+			case BOAR:
+				useBoar(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -156,8 +159,21 @@ public class AbilityManager
 		else{
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
 		}
-		Snares snares = new Snares(world, gameWorld);
+		Snares snares = snaresPool.obtain();
+		activeSnares.add(snares);
 		snares.init(character, abilityLevel);
+	}
+	
+	public void useBoar(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+		}
+		Boar boar = boarsPool.obtain();
+		activeBoars.add(boar);
+		boar.init(character, abilityLevel);
 	}
 	
 	public void useBlackHole(Character character, int abilityLevel){
@@ -239,6 +255,26 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<Snares> activeSnares = new Array<Snares>();
+    private final Pool<Snares> snaresPool = new Pool<Snares>() {
+	    @Override
+	    protected Snares newObject() {
+	    	Snares snares = new Snares(world, gameWorld);
+	    	gameWorld.worldStage.addActor(snares);
+	    	return snares;
+	    }
+    };
+    
+	private final Array<Boar> activeBoars = new Array<Boar>();
+    private final Pool<Boar> boarsPool = new Pool<Boar>() {
+	    @Override
+	    protected Boar newObject() {
+	    	Boar boar = new Boar(world, gameWorld);
+	    	gameWorld.worldStage.addActor(boar);
+	    	return boar;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -268,6 +304,18 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeForceFields.get(i).alive == false) {
             	forceFieldsPool.free(activeForceFields.removeIndex(i));
+            }
+        }
+        len = activeSnares.size;
+        for (int i = len; --i >= 0;) {
+            if (activeSnares.get(i).alive == false) {
+            	snaresPool.free(activeSnares.removeIndex(i));
+            }
+        }
+        len = activeBoars.size;
+        for (int i = len; --i >= 0;) {
+            if (activeBoars.get(i).alive == false) {
+            	boarsPool.free(activeBoars.removeIndex(i));
             }
         }
 	}
