@@ -14,6 +14,7 @@ import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
@@ -171,9 +172,24 @@ public class AbilityManager
 		else{
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
 		}
+
+
 		Boar boar = boarsPool.obtain();
 		activeBoars.add(boar);
-		boar.init(character, abilityLevel);
+		boar.init(character, 1);
+
+		if(abilityLevel == 2 || abilityLevel == 3){
+			for(int i=0; i<3; i++){
+				Boar boar2 = boarsPool.obtain();
+				activeBoars.add(boar2);
+				boar2.init(character, 2);
+			}
+		}
+		if(abilityLevel == 3){
+			Boar boar3 = boarsPool.obtain();
+			activeBoars.add(boar3);
+			boar3.init(character, 3);
+		}
 	}
 	
 	public void useBlackHole(Character character, int abilityLevel){

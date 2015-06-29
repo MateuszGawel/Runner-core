@@ -30,6 +30,8 @@ public class Materials {
 	public static FixtureDef barrelBody;
 	public static FixtureDef snaresBody;
 	public static FixtureDef snaresSensor;
+	public static FixtureDef boarBody;
+	public static FixtureDef boarSensor;
 	
 	static
 	{
@@ -55,8 +57,9 @@ public class Materials {
 		arrowSensor = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
 		fieldBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT), true);
 		snaresBody = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN), false);
-		snaresSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
-		
+		snaresSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN), true);
+		boarBody = createFixtureDef(12f, 0f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
+		boarSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), true);
 	}
 	
 	private static FixtureDef createFixtureDef(float density, float friction, float restitution, short categoryBits, short maskBits, boolean sensor)

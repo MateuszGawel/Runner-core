@@ -3,6 +3,7 @@ package com.apptogo.runner.listeners;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.exception.PlayerDoesntExistException;
 import com.apptogo.runner.handlers.FlagsHandler;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.world.GameWorld;
@@ -217,6 +218,12 @@ public class MyContactListener implements ContactListener
 			Fixture hedgeHogFixture = getFixtureByType(fa, fb, "hedgehog");
 			((UserData)hedgeHogFixture.getBody().getUserData()).changeDirection = true;
 		}
+		//zmiana dzika
+		if( checkFixturesTypes(fa, fb, "boarSensor", "nonkilling")){
+			Fixture boarSensorFixture = getFixtureByType(fa, fb, "boarSensor");
+			((UserData)boarSensorFixture.getBody().getUserData()).changeDirection = true;
+		}
+		
 		if(checkFixturesTypes(fa, fb, "barrel", "barrel")){
 			((UserData)fa.getBody().getUserData()).active = true;
 			((UserData)fb.getBody().getUserData()).active = true;
@@ -291,6 +298,11 @@ public class MyContactListener implements ContactListener
 				Fixture fixture = getFixtureByType(fa, fb, "coinField");
 				((UserData)fixture.getBody().getUserData()).active = false;
 			}
+		}
+		//zmiana dzika
+		if( checkFixturesTypes(fa, fb, "boarSensor", "nonkilling")){
+			Fixture boarSensorFixture = getFixtureByType(fa, fb, "boarSensor");
+			((UserData)boarSensorFixture.getBody().getUserData()).changeDirection = false;
 		}
 	}
 
