@@ -9,12 +9,12 @@ import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.LiftField;
+import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
@@ -72,6 +72,9 @@ public class AbilityManager
 				break;
 			case BOAR:
 				useBoar(character, abilityLevel);
+				break;
+			case OIL:
+				useOil(character, abilityLevel);
 				break;
 			default:
 				break;
@@ -192,6 +195,39 @@ public class AbilityManager
 		}
 	}
 	
+	public void useOil(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
+		}
+
+		switch(abilityLevel){
+		case 1:
+			for(int i=0; i<5; i++){
+				Oil oil = oilsPool.obtain();
+				activeOils.add(oil);
+				oil.init(character, 1);
+			}
+			break;
+		case 2:
+			for(int i=0; i<25; i++){
+				Oil oil = oilsPool.obtain();
+				activeOils.add(oil);
+				oil.init(character, 2);
+			}
+			break;
+		case 3:
+			for(int i=0; i<40; i++){
+				Oil oil = oilsPool.obtain();
+				activeOils.add(oil);
+				oil.init(character, 3);
+			}
+			break;
+		}
+	}
+	
 	public void useBlackHole(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
@@ -291,6 +327,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<Oil> activeOils = new Array<Oil>();
+    private final Pool<Oil> oilsPool = new Pool<Oil>() {
+	    @Override
+	    protected Oil newObject() {
+	    	Oil oil = new Oil(world, gameWorld);
+	    	gameWorld.worldStage.addActor(oil);
+	    	return oil;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -332,6 +378,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeBoars.get(i).alive == false) {
             	boarsPool.free(activeBoars.removeIndex(i));
+            }
+        }
+        len = activeOils.size;
+        for (int i = len; --i >= 0;) {
+            if (activeOils.get(i).alive == false) {
+            	oilsPool.free(activeOils.removeIndex(i));
             }
         }
 	}

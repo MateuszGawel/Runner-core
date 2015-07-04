@@ -34,6 +34,7 @@ public class ShopManager
 		items = new Array<ShopItem>();
 
 		this.items.add( new ShopItem(this, CharacterAbilityType.ARROW, "shop_arrow", "ARROW", "Guess what is in your eye?", new Integer[]{100, 200, 300}, player)  );
+		this.items.add( new ShopItem(this, CharacterAbilityType.OIL, "shop_arrow", "OIL", "Nie wypierdolisz siê, ten olej spowalnia.", new Integer[]{100, 200, 300}, player)  );
 		this.items.add( new ShopItem(this, CharacterAbilityType.BOAR, "shop_arrow", "BOAR", "W³ochaty jebaniec. Uciekaj", new Integer[]{100, 200, 300}, player)  );
 		this.items.add( new ShopItem(this, CharacterAbilityType.BLACKHOLE, "shop_blackhole", "BLACKHOLE", "Teleport in other words", new Integer[]{100, 200, 300}, player)  );
 		this.items.add( new ShopItem(this, CharacterAbilityType.BOMB, "shop_bomb", "BOMB", "A little black sphere that will rock your socks!", new Integer[]{100, 200, 300}, player)  );
