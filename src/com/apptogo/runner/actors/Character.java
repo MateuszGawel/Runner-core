@@ -24,6 +24,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -46,7 +47,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
-public abstract class Character extends Actor{
+public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	public final float coinFixtureRadius = 128;
 	
@@ -1168,5 +1169,9 @@ public abstract class Character extends Actor{
 	                   flipX, //boolean flipX
 	                   flipY  //boolean flipY
 	                  );
+	}
+	@Override
+	public int compareTo(Character character) {
+		return Math.round(character.getBody().getPosition().x - this.getBody().getPosition().x);
 	}
 }

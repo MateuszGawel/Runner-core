@@ -10,7 +10,7 @@ import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.levels.LevelWorld;
 import com.badlogic.gdx.utils.Array;
 
-public class Player 
+public class Player
 {
 	public HashMap<String, Integer> gameLevels;
 	public HashMap<String, Integer> abilities;

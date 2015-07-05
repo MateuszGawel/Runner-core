@@ -2,22 +2,25 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.BlackHole;
 import com.apptogo.runner.actors.Boar;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
-import com.apptogo.runner.actors.Ufo;
 import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.LiftField;
 import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
-import com.apptogo.runner.actors.Ufo.DeathAnimationState;
+import com.apptogo.runner.actors.Ufo;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.logger.Logger;
+import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
@@ -276,9 +279,42 @@ public class AbilityManager
 
 			break;
 		case SPACE:
-			Ufo ufo = ufosPool.obtain();
-			ufo.init(character, abilityLevel);
-			activeUfos.add(ufo);
+			Array<Character> orderedEnemies = new Array<Character>();
+
+			for(Player player : gameWorld.enemies){
+				orderedEnemies.add(player.character);
+			}
+			orderedEnemies.sort();
+			
+			
+			
+			try{
+				switch(abilityLevel){
+				case 1:
+					Ufo ufo = ufosPool.obtain();
+					ufo.init(orderedEnemies.get(0), abilityLevel);
+					activeUfos.add(ufo);
+					break;
+				case 2:
+					for(int i=0; i<2; i++){
+						ufo = ufosPool.obtain();
+						ufo.init(orderedEnemies.get(i), abilityLevel);
+						activeUfos.add(ufo);
+					}
+					break;
+				case 3:
+					for(int i=0; i<3; i++){
+						ufo = ufosPool.obtain();
+						ufo.init(orderedEnemies.get(i), abilityLevel);
+						activeUfos.add(ufo);
+					}
+					break;
+				}
+			}
+			catch(IndexOutOfBoundsException e){
+				Logger.log(this, "Not enough Players. Not all Ufos used");
+			}
+			
 			break;
 		}
 		

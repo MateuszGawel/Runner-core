@@ -252,10 +252,10 @@ public class CampaignScreen extends BaseScreen
     	            	Array<Player> players = new Array<Player>();
     	            	Player enemyPlayer1 = new Player("dupek", CharacterType.ARCHER);
     	            	Player enemyPlayer2 = new Player("cipek", CharacterType.BANDIT);
-    	            	//Player enemyPlayer3 = new Player("siurek", CharacterType.ARCHER);
+    	            	Player enemyPlayer3 = new Player("siurek", CharacterType.ALIEN);
     	            	players.add(enemyPlayer1);
     	            	players.add(enemyPlayer2);
-    	            	//players.add(enemyPlayer3);
+    	            	players.add(enemyPlayer3);
     	            	
     	            	ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, level, players );
     	            }
