@@ -89,7 +89,7 @@ public class Oil extends Actor implements Poolable{
     	setAnimationState();
     	oilBody.setTransform(characterOwner.getX()-10/PPM-new Random().nextInt(10)/PPM, characterOwner.getY()+new Random().nextInt(10)/PPM, 0);
     	oilBody.setLinearVelocity(characterOwner.getSpeed()/10, 0);
-    	oilBody.getFixtureList().get(0).setUserData(new UserData("bomb", characterOwner.playerName));
+    	oilBody.getFixtureList().get(0).setUserData(new UserData("oil", characterOwner.playerName));
         alive = true;
         setVisible(true);
     }

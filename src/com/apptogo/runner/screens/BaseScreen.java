@@ -11,6 +11,7 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -42,7 +43,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public abstract class BaseScreen implements Screen
 {	
 	protected Runner runner;
-	protected int currentWindowWidth, currentWindowHeight;
+	public int currentWindowWidth, currentWindowHeight;
 	protected LanguageManager languageManager;
 	protected Image background;
 

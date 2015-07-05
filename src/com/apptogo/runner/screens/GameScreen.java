@@ -4,6 +4,7 @@ import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.controller.Input;
+import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.GameWorldType;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.exception.PlayerExistsException;
@@ -130,7 +131,8 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			gameGuiStage.addActor(powerupButton);
 		}
-		gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(1) );
+		//gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(1) );
+		gameWorld.player.character.setPowerup( CharacterAbilityType.DEATH );
 		createGameProgressBar();
 	}
 	

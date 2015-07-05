@@ -7,14 +7,17 @@ import com.apptogo.runner.actors.BlackHole;
 import com.apptogo.runner.actors.Boar;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
+import com.apptogo.runner.actors.Ufo;
 import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.LiftField;
 import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
+import com.apptogo.runner.actors.Ufo.DeathAnimationState;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.World;
@@ -27,7 +30,7 @@ public class AbilityManager
 	
 	private World world;
 	private GameWorld gameWorld;
-	
+
 	public static void create()
 	{		
 		INSTANCE = new AbilityManager();
@@ -48,15 +51,17 @@ public class AbilityManager
 		
 		blackHoleOutParticleEffectActor = new ParticleEffectActor("blackHoleOut.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreenClass.GAME, "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(blackHoleOutParticleEffectActor);
+		
 	}
 	
 	public void useAbility(Character character, CharacterAbilityType abilityType, int abilityLevel){
+		Logger.log(this, "uzywam: " + abilityType);
 		switch(abilityType){
 			case BOMB:
-				throwBombs(character, abilityLevel);
+				useBombs(character, abilityLevel);
 				break;
 			case ARROW:
-				shootArrow(character, abilityLevel);
+				useArrow(character, abilityLevel);
 				break;
 			case LIFT:
 				useLift(character, abilityLevel);
@@ -76,12 +81,15 @@ public class AbilityManager
 			case OIL:
 				useOil(character, abilityLevel);
 				break;
+			case DEATH:
+				useDeath(character, abilityLevel);
+				break;
 			default:
 				break;
 		}
 	}
 	
-	private void throwBombs(Character character, int abilityLevel)
+	private void useBombs(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
@@ -98,7 +106,7 @@ public class AbilityManager
 		}
 	}
 	
-	private void shootArrow(Character character, int abilityLevel)
+	private void useArrow(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
@@ -252,6 +260,31 @@ public class AbilityManager
 		activeForceFields.add(forceField);
 	}
 	
+	public void useDeath(Character character, int abilityLevel){
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+		}
+		
+		switch(gameWorld.gameWorldType){
+		case WILDWEST:
+
+			break;
+		case FOREST:
+
+			break;
+		case SPACE:
+			Ufo ufo = ufosPool.obtain();
+			ufo.init(character, abilityLevel);
+			activeUfos.add(ufo);
+			break;
+		}
+		
+		
+	}
+	
 	public void act(){
 		freePools();
 	}
@@ -337,6 +370,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<Ufo> activeUfos = new Array<Ufo>();
+    private final Pool<Ufo> ufosPool = new Pool<Ufo>() {
+	    @Override
+	    protected Ufo newObject() {
+	    	Ufo ufo = new Ufo(world, gameWorld);
+	    	gameWorld.worldStage.addActor(ufo);
+	    	return ufo;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -384,6 +427,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeOils.get(i).alive == false) {
             	oilsPool.free(activeOils.removeIndex(i));
+            }
+        }
+        len = activeUfos.size;
+        for (int i = len; --i >= 0;) {
+            if (activeUfos.get(i).alive == false) {
+            	ufosPool.free(activeUfos.removeIndex(i));
             }
         }
 	}

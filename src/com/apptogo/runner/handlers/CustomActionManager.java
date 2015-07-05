@@ -23,6 +23,7 @@ public class CustomActionManager {
 	/**Dodaj akcje ktora wykona perform po ustalonym delay*/
 	public void registerAction(CustomAction action){
 		this.actionsCreated.add(action);
+		action.setRegistered(true);
 	}
 	
 	public void unregisterAction(CustomAction action){
@@ -30,6 +31,7 @@ public class CustomActionManager {
 		while(iter.hasNext()) {
 		    if (action == iter.next()){
 		        iter.remove();
+		        action.setRegistered(false);
 		        break;
 		    }
 		}

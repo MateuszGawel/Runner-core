@@ -1090,6 +1090,9 @@ public abstract class Character extends Actor{
 			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
 			//removePowerup(ability);
 		}
+		else if(powerupType == CharacterAbilityType.DEATH){
+			character.useSuperAbility( CharacterAbilityType.DEATH, character.abilities.get( powerupType.toString() ) );
+		}
 		//flags.setPowerupSet(false);
 	}
 	

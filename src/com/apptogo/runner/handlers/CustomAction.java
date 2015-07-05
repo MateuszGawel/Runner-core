@@ -15,6 +15,7 @@ public abstract class CustomAction {
 	private int loopCount = 0;
 	private int loops = 1;
 	protected Object[] args;
+	private boolean registered;
 	
 	public CustomAction(float delay){
 		this.delay = delay;
@@ -34,7 +35,7 @@ public abstract class CustomAction {
 	
 	public abstract void perform();
 	public void onFinish(){
-		
+
 	}
 	
 	public void additionalTask(){
@@ -52,6 +53,7 @@ public abstract class CustomAction {
 			perform();
 			if(loops > 0 && loopCount >= loops){
 				this.finished = true;
+				registered = false;
 				onFinish();
 			}	
 		}
@@ -64,5 +66,13 @@ public abstract class CustomAction {
 		stateTime = 0;
 		loopCount = 0;
 		timeElapsed = 0;
+	}
+
+	public boolean isRegistered() {
+		return registered;
+	}
+
+	public void setRegistered(boolean registered) {
+		this.registered = registered;
 	}
 }

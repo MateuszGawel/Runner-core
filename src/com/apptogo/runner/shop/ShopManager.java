@@ -45,6 +45,7 @@ public class ShopManager
 		this.items.add( new ShopItem(this, CharacterAbilityType.SNARES, "shop_snares", "SNARES", "Watch your back", new Integer[]{100, 200, 300}, player)  );
 		this.items.add( new ShopItem(this, CharacterAbilityType.SUPERSPEED, "shop_superspeed", "SUPERSPEED", "Fast as fuck!", new Integer[]{100, 200, 300}, player)  );	
 		
+		
 		return items;
 	}
 	
