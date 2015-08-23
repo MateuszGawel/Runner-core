@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -40,12 +41,12 @@ public class Ufo extends Actor implements Poolable{
 	private TextureAtlas atlas;
 	private Character characterOwner;
 	private CustomAction shootAction;
-	private boolean flyAway;
+	private boolean flyAway, alreadyShot;
 	private ParticleEffectActor shootLoadEffect;
 	private PooledEffect pooledShoot;
 	private Vector2 startingPos;
 	private LaserShoot laserShoot;
-	
+
 	public enum DeathAnimationState{
 		NORMAL
 	}
@@ -79,13 +80,17 @@ public class Ufo extends Actor implements Poolable{
 		gameWorld.getWorldStage().addActor(this);
 		setSize(203/PPM, 121/PPM);
 		
+		laserShoot = new LaserShoot();
+		
 		shootAction = new CustomAction(3, 1) {
 			@Override
 			public void perform() {
-				//zrobic strzal
-				Logger.log(this, "shoot");
+				
+				laserShoot.init();	
+
+				Logger.log(this, "wykonuje shoot");
+				alreadyShot = true;
 				characterOwner.dieDismemberment();
-				flyAway = true;
 				startingPos = new Vector2(ufoBody.getPosition());
 			}
 		};
@@ -113,7 +118,7 @@ public class Ufo extends Actor implements Poolable{
     	super.act(delta);
     	if(currentFrame != null && alive){
     		if(!flyAway)
-    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x, characterOwner.getBody().getPosition().y+5), 0.1f),0);
+    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x+1, characterOwner.getBody().getPosition().y+5), 0.1f),0);
     		else{
     			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x+25, characterOwner.getBody().getPosition().y+10), 0.02f),0);
 	    		if(ufoBody.getPosition().y >= characterOwner.getBody().getPosition().y+9){
@@ -122,8 +127,11 @@ public class Ufo extends Actor implements Poolable{
 	    		}
 	    	}
     		
-    		if(!flyAway && characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6 && !shootAction.isRegistered()){
+    		Logger.log(this, "MAM: " + !flyAway + (characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6) + !shootAction.isRegistered());
+    		
+    		if(!flyAway && !alreadyShot && characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6 && !shootAction.isRegistered()){
     			pooledShoot = shootLoadEffect.obtainAndStart(ufoBody.getPosition().x, ufoBody.getPosition().y, 0);
+    			Logger.log(this, "odpalam");
     			CustomActionManager.getInstance().registerAction(shootAction);
     		}
     		if(pooledShoot != null){
@@ -137,6 +145,7 @@ public class Ufo extends Actor implements Poolable{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
+		
 		//batch.draw(currentRegion, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		batch.draw(currentFrame.getTexture(),  //Texture texture
 				   getX(), //float x
@@ -164,6 +173,7 @@ public class Ufo extends Actor implements Poolable{
         alive = false;
         flyAway = false;
         shootAction.resetAction();
+        alreadyShot = false;
         shootLoadEffect.remove();
         pooledShoot = null;
 	}
@@ -173,6 +183,42 @@ public class Ufo extends Actor implements Poolable{
 	}
 	
 	class LaserShoot extends Actor{
-		//zrobic to jak w quasar
+		private TextureRegion texture;
+		private float width=0.5f, height = 0;
+		private Vector2 direction;
+		private float alpha = 1;
+		
+		public LaserShoot(){
+			texture = atlas.findRegion("laserPattern");
+			setDebug(true);
+			gameWorld.getWorldStage().addActor(this);
+		}
+		
+		public void init(){
+			direction = new Vector2(characterOwner.getBody().getPosition().x, characterOwner.getBody().getPosition().y);
+			height = ufoBody.getPosition().dst(direction);
+			setRotation(ufoBody.getPosition().angle(direction)-180);
+			setPosition(ufoBody.getPosition().x, ufoBody.getPosition().y);
+			alpha=1;
+			CustomActionManager.getInstance().registerAction(new CustomAction(0.01f, 20) {		
+				@Override
+				public void perform() {
+					alpha-=0.05f;
+					Logger.log(this, "wykonuje wygaszenie: " + alpha);
+					if(alpha<=0){
+						flyAway = true;
+					}
+				}
+			});
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			batch.setColor(1,1,1, alpha);
+			super.draw(batch, parentAlpha);
+			batch.draw(texture, ufoBody.getPosition().x-width/2,  ufoBody.getPosition().y, width/2, 0, width, height, 1, 1, getRotation());
+			batch.setColor(1, 1, 1, 1);
+		}
 	}
+
 }

@@ -81,7 +81,7 @@ public class Boar extends Actor implements Poolable{
 		case 1:
 			return 0.5f;
 		case 2:
-			return 0.3f;
+			return 0.25f;
 		case 3: 
 			return 1f;
 		default:
@@ -118,7 +118,7 @@ public class Boar extends Actor implements Poolable{
 		createFixture(Materials.boarSensor, 0.1f, 0.4f, 1f, bodylvl1);
 		createFixture(Materials.boarSensor, 0.1f, 0.4f, -1f, bodylvl1);
 
-		bodylvl2 = createBody(Materials.boarBody, 0.5f, 0.3f);
+		bodylvl2 = createBody(Materials.boarBody, 0.5f, 0.25f);
 		createFixture(Materials.boarSensor, 0.1f, 0.2f, 0.5f, bodylvl2);
 		createFixture(Materials.boarSensor, 0.1f, 0.2f, -0.5f, bodylvl2);
 		
