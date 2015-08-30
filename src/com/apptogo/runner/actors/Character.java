@@ -24,7 +24,6 @@ import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -37,6 +36,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -51,10 +51,12 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	public final float coinFixtureRadius = 128;
 	
+	public float MULT = 9;
+	
 	public String playerName;
 	public FlagsHandler flags;
 	
-	private World world;
+	public World world;
 	private CustomActionManager customActionManager = CustomActionManager.getInstance();
 	protected Body body;
 	protected TextureRegion currentFrame;
@@ -73,7 +75,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	protected long stepSoundId;
 	
 	public float speed = 0;
-	public float playerSpeedLimit = 12;
+	public float playerSpeedLimit = 16;
 	public float playerMinSpeed = 3;
 	public float playerSlowAmmount = 0;
 	public float speedBeforeLand;
@@ -125,6 +127,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
     	sounds.put(CharacterSound.STEPS, (Sound)rm.getResource(cs, "mfx/game/characters/steps.ogg"));
     	sounds.put(CharacterSound.LAND, (Sound)rm.getResource(cs, "mfx/game/characters/land.ogg"));
     	sounds.put(CharacterSound.SLIDE, (Sound)rm.getResource(cs, "mfx/game/characters/slide.ogg"));
+    	sounds.put(CharacterSound.JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/jumpSound.ogg"));
     }
     
 	protected void createBody(int startingPosition){
@@ -188,13 +191,15 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 		
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, -70 / PPM), 0);
+		CircleShape circle = new CircleShape();
+		circle.setRadius(20/PPM);
+		circle.setPosition(new Vector2(0 / PPM, -60 / PPM));
 		fixtureDef = Materials.characterSensor;
-		fixtureDef.shape = shape;
+		fixtureDef.shape = circle;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
 		
 		//jump sensor
-		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, -80 / PPM), 0);
+		shape.setAsBox(70 / PPM, 30 / PPM, new Vector2(-40 / PPM, -80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
@@ -246,13 +251,15 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		body.createFixture(fixtureDef).setUserData( new UserData("wallSensor") );
 	
 		//foot sensor
-		shape.setAsBox(25 / PPM, 25 / PPM, new Vector2(-10 / PPM, 70 / PPM), 0);
+		CircleShape circle = new CircleShape();
+		circle.setRadius(20/PPM);
+		circle.setPosition(new Vector2(0 / PPM, 60 / PPM));
 		fixtureDef = Materials.characterSensor;
-		fixtureDef.shape = shape;
+		fixtureDef.shape = circle;
 		body.createFixture(fixtureDef).setUserData( new UserData("footSensor") );
 		
 		//jump sensor
-		shape.setAsBox(70 / PPM, 40 / PPM, new Vector2(-40 / PPM, 80 / PPM), 0);
+		shape.setAsBox(70 / PPM, 30 / PPM, new Vector2(-40 / PPM, 80 / PPM), 0);
 		fixtureDef = Materials.characterSensor;
 		fixtureDef.shape = shape;
 		body.createFixture(fixtureDef).setUserData( new UserData("jumpSensor") );
@@ -306,6 +313,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	}
 	
 	public void jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd){
+		flags.update();
 		if(flags.isCanDoubleJump()){
 			doubleJump();
 		}
@@ -322,27 +330,29 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		flags.setSliding(false);
 		flags.setQueuedBoost(0);
 		flags.setJumped(true);
+		flags.setJumpedQueued(true);
 		layFixtures(false);
-
-		float y = (float) sqrt(-world.getGravity().y * 8);
+		sounds.get(CharacterSound.JUMP).play();
+		float y = (float) sqrt(-world.getGravity().y * MULT);// 12);
 		float x = body.getLinearVelocity().x;
 		body.setLinearVelocity(x*xMultiplier + xAdd, (y*yMultiplier + yAdd) * gravityModificator);
 		animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
-		
 		if(stepSoundPlayed){
 			sounds.get(CharacterSound.STEPS).stop();
 			stepSoundPlayed = false;
 		}
-		sounds.get(CharacterSound.JUMP).play();
 		
 		NotificationManager.getInstance().notifyJump(getBody().getPosition(), 1, 1, 0, 0, false);
 	}	
 	
 	private void doubleJump(){
-		float y = (float) sqrt(-world.getGravity().y * 8);
+		float y = (float) sqrt(-world.getGravity().y * MULT);
 		float x = body.getLinearVelocity().x;
 		flags.setQueuedBoost(0);
-		body.setLinearVelocity(x * 0.8f, gravityModificator * y * 0.7f );
+		flags.setJumpedQueued(true);
+		sounds.get(CharacterSound.DOUBLEJUMP).play();
+		//animationManager.setCurrentAnimationState(CharacterAnimationState.JUMPING);
+		body.setLinearVelocity(x * 0.9f, gravityModificator * y * 0.85f );
 		flags.setDoubleJumped(true);
 	}
 	
@@ -408,10 +418,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		{
 			flags.setDoubleJumped(false);
 			flags.setJumped(false);
-			if(!stepSoundPlayed){
-				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
-				stepSoundPlayed = true;
-			}
+
 			
 			if( flags.isSliding() )
 				standUp();
@@ -426,8 +433,14 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 				}
 				flags.setLifted(false);
 			}
-			if(!flags.isSliding())
-				sounds.get(CharacterSound.LAND).play(0.3f);
+			
+			if(!stepSoundPlayed){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
+				handleStepSoundSpeed();
+			}
+			if(!flags.isSliding() && speed <= 0.05f)
+				sounds.get(CharacterSound.LAND).play();
 		}
 	}
 	
@@ -550,8 +563,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			flags.setAlive(false);
 			flags.setSliding(false);
 			flags.setFlying(false);
-			
-			//flags.setBegan(false);
+			flags.setBegan(false);
 			
 			deathPosition = new Vector2(body.getPosition());
 			customActionManager.registerAction(new CustomAction(1f) {
@@ -629,13 +641,14 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	/*--- HANDLERS ---*/
 	private void handleQueuedActions(){
+		
 		if(flags.isQueuedJump()){
 			character.jump(1, 1, 0, 0);
 			flags.setQueuedJump(false);
 		}
 		
 		if(flags.getQueuedBoost() > 0){
-			boostAfterLand();
+			//boostAfterLand();
 		}
 		
 		if(flags.getQueuedLift() > 0){
@@ -735,19 +748,29 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		}
 		if(flags.isShouldStart()){
 			flags.setStopped(false);
+			if(!stepSoundPlayed && speed > 0.5f && flags.isOnGround() && animationManager.getCurrentAnimationState() != CharacterAnimationState.JUMPING){
+				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+				stepSoundPlayed = true;
+			}
 		}
 	}
 
 	private void handleRunning(){
+		
 		speed = body.getLinearVelocity().x;
+		
+
 		if(flags.isCanRun()){
+			body.setLinearDamping(0);
 			if(flags.isOnGround()){
-				body.applyForceToCenter(new Vector2(tempRunningModificator * 4500, 0), true); 
+				body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount), body.getLinearVelocity().y);
 			}
 			else if(this.getBody().getLinearVelocity().x <= 1){
-					body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
+				body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
 			}
 		}
+		else
+			body.setLinearDamping(0); //5
 		//Logger.log(this, flags.isShouldChangeToRunningState());
 		if(flags.isShouldChangeToRunningState())
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
@@ -755,7 +778,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	private void handleStepSoundSpeed(){
 		if(stepSoundId != 0)
-			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/12);
+			sounds.get(CharacterSound.STEPS).setPitch(stepSoundId, getSpeed()/13);
 	}
 
 	private void handleStandingUp(){
@@ -795,7 +818,6 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 					}
 				}
 			};
-			
 			customActionManager.registerAction(action);
 			if(flags.isStopFlyingAction()){
 				action.setFinished(true);
@@ -928,7 +950,11 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	@Override
 	public void act(float delta) {
-    	if(flags.isMe()) if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
+    	if(flags.isMe()) 
+    	{
+    		if(CoinsManager.getInstance() != null) CoinsManager.getInstance().update();
+    		//Logger.log(this, this.animationManager.getCurrentAnimationState() );
+    	}
 
 		flags.update();
 		handleQueuedActions();

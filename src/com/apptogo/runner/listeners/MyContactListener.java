@@ -355,7 +355,6 @@ public class MyContactListener implements ContactListener
 				contact.setRestitution(0);
 			}
 		}
-		
 		//dŸwiêk beczki
 		if( checkFixturesTypes(fa, fb, "barrel", "nonkilling")){
 			Body body = getFixtureByType(fa, fb, "barrel").getBody();
@@ -367,7 +366,6 @@ public class MyContactListener implements ContactListener
 			}
 		}
 	}
-	
 	public void postStep()
 	{
 

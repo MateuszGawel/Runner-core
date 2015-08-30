@@ -51,7 +51,7 @@ public class Alien extends Character{
 		ResourcesManager rm = ResourcesManager.getInstance();
     	BaseScreen cs = ScreensManager.getInstance().getCurrentScreen();
     	
-    	sounds.put(CharacterSound.JUMP, (Sound)rm.getResource(cs, "mfx/game/characters/archerJump.ogg"));
+    	sounds.put(CharacterSound.DOUBLEJUMP, (Sound)rm.getResource(cs, "mfx/game/characters/archerJump.ogg"));
     	sounds.put(CharacterSound.DEATH, (Sound)rm.getResource(cs, "mfx/game/characters/archerDeath.ogg"));
     	sounds.put(CharacterSound.EXPLODE, (Sound)rm.getResource(cs, "mfx/game/characters/archerExplode.ogg"));
     	sounds.put(CharacterSound.VICTORY, (Sound)rm.getResource(cs, "mfx/game/characters/archerVictory.ogg"));

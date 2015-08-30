@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 public class ForestWorld extends GameWorld{
-	public static final Vector2 GRAVITY = new Vector2(0f, -80f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -150f);
 
 
 	public ParallaxBackground tree1, tree2, tree3, grass;

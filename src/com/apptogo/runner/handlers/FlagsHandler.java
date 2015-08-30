@@ -53,6 +53,7 @@ public class FlagsHandler {
 	private boolean stopFlyingAction;
 	private boolean canUseAbility;
 	private boolean jumped;
+	private boolean jumpedQueued; //flaga ustawiana zanim przekrêci siê update bo zdarzenia sa wykonywane poza update.
 	private boolean gravityInversed;
 	private boolean gravityRotationSwitch;
 	private boolean lifted;
@@ -110,7 +111,7 @@ public class FlagsHandler {
 			else
 				canBegin = false;
 			
-			if((footSensor>0 || barrelSensor>0) && alive && !onGround && (character.getBody().getLinearVelocity().y <= 5 || character.getBody().getLinearVelocity().y >= -5)) //5 mo¿e byæ z³¹ wartoœci¹
+			if((footSensor>0 || barrelSensor>0) && alive && !onGround && !jumpedQueued && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDING && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDINGIDLE)
 				canLand = true;
 			else
 				canLand = false;
@@ -120,7 +121,7 @@ public class FlagsHandler {
 			else
 				onGround = false;
 			
-			if(alive && began && !finished && character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && tempRunFlag && !lifted && !snared)
+			if(alive && began && !finished && /*character.speed <= character.playerSpeedLimit-character.playerSlowAmmount && */ tempRunFlag && !lifted && !snared)
 				canRun = true;
 			else
 				canRun = false;
@@ -199,6 +200,8 @@ public class FlagsHandler {
 				canBeBlackHoleTeleported = true;
 			else 
 				canBeBlackHoleTeleported = false;
+			
+			jumpedQueued = false;
 //		else
 //		{
 //			canBegin = false;                  
@@ -727,6 +730,14 @@ public class FlagsHandler {
 
 	public void setCanBeSnared(boolean canBeSnared) {
 		this.canBeSnared = canBeSnared;
+	}
+
+	public boolean isJumpedQueued() {
+		return jumpedQueued;
+	}
+
+	public void setJumpedQueued(boolean jumpedQueued) {
+		this.jumpedQueued = jumpedQueued;
 	}
 
 	public boolean isCanBeBlackHoleTeleported() {

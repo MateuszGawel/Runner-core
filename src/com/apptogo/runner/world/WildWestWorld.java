@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class WildWestWorld extends GameWorld{
-	public static final Vector2 GRAVITY = new Vector2(0f, -80f);
+	public static final Vector2 GRAVITY = new Vector2(0f, -110f);
 
 	public ParallaxBackground mountains;
 	public ParallaxBackground rocks;

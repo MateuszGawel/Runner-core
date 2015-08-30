@@ -23,6 +23,7 @@ import com.apptogo.runner.world.GameWorldRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -180,6 +181,26 @@ public abstract class GameScreen extends BaseScreen{
 		{
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.U) )
+		{
+			player.character.MULT += 0.5;
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.Y) )
+		{
+			player.character.MULT -= 0.5;
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.O) )
+		{
+			player.character.world.setGravity( new Vector2(player.character.world.getGravity().x, player.character.world.getGravity().y + 5)  );
+		}
+		if( Gdx.input.isKeyJustPressed(Keys.P) )
+		{
+			player.character.world.setGravity( new Vector2(player.character.world.getGravity().x, player.character.world.getGravity().y - 5)  );
+		}		
+		
 //		else if( Input.isPressed() ) 
 //		{
 //			if(!multiplayer) 

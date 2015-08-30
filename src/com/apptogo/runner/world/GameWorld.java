@@ -17,6 +17,7 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.listeners.MyContactListener;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.userdata.UserData;
@@ -39,7 +40,7 @@ public abstract class GameWorld
 	public static final float WIDTH = Runner.SCREEN_WIDTH / PPM;
 	public static final float HEIGHT = Runner.SCREEN_HEIGHT / PPM;
 	public static final float WORLD_STEP = 1/60f;
-	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0f, -60f);
+	public static final Vector2 DEFAULT_GRAVITY = new Vector2(0f, -100f);
 	
 	public World world;
 	Array<Body> bodiesToDestroy;
@@ -78,6 +79,7 @@ public abstract class GameWorld
 		this.gameWorldType = gameWorldType;
 		
 		world = new World(DEFAULT_GRAVITY, true);
+		Logger.log(this, world.getGravity());
 		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);
 		

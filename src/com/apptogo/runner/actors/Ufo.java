@@ -9,7 +9,6 @@ import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
-import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -88,7 +87,6 @@ public class Ufo extends Actor implements Poolable{
 				
 				laserShoot.init();	
 
-				Logger.log(this, "wykonuje shoot");
 				alreadyShot = true;
 				characterOwner.dieDismemberment();
 				startingPos = new Vector2(ufoBody.getPosition());
@@ -122,16 +120,12 @@ public class Ufo extends Actor implements Poolable{
     		else{
     			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x+25, characterOwner.getBody().getPosition().y+10), 0.02f),0);
 	    		if(ufoBody.getPosition().y >= characterOwner.getBody().getPosition().y+9){
-	    			Logger.log(this, "reset");
 	    			reset();
 	    		}
 	    	}
     		
-    		Logger.log(this, "MAM: " + !flyAway + (characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6) + !shootAction.isRegistered());
-    		
     		if(!flyAway && !alreadyShot && characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6 && !shootAction.isRegistered()){
     			pooledShoot = shootLoadEffect.obtainAndStart(ufoBody.getPosition().x, ufoBody.getPosition().y, 0);
-    			Logger.log(this, "odpalam");
     			CustomActionManager.getInstance().registerAction(shootAction);
     		}
     		if(pooledShoot != null){
@@ -197,14 +191,15 @@ public class Ufo extends Actor implements Poolable{
 		public void init(){
 			direction = new Vector2(characterOwner.getBody().getPosition().x, characterOwner.getBody().getPosition().y);
 			height = ufoBody.getPosition().dst(direction);
-			setRotation(ufoBody.getPosition().angle(direction)-180);
+//			setRotation(ufoBody.getPosition().angle(direction)-180);
+			Vector2 temp = new Vector2( direction.x - ufoBody.getPosition().x, direction.y - ufoBody.getPosition().y );
+			setRotation(temp.angle() - 90);
 			setPosition(ufoBody.getPosition().x, ufoBody.getPosition().y);
 			alpha=1;
 			CustomActionManager.getInstance().registerAction(new CustomAction(0.01f, 20) {		
 				@Override
 				public void perform() {
 					alpha-=0.05f;
-					Logger.log(this, "wykonuje wygaszenie: " + alpha);
 					if(alpha<=0){
 						flyAway = true;
 					}
