@@ -4,12 +4,14 @@ import com.apptogo.runner.actors.Countdown;
 import com.apptogo.runner.appwarp.NotificationManager;
 import com.apptogo.runner.controller.Input;
 import com.apptogo.runner.enums.GameWorldType;
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.enums.WidgetType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.widget.Widget;
@@ -47,12 +49,16 @@ public class GameScreenSingle extends GameScreen
 		
 		createGui();
 		createLabels();
-		
+		Logger.log(this, "YYYYY!");
 		CustomActionManager.getInstance().registerAction(new CustomAction(2f, 1, player.character) {
 			
 			@Override
 			public void perform() {
-				new Countdown(gameWorld).startCountdown();
+				
+				if( ScreensManager.getInstance().getCurrentScreenClass() == ScreenClass.GAME)
+				{
+					new Countdown(gameWorld).startCountdown();
+				}
 			}
 		});
 		
@@ -122,6 +128,11 @@ public class GameScreenSingle extends GameScreen
 		if( Gdx.input.isKeyPressed(Keys.F))
 		{
 			finishWidget.toggleWidget();
+		}
+		
+		if( Gdx.input.isKeyPressed(Keys.W))
+		{
+			player.character.dieBottom();
 		}
 		
 		if( Input.isPressed() ) 

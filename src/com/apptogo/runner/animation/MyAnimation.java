@@ -64,7 +64,7 @@ public class MyAnimation extends Animation{
 	public int getKeyFrameIndex (float stateTime) {
 		//Logger.log(this, "maxLoop: " + maxLoopCount + " currentLoop: " + loopCount);
 		//if(stateTime < frameDuration[0])
-			//resetLoops();   - ta linijka i powyzsza usunieta bo wrzucal 0 klatke przy stopie zawsze na koncu
+			//resetLoops();   //- ta linijka i powyzsza usunieta bo wrzucal 0 klatke przy stopie zawsze na koncu
 		if (keyFrames.length == 1) return 0;
 		if(loopCount <= maxLoopCount && (stateTime - timeElapsed) / frameDuration[frameNumber] >= 1){
 			timeElapsed += frameDuration[frameNumber];
@@ -147,7 +147,7 @@ public class MyAnimation extends Animation{
 		if(isAnimationFinished())
 			onAnimationFinished();
 		
-		if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "Obecna klatka " + ( (AtlasRegion) frame).name );
+		//if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "Obecna klatka " + ( (AtlasRegion) frame).name );
 		
 		return frame;
 	}
@@ -169,7 +169,7 @@ public class MyAnimation extends Animation{
 		this.animationFinished = false;
 		this.timeElapsed = 0;
 		this.frameNumber = 0;
-		if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "RESET!");
+		//if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "RESET!");
 	}
 	public int getFrameNumber(){
 		return this.frameNumber;

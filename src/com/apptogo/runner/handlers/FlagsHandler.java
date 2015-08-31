@@ -59,6 +59,7 @@ public class FlagsHandler {
 	private boolean lifted;
 	private boolean snared;
 	private boolean teleport;
+	private boolean diedInAir;
  	
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
@@ -111,7 +112,7 @@ public class FlagsHandler {
 			else
 				canBegin = false;
 			
-			if((footSensor>0 || barrelSensor>0) && alive && !onGround && !jumpedQueued && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDING && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDINGIDLE)
+			if((footSensor>0 || barrelSensor>0) && alive && !onGround && began && !jumpedQueued && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDING && animManager.getCurrentAnimationState()!=CharacterAnimationState.LANDINGIDLE)
 				canLand = true;
 			else
 				canLand = false;
@@ -126,7 +127,7 @@ public class FlagsHandler {
 			else
 				canRun = false;
 			
-			if(alive && !finished && began && onGround && character.speed>1 && ( animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE || animManager.getCurrentAnimationState() == CharacterAnimationState.DIEINGBOTTOM || animManager.getCurrentAnimationState() == CharacterAnimationState.DIEINGTOP ) )
+			if(began && alive && character.speed>0.1f && !stopped && (animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE || animManager.getCurrentAnimationState() == CharacterAnimationState.BORED) )
 				shouldChangeToRunningState = true;
 			else
 				shouldChangeToRunningState = false;
@@ -169,12 +170,7 @@ public class FlagsHandler {
 			if(began && !finished && character.speed>0.1f && alive && stopped)
 				shouldStart = true;
 			else
-				shouldStart = false;	
-			
-			if(began && alive && character.speed>0.1f && !stopped && animManager.getCurrentAnimationState() == CharacterAnimationState.IDLE)
-				shouldChangeToRunningState = true;
-			else
-				shouldChangeToRunningState = false;
+				shouldStart = false;
 			
 			if(alive && began && !finished && !onGround && animManager.getCurrentAnimationState() == CharacterAnimationState.RUNNING)
 				shouldFly = true;
@@ -762,5 +758,13 @@ public class FlagsHandler {
 
 	public void setTeleport(boolean teleport) {
 		this.teleport = teleport;
+	}
+
+	public boolean isDiedInAir() {
+		return diedInAir;
+	}
+
+	public void setDiedInAir(boolean diedInAir) {
+		this.diedInAir = diedInAir;
 	}
 }

@@ -27,9 +27,9 @@ public class WildWestBackgroundRenderer extends Actor{
 		}
 		batch.end();
 			shapeRenderer.begin(ShapeType.Filled);
-				shapeRenderer.rect(0, currentHeight*2/3-200, currentWidth, currentHeight/3+200, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
-				shapeRenderer.rect(0, currentHeight*1/3-100, currentWidth, currentHeight/3, brown, brown, brown, brown);
-				shapeRenderer.rect(0, 0, currentWidth, currentHeight/3-100, lightBrown, lightBrown, lightBrown, lightBrown);
+				shapeRenderer.rect(0, currentHeight*2/3-200, currentWidth, currentHeight/3+205, Color.WHITE, Color.WHITE, lightBlue, lightBlue);
+				shapeRenderer.rect(0, currentHeight/3, currentWidth, currentHeight/3-200, brown, brown, brown, brown);
+				shapeRenderer.rect(0, 0, currentWidth, currentHeight/3, lightBrown, lightBrown, lightBrown, lightBrown);
 			shapeRenderer.end();
 		batch.begin();
 	}

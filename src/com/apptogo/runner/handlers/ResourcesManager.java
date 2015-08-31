@@ -145,7 +145,7 @@ public class ResourcesManager
 		public void loadMusics()
 		{			
 			for(String music: this.musics) //tu chyba nie powinien byc string? wyglada mi na niedorobke moja ale bd sie tym martwic jak dojdziemy do dzwiekow
-			{
+			{				
 				this.manager.load(music, Music.class);
 			}
 		}

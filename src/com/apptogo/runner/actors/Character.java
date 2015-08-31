@@ -301,8 +301,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	public void start()
 	{
 		if(flags.isCanBegin())
-		{		
-			if(!stepSoundPlayed){
+		{				
+			if(!stepSoundPlayed && flags.isBegan()){				
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
 			}
@@ -436,14 +436,18 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 				}
 				flags.setLifted(false);
 			}
-			
+
 			if(!stepSoundPlayed){
+				handleStepSoundSpeed();
+				
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
-				handleStepSoundSpeed();
 			}
+			
 			if(!flags.isSliding() && speed <= 0.05f)
+			{
 				sounds.get(CharacterSound.LAND).play();
+			}
 		}
 	}
 	
@@ -559,6 +563,11 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		playerSlowAmmount = 0;
 		if(flags.isAlive())
 		{
+			if( !flags.isOnGround() )
+			{
+				flags.setDiedInAir(true);
+			}
+			
 			if(stepSoundPlayed){
 				sounds.get(CharacterSound.STEPS).stop();
 				stepSoundPlayed = false;
@@ -583,12 +592,27 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		setVisible(true);
 		flags.setImmortal(true);
 		flags.setAlive(true);
-		flags.update();
-		if(flags.isOnGround())
-			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 		
 		body.setTransform(deathPosition, 0);
-		start();
+		
+		flags.update();
+		
+		Logger.log(this, "respawn");
+		if(!stepSoundPlayed && !flags.isDiedInAir()){
+			stepSoundId = sounds.get(CharacterSound.STEPS).loop();
+			stepSoundPlayed = true;
+		}
+
+		flags.setDiedInAir(false);
+		
+		flags.setBegan(true);
+		if(flags.isOnGround()){
+			animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
+		}
+		else
+			animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
+		
+		
 		
 		CustomActionManager.getInstance().registerAction(new CustomAction(0.01f, 96) {
 			
@@ -1166,13 +1190,13 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		
 		batch.setColor(c.r , c.g, c.b, alpha);
 		
-		Logger.log(this, batch.getColor().a + ",   parentAlpha = " + parentAlpha);
+//		Logger.log(this, batch.getColor().a + ",   parentAlpha = " + parentAlpha);
 		
 		AtlasRegion currentRegion = (AtlasRegion)currentFrame;
 		if(gravityModificator == 1)
 			batch.draw(currentFrame.getTexture(),  //Texture texture
-					   getX() + ( (currentRegion.offsetX) * 1.219f / PPM) - customOffsetX, //float x
-	                   getY() + ( (currentRegion.offsetY) * 1.219f / PPM) - customOffsetY, //float y
+					   getX() + ( (currentRegion.offsetX) / PPM) - customOffsetX, //float x
+	                   getY() + ( (currentRegion.offsetY) / PPM) - customOffsetY, //float y
 	                   getOriginX(),  //float originX
 	                   getOriginY(),  //float originY
 	                   getWidth(),    //float width
@@ -1189,8 +1213,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	                  );
 		else
 			batch.draw(currentFrame.getTexture(),  //Texture texture
-					   getX() - ( (currentRegion.originalWidth - currentRegion.offsetX - currentRegion.packedWidth ) * 1.219f / PPM) - customOffsetX, //float x
-	                   getY() - ( (currentRegion.offsetY) * 1.219f / PPM) - customOffsetY, //float y
+					   getX() - ( (currentRegion.originalWidth - currentRegion.offsetX - currentRegion.packedWidth ) / PPM) - customOffsetX, //float x
+	                   getY() - ( (currentRegion.offsetY) / PPM) - customOffsetY, //float y
 	                   getOriginX(),  //float originX
 	                   getOriginY(),  //float originY
 	                   getWidth(),    //float width

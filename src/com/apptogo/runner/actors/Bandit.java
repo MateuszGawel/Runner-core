@@ -126,17 +126,19 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.06f, CharacterAnimationState.IDLE, animationManager.createFrames(22, "bandit_idle"), true, 8 + randonGenerator.nextInt(5)){
 			@Override
 			public void onAnimationFinished(){
-				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLETOMOONWALK);
+				//animationManager.setCurrentAnimationState(CharacterAnimationState.IDLETOMOONWALK);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.BORED, animationManager.createFrames(31, "bandit_moonwalk"), true, 5){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
-				animationManager.setCurrentAnimationState(CharacterAnimationState.MOONWALKTOIDLE);
+				//animationManager.setCurrentAnimationState(CharacterAnimationState.MOONWALKTOIDLE);
+				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.MOONWALKTOIDLE, animationManager.createFrames(6, "bandit_moonwalkToIdle"), false){
+		/*animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.MOONWALKTOIDLE, animationManager.createFrames(6, "bandit_moonwalkToIdle"), false){
 			@Override
 			public void onAnimationFinished(){
 				this.resetLoops();
@@ -149,7 +151,7 @@ public class Bandit extends Character{
 				this.resetLoops();
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
-		});	
+		});	*/
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, animationManager.createFrames(10, "bandit_flybomb"), false){
 			@Override
 			public void onAnimationFinished(){

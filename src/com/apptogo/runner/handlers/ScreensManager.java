@@ -1,5 +1,6 @@
  package com.apptogo.runner.handlers;
 
+import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.levels.Level;
 import com.apptogo.runner.main.Runner;
@@ -116,6 +117,7 @@ public class ScreensManager {
 		runner.setScreen(screen);
 	}
 	
-    public ScreenType getCurrentScreenType(){ return currentScreenType; }
+	public ScreenType getCurrentScreenType(){ return currentScreenType; }
+	public ScreenClass getCurrentScreenClass(){ return ScreenType.convertToScreenClass(currentScreenType); }
     public BaseScreen getCurrentScreen(){ return currentScreen; }
 }

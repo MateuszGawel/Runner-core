@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.GameScreen;
@@ -24,7 +25,6 @@ public class Countdown extends Obstacle{
 	private int frameCounter = 0;
 	public Countdown(GameWorld world){
 		super();
-		
 		this.isGameObstacle = false;
 		
 		this.world = world;
@@ -34,30 +34,23 @@ public class Countdown extends Obstacle{
 		countdownGo = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/countdownGo.ogg");
 		ScreensManager.getInstance().getCurrentScreen().gameGuiStage.addActor(this);
 		updatePosition = false;	
-		
-		//temp
-		for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.enemies){
-			enemy.character.start();
-		}
-		((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start();
-		remove();
-		//temp
-		
+				
 		animationManager.createAnimation(new MyAnimation(1f, CountdownAnimationState.NORMAL, animationManager.createFrames(4, "countdown"), false){
 			@Override
 			public void onAnimationFinished(){
 				setVisible(false);
 				animationManager.setCurrentAnimationState(CountdownAnimationState.STATIC);
-				//currentFrame = animationManager.animate(0f);
+				currentFrame = animationManager.animate(0f);
 
 				setAnimate(false);
 				
-				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.play();
-				//((GameScreen)ScreensManager.getInstance().getCurrentScreen()).world.music.setLooping(true);
+//				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.music.play();
+//				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.music.setLooping(true);
+				
 				for(Player enemy : ((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.enemies){
-					enemy.character.start();
+					enemy.character.start(); //trzeba usunac flage tempCanRan w flags managerze
 				}
-				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start();
+				((GameScreen)ScreensManager.getInstance().getCurrentScreen()).gameWorld.player.character.start(); //trzeba usunac flage tempCanRan w flags managerze
 				remove();
 			}
 			@Override
@@ -87,15 +80,14 @@ public class Countdown extends Obstacle{
 	
 	public void startCountdown(){
 		//wykomentowane zeby nie opozniac
-		//animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
-		//setAnimate(true);
+		animationManager.setCurrentAnimationState(CountdownAnimationState.NORMAL);
+		setAnimate(true);
 	}
 	
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		
         setWidth(currentFrame.getRegionWidth());
         setHeight(currentFrame.getRegionHeight());
 		setPosition(Runner.SCREEN_WIDTH/2 - currentFrame.getRegionWidth()/2, Runner.SCREEN_HEIGHT/2 - currentFrame.getRegionHeight()/2);
