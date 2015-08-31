@@ -49,7 +49,7 @@ public class GameScreenSingle extends GameScreen
 		
 		createGui();
 		createLabels();
-		Logger.log(this, "YYYYY!");
+
 		CustomActionManager.getInstance().registerAction(new CustomAction(2f, 1, player.character) {
 			
 			@Override

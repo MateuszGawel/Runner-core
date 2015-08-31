@@ -92,7 +92,7 @@ public class LiftField extends Actor{
 		
 		setPosition(ownerCharacter.getX(), ownerCharacter.getY());
 		fieldBody.setTransform(ownerCharacter.getX() + 50/PPM, ownerCharacter.getY() + 5/PPM, 0);
-		pooledEffect = getParticleEffectActor().obtainAndStart(fieldBody.getPosition().x+20/PPM, fieldBody.getPosition().y+20/PPM, 0);
+		pooledEffect = getParticleEffectActor().obtainAndStart(fieldBody.getPosition().x+20/PPM, fieldBody.getPosition().y+90/PPM, 0);
     	
 		CustomActionManager.getInstance().registerAction(new CustomAction(0.4f) {
 			@Override
@@ -112,8 +112,11 @@ public class LiftField extends Actor{
 		if(alive){
 			setPosition(ownerCharacter.getX(), ownerCharacter.getY());
 			fieldBody.setTransform(ownerCharacter.getX() + 50/PPM, ownerCharacter.getY() + 5/PPM, 0);
+			
+		}
+		if(!pooledEffect.isComplete()){
 			getParticleEffectActor().setPosition(ownerCharacter.getX() + 50/PPM, ownerCharacter.getY()+ 5/PPM);
-			pooledEffect.setPosition(ownerCharacter.getX() + 50/PPM, ownerCharacter.getY()+ 5/PPM);
+			pooledEffect.setPosition(ownerCharacter.getX() + 50/PPM, ownerCharacter.getY()+ 90/PPM);
 		}
 	}
 	public void setLevel(int level) {

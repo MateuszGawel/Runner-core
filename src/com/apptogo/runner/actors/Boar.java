@@ -107,7 +107,7 @@ public class Boar extends Actor implements Poolable{
         animationManager = new AnimationManager();
         this.world = world;
 		animationManager.createAnimation(new MyAnimation(0.03f, BoarAnimationState.LVL1, animationManager.createFrames(19, "boar1lvl"), true));	
-		animationManager.createAnimation(new MyAnimation(0.03f, BoarAnimationState.LVL2, animationManager.createFrames(19, "boar1lvl"), true));	
+		animationManager.createAnimation(new MyAnimation(0.03f, BoarAnimationState.LVL2, animationManager.createFrames(19, "boarlvl3"), true));	
 		animationManager.createAnimation(new MyAnimation(0.03f, BoarAnimationState.LVL3, animationManager.createFrames(19, "boar1lvl"), true));	
 		setAnimationState();	
 		

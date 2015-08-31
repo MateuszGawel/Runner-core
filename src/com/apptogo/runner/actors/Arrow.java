@@ -20,6 +20,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -179,7 +180,7 @@ public class Arrow extends Actor implements Poolable{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		batch.draw(currentRegion, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		batch.draw(currentRegion, getX()+(((AtlasRegion)currentRegion).offsetX), getY()+ (((AtlasRegion)currentRegion).offsetX), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
 	}
 
 	public void setLevel(int level) {

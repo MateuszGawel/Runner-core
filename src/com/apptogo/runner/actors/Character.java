@@ -492,8 +492,12 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			customActionManager.registerAction(new CustomAction(0.5f) {
 				@Override
 				public void perform() {
+					
 					flags.setMinimumSlidingTimePassed(true);
-					if(!flags.isSlideButtonPressed()) standUp();
+					if(!flags.isSlideButtonPressed()) {
+						Logger.log(this, "wstaje!");
+						standUp();
+					}
 				}
 			});
 			NotificationManager.getInstance().notifySlide(getBody().getPosition());
@@ -1043,6 +1047,12 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 				flags.setSlideButtonPressed(true);
 				character.slide();
 		        return true;
+		    }
+			@Override
+		    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+			{
+				flags.setSlideButtonPressed(false);
+				standUp();
 		    }
 		});
 		

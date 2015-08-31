@@ -138,7 +138,7 @@ public class BlackHole extends Actor implements Poolable{
     	((UserData)getCurrentBody().getFixtureList().get(0).getUserData()).alive = true;
     	((UserData)getCurrentBody().getFixtureList().get(0).getUserData()).playerName = characterOwner.playerName;
     	((UserData)getCurrentBody().getFixtureList().get(0).getUserData()).abilityLevel = level;
-    	getCurrentBody().setTransform(characterOwner.getX(), characterOwner.getY(), 0);
+    	getCurrentBody().setTransform(characterOwner.getX(), characterOwner.getY()+30/PPM, 0);
     	getCurrentBody().setLinearVelocity(getSpeed(), 0);
     	getCurrentBody().setAngularVelocity(3f);
     	setWidth(getSize() / PPM);
@@ -188,7 +188,7 @@ public class BlackHole extends Actor implements Poolable{
 	        setRotation((float)Math.toDegrees(getCurrentBody().getAngle()));
 	        if(level!=1){ 
 	        	getParticleEffect().setPosition(getCurrentBody().getPosition().x, getCurrentBody().getPosition().y);
-	        	pooledEffect.setPosition(getCurrentBody().getPosition().x, getCurrentBody().getPosition().y);
+	        	pooledEffect.setPosition(getCurrentBody().getPosition().x, getCurrentBody().getPosition().y+getSize()/4/PPM);
 	        }
 	        if(((UserData)getCurrentBody().getFixtureList().get(0).getUserData()).active){
 	        	((UserData)getCurrentBody().getFixtureList().get(0).getUserData()).active = false;

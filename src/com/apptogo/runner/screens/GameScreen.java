@@ -182,24 +182,42 @@ public abstract class GameScreen extends BaseScreen{
 			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
 		}
 		
-		if( Gdx.input.isKeyJustPressed(Keys.U) )
-		{
-			player.character.MULT += 0.5;
-		}
-		
-		if( Gdx.input.isKeyJustPressed(Keys.Y) )
-		{
-			player.character.MULT -= 0.5;
-		}
-		
 		if( Gdx.input.isKeyJustPressed(Keys.O) )
 		{
-			player.character.world.setGravity( new Vector2(player.character.world.getGravity().x, player.character.world.getGravity().y + 5)  );
+			int itemLevel = player.getAbilityLevel( player.character.currentAbilitySet );
+			
+			if( itemLevel > 1 )
+				player.abilities.put(player.character.currentAbilitySet.toString(), itemLevel - 1);
 		}
 		if( Gdx.input.isKeyJustPressed(Keys.P) )
 		{
-			player.character.world.setGravity( new Vector2(player.character.world.getGravity().x, player.character.world.getGravity().y - 5)  );
-		}		
+			int itemLevel = player.getAbilityLevel( player.character.currentAbilitySet );
+			
+			if( itemLevel < 3 )
+				player.abilities.put(player.character.currentAbilitySet.toString(), itemLevel + 1);
+		}	
+		
+		
+		if( Gdx.input.isKeyJustPressed(Keys.NUM_0) )
+		{
+			gameWorld.player.character.setPowerup( CharacterAbilityType.DEATH );
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.NUM_7) )
+		{
+			gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(0) );
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.NUM_8) )
+		{
+			gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(1) );
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.NUM_9) )
+		{
+			gameWorld.player.character.setPowerup( gameWorld.player.character.specialAbilities.get(2) );
+		}
+		
 		
 //		else if( Input.isPressed() ) 
 //		{
