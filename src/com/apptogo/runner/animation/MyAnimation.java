@@ -1,5 +1,7 @@
 package com.apptogo.runner.animation;
 
+import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.logger.Logger;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -61,8 +63,8 @@ public class MyAnimation extends Animation{
 	@Override
 	public int getKeyFrameIndex (float stateTime) {
 		//Logger.log(this, "maxLoop: " + maxLoopCount + " currentLoop: " + loopCount);
-		if(stateTime < frameDuration[0])
-			resetLoops();
+		//if(stateTime < frameDuration[0])
+			//resetLoops();   - ta linijka i powyzsza usunieta bo wrzucal 0 klatke przy stopie zawsze na koncu
 		if (keyFrames.length == 1) return 0;
 		if(loopCount <= maxLoopCount && (stateTime - timeElapsed) / frameDuration[frameNumber] >= 1){
 			timeElapsed += frameDuration[frameNumber];
@@ -144,6 +146,9 @@ public class MyAnimation extends Animation{
 		playMode = oldPlayMode;
 		if(isAnimationFinished())
 			onAnimationFinished();
+		
+		if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "Obecna klatka " + ( (AtlasRegion) frame).name );
+		
 		return frame;
 	}
 
@@ -164,6 +169,7 @@ public class MyAnimation extends Animation{
 		this.animationFinished = false;
 		this.timeElapsed = 0;
 		this.frameNumber = 0;
+		if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "RESET!");
 	}
 	public int getFrameNumber(){
 		return this.frameNumber;

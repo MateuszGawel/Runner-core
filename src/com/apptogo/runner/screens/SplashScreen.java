@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class SplashScreen extends BaseScreen
 {
-	private final boolean SKIP_ANIMATIONS = false;
+	private final boolean SKIP_ANIMATIONS = true;
 	
 	private enum SplashPhase
 	{

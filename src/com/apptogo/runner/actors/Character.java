@@ -29,6 +29,7 @@ import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -96,6 +97,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	HashMap<String, Integer> abilities;
 	//
 	public Array<CharacterAbilityType> specialAbilities;
+	
+	float alpha = 1f;
 	
 	public Character(World world, String atlasName, String jumpButtonStyleName, String slideButtonStyleName, String slowButtonStyleName, String playerName, HashMap<String, Integer> abilities)
 	{
@@ -587,32 +590,33 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		body.setTransform(deathPosition, 0);
 		start();
 		
-		final CustomAction blinkAction = new CustomAction(0.1f, 0) {
-			@Override
-			public void perform()
-			{
-				if(blinkShow) setVisible(true);
-				else          setVisible(false);
-				
-				blinkShow = !blinkShow;
-			}
-		};
-		
-		customActionManager.registerAction(blinkAction);
-		
-		customActionManager.registerAction(new CustomAction(2f) {
+		CustomActionManager.getInstance().registerAction(new CustomAction(0.01f, 96) {
+			
+			boolean growing = false;
+			
 			@Override
 			public void perform() {
-				
+				if(growing){
+					alpha+=0.05f;
+					if(alpha >= 1)
+						growing = false;
+				}
+				else{
+					alpha -= 0.05f;
+					if(alpha <= 0.2)
+						growing = true;
+				}
+			}
+			
+			@Override
+			public void onFinish()
+			{
 				flags.setImmortal(false);
-				
 				flags.update();
-
-				blinkAction.setFinished(true);
 				
-				blinkShow = false;
-								
-				setVisible(true);				
+				alpha = 1f;
+				
+				Logger.log(this, "AKTUALNE ALPHA JEST " + alpha);
 			}
 		});
 	}
@@ -770,7 +774,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			}
 		}
 		else
-			body.setLinearDamping(0); //5
+			body.setLinearDamping(5); //5
 		//Logger.log(this, flags.isShouldChangeToRunningState());
 		if(flags.isShouldChangeToRunningState())
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
@@ -1158,6 +1162,12 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	@Override
 	public void draw(Batch batch, float parentAlpha) 
 	{
+		Color c = new Color(batch.getColor());
+		
+		batch.setColor(c.r , c.g, c.b, alpha);
+		
+		Logger.log(this, batch.getColor().a + ",   parentAlpha = " + parentAlpha);
+		
 		AtlasRegion currentRegion = (AtlasRegion)currentFrame;
 		if(gravityModificator == 1)
 			batch.draw(currentFrame.getTexture(),  //Texture texture
@@ -1195,6 +1205,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	                   flipX, //boolean flipX
 	                   flipY  //boolean flipY
 	                  );
+		
+		batch.setColor(c.r , c.g, c.b, c.a);
 	}
 	@Override
 	public int compareTo(Character character) {
