@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -210,7 +211,11 @@ public abstract class BaseScreen implements Screen
 			
 			fadeViewport.update(currentWindowWidth, currentWindowHeight);
 			fadeStage.act();
-			fadeStage.draw();
+			
+			if( fade.getColor().a > 0 )
+			{
+				fadeStage.draw();
+			}
 		}
 				
 		CustomActionManager.getInstance().act(delta);

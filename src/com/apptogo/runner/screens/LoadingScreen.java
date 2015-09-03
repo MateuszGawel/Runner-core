@@ -20,7 +20,7 @@ public class LoadingScreen extends BaseScreen
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad)
 	{		
-		super(runner);	Logger.log(this,"LOADING CREATED");
+		super(runner);
 		resourcesManager = ResourcesManager.getInstance();
 		
 		timeStart = TimeUtils.millis();
@@ -40,7 +40,7 @@ public class LoadingScreen extends BaseScreen
 	}
 	
 	public void step()
-	{Logger.log(this,"LOADING STEP");
+	{
 		if( !loadingLabelIsAdded )// && ( (TimeUtils.millis() - timeStart) > 500 ) )
 		{			
 			loadingAnimation.setVisible(true);

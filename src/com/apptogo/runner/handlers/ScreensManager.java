@@ -111,7 +111,6 @@ public class ScreensManager {
 	public void setScreen(BaseScreen screen)
 	{
 		if( currentScreen != null ) currentScreen.dispose();
-		Logger.log(this, "ZDISPOZOWANY!");
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	
