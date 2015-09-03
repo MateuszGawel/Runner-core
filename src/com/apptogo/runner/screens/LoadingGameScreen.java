@@ -16,6 +16,7 @@ import com.apptogo.runner.player.Player;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class LoadingGameScreen extends BaseScreen
 {
@@ -72,7 +73,7 @@ public class LoadingGameScreen extends BaseScreen
 	}
 	
 	public void step()
-	{
+	{		
 		if( resourcesManager.getAssetManager(screenToLoad).update() )
 		{
 			ScreenMeta screenMeta = resourcesManager.screenMetaArray.get( resourcesManager.getScreenIndex(ScreenClass.GAME) );

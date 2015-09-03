@@ -144,15 +144,17 @@ public abstract class GameScreen extends BaseScreen{
 	}
 	
 	public void step() 
-	{
-		handleInput();	
+	{		
 		handleCoinLabel();
 		gameWorld.update(delta);
 		worldRenderer.resize(currentWindowWidth, currentWindowHeight);
 		worldRenderer.render(delta);
+		
 		Input.update();
+		
+		handleInput();
 	}
-	
+
 	private void handleCoinLabel()
 	{
 		coinLabelCounter = gameWorld.player.character.getCoinCounter();
@@ -179,7 +181,8 @@ public abstract class GameScreen extends BaseScreen{
 	{
 		if( Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.BACK) )
 		{
-			ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+			//ScreensManager.getInstance().createLoadingScreen(ScreenType.SCREEN_MAIN_MENU);
+			loadScreenAfterFadeOut(ScreenType.SCREEN_MAIN_MENU);
 		}
 		
 		if( Gdx.input.isKeyJustPressed(Keys.O) )

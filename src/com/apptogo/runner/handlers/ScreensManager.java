@@ -3,6 +3,7 @@
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.screens.BaseScreen;
@@ -110,7 +111,7 @@ public class ScreensManager {
 	public void setScreen(BaseScreen screen)
 	{
 		if( currentScreen != null ) currentScreen.dispose();
-		
+		Logger.log(this, "ZDISPOZOWANY!");
 		currentScreen = screen;
 		currentScreenType = screen.getSceneType();
 	

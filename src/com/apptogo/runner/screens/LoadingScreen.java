@@ -6,15 +6,12 @@ import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class LoadingScreen extends BaseScreen
 {	    
 	private ScreenType screenToLoad;
 	private ResourcesManager resourcesManager;
-	
-	private Label loadingLabel;
 	
 	private Loading loadingAnimation;
 		
@@ -23,7 +20,7 @@ public class LoadingScreen extends BaseScreen
 	
 	public LoadingScreen(Runner runner, ScreenType screenToLoad)
 	{		
-		super(runner);	
+		super(runner);	Logger.log(this,"LOADING CREATED");
 		resourcesManager = ResourcesManager.getInstance();
 		
 		timeStart = TimeUtils.millis();
@@ -34,26 +31,18 @@ public class LoadingScreen extends BaseScreen
 	}
 		
 	public void prepare() 
-	{
-		String loading = getLangString("loadingLabel");
-				
-		loadingLabel = new Label( loading, skin, "loadingSmall");
-		setCenterPosition(loadingLabel, 10.0f);
-		loadingLabel.setVisible(false);
-				
-		loadingAnimation = new Loading(); // new ObjectAnimation("gfx/splash/loading.pack", "loading", 19, -85.0f, -20.0f, false, true);
+	{	
+		loadingAnimation = new Loading();
 		loadingAnimation.setVisible(false);
-				
-		addToScreen(loadingLabel);
+		setCenterPosition(loadingAnimation, 200);
+		
 		addToScreen(loadingAnimation);
 	}
 	
 	public void step()
-	{
-		if( !loadingLabelIsAdded && ( (TimeUtils.millis() - timeStart) > 750 ) )
-		{
-			loadingLabel.setVisible(true);
-			
+	{Logger.log(this,"LOADING STEP");
+		if( !loadingLabelIsAdded )// && ( (TimeUtils.millis() - timeStart) > 500 ) )
+		{			
 			loadingAnimation.setVisible(true);
 			loadingAnimation.start();
 			

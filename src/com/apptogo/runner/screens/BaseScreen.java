@@ -8,10 +8,10 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
-import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -21,7 +21,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -29,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -51,7 +49,7 @@ public abstract class BaseScreen implements Screen
 	
 	protected Stage menuStage;
 	protected Stage menuBackgroundStage;
-	protected Stage menuFadeStage;
+	protected Stage fadeStage;
 	protected ExtendViewport viewport;
 	protected FillViewport backgroundViewport;
 	protected FillViewport fadeViewport;
@@ -63,6 +61,8 @@ public abstract class BaseScreen implements Screen
 	protected InputMultiplexer inputMultiplexer;
 	
 	protected float delta;
+	
+	protected boolean isFinished = false;
 	
 	protected Player player;
 	
@@ -98,6 +98,8 @@ public abstract class BaseScreen implements Screen
 	@Override
 	public void show() 
 	{
+		skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
+		
 		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI)  )
 		{
 			menuStage = new Stage();
@@ -107,15 +109,7 @@ public abstract class BaseScreen implements Screen
 			menuBackgroundStage = new Stage();
 			backgroundViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			menuBackgroundStage.setViewport( backgroundViewport );
-			
-			menuFadeStage = new Stage();
-			fadeViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
-			menuFadeStage.setViewport( fadeViewport );
-			
-			skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
-			
-			initializeFade();
-			
+						
 			Gdx.input.setInputProcessor(menuStage);
 			
 			this.prepare();
@@ -140,6 +134,12 @@ public abstract class BaseScreen implements Screen
 			
 			Gdx.input.setInputProcessor(inputMultiplexer);
 		}
+		
+		fadeStage = new Stage();
+		fadeViewport = new FillViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
+		fadeStage.setViewport( fadeViewport );
+					
+		initializeFade();
 	}
 	
 	private void initializeFade() 
@@ -154,57 +154,65 @@ public abstract class BaseScreen implements Screen
 		
 		fade = new Image( ResourcesManager.getInstance().getAtlasRegion(ScreenClass.STILL, "blackNonTransparent") );
 
-		fade.getColor().a = 0.99f;
+		fade.getColor().a = 1f;
 		fade.setSize(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 		fade.setPosition(-Runner.SCREEN_WIDTH/2.0f, -Runner.SCREEN_HEIGHT/2.0f);
 		fade.addAction(fadeInAction);
 				
-	    menuFadeStage.addActor(fade);
+	    fadeStage.addActor(fade);
 	}
 	
 	@Override
 	public void render(float delta) 
 	{
 		this.delta = delta;
-
-		if( !(this.getSceneType() == ScreenType.SCREEN_GAME_SINGLE) && !(this.getSceneType() == ScreenType.SCREEN_GAME_MULTI) )
+		
+		if( fade.getColor().a >= 1 && screenToLoadAfterFadeOut != null )
 		{
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			this.step();
 			
-			if( fade.getColor().a >= 1 && screenToLoadAfterFadeOut != null )
-			{
-				ScreensManager.getInstance().createLoadingScreen( screenToLoadAfterFadeOut );
-			}
+			Logger.log(this, fade.getColor().a);
 			
-			backgroundViewport.update(currentWindowWidth, currentWindowHeight);
-			menuBackgroundStage.act();   
-			menuBackgroundStage.draw();
-					
-			//Logger.log(this, "liczba rendercalli menuBackgroundStage: " + ((SpriteBatch)menuBackgroundStage.getBatch()).renderCalls);
-			
-			viewport.update(currentWindowWidth, currentWindowHeight);
-			menuStage.act();
-			menuStage.draw();
-			
-			//Logger.log(this, "liczba rendercalli menuStage: " + ((SpriteBatch)menuStage.getBatch()).renderCalls);
-			
-			fadeViewport.update(currentWindowWidth, currentWindowHeight);
-			menuFadeStage.act();
-			menuFadeStage.draw();
-			
-			//Logger.log(this, "liczba rendercalli menuFadeStage: " + ((SpriteBatch)menuFadeStage.getBatch()).renderCalls);
-		}
-		else
-		{
-			this.step();
-			gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
-			gameGuiStage.act(delta);
-    		gameGuiStage.draw();
-    		//Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
+			ScreensManager.getInstance().createLoadingScreen( screenToLoadAfterFadeOut );
 		}
 		
+		//Logger.log(this, "liczba rendercalli menuFadeStage: " + ((SpriteBatch)menuFadeStage.getBatch()).renderCalls);
+		
+		if (!isFinished) 
+		{
+			this.step();	
+			
+			if( this.getScreenClass() != ScreenClass.GAME )
+			{
+				Gdx.gl.glClearColor(0, 0, 0, 1);
+				Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+				
+				backgroundViewport.update(currentWindowWidth, currentWindowHeight);
+				menuBackgroundStage.act();   
+				menuBackgroundStage.draw();
+						
+				//Logger.log(this, "liczba rendercalli menuBackgroundStage: " + ((SpriteBatch)menuBackgroundStage.getBatch()).renderCalls);
+				
+				viewport.update(currentWindowWidth, currentWindowHeight);
+				menuStage.act();
+				menuStage.draw();
+				
+				//Logger.log(this, "liczba rendercalli menuStage: " + ((SpriteBatch)menuStage.getBatch()).renderCalls);
+			}
+			else
+			{
+				gameGuiStage.getViewport().update(currentWindowWidth, currentWindowHeight, true);
+				gameGuiStage.act(delta);
+	    		gameGuiStage.draw();
+	    		//Logger.log(this, "liczba rendercalli gameGuiStage: " + ((SpriteBatch)gameGuiStage.getBatch()).renderCalls);
+			}
+			
+			fadeViewport.update(currentWindowWidth, currentWindowHeight);
+			fadeStage.act();
+			fadeStage.draw();
+		}
+				
 		CustomActionManager.getInstance().act(delta);
 	}	
 	
@@ -235,11 +243,12 @@ public abstract class BaseScreen implements Screen
 	
 	protected void addToFade(Actor actor)
 	{
-		this.menuFadeStage.addActor(actor);
+		this.fadeStage.addActor(actor);
 	}
 		
 	protected void loadScreenAfterFadeOut( ScreenType screenType )
 	{
+		fadeOutAction.reset();
 		fade.addAction( fadeOutAction );		
 		screenToLoadAfterFadeOut = screenType;
 	}
@@ -331,7 +340,9 @@ public abstract class BaseScreen implements Screen
 	
 	@Override
 	public void dispose() 
-	{		
+	{
+		isFinished = true;
+		
 		if( menuStage != null)
 		{
 			menuStage.clear();
@@ -342,15 +353,15 @@ public abstract class BaseScreen implements Screen
 			menuBackgroundStage.clear();
 			menuBackgroundStage.dispose();
 		}
-		if( menuFadeStage != null)
+		if(gameGuiStage != null)
 		{
-			menuFadeStage.clear();
-			menuFadeStage.dispose();
-		}
-		
-		if(gameGuiStage != null){
 			gameGuiStage.clear();
 			gameGuiStage.dispose();
+		}
+		if( fadeStage != null)
+		{
+			fadeStage.clear();
+			fadeStage.dispose();
 		}
 	}
 }
