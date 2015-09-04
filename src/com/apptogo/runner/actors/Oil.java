@@ -2,11 +2,7 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.Random;
-
-import com.apptogo.runner.actors.Boar.BoarAnimationState;
 import com.apptogo.runner.animation.AnimationManager;
-import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.userdata.UserData;
@@ -16,11 +12,13 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -28,7 +26,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 public class Oil extends Actor implements Poolable{
 
 	public boolean alive;
-	private Body oilBody, oilSensor;
+	public Body oilBody;
 	private GameWorld gameWorld;
 	//parameters
 	private int level = 1;
@@ -84,11 +82,13 @@ public class Oil extends Actor implements Poolable{
 		gameWorld.getWorldStage().addActor(this);	
 	}
 	
-    public void init(Character characterOwner, int level) {
+    public void init(Character characterOwner, int level, float linearVelocity, Object o) {
     	this.level = level;
     	setAnimationState();
-    	oilBody.setTransform(characterOwner.getX()-10/PPM-new Random().nextInt(10)/PPM, characterOwner.getY()+new Random().nextInt(10)/PPM, 0);
-    	oilBody.setLinearVelocity(characterOwner.getSpeed()/10, 0);
+    	oilBody.setTransform(characterOwner.getX()-10/PPM, characterOwner.getY() + 10/PPM, 0);
+    	//oilBody.setLinearVelocity(linearVelocity, 0);
+    	oilBody.applyLinearImpulse(new Vector2(linearVelocity, 0), oilBody.getWorldCenter(), true);
+    	oilBody.setUserData("oil number " + o);
     	oilBody.getFixtureList().get(0).setUserData(new UserData("oil", characterOwner.playerName));
         alive = true;
         setVisible(true);
@@ -103,6 +103,15 @@ public class Oil extends Actor implements Poolable{
 	        setWidth(currentFrame.getRegionWidth() / PPM);
 	        setHeight(currentFrame.getRegionHeight() / PPM);
 	        setOrigin(getWidth()/2, getHeight()/2);
+	        
+	        //join powinien sie zerwac na krawedzi bo olej zawisnie w powietrzu
+	        for(JointEdge jointEdge : oilBody.getJointList())
+			{
+	        	if( Math.abs(jointEdge.other.getPosition().y - oilBody.getPosition().y ) > 2/PPM )
+	        	{
+	        		this.gameWorld.world.destroyJoint(jointEdge.joint);
+	        	}
+			}
     	}
     	//currentFrame = (AtlasRegion)animationManager.animate(delta);
     }
@@ -132,6 +141,15 @@ public class Oil extends Actor implements Poolable{
 	
 	@Override
 	public void reset() {
+		
+		for(JointEdge jointEdge : oilBody.getJointList())
+		{
+			if( jointEdge.joint != null )
+			{
+				this.gameWorld.world.destroyJoint(jointEdge.joint);
+			}
+		}
+		
 		oilBody.setTransform(-100, 0, 0);
         alive = false;
 	}

@@ -116,13 +116,7 @@ public abstract class BaseScreen implements Screen
 			this.prepare();
 		}
 		else
-		{
-			//TEGO NIE POWINNO TU BYC BO NIE CHCEMY MIEC SKINA W GS W PAMIECI!
-			skin = ResourcesManager.getInstance().getUiSkin( ScreenType.convertToScreenClass( this.getSceneType() ) );
-			//----------------------------------------------------------------
-			//tylko na potrzeby testow
-			
-			
+		{	
 			gameGuiStage = new Stage();
 			guiViewport = new FitViewport(Runner.SCREEN_WIDTH, Runner.SCREEN_HEIGHT);
 			gameGuiStage.setViewport(guiViewport);
@@ -216,6 +210,8 @@ public abstract class BaseScreen implements Screen
 			{
 				fadeStage.draw();
 			}
+			
+			//Logger.log(this, "liczba rendercalli fadeStage: " + ((SpriteBatch)fadeStage.getBatch()).renderCalls);
 		}
 				
 		CustomActionManager.getInstance().act(delta);

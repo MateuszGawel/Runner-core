@@ -2,9 +2,6 @@ package com.apptogo.runner.handlers;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.apptogo.runner.actors.Arrow;
 import com.apptogo.runner.actors.BlackHole;
 import com.apptogo.runner.actors.Boar;
@@ -23,7 +20,10 @@ import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
@@ -206,7 +206,21 @@ public class AbilityManager
 		}
 	}
 	
-	public void useOil(Character character, int abilityLevel){
+	private void createOilJoint(Body bodyA, Body bodyB)
+	{Logger.log(this, "JOINT MIEDZY " + bodyA.getUserData() + " A " + bodyB.getUserData());
+		RopeJointDef jointDef = new RopeJointDef();
+		jointDef.bodyA = bodyA;
+		jointDef.bodyB = bodyB;
+			
+		jointDef.maxLength = 50/PPM;
+		
+		//jointDef.length = 50/PPM;
+		
+		world.createJoint(jointDef);
+	}
+	
+	public void useOil(Character character, int abilityLevel)
+	{
 		if(!character.flags.isOnGround()){
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
 		}
@@ -214,26 +228,37 @@ public class AbilityManager
 			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
 		}
 
+		Oil previousOil = null;
+		
 		switch(abilityLevel){
 		case 1:
 			for(int i=0; i<5; i++){
 				Oil oil = oilsPool.obtain();
 				activeOils.add(oil);
-				oil.init(character, 1);
+				oil.init(character, 1, (i-2)*2, i);
+				
+				if( previousOil != null ) createOilJoint(previousOil.oilBody, oil.oilBody);
+				previousOil = oil;
 			}
 			break;
 		case 2:
 			for(int i=0; i<25; i++){
 				Oil oil = oilsPool.obtain();
 				activeOils.add(oil);
-				oil.init(character, 2);
+				oil.init(character, 2, (i-12), i);
+				
+				if( previousOil != null ) createOilJoint(previousOil.oilBody, oil.oilBody);
+				previousOil = oil;
 			}
 			break;
 		case 3:
-			for(int i=0; i<40; i++){
+			for(int i=0; i<41; i++){
 				Oil oil = oilsPool.obtain();
 				activeOils.add(oil);
-				oil.init(character, 3);
+				oil.init(character, 3, (i-20), i);
+				
+				if( previousOil != null ) createOilJoint(previousOil.oilBody, oil.oilBody);
+				previousOil = oil;
 			}
 			break;
 		}
