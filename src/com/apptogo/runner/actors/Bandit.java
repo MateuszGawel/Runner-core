@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
@@ -181,16 +180,116 @@ public class Bandit extends Character{
 	
 	public void createBodyMembers()
 	{
-		CircleShape circleShape = new CircleShape();
-		circleShape.setRadius(20/PPM);
+		//torso		
+		CircleShape torsoShape = new CircleShape();
+		torsoShape.setRadius(8.5f/PPM);
 		
-		
-		PolygonShape polygonShape = new PolygonShape();
-		polygonShape.setAsBox(15/PPM, 25/PPM);
-		
-		BodyMember torso = new BodyMember(this, world, polygonShape, "banditTorso", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians);
+		BodyMember torso = new BodyMember(this, world, torsoShape, "banditTorso", 28.5f/PPM, -6.5f/PPM, 0 * MathUtils.degreesToRadians);		
 		
 		bodyMembers.add(torso);
+		
+		
+		//head
+		CircleShape headShape = new CircleShape();
+		headShape.setRadius(10/PPM);
+		
+		BodyMember head = new BodyMember(this, world, headShape, "banditHead", 33/PPM, 15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-4/PPM, -12/PPM), new Vector2(0/PPM, 10/PPM), true);		
+		
+		bodyMembers.add(head);
+		
+		
+		
+		//legs
+		CircleShape legShape = new CircleShape();
+		legShape.setRadius(3/PPM);
+		
+		//left
+		
+		BodyMember leftLeg = new BodyMember(this, world, legShape, "banditLeg", 25/PPM, -23/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(1/PPM, 5/PPM), new Vector2(-2.5f/PPM, -11.5f/PPM));		
+		
+		bodyMembers.add(leftLeg);
+		
+		
+		//right
+		
+		BodyMember rightLeg = new BodyMember(this, world, legShape, "banditLeg", 32/PPM, -23/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-2/PPM, 5/PPM), new Vector2(1.5f/PPM, -11.5f/PPM));		
+		
+		bodyMembers.add(rightLeg);
+		
+		
+		//foots
+		CircleShape footShape = new CircleShape();
+		footShape.setRadius(4/PPM);
+		
+		//left
+		
+		BodyMember leftFoot = new BodyMember(this, world, legShape, "banditFoot", 24/PPM, -34/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0/PPM, 6/PPM), new Vector2(-1/PPM, -5/PPM));		
+		
+		bodyMembers.add(leftFoot);
+		
+		//right
+		
+		BodyMember rightFoot = new BodyMember(this, world, legShape, "banditFoot", 33/PPM, -34/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(-1/PPM, 6/PPM), new Vector2(0/PPM, -5/PPM));		
+		
+		bodyMembers.add(rightFoot);
+		
+		
+		//arms
+		CircleShape armShape = new CircleShape();
+		armShape.setRadius(3/PPM);
+		
+		//left
+		
+		BodyMember leftArm = new BodyMember(this, world, armShape, "banditArm", 26.5f/PPM, -28.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(2/PPM, 2/PPM), new Vector2(0/PPM, 0/PPM));		
+		
+		bodyMembers.add(leftArm);
+		
+		
+		//right
+		
+		BodyMember rightArm = new BodyMember(this, world, armShape, "banditArm", 26.5f/PPM, -28.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(2/PPM, 2/PPM), new Vector2(0/PPM, 0/PPM));		
+		
+		bodyMembers.add(rightArm);
+		
+		
+		//hands
+		CircleShape handShape = new CircleShape();
+		handShape.setRadius(3/PPM);
+		
+		//left
+		
+		BodyMember leftHand = new BodyMember(this, world, armShape, "banditHand", 26.5f/PPM, -35.5f/PPM, 0 * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0/PPM, 3.5f/PPM), new Vector2(0/PPM, -3.5f/PPM));		
+		
+		bodyMembers.add(leftHand);
+		
+		
+		//right
+		
+		BodyMember rightHand = new BodyMember(this, world, armShape, "banditHand", 26.5f/PPM, -35.5f/PPM, 0 * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0/PPM, 3.5f/PPM), new Vector2(0/PPM, -3.5f/PPM));		
+		
+		bodyMembers.add(rightHand);
+		
+		
+		gameWorld.worldStage.addActor(rightLeg);
+		gameWorld.worldStage.addActor(rightFoot);
+		
+		gameWorld.worldStage.addActor(leftLeg);
+		gameWorld.worldStage.addActor(leftFoot);
+		
+		gameWorld.worldStage.addActor(leftArm);
+		gameWorld.worldStage.addActor(leftHand);
+		
+		gameWorld.worldStage.addActor(torso);
+		
+		gameWorld.worldStage.addActor(rightArm);
+		gameWorld.worldStage.addActor(rightHand);
+		
+		gameWorld.worldStage.addActor(head);
+		
+		
+		
+		
+		/*
 		
 		
 		bodyMembers.add(new BodyMember(this, world, circleShape, "banditHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0,0), new Vector2(0, 1)));
@@ -220,10 +319,7 @@ public class Bandit extends Character{
 		bodyMembers.add(leftHand);
 		polygonShape.setAsBox(5/PPM, 15/PPM);
 		bodyMembers.add(new BodyMember(this, world, polygonShape, "banditBag", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
-		
-		for(BodyMember bodyMember : bodyMembers){
-			gameWorld.worldStage.addActor(bodyMember);
-		}
+		 */
 	}
     
 	@Override

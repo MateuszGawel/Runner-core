@@ -242,20 +242,20 @@ public class AbilityManager
 			}
 			break;
 		case 2:
-			for(int i=0; i<25; i++){
+			for(int i=0; i<11; i++){
 				Oil oil = oilsPool.obtain();
 				activeOils.add(oil);
-				oil.init(character, 2, (i-12), i);
+				oil.init(character, 2, (i-5), i);
 				
 				if( previousOil != null ) createOilJoint(previousOil.oilBody, oil.oilBody);
 				previousOil = oil;
 			}
 			break;
 		case 3:
-			for(int i=0; i<41; i++){
+			for(int i=0; i<17; i++){
 				Oil oil = oilsPool.obtain();
 				activeOils.add(oil);
-				oil.init(character, 3, (i-20), i);
+				oil.init(character, 3, (i-8), i);
 				
 				if( previousOil != null ) createOilJoint(previousOil.oilBody, oil.oilBody);
 				previousOil = oil;

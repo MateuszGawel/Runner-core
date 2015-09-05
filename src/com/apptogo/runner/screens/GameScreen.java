@@ -222,6 +222,12 @@ public abstract class GameScreen extends BaseScreen{
 		}
 		
 		
+		if( Gdx.input.isKeyJustPressed(Keys.D) )
+		{
+			gameWorld.player.character.dieDismemberment();
+		}
+		
+		
 //		else if( Input.isPressed() ) 
 //		{
 //			if(!multiplayer) 

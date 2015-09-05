@@ -2,8 +2,6 @@ package com.apptogo.runner.actors;
 
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
-import java.util.Random;
-
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
@@ -14,43 +12,27 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class BodyMember extends Actor
 {
 	private Body body;
 	private Character player;
-	private Random random = new Random();
 	private TextureRegion currentFrame;
 	private float offsetX=0, offsetY=0, angle=0;
 	
-	boolean applyForce = true;
-		
-	public BodyMember(Character player, World world, String path, Shape shapes)
+	boolean applyForce = false;
+			
+	public BodyMember(Character player, World world, Shape shape, String path)
 	{
 		this.player = player;
 		
-		Shape shape = null;
-		
 		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path);
-		
-		if( path.toLowerCase().contains("head") )
-		{
-			shape = new CircleShape();
-			((CircleShape)shape).setRadius( (Math.min(this.currentFrame.getRegionWidth(), this.currentFrame.getRegionHeight())/2.0f) /PPM);
-		}
-		else
-		{
-			shape = new PolygonShape();
-			((PolygonShape)shape).setAsBox( (this.currentFrame.getRegionWidth()/2.0f)/PPM, (this.currentFrame.getRegionHeight()/2.0f)/PPM);
-		}
-		
+				
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 				
@@ -69,45 +51,39 @@ public class BodyMember extends Actor
 		
 		body.setTransform(-100, 0, 0);
 	}
-	
-	public BodyMember(Character player, World world, String path, Shape shape, Body jointBody, Vector2 anchorA, Vector2 anchorB)
-	{
-		this(player, world, path, shape);
 		
-		DistanceJointDef jointDef = new DistanceJointDef();
-		jointDef.bodyA = body;
-		jointDef.bodyB = jointBody;
-		
-		anchorA.x *= ((UserData)this.body.getUserData()).bodyWidth / 2.0f;
-		anchorB.x *= ((UserData)jointBody.getUserData()).bodyWidth / 2.0f;
-		
-		anchorA.y *= ((UserData)this.body.getUserData()).bodyHeight / 2.0f;
-		anchorB.y *= ((UserData)this.body.getUserData()).bodyHeight / 2.0f;
-		
-		jointDef.localAnchorA.set( anchorA );
-		jointDef.localAnchorB.set( anchorB );
-		
-		jointDef.length = 0.01f;
-		
-		world.createJoint(jointDef);
-		
-		applyForce = false;
-	}
-	
 	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle)
 	{
-		this(player, world, path, shape);
+		this(player, world, shape, path);
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
-		this.angle = 0;//angle;
+		this.angle = angle;
 	}
 	
 	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB)
 	{
-		this(player, world, path, shape, jointBody, anchorA, anchorB);
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.angle = 0;//angle;
+		this(player, world, shape, path, offsetX, offsetY, angle);
+				
+		RevoluteJointDef jointDef = new RevoluteJointDef();
+		
+		jointDef.bodyA = body;
+		jointDef.bodyB = jointBody;
+		
+		jointDef.localAnchorA.set( anchorA );
+		jointDef.localAnchorB.set( anchorB );
+			
+		jointDef.collideConnected = true;
+		jointDef.lowerAngle = (float) Math.toRadians( -45 );
+		jointDef.upperAngle = (float) Math.toRadians( 45 );
+		
+		world.createJoint(jointDef);
+	}
+	
+	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB, boolean applyForce)
+	{
+		this(player, world, shape, path, offsetX, offsetY, angle, jointBody, anchorA, anchorB);
+		
+		this.applyForce = applyForce;
 	}
 	
 	public Body getBody()
@@ -118,11 +94,10 @@ public class BodyMember extends Actor
     public void init()
     {
     	body.setTransform(player.getX() + offsetX, player.getY() + offsetY + 1.5f, angle);
-    	
-    	//if(applyForce)
-    	//{
-	        body.applyForce(90, 45, 0, 0, true); //random.nextInt(20)-10/PPM, random.nextInt(20)-10/PPM, true);
-    	//}
+    	if(applyForce)
+		{
+    		body.applyLinearImpulse(new Vector2(20, 2), body.getWorldCenter(), true);
+		}
     	
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
     }
@@ -135,11 +110,13 @@ public class BodyMember extends Actor
 	@Override
 	public void act(float delta) 
 	{
-        setPosition(body.getPosition().x - currentFrame.getRegionWidth()/2/PPM, body.getPosition().y - currentFrame.getRegionHeight()/2/PPM);
+		float positionX = body.getPosition().x - (currentFrame.getRegionWidth() - ((UserData)body.getUserData()).bodyWidth)/2f/PPM;
+		float positionY = body.getPosition().y - (currentFrame.getRegionHeight() - ((UserData)body.getUserData()).bodyHeight)/2f/PPM;
+		
+        setPosition(positionX, positionY);
         setWidth(currentFrame.getRegionWidth() / PPM);
         setHeight(currentFrame.getRegionHeight() / PPM);
         setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-		
 	}
 	
 	@Override
