@@ -550,11 +550,13 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	public void dieDismemberment()
 	{
 		if(flags.isCanDie()){
-			getBody().setLinearVelocity(0,0);
+			
 			sounds.get(CharacterSound.EXPLODE).play();
 			for(BodyMember bodyMember : bodyMembers){
-				bodyMember.init();
+				bodyMember.init( getBody().getLinearVelocity() );
 			}  
+			
+			getBody().setLinearVelocity(0,0);
 			
 			setVisible(false);
 			

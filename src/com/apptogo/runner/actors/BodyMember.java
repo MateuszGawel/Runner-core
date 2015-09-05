@@ -25,8 +25,8 @@ public class BodyMember extends Actor
 	private TextureRegion currentFrame;
 	private float offsetX=0, offsetY=0, angle=0;
 	
-	boolean applyForce = false;
-			
+	public boolean applyForce = false;
+				
 	public BodyMember(Character player, World world, Shape shape, String path)
 	{
 		this.player = player;
@@ -34,6 +34,7 @@ public class BodyMember extends Actor
 		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path);
 				
 		BodyDef bodyDef = new BodyDef();
+		
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 				
 		UserData userData = new UserData("bodyMember");
@@ -45,6 +46,9 @@ public class BodyMember extends Actor
 		fixtureDef.shape = shape;
 		
 		body = world.createBody(bodyDef);
+		
+		body.setAngularDamping(5);
+		body.setLinearDamping(5);
 		
 		body.createFixture(fixtureDef).setUserData( userData );
 		body.setUserData( userData );
@@ -60,7 +64,7 @@ public class BodyMember extends Actor
 		this.angle = angle;
 	}
 	
-	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB)
+	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB, float minAngle, float maxAngle)
 	{
 		this(player, world, shape, path, offsetX, offsetY, angle);
 				
@@ -72,32 +76,23 @@ public class BodyMember extends Actor
 		jointDef.localAnchorA.set( anchorA );
 		jointDef.localAnchorB.set( anchorB );
 			
-		jointDef.collideConnected = true;
-		jointDef.lowerAngle = (float) Math.toRadians( -45 );
-		jointDef.upperAngle = (float) Math.toRadians( 45 );
+		jointDef.collideConnected = false;
+		jointDef.lowerAngle = (float) Math.toRadians( minAngle );
+		jointDef.upperAngle = (float) Math.toRadians( maxAngle );
 		
 		world.createJoint(jointDef);
 	}
-	
-	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB, boolean applyForce)
-	{
-		this(player, world, shape, path, offsetX, offsetY, angle, jointBody, anchorA, anchorB);
 		
-		this.applyForce = applyForce;
-	}
-	
 	public Body getBody()
 	{
 		return this.body;
 	}
 
-    public void init()
+    public void init(Vector2 linearVelocity)
     {
     	body.setTransform(player.getX() + offsetX, player.getY() + offsetY + 1.5f, angle);
-    	if(applyForce)
-		{
-    		body.applyLinearImpulse(new Vector2(3, 2), body.getWorldCenter(), true);
-		}
+    	
+    	if( applyForce ) body.applyLinearImpulse(new Vector2(2, 0), body.getWorldCenter(), true);
     	
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
     }
