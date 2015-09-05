@@ -26,7 +26,9 @@ public class BodyMember extends Actor
 	private float offsetX=0, offsetY=0, angle=0;
 	
 	public boolean applyForce = false;
-				
+	
+	boolean isGhost = false;
+	
 	public BodyMember(Character player, World world, Shape shape, String path)
 	{
 		this.player = player;
@@ -44,7 +46,7 @@ public class BodyMember extends Actor
 		FixtureDef fixtureDef;
 		fixtureDef = Materials.bodyMemberBody;
 		fixtureDef.shape = shape;
-		
+				
 		body = world.createBody(bodyDef);
 		
 		body.setAngularDamping(5);
@@ -76,7 +78,9 @@ public class BodyMember extends Actor
 		jointDef.localAnchorA.set( anchorA );
 		jointDef.localAnchorB.set( anchorB );
 			
-		jointDef.collideConnected = false;
+		jointDef.collideConnected = true;
+		
+		jointDef.enableLimit = true;
 		jointDef.lowerAngle = (float) Math.toRadians( minAngle );
 		jointDef.upperAngle = (float) Math.toRadians( maxAngle );
 		
