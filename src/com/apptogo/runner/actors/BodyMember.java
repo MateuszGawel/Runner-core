@@ -96,7 +96,7 @@ public class BodyMember extends Actor
     	body.setTransform(player.getX() + offsetX, player.getY() + offsetY + 1.5f, angle);
     	if(applyForce)
 		{
-    		body.applyLinearImpulse(new Vector2(20, 2), body.getWorldCenter(), true);
+    		body.applyLinearImpulse(new Vector2(3, 2), body.getWorldCenter(), true);
 		}
     	
     	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
