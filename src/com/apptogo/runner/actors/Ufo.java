@@ -81,7 +81,7 @@ public class Ufo extends Actor implements Poolable{
 		
 		laserShoot = new LaserShoot();
 		
-		shootAction = new CustomAction(3, 1) {
+		shootAction = new CustomAction(2, 1) {
 			@Override
 			public void perform() {
 				

@@ -58,7 +58,7 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == FOREST )
 		{
-			return new String[]{"mfx/game/levels/swamp.ogg", "mfx/game/levels/powerup.ogg"};
+			return new String[]{"mfx/game/levels/swamp.ogg", "mfx/game/levels/powerup.ogg", "mfx/game/levels/jaws.ogg", "mfx/game/levels/roar.ogg"};
 		}
 		else if( gameWorldType == SPACE )
 		{

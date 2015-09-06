@@ -8,6 +8,7 @@ import com.apptogo.runner.actors.Boar;
 import com.apptogo.runner.actors.Bomb;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.ForceField;
+import com.apptogo.runner.actors.Jaws;
 import com.apptogo.runner.actors.LiftField;
 import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
@@ -332,7 +333,32 @@ public class AbilityManager
 			}
 			break;
 		case FOREST:
-
+			try{
+				switch(abilityLevel){
+				case 1:
+					Jaws jaws = jawsPool.obtain();
+					jaws.init(orderedEnemies.get(0), abilityLevel);
+					activeJaws.add(jaws);
+					break;
+				case 2:
+					for(int i=0; i<2; i++){
+						jaws = jawsPool.obtain();
+						jaws.init(orderedEnemies.get(i), abilityLevel);
+						activeJaws.add(jaws);
+					}
+					break;
+				case 3:
+					for(int i=0; i<3; i++){
+						jaws = jawsPool.obtain();
+						jaws.init(orderedEnemies.get(i), abilityLevel);
+						activeJaws.add(jaws);
+					}
+					break;
+				}
+			}
+			catch(IndexOutOfBoundsException e){
+				Logger.log(this, "Not enough Players. Not all ViewFinders used");
+			}
 			break;
 		case SPACE:
 			try{
@@ -469,6 +495,15 @@ public class AbilityManager
 	    protected ViewFinder newObject() {
 	    	ViewFinder viewFinder = new ViewFinder(world, gameWorld);
 	    	return viewFinder;
+	    }
+    };
+    
+	private final Array<Jaws> activeJaws = new Array<Jaws>();
+    private final Pool<Jaws> jawsPool = new Pool<Jaws>() {
+	    @Override
+	    protected Jaws newObject() {
+	    	Jaws jaws = new Jaws(world, gameWorld);
+	    	return jaws;
 	    }
     };
     

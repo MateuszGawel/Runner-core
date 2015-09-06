@@ -36,7 +36,7 @@ public class ViewFinder extends Group implements Poolable{
 	private Character characterTarget;
 	private ViewFinderImage vfImage;
 	private Vector2 currentPosition = new Vector2(0,0);
-	public ParticleEffectActor explosionParticleOne;
+	public ParticleEffectActor explosionParticle;
 	private PooledEffect pooledEffect;
 	private Sound shot, shotClicks;
 	
@@ -46,8 +46,8 @@ public class ViewFinder extends Group implements Poolable{
 		setSize(1,1);
         this.addActor(vfImage);
         setOrigin(getWidth()/2, getHeight()/2);
-        explosionParticleOne = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
-        this.addActor(explosionParticleOne);
+        explosionParticle = new ParticleEffectActor("explosion_lvl1.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
+        this.addActor(explosionParticle);
         shot = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/shot.ogg");
         shotClicks = (Sound)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "mfx/game/levels/shotClicks.ogg");
 	}
@@ -62,7 +62,7 @@ public class ViewFinder extends Group implements Poolable{
         CustomActionManager.getInstance().registerAction(new CustomAction(2.5f) {
 			@Override
 			public void perform() {
-				pooledEffect = explosionParticleOne.obtainAndStart(getWidth()/2, getHeight()/2+0.3f, 0);
+				pooledEffect = explosionParticle.obtainAndStart(getWidth()/2, getHeight()/2+0.3f, 0);
 				characterTarget.dieDismemberment();
 				shot.play();
 			}
@@ -82,7 +82,7 @@ public class ViewFinder extends Group implements Poolable{
     	if(alive){
 	    	setPosition(characterTarget.getX(), characterTarget.getY());
 	    	
-	    	explosionParticleOne.setPosition(getWidth()/2, getHeight()/2+0.3f, 0);
+	    	explosionParticle.setPosition(getWidth()/2, getHeight()/2+0.3f, 0);
 	    	if(pooledEffect!=null){ 
 	    		pooledEffect.setPosition(getWidth()/2, getHeight()/2+0.3f);
 		    	if(pooledEffect.isComplete() && !vfImage.reseting){

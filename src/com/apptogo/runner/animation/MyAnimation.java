@@ -144,8 +144,10 @@ public class MyAnimation extends Animation{
 		}
 		TextureRegion frame = keyFrames[getKeyFrameIndex(stateTime)];
 		playMode = oldPlayMode;
-		if(isAnimationFinished())
+		if(isAnimationFinished() && !onFinishFlag){
+			onFinishFlag = true;
 			onAnimationFinished();
+		}
 		
 		//if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "Obecna klatka " + ( (AtlasRegion) frame).name );
 		
@@ -156,6 +158,7 @@ public class MyAnimation extends Animation{
 		return animationFinished;
 	}
 	
+	private boolean onFinishFlag;
 	public void onAnimationFinished(){
 		//to override
 	}
@@ -169,6 +172,7 @@ public class MyAnimation extends Animation{
 		this.animationFinished = false;
 		this.timeElapsed = 0;
 		this.frameNumber = 0;
+		onFinishFlag = false;
 		//if(animationState == CharacterAnimationState.RUNNING ) Logger.log(this, "RESET!");
 	}
 	public int getFrameNumber(){
