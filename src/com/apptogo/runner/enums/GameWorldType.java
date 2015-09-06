@@ -62,7 +62,7 @@ public enum GameWorldType
 		}
 		else if( gameWorldType == SPACE )
 		{
-			return new String[]{"mfx/game/levels/powerup.ogg"};
+			return new String[]{"mfx/game/levels/powerup.ogg", "mfx/game/levels/ufo.ogg", "mfx/game/levels/laser.ogg"};
 		}
 		
 		return null;
