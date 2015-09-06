@@ -126,13 +126,13 @@ public class Archer extends Character{
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.FLYARROW, animationManager.createFrames(10, "archer_flyarrow"), true){
+		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.FLYABILITY, animationManager.createFrames(10, "archer_flyarrow"), true){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.RUNARROW, animationManager.createFrames(15, "archer_runarrow"), false){
+		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(15, "archer_runarrow"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)

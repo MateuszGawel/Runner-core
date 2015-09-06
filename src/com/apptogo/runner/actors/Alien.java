@@ -133,13 +133,13 @@ public class Alien extends Character{
 				animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYLIFT, animationManager.createFrames(10, "alien_flydzida"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYABILITY, animationManager.createFrames(10, "alien_flydzida"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNLIFT, animationManager.createFrames(15, "alien_rundzida"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(15, "alien_rundzida"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)

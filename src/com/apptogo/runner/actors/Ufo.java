@@ -38,7 +38,7 @@ public class Ufo extends Actor implements Poolable{
 	private AtlasRegion currentFrame;
 	private AnimationManager animationManager;
 	private TextureAtlas atlas;
-	private Character characterOwner;
+	private Character characterTarget;
 	private CustomAction shootAction;
 	private boolean flyAway, alreadyShot;
 	private ParticleEffectActor shootLoadEffect;
@@ -88,7 +88,7 @@ public class Ufo extends Actor implements Poolable{
 				laserShoot.init();	
 
 				alreadyShot = true;
-				characterOwner.dieDismemberment();
+				characterTarget.dieDismemberment();
 				startingPos = new Vector2(ufoBody.getPosition());
 			}
 		};
@@ -99,7 +99,7 @@ public class Ufo extends Actor implements Poolable{
 	
     public void init(Character characterOwner, int level) {
     	this.level = level;
-    	this.characterOwner = characterOwner;
+    	this.characterTarget = characterOwner;
     	startingPos = new Vector2(characterOwner.getX()-15, characterOwner.getY()+10);
     	ufoBody.setTransform(startingPos, 0);
         flyAway = false;
@@ -116,15 +116,15 @@ public class Ufo extends Actor implements Poolable{
     	super.act(delta);
     	if(currentFrame != null && alive){
     		if(!flyAway)
-    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x+1, characterOwner.getBody().getPosition().y+5), 0.1f),0);
+    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterTarget.getBody().getPosition().x+1, characterTarget.getBody().getPosition().y+5), 0.1f),0);
     		else{
-    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterOwner.getBody().getPosition().x+25, characterOwner.getBody().getPosition().y+10), 0.02f),0);
-	    		if(ufoBody.getPosition().y >= characterOwner.getBody().getPosition().y+9){
+    			ufoBody.setTransform(startingPos.lerp(new Vector2(characterTarget.getBody().getPosition().x+25, characterTarget.getBody().getPosition().y+10), 0.02f),0);
+	    		if(ufoBody.getPosition().y >= characterTarget.getBody().getPosition().y+9){
 	    			reset();
 	    		}
 	    	}
     		
-    		if(!flyAway && !alreadyShot && characterOwner.getBody().getPosition().dst(ufoBody.getPosition()) <= 6 && !shootAction.isRegistered()){
+    		if(!flyAway && !alreadyShot && characterTarget.getBody().getPosition().dst(ufoBody.getPosition()) <= 6 && !shootAction.isRegistered()){
     			pooledShoot = shootLoadEffect.obtainAndStart(ufoBody.getPosition().x, ufoBody.getPosition().y, 0);
     			CustomActionManager.getInstance().registerAction(shootAction);
     		}
@@ -189,7 +189,7 @@ public class Ufo extends Actor implements Poolable{
 		}
 		
 		public void init(){
-			direction = new Vector2(characterOwner.getBody().getPosition().x, characterOwner.getBody().getPosition().y);
+			direction = new Vector2(characterTarget.getBody().getPosition().x, characterTarget.getBody().getPosition().y);
 			height = ufoBody.getPosition().dst(direction);
 //			setRotation(ufoBody.getPosition().angle(direction)-180);
 			Vector2 temp = new Vector2( direction.x - ufoBody.getPosition().x, direction.y - ufoBody.getPosition().y );

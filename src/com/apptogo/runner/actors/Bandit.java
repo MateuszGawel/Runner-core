@@ -152,13 +152,13 @@ public class Bandit extends Character{
 				animationManager.setCurrentAnimationState(CharacterAnimationState.BORED);
 			}
 		});	*/
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYBOMB, animationManager.createFrames(10, "bandit_flybomb"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.FLYABILITY, animationManager.createFrames(10, "bandit_flybomb"), false){
 			@Override
 			public void onAnimationFinished(){
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
 			}
 		});	
-		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNBOMB, animationManager.createFrames(10, "bandit_runbomb"), false){
+		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(10, "bandit_runbomb"), false){
 			@Override
 			public void onAnimationFinished(){
 				if(speed > 0.001f)

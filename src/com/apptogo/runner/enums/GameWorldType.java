@@ -54,7 +54,7 @@ public enum GameWorldType
 		
 		if( gameWorldType == WILDWEST )
 		{
-			return new String[]{"mfx/game/levels/bonfire.ogg", "mfx/game/levels/bush.ogg", "mfx/game/levels/barrel.ogg", "mfx/game/levels/powerup.ogg"};
+			return new String[]{"mfx/game/levels/bonfire.ogg", "mfx/game/levels/bush.ogg", "mfx/game/levels/barrel.ogg", "mfx/game/levels/powerup.ogg", "mfx/game/levels/shot.ogg", "mfx/game/levels/shotClicks.ogg"};
 		}
 		else if( gameWorldType == FOREST )
 		{

@@ -13,6 +13,7 @@ import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.actors.Ufo;
+import com.apptogo.runner.actors.ViewFinder;
 import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.ScreenClass;
@@ -22,7 +23,6 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -95,10 +95,10 @@ public class AbilityManager
 	private void useBombs(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 
 		for(int i=0; i<abilityLevel; i++){
@@ -112,10 +112,10 @@ public class AbilityManager
 	private void useArrow(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 
 		switch(abilityLevel){
@@ -157,10 +157,10 @@ public class AbilityManager
 	public void useLift(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 		LiftField liftField = liftFieldsPool.obtain();
 		liftField.init(character, abilityLevel);
@@ -169,10 +169,10 @@ public class AbilityManager
 	
 	public void useSnares(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 		Snares snares = snaresPool.obtain();
 		activeSnares.add(snares);
@@ -181,10 +181,10 @@ public class AbilityManager
 	
 	public void useBoar(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNARROW);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 
 
@@ -222,10 +222,10 @@ public class AbilityManager
 	public void useOil(Character character, int abilityLevel)
 	{
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYBOMB);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNBOMB);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 
 		Oil previousOil = null;
@@ -266,10 +266,10 @@ public class AbilityManager
 	
 	public void useBlackHole(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 		BlackHole blackHole = blackHolesPool.obtain();
 		blackHole.init(character, abilityLevel);
@@ -278,10 +278,10 @@ public class AbilityManager
 	
 	public void useForceField(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
 		ForceField forceField = forceFieldsPool.obtain();
 		forceField.init(character, abilityLevel);
@@ -290,29 +290,51 @@ public class AbilityManager
 	
 	public void useDeath(Character character, int abilityLevel){
 		if(!character.flags.isOnGround()){
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 		}
 		else{
-			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNLIFT);
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
 		}
+		
+		Array<Character> orderedEnemies = new Array<Character>();
+		for(Player player : gameWorld.enemies){
+			orderedEnemies.add(player.character);
+		}
+		orderedEnemies.sort();
 		
 		switch(gameWorld.gameWorldType){
 		case WILDWEST:
-
+			try{
+				switch(abilityLevel){
+				case 1:
+					ViewFinder viewFinder = viewFindersPool.obtain();
+					viewFinder.init(orderedEnemies.get(0), abilityLevel);
+					activeViewFinders.add(viewFinder);
+					break;
+				case 2:
+					for(int i=0; i<2; i++){
+						viewFinder = viewFindersPool.obtain();
+						viewFinder.init(orderedEnemies.get(i), abilityLevel);
+						activeViewFinders.add(viewFinder);
+					}
+					break;
+				case 3:
+					for(int i=0; i<3; i++){
+						viewFinder = viewFindersPool.obtain();
+						viewFinder.init(orderedEnemies.get(i), abilityLevel);
+						activeViewFinders.add(viewFinder);
+					}
+					break;
+				}
+			}
+			catch(IndexOutOfBoundsException e){
+				Logger.log(this, "Not enough Players. Not all ViewFinders used");
+			}
 			break;
 		case FOREST:
 
 			break;
 		case SPACE:
-			Array<Character> orderedEnemies = new Array<Character>();
-
-			for(Player player : gameWorld.enemies){
-				orderedEnemies.add(player.character);
-			}
-			orderedEnemies.sort();
-			
-			
-			
 			try{
 				switch(abilityLevel){
 				case 1:
@@ -441,6 +463,15 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<ViewFinder> activeViewFinders = new Array<ViewFinder>();
+    private final Pool<ViewFinder> viewFindersPool = new Pool<ViewFinder>() {
+	    @Override
+	    protected ViewFinder newObject() {
+	    	ViewFinder viewFinder = new ViewFinder(world, gameWorld);
+	    	return viewFinder;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -494,6 +525,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeUfos.get(i).alive == false) {
             	ufosPool.free(activeUfos.removeIndex(i));
+            }
+        }
+        len = activeViewFinders.size;
+        for (int i = len; --i >= 0;) {
+            if (activeViewFinders.get(i).alive == false) {
+            	viewFindersPool.free(activeViewFinders.removeIndex(i));
             }
         }
 	}
