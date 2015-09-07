@@ -457,16 +457,20 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		flags.setDoubleJumped(true);
 	}
 	
-	private void snare(int level){
+	private void snare(final int level){
 		if(flags.isCanBeSnared()){
+			land();
 			flags.setSnared(true);
-			body.setLinearVelocity(2,0);
+			body.setLinearVelocity(0,0);
+			body.setTransform(body.getPosition().lerp(new Vector2(flags.getQueuedSnarePosition().x, body.getPosition().y), 0.8f), 0);
 			customActionManager.registerAction(new CustomAction(level) {
 				@Override
 				public void perform() {
 					flags.setSnared(false);
 				}
 			});
+			flags.setQueuedSnarePosition(null);
+			flags.update();
 		}
 	}
 	

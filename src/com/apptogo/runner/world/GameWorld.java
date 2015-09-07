@@ -159,7 +159,7 @@ public abstract class GameWorld
 		this.player.character.flags.setMe(true);
 		
 		worldStage.addActor( this.player.character );
-		this.player.character.setZIndex(1500000);
+		this.player.character.toFront();
 		
 		CoinsManager.getInstance().createCoinsToPool(100);
 	}
@@ -262,8 +262,8 @@ public abstract class GameWorld
 		enemies.add( enemy );
 		
 		worldStage.addActor( enemy.character );
-		enemy.character.setZIndex(1000000);
-		tiledMapRendererActorFrontLayer.setZIndex(2000000);
+		enemy.character.toFront();
+		tiledMapRendererActorFrontLayer.toFront();
     }
     
     public Player getEnemy(String enemyName) throws PlayerDoesntExistException //tak naprawde tu tez ladniej by bylo przesylac calego playera ale to chyba troche kosztuje wiec zdecydowalem ze samo imie
@@ -287,4 +287,9 @@ public abstract class GameWorld
     {
     	return CharacterType.convertToCharacter(characterType, world, this, startingPosition, player);
     }
+
+
+	public MyTiledMapRendererActorFrontLayer getTiledMapRendererActorFrontLayer() {
+		return tiledMapRendererActorFrontLayer;
+	}
 }

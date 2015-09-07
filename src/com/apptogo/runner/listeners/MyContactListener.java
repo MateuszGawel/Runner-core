@@ -191,6 +191,7 @@ public class MyContactListener implements ContactListener
 				if(/*player.character.flags.isMe() &&*/ snaresOwner!=player.getName() && player.character.flags.isCanBeSnared() && !((UserData)snaresFixture.getUserData()).active){
 					((UserData)snaresFixture.getUserData()).active = true;
 					player.character.flags.setQueuedSnare(((UserData)snaresFixture.getUserData()).abilityLevel);
+					player.character.flags.setQueuedSnarePosition(new Vector2(snaresFixture.getBody().getPosition().x+0.2f, snaresFixture.getBody().getPosition().y));
 				}
 			}
 			//czarna dziura
