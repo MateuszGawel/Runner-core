@@ -25,9 +25,9 @@ public class GameWorldRenderer
         this.debugRenderer = new Box2DDebugRenderer();  
         this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();  
        
-        camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
-        camera.position.y = gameWorld.player.character.getBody().getPosition().y;  
-        
+    	camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
+    	camera.position.y = gameWorld.player.character.getBody().getPosition().y;  
+                
         cullingArea = new Rectangle(camera.position.x - camera.viewportWidth * camera.zoom / 2, camera.position.y - camera.viewportHeight * camera.zoom / 2, camera.viewportWidth * camera.zoom, camera.viewportHeight * camera.zoom);
     }  
     
@@ -43,10 +43,22 @@ public class GameWorldRenderer
     	//ustawienia kamery
     	if(!gameWorld.player.character.flags.isTeleport()){
     		//Logger.log(this, "NO LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
-    		camera.position.set(
-				Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
-				Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
-				0);
+    		
+    		//sledzenie kamera glowy po dieDismemberment
+    		if( gameWorld.player.character.bodyMemberToFollow != null )
+            {
+    			camera.position.set(
+    					Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.bodyMemberToFollow.getPosition().x + 2, gameWorld.minCameraX + 2)),
+    					Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.bodyMemberToFollow.getPosition().y + 1, gameWorld.minCameraY + 1)),
+    					0);
+            }
+    		else
+    		{
+    			camera.position.set(
+    					Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
+    					Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
+    					0);
+    		}
     	}
     	else{
     		if(lerpStart == null)

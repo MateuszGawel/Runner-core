@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -25,12 +26,16 @@ public class BodyMember extends Actor
 	private TextureRegion currentFrame;
 	private float offsetX=0, offsetY=0, angle=0;
 	
-	public boolean applyForce = false;
+	private Vector2 origin = new Vector2(0, 0);
+	
+	public float applySuperForce = 0;
 	
 	boolean isGhost = false;
 	
 	public BodyMember(Character player, World world, Shape shape, String path)
 	{
+		if( path.equals("banditHead") ) applySuperForce = 4;
+		
 		this.player = player;
 		
 		this.currentFrame = (TextureRegion)ResourcesManager.getInstance().getAtlasRegion(path);
@@ -45,13 +50,11 @@ public class BodyMember extends Actor
 		
 		FixtureDef fixtureDef;
 		fixtureDef = Materials.bodyMemberBody;
+				
 		fixtureDef.shape = shape;
 				
 		body = world.createBody(bodyDef);
-		
-		body.setAngularDamping(5);
-		body.setLinearDamping(5);
-		
+				
 		body.createFixture(fixtureDef).setUserData( userData );
 		body.setUserData( userData );
 		
@@ -69,7 +72,9 @@ public class BodyMember extends Actor
 	public BodyMember(Character player, World world, Shape shape, String path, float offsetX, float offsetY, float angle, Body jointBody, Vector2 anchorA, Vector2 anchorB, float minAngle, float maxAngle)
 	{
 		this(player, world, shape, path, offsetX, offsetY, angle);
-				
+		
+		//origin.set(anchorA);
+		
 		RevoluteJointDef jointDef = new RevoluteJointDef();
 		
 		jointDef.bodyA = body;
@@ -78,7 +83,7 @@ public class BodyMember extends Actor
 		jointDef.localAnchorA.set( anchorA );
 		jointDef.localAnchorB.set( anchorB );
 			
-		jointDef.collideConnected = true;
+		jointDef.collideConnected = false;
 		
 		jointDef.enableLimit = true;
 		jointDef.lowerAngle = (float) Math.toRadians( minAngle );
@@ -94,11 +99,13 @@ public class BodyMember extends Actor
 
     public void init(Vector2 linearVelocity)
     {
-    	body.setTransform(player.getX() + offsetX, player.getY() + offsetY + 1.5f, angle);
+    	body.setTransform(player.getX() + offsetX + 1f, player.getY() + offsetY + 1f, angle);
     	
-    	if( applyForce ) body.applyLinearImpulse(new Vector2(2, 0), body.getWorldCenter(), true);
+    	Vector2 playerVelocity = player.character.body.getLinearVelocity();
     	
-    	setOrigin(currentFrame.getRegionWidth()/2/PPM,  currentFrame.getRegionHeight()/2/PPM);
+    	body.applyLinearImpulse(new Vector2( playerVelocity.x/18f * applySuperForce, playerVelocity.y/25f ), body.getWorldCenter(), true);
+    	
+    	setOrigin(currentFrame.getRegionWidth()/2/PPM + origin.x,  currentFrame.getRegionHeight()/2/PPM + origin.y);
     }
     
 	public void reset() 
@@ -111,6 +118,9 @@ public class BodyMember extends Actor
 	{
 		float positionX = body.getPosition().x - (currentFrame.getRegionWidth() - ((UserData)body.getUserData()).bodyWidth)/2f/PPM;
 		float positionY = body.getPosition().y - (currentFrame.getRegionHeight() - ((UserData)body.getUserData()).bodyHeight)/2f/PPM;
+		
+		if( body.getPosition().y < 16.5f ) body.setLinearDamping(20);
+		else body.setLinearDamping(2);
 		
         setPosition(positionX, positionY);
         setWidth(currentFrame.getRegionWidth() / PPM);

@@ -94,6 +94,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	protected boolean blinkShow = false;
 	private PooledEffect blackHoleInEffect;
 	
+	public Body bodyMemberToFollow = null;
+	
 	HashMap<String, Integer> abilities;
 	//
 	public Array<CharacterAbilityType> specialAbilities;
@@ -552,6 +554,9 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		if(flags.isCanDie()){
 			
 			sounds.get(CharacterSound.EXPLODE).play();
+			
+			bodyMemberToFollow = bodyMembers.get(1).getBody(); //bo dodaje glowe jako druga ale tu trzeba cos lepiej pokombinowac!
+			
 			for(BodyMember bodyMember : bodyMembers){
 				bodyMember.init( getBody().getLinearVelocity() );
 			}  
@@ -595,6 +600,8 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	
 	public void respawn()
 	{
+		bodyMemberToFollow = null;
+		
 		setVisible(true);
 		flags.setImmortal(true);
 		flags.setAlive(true);
