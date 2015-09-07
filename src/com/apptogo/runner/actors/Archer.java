@@ -36,7 +36,13 @@ public class Archer extends Character{
 		this.world = world;
 		createBody(startingPosition);
         
-        createBodyMembers();
+		PolygonShape arrowsShape = new PolygonShape();
+		arrowsShape.setAsBox(3/PPM, 12/PPM);
+		
+		BodyMember arrows = new BodyMember(this, world, arrowsShape, "archerArrows", -12/PPM, -2/PPM, 0 * MathUtils.degreesToRadians);		
+		
+		createBodyMembers(gameWorld, "archerHead", "archerTorso", "archerArm", "archerHand", "archerLeg", "archerFoot", arrows);
+		
         addSounds();
         
         customOffsetX = 50.0f / PPM;
