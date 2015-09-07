@@ -7,14 +7,14 @@ import java.util.Random;
 import com.apptogo.runner.animation.AnimationManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class SwampSegment extends Actor{
+public class SwampSegment extends Obstacle{
 
 	public enum SwampAnimationState{
 		ANIMATING
 	}
-	private TextureRegion currentFrame;
 	private AnimationManager animationManager;
 	
 	public SwampSegment(){
@@ -22,14 +22,16 @@ public class SwampSegment extends Actor{
 		animationManager.createAnimation(45, 0.05f, "swamp", SwampAnimationState.ANIMATING, true);
 		animationManager.setCurrentAnimationState(SwampAnimationState.ANIMATING);
 		currentFrame = animationManager.animate(0f);
-        setWidth(currentFrame.getRegionWidth() / PPM);
-        setHeight(currentFrame.getRegionHeight() / PPM);
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-		batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), 1, 1, getRotation());
+		
+        setWidth(currentFrame.getRegionWidth() / PPM);
+        setHeight(currentFrame.getRegionHeight() / PPM);
+        super.draw(batch, parentAlpha);
+		
+		
 	}
 	
 	@Override
