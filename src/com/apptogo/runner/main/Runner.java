@@ -9,6 +9,7 @@ import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.handlers.TiledMapLoader;
 import com.apptogo.runner.handlers.TipManager;
+import com.apptogo.runner.handlers.VideoManager;
 import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.news.NewsManager;
 import com.apptogo.runner.shop.ShopManager;
@@ -74,6 +75,7 @@ public class Runner extends Game
 		NewsManager.create();
 		TipManager.create();
 		CustomActionManager.create();
+		VideoManager.create();
 	}
 	
 	private void destroyManagers()
@@ -89,5 +91,6 @@ public class Runner extends Game
 		NewsManager.destroy();
 		TipManager.destroy();
 		CustomActionManager.destroy();
+		VideoManager.destroy();
 	}
 }

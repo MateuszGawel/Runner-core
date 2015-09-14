@@ -8,18 +8,19 @@ import com.apptogo.runner.handlers.LanguageManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.SaveManager;
 import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.handlers.VideoManager;
 import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.main.Runner;
 import com.apptogo.runner.player.Player;
 import com.apptogo.runner.settings.Settings;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -75,12 +77,14 @@ public abstract class BaseScreen implements Screen
 	
 	SaveManager saveManager;
 	
+	boolean recordVideo = false;
+	
 	public abstract void handleInput();
 	public abstract ScreenType getSceneType();
 	public abstract void step();
 	public abstract void prepare();
 	public String getLangString(String key){ return languageManager.getString(key);	}	
-	
+		
 	protected BaseScreen(Runner runner) 
 	{
 		this.runner = runner;
@@ -160,6 +164,26 @@ public abstract class BaseScreen implements Screen
 	@Override
 	public void render(float delta) 
 	{
+		//recording video - generalnie chyba powinnismy to wywalic przed deployem lacznie z videomanagerem
+		if( recordVideo )
+		{
+			VideoManager.getInstance().makeScreenshot();
+			
+			if( Gdx.input.isKeyJustPressed( Keys.V ) )
+			{
+				recordVideo = false;
+				VideoManager.getInstance().saveScreenshots();
+			}			
+		}
+		else
+		{
+			if( Gdx.input.isKeyJustPressed( Keys.V ) ) 
+			{
+				recordVideo = true;
+			}
+		}
+		//end of recording video
+		
 		this.delta = delta;
 		
 		if( fade.getColor().a >= 1 && screenToLoadAfterFadeOut != null )
