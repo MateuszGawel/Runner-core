@@ -33,8 +33,15 @@ public class Alien extends Character{
 		this.gameWorld = gameWorld;
 		initAnimations();
 		this.world = world;
+		
 		createBody(startingPosition);
 
+		PolygonShape staffShape = new PolygonShape();
+		staffShape.setAsBox(9/PPM, 20/PPM);
+		
+		BodyMember staff = new BodyMember(this, world, staffShape, "alienStaff", 8/PPM, -2/PPM, -45 * MathUtils.degreesToRadians);		
+		
+		createBodyMembers(gameWorld, "alienHead", "alienTorso", "alienArm", "alienHand", "alienLeg", "alienFoot", staff);
 
         addSounds();
         

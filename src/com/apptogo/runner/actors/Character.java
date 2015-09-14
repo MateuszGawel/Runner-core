@@ -28,12 +28,14 @@ import com.apptogo.runner.screens.BaseScreen;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
+import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -300,6 +302,100 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		}
 	}
 	
+	public void createBodyMembers(GameWorld gameWorld, String headRegion, String torsoRegion, String armRegion, String handRegion, String legRegion, String footRegion, BodyMember stuff)
+	{
+		//torso				
+		PolygonShape torsoShape = new PolygonShape();
+		torsoShape.setAsBox(8/PPM, 12/PPM);
+		
+		BodyMember torso = new BodyMember(this, world, torsoShape, torsoRegion, 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);		
+				
+		bodyMembers.add(torso);
+		
+		
+		//head
+		PolygonShape headShape = new PolygonShape();
+		headShape.setAsBox(10/PPM, 10/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		BodyMember head = new BodyMember(this, world, headShape, headRegion, 4.5f/PPM, 30.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, -6/PPM), new Vector2(4.5f/PPM, 14/PPM), -10, 30);		
+				
+		bodyMembers.add(head);
+		
+		
+		//legs
+		PolygonShape legShape = new PolygonShape();
+		legShape.setAsBox(3/PPM, 6/PPM);
+		
+		//left
+		
+		BodyMember leftLeg = new BodyMember(this, world, legShape, legRegion, -3.5f/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3.5f/PPM, -10f/PPM), 0, 5);		
+		
+		bodyMembers.add(leftLeg);
+		
+		//right
+		
+		BodyMember rightLeg = new BodyMember(this, world, legShape, legRegion, 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), 0, 5);		
+		
+		bodyMembers.add(rightLeg);
+		
+		
+		//foots
+		PolygonShape footShape = new PolygonShape();
+		footShape.setAsBox(3/PPM, 8/PPM);
+		
+		//left
+		
+		BodyMember leftFoot = new BodyMember(this, world, footShape, footRegion, -3.5f/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0/PPM, 6/PPM), new Vector2(0/PPM, -4/PPM), 0, 90);		
+		
+		bodyMembers.add(leftFoot);
+		
+		//right
+		
+		BodyMember rightFoot = new BodyMember(this, world, footShape, footRegion, 3/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0/PPM, 6/PPM), new Vector2(0/PPM, -4/PPM), 0, 90);		
+		
+		bodyMembers.add(rightFoot);
+		
+		//arm
+		PolygonShape armShape = new PolygonShape();
+		armShape.setAsBox(2/PPM, 5/PPM);
+		
+		BodyMember arm = new BodyMember(this, world, armShape, armRegion, -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -170, 15);		
+		
+		bodyMembers.add(arm);
+				
+		
+		//hands
+		PolygonShape handShape = new PolygonShape();
+		handShape.setAsBox(2/PPM, 8/PPM);
+		
+		//left
+		
+		BodyMember leftHand = new BodyMember(this, world, handShape, handRegion, -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, arm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+		
+		bodyMembers.add(leftHand);
+			
+		//right
+		
+		BodyMember rightHand = new BodyMember(this, world, handShape, handRegion, -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, arm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+		
+		bodyMembers.add(rightHand);
+		
+		//stuff
+		bodyMembers.add(stuff);
+		
+		
+		gameWorld.worldStage.addActor(stuff);
+		gameWorld.worldStage.addActor(leftHand);
+		gameWorld.worldStage.addActor(rightLeg);
+		gameWorld.worldStage.addActor(rightFoot);
+		gameWorld.worldStage.addActor(leftLeg);
+		gameWorld.worldStage.addActor(leftFoot);
+		gameWorld.worldStage.addActor(torso);
+		gameWorld.worldStage.addActor(head);
+		gameWorld.worldStage.addActor(arm);
+		gameWorld.worldStage.addActor(rightHand);
+	}
+	
 	public void start()
 	{
 		if(flags.isCanBegin())
@@ -361,16 +457,20 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		flags.setDoubleJumped(true);
 	}
 	
-	private void snare(int level){
+	private void snare(final int level){
 		if(flags.isCanBeSnared()){
+			land();
 			flags.setSnared(true);
-			body.setLinearVelocity(2,0);
+			body.setLinearVelocity(0,0);
+			body.setTransform(body.getPosition().lerp(new Vector2(flags.getQueuedSnarePosition().x, body.getPosition().y), 0.8f), 0);
 			customActionManager.registerAction(new CustomAction(level) {
 				@Override
 				public void perform() {
 					flags.setSnared(false);
 				}
 			});
+			flags.setQueuedSnarePosition(null);
+			flags.update();
 		}
 	}
 	

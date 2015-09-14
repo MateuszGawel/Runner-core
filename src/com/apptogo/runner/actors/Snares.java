@@ -6,6 +6,8 @@ import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.animation.MyAnimation;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
+import com.apptogo.runner.handlers.MyTiledMapRendererActorFrontLayer;
+import com.apptogo.runner.logger.Logger;
 import com.apptogo.runner.userdata.UserData;
 import com.apptogo.runner.vars.Box2DVars;
 import com.apptogo.runner.vars.Materials;
@@ -18,8 +20,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Pool.Poolable;
 
-public class Snares extends Actor{
+public class Snares extends Obstacle implements Poolable{
 
 	public boolean alive;
 	private Body body;
@@ -28,7 +31,8 @@ public class Snares extends Actor{
 	private int level = 1;
 	private AnimationManager animationManager;
 	private AtlasRegion currentRegion;
-	
+	private boolean animate;
+
 	public enum SnaresAnimationState{
 		LVL1, LVL2, LVL3
 	}
@@ -48,7 +52,7 @@ public class Snares extends Actor{
 	}
 	
 	public Snares(World world, GameWorld gameWorld){
-
+		this.gameWorld = gameWorld;
 		animationManager = new AnimationManager();
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -83,11 +87,17 @@ public class Snares extends Actor{
 	
     public void init(Character characterOwner, int level) {
     	this.level = level;
+    	alive = true;
     	((UserData)body.getFixtureList().get(1).getUserData()).abilityLevel = level;
     	((UserData)body.getFixtureList().get(1).getUserData()).playerName = characterOwner.playerName;
         body.setTransform(characterOwner.getX()-10/PPM, characterOwner.getY()+50/PPM, 0);
         setAnimationState();
         currentRegion = (AtlasRegion)animationManager.animate(0f);
+        for (Actor actor : gameWorld.getWorldStage().getActors()){
+        	if(actor instanceof MyTiledMapRendererActorFrontLayer){
+        		this.setZIndex(actor.getZIndex()-1);
+        	}
+        }
     }
     
     
@@ -97,14 +107,19 @@ public class Snares extends Actor{
     	setPosition(body.getPosition().x - currentRegion.getRegionWidth()/2/PPM, body.getPosition().y - currentRegion.getRegionHeight()/2/PPM + 35/PPM - (currentRegion.originalHeight/PPM - currentRegion.getRegionHeight()/2/PPM));
         setWidth(currentRegion.getRegionWidth() / PPM);
         setHeight(currentRegion.getRegionHeight() / PPM);
+        
+        if(animate) currentRegion = (AtlasRegion)animationManager.animate(delta);
+        
         if(((UserData)body.getFixtureList().get(0).getUserData()).active){
-        	currentRegion = (AtlasRegion)animationManager.animate(delta);
+        	animate = true;
+        	((UserData)body.getFixtureList().get(0).getUserData()).active = false;
 			CustomActionManager.getInstance().registerAction(new CustomAction(level) {
 				@Override
 				public void perform() {
 					setAnimationState();
+					animate = false;
+					Logger.log(this, "CA LEVEL : " + level);
 					animationManager.getCurrentAnimation().resetLoops();
-					((UserData)body.getFixtureList().get(0).getUserData()).active = false;
 					currentRegion = (AtlasRegion)animationManager.animate(0f);
 				}
 			});
@@ -119,5 +134,11 @@ public class Snares extends Actor{
 	
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 }

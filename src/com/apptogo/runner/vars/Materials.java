@@ -57,8 +57,8 @@ public class Materials {
 		arrowBody = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		arrowSensor = createFixtureDef(10f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER), true);
 		fieldBody = createFixtureDef(1f, 0.1f, 0.1f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT), true);
-		snaresBody = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN), false);
-		snaresSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN), true);
+		snaresBody = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
+		snaresSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_CHARACTER), true);
 		boarBody = createFixtureDef(12f, 0f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);
 		boarSensor = createFixtureDef(1f, 1f, 0f, BIT_ABILITY, (short)(BIT_CHARACTER | BIT_TERRAIN | BIT_WORLD_OBJECT), true);
 		oilBody = createFixtureDef(10f, 5f, 0f, BIT_ABILITY, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false);

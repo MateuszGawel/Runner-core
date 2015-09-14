@@ -214,7 +214,7 @@ public class AbilityManager
 		jointDef.bodyB = bodyB;
 			
 		jointDef.maxLength = 50/PPM;
-		
+		jointDef.collideConnected = true;
 		//jointDef.length = 50/PPM;
 		
 		world.createJoint(jointDef);

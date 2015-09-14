@@ -3,6 +3,7 @@ package com.apptogo.runner.handlers;
 import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.animation.AnimationManager;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class FlagsHandler {
@@ -13,6 +14,7 @@ public class FlagsHandler {
 	private boolean queuedJump;
 	private int queuedLift;
 	private int queuedSnare;
+	private Vector2 queuedSnarePosition;
 	private boolean queuedDeathDismemberment;
 	private boolean queuedDeathTop;
 	private boolean queuedDeathBottom;
@@ -766,5 +768,13 @@ public class FlagsHandler {
 
 	public void setDiedInAir(boolean diedInAir) {
 		this.diedInAir = diedInAir;
+	}
+
+	public Vector2 getQueuedSnarePosition() {
+		return queuedSnarePosition;
+	}
+
+	public void setQueuedSnarePosition(Vector2 queuedSnarePosition) {
+		this.queuedSnarePosition = queuedSnarePosition;
 	}
 }
