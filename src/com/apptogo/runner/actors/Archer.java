@@ -77,7 +77,7 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "archer_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f)
+				if(getSpeed() < 0.1f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 				else
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
@@ -86,7 +86,7 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(8, "archer_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
@@ -107,7 +107,7 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "archer_standup"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f)
+				if(getSpeed() < 0.1f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 				else
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
@@ -141,7 +141,7 @@ public class Archer extends Character{
 		animationManager.createAnimation(new MyAnimation(0.01f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(15, "archer_runarrow"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(speed > 0.001f)
+				if(speed > 0.1f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 				else
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);

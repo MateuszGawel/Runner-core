@@ -75,7 +75,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "alien_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
@@ -89,7 +89,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(5, "alien_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
@@ -110,7 +110,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "alien_standup"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
 						stepSoundPlayed = false;
@@ -149,7 +149,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(15, "alien_rundzida"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(speed > 0.001f)
+				if(speed > 0.1f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 				else{
 					if(stepSoundPlayed){

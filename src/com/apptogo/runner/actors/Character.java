@@ -914,11 +914,13 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 				body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
 			}
 		}
+		else
+			body.setLinearDamping(5);
+		
 		if(flags.isSnared()){
 			body.setTransform(flags.getSnaredBodyPosition(), body.getAngle());
 		}
-		else
-			body.setLinearDamping(5); //5
+		 //5
 		//Logger.log(this, flags.isShouldChangeToRunningState());
 		if(flags.isShouldChangeToRunningState())
 			animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);

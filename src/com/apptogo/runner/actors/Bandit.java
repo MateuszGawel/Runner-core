@@ -75,7 +75,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDING, animationManager.createFrames(10, "bandit_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
@@ -90,7 +90,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.LANDINGIDLE, animationManager.createFrames(5, "bandit_land"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
@@ -111,7 +111,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.STANDINGUP, animationManager.createFrames(6, "bandit_standup"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(getSpeed() < 0.001f){
+				if(getSpeed() < 0.1f){
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);
 					if(stepSoundPlayed){
 						sounds.get(CharacterSound.STEPS).stop();
@@ -166,7 +166,7 @@ public class Bandit extends Character{
 		animationManager.createAnimation(new MyAnimation(0.03f, CharacterAnimationState.RUNABILITY, animationManager.createFrames(10, "bandit_runbomb"), false){
 			@Override
 			public void onAnimationFinished(){
-				if(speed > 0.001f)
+				if(speed > 0.1f)
 					animationManager.setCurrentAnimationState(CharacterAnimationState.RUNNING);
 				else{
 					animationManager.setCurrentAnimationState(CharacterAnimationState.IDLE);

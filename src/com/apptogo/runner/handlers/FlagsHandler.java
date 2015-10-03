@@ -165,7 +165,7 @@ public class FlagsHandler {
 			else
 				canStandUp = false;
 			
-			if(began && character.speed<0.1f && alive && !stopped && onGround && !sliding && animManager.getCurrentAnimationState() != CharacterAnimationState.LANDINGIDLE && animManager.getCurrentAnimationState() != CharacterAnimationState.STANDINGUP)
+			if(began && character.speed<1f && alive && !stopped && onGround && !sliding && animManager.getCurrentAnimationState() != CharacterAnimationState.LANDINGIDLE && animManager.getCurrentAnimationState() != CharacterAnimationState.STANDINGUP)
 				shouldStop = true;
 			else
 				shouldStop = false;	
