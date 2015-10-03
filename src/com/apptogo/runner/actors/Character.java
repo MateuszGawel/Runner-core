@@ -463,10 +463,14 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			flags.setSnared(true);
 			body.setLinearVelocity(0,0);
 			body.setTransform(body.getPosition().lerp(new Vector2(flags.getQueuedSnarePosition().x, body.getPosition().y), 0.8f), 0);
+			flags.setSnaredBodyPosition(new Vector2(flags.getQueuedSnarePosition().x, body.getPosition().y));
+			
 			customActionManager.registerAction(new CustomAction(level) {
 				@Override
 				public void perform() {
 					flags.setSnared(false);
+					flags.setSnaredBodyPosition(null);
+					flags.update();		
 				}
 			});
 			flags.setQueuedSnarePosition(null);
@@ -909,6 +913,9 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			else if(this.getBody().getLinearVelocity().x <= 1){
 				body.setLinearVelocity( (playerSpeedLimit - playerSlowAmmount) * 0.5f, body.getLinearVelocity().y);
 			}
+		}
+		if(flags.isSnared()){
+			body.setTransform(flags.getSnaredBodyPosition(), body.getAngle());
 		}
 		else
 			body.setLinearDamping(5); //5

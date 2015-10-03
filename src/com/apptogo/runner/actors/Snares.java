@@ -32,7 +32,8 @@ public class Snares extends Obstacle implements Poolable{
 	private AnimationManager animationManager;
 	private AtlasRegion currentRegion;
 	private boolean animate;
-
+	private boolean active;
+	
 	public enum SnaresAnimationState{
 		LVL1, LVL2, LVL3
 	}
@@ -59,7 +60,7 @@ public class Snares extends Obstacle implements Poolable{
 		body = world.createBody(bodyDef);
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(0.15f, 0.15f);
+		shape.setAsBox(0.25f, 0.10f);
 		UserData userData = new UserData("snares");
 		float shapeWidth = Box2DVars.getShapeWidth(shape);
 		userData.bodyWidth = shapeWidth;
@@ -104,20 +105,25 @@ public class Snares extends Obstacle implements Poolable{
     @Override
     public void act(float delta){
     	super.act(delta);
-    	setPosition(body.getPosition().x - currentRegion.getRegionWidth()/2/PPM, body.getPosition().y - currentRegion.getRegionHeight()/2/PPM + 35/PPM - (currentRegion.originalHeight/PPM - currentRegion.getRegionHeight()/2/PPM));
+    	setPosition(body.getPosition().x - currentRegion.getRegionWidth()/2/PPM, body.getPosition().y - currentRegion.getRegionHeight()/2/PPM + 38/PPM - (currentRegion.originalHeight/PPM - currentRegion.getRegionHeight()/2/PPM));
         setWidth(currentRegion.getRegionWidth() / PPM);
         setHeight(currentRegion.getRegionHeight() / PPM);
-        
+        setRotation((float)Math.toDegrees(body.getAngle()));
+        setOrigin(currentRegion.getRegionWidth()/2/PPM, currentRegion.getRegionHeight()/2/PPM);
         if(animate) currentRegion = (AtlasRegion)animationManager.animate(delta);
         
-        if(((UserData)body.getFixtureList().get(0).getUserData()).active){
+        if(((UserData)body.getFixtureList().get(0).getUserData()).active && !active)
+        	active = true;
+        
+        if(active){
         	animate = true;
-        	((UserData)body.getFixtureList().get(0).getUserData()).active = false;
+        	active = false;
 			CustomActionManager.getInstance().registerAction(new CustomAction(level) {
 				@Override
 				public void perform() {
 					setAnimationState();
 					animate = false;
+					((UserData)body.getFixtureList().get(0).getUserData()).active = false;
 					Logger.log(this, "CA LEVEL : " + level);
 					animationManager.getCurrentAnimation().resetLoops();
 					currentRegion = (AtlasRegion)animationManager.animate(0f);

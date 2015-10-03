@@ -21,6 +21,7 @@ public class FlagsHandler {
 	private boolean queuedCatapultJump;
 	private boolean queuedMushroomJump;
 	private Body queuedTeleportToBody;
+	private Vector2 snaredBodyPosition;
 	
 	//ZMIENNE
 	private Character character;
@@ -776,5 +777,13 @@ public class FlagsHandler {
 
 	public void setQueuedSnarePosition(Vector2 queuedSnarePosition) {
 		this.queuedSnarePosition = queuedSnarePosition;
+	}
+
+	public Vector2 getSnaredBodyPosition() {
+		return snaredBodyPosition;
+	}
+
+	public void setSnaredBodyPosition(Vector2 snaredBodyPosition) {
+		this.snaredBodyPosition = snaredBodyPosition;
 	}
 }
