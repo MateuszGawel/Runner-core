@@ -10,6 +10,7 @@ import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.Jaws;
 import com.apptogo.runner.actors.LiftField;
+import com.apptogo.runner.actors.Mine;
 import com.apptogo.runner.actors.Oil;
 import com.apptogo.runner.actors.ParticleEffectActor;
 import com.apptogo.runner.actors.Snares;
@@ -84,6 +85,9 @@ public class AbilityManager
 				break;
 			case OIL:
 				useOil(character, abilityLevel);
+				break;
+			case PARACHUTE:
+				useParachute(character, abilityLevel);
 				break;
 			case DEATH:
 				useDeath(character, abilityLevel);
@@ -263,6 +267,10 @@ public class AbilityManager
 			}
 			break;
 		}
+	}
+	
+	public void useParachute(Character character, int abilityLevel){
+		new Mine(world, gameWorld, character);
 	}
 	
 	public void useBlackHole(Character character, int abilityLevel){

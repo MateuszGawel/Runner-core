@@ -7,8 +7,8 @@ public enum CharacterAbilityType
 {
 	SUPERSPEED, SHIELD, DEATH,
 	BOMB, ARROW, LIFT, 
-	LASSO, SNARES, FORCEFIELD,
-	OIL, BOAR, BLACKHOLE;
+	OIL, SNARES, FORCEFIELD,
+	PARACHUTE, BOAR, BLACKHOLE;
 	
 	public static Array<CharacterAbilityType> values;
 	
@@ -27,9 +27,9 @@ public enum CharacterAbilityType
 		{
 			return CharacterAbilityType.ARROW;
 		}
-		else if( key.equals( CharacterAbilityType.LASSO.toString() ) )
+		else if( key.equals( CharacterAbilityType.PARACHUTE.toString() ) )
 		{
-			return CharacterAbilityType.LASSO;
+			return CharacterAbilityType.PARACHUTE;
 		}
 		else if( key.equals( CharacterAbilityType.SNARES.toString() ) )
 		{
@@ -89,7 +89,7 @@ public enum CharacterAbilityType
 			if(abilityType == CharacterAbilityType.DEATH) button = new CharacterButton("banditSuperSpeedButton", 20, 200);
 			if(abilityType == CharacterAbilityType.BOMB      ) button = new CharacterButton("banditBombAbilityButton", 20, 200);
 			if(abilityType == CharacterAbilityType.OIL      ) button = new CharacterButton("banditBombAbilityButton", 20, 200);
-			if(abilityType == CharacterAbilityType.LASSO      ) button = new CharacterButton("banditBombAbilityButton", 20, 200);
+			if(abilityType == CharacterAbilityType.PARACHUTE      ) button = new CharacterButton("banditBombAbilityButton", 20, 200);
 		}
 		else if(characterType == CharacterType.ARCHER) //podmienic snares
 		{

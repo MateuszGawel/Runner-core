@@ -44,13 +44,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
-public abstract class Character extends Actor  implements Comparable<Character>{
+public abstract class Character extends Group  implements Comparable<Character>{
 	
 	public final float coinFixtureRadius = 128;
 	
@@ -188,7 +188,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -5/PPM, -30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
+		body.createFixture(fixtureDef).setUserData( new UserData("mainBody") );
 		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor
@@ -568,12 +568,16 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 	private void layFixtures(boolean layFixture){
 		if(layFixture){
 			body.getFixtureList().get(0).setSensor(true); 
+			((UserData)body.getFixtureList().get(0).getUserData()).ignoreContact = true;
 			body.getFixtureList().get(1).setSensor(true);
+			((UserData)body.getFixtureList().get(1).getUserData()).ignoreContact = false;
 			body.getFixtureList().get(2).setSensor(false);
 		}
 		else{
-			body.getFixtureList().get(0).setSensor(false); 
+			body.getFixtureList().get(0).setSensor(false);
+			((UserData)body.getFixtureList().get(0).getUserData()).ignoreContact = false;
 			body.getFixtureList().get(1).setSensor(false);
+			((UserData)body.getFixtureList().get(1).getUserData()).ignoreContact = true;
 			body.getFixtureList().get(2).setSensor(true);
 		}
 	}
@@ -1267,7 +1271,7 @@ public abstract class Character extends Actor  implements Comparable<Character>{
 			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );
 			//removePowerup(ability);
 		}
-		else if( powerupType == CharacterAbilityType.LASSO || powerupType == CharacterAbilityType.BOAR || powerupType == CharacterAbilityType.BLACKHOLE )
+		else if( powerupType == CharacterAbilityType.PARACHUTE || powerupType == CharacterAbilityType.BOAR || powerupType == CharacterAbilityType.BLACKHOLE )
 		{			
 			CharacterAbilityType ability = this.specialAbilities.get( 2 );		
 			character.useSuperAbility( ability, character.abilities.get( powerupType.toString() ) );

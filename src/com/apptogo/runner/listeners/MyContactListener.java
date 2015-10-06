@@ -419,16 +419,16 @@ public class MyContactListener implements ContactListener
 		if(fixtureA.getUserData() != null && fixtureB.getUserData() != null){
 			if
 			(
-					((UserData)fixtureA.getUserData()).ignoreContact == true
-					||
-					((UserData)fixtureB.getUserData()).ignoreContact == true 
+					((UserData)fixtureA.getUserData()).ignoreContact == false
+					&&
+					((UserData)fixtureB.getUserData()).ignoreContact == false 
 			)
 			{
-				return true;
+				return false;
 			}
 		}
 		
-		return false;
+		return true;
 	}
 	
 	private Fixture getFixtureByType(Fixture fixtureA, Fixture fixtureB, String type)

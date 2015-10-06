@@ -61,7 +61,7 @@ public class Bandit extends Character{
         
         this.specialAbilities.add(CharacterAbilityType.BOMB);
         this.specialAbilities.add(CharacterAbilityType.OIL);
-        this.specialAbilities.add(CharacterAbilityType.LASSO);
+        this.specialAbilities.add(CharacterAbilityType.PARACHUTE);
 	}
 	
 	private void initAnimations(){

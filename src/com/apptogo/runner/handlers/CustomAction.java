@@ -13,6 +13,8 @@ public abstract class CustomAction {
 	private float delay;
 	private boolean finished;
 	private int loopCount = 0;
+
+
 	private int loops = 1;
 	protected Object[] args;
 	private boolean registered;
@@ -74,5 +76,8 @@ public abstract class CustomAction {
 
 	public void setRegistered(boolean registered) {
 		this.registered = registered;
+	}
+	public int getLoopCount() {
+		return loopCount;
 	}
 }
