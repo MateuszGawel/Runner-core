@@ -248,7 +248,7 @@ public abstract class Character extends Group  implements Comparable<Character>{
 		shape.setAsBox(bodySize.y -5/PPM, bodySize.x, new Vector2(-bodySize.x -5/PPM, 30/PPM), 0);
 		fixtureDef = Materials.characterBody;
 		fixtureDef.shape = shape;
-		body.createFixture(fixtureDef).setUserData( new UserData("mainBoddy") );
+		body.createFixture(fixtureDef).setUserData( new UserData("mainBody") );
 		body.getFixtureList().get(2).setSensor(true);
 		
 		//wall sensor

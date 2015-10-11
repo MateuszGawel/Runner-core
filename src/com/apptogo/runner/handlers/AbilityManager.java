@@ -10,9 +10,10 @@ import com.apptogo.runner.actors.Character;
 import com.apptogo.runner.actors.ForceField;
 import com.apptogo.runner.actors.Jaws;
 import com.apptogo.runner.actors.LiftField;
-import com.apptogo.runner.actors.Mine;
 import com.apptogo.runner.actors.Oil;
+import com.apptogo.runner.actors.Parachute;
 import com.apptogo.runner.actors.ParticleEffectActor;
+import com.apptogo.runner.actors.SmallBomb;
 import com.apptogo.runner.actors.Snares;
 import com.apptogo.runner.actors.Ufo;
 import com.apptogo.runner.actors.ViewFinder;
@@ -270,7 +271,13 @@ public class AbilityManager
 	}
 	
 	public void useParachute(Character character, int abilityLevel){
-		new Mine(world, gameWorld, character);
+		if(!character.flags.isOnGround()){
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
+		}
+		else{
+			character.animationManager.setCurrentAnimationState(CharacterAnimationState.RUNABILITY);
+		}
+		new Parachute(world, gameWorld, character, smallBombsPool);
 	}
 	
 	public void useBlackHole(Character character, int abilityLevel){
@@ -515,6 +522,16 @@ public class AbilityManager
 	    }
     };
     
+	private final Array<SmallBomb> activeSmallBombs = new Array<SmallBomb>();
+    private final Pool<SmallBomb> smallBombsPool = new Pool<SmallBomb>() {
+	    @Override
+	    protected SmallBomb newObject() {
+	    	SmallBomb smallBomb = new SmallBomb(world, gameWorld);
+	    	activeSmallBombs.add(smallBomb);
+	    	return smallBomb;
+	    }
+    };
+    
 	private void freePools(){
         int len = activeBombs.size;
         for (int i = len; --i >= 0;) {
@@ -574,6 +591,12 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeViewFinders.get(i).alive == false) {
             	viewFindersPool.free(activeViewFinders.removeIndex(i));
+            }
+        }
+        len = activeSmallBombs.size;
+        for (int i = len; --i >= 0;) {
+            if (activeSmallBombs.get(i).alive == false) {
+            	smallBombsPool.free(activeSmallBombs.removeIndex(i));
             }
         }
 	}

@@ -31,6 +31,21 @@ public class MyContactListener implements ContactListener
 		Fixture fb = contact.getFixtureB();
 		Player player = checkIfFixtureIsPlayer(fa, fb);		
 
+		if(checkIsOneOfType(fa, fb, "smallBomb")){
+			Fixture fixture = getFixtureByType(fa, fb, "smallBomb");
+			String bombOwner = ((UserData)fixture.getUserData()).playerName;
+			
+			
+			if(player!=null){
+				if(bombOwner!=player.getName()){
+					((UserData)fixture.getBody().getUserData()).active = false;
+				}
+			}
+			else{
+				((UserData)fixture.getBody().getUserData()).active = false;
+			}
+		}
+		
 		if(player != null && !checkIsIgnored(fa, fb)){
 			FlagsHandler flags = player.character.flags;
 
