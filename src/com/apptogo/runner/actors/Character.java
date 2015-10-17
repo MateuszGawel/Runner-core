@@ -1285,7 +1285,8 @@ public abstract class Character extends Group  implements Comparable<Character>{
 	
 	public void useSuperAbility(CharacterAbilityType abilityType, int abilityLevel)
 	{
-		AbilityManager.getInstance().useAbility(character, abilityType, abilityLevel);
+		if(!character.flags.isUsingAbility())
+			AbilityManager.getInstance().useAbility(character, abilityType, abilityLevel);
 	}
 	
 	public CharacterAbilityType currentAbilitySet;

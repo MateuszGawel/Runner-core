@@ -49,7 +49,7 @@ public abstract class CustomAction {
 		if(delta <= 0.1)
 			stateTime += delta;
 
-		if((stateTime - timeElapsed)/delay >= 1){
+		if((stateTime - timeElapsed)/delay >= 1 && !finished){
 			loopCount++;
 			timeElapsed+=delay;
 			perform();

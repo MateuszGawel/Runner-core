@@ -44,6 +44,7 @@ public class SmallBomb extends Obstacle implements Poolable {
 
 	public SmallBomb(World world, GameWorld gameWorld) {
 		super(new EllipseMapObject(0, 0, 10, 10), world, "bomblvl12", "gfx/game/characters/charactersAtlas.pack");
+		Logger.log(this, "konstruktor");
 		this.gameWorld = gameWorld;
 		createBody(BodyType.DynamicBody, Materials.obstacleBody, "smallBomb");
 		gameWorld.getWorldStage().addActor(this);
@@ -78,7 +79,8 @@ public class SmallBomb extends Obstacle implements Poolable {
 		explodeSensor.getFixtureList().get(0).setUserData(new UserData("bombExplosion", characterOwner.playerName));
 		this.characterOwner = characterOwner;
 		((UserData) getBody().getUserData()).active = true;
-		body.setTransform(characterOwner.getX() + 0.8f, characterOwner.getY() + 1.2f, 0);
+		body.setTransform(characterOwner.getX() + 1f, characterOwner.getY() + 1f, 0);
+		body.setLinearVelocity(new Vector2(0, 0));
 		gameWorld.getWorldStage().addActor(explosion);
 	}
 

@@ -3,6 +3,7 @@ package com.apptogo.runner.actors;
 import static com.apptogo.runner.vars.Box2DVars.PPM;
 
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
@@ -33,6 +34,7 @@ public class Parachute extends Actor{
 		this.characterOwner = characterOwner;
 		this.gameWorld = gameWorld;
 		this.smallBombsPool = smallBombsPool;
+		characterOwner.flags.setUsingAbility(true);
 		atlas = ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack");
 		mineRegion = atlas.findRegion("mine");
 		parachuteRegion = atlas.findRegion("parachute");
@@ -42,7 +44,7 @@ public class Parachute extends Actor{
 		gameWorld.getWorldStage().addActor(this);	
 		explosion = new ParticleEffectActor("explosion_lvl2.p", 1, 4, 1, 1/PPM, (TextureAtlas)ResourcesManager.getInstance().getResource(ScreensManager.getInstance().getCurrentScreen(), "gfx/game/characters/charactersAtlas.pack"));
 		gameWorld.getWorldStage().addActor(explosion);
-		fallingForce = new Vector2(200f, 3500f);
+		fallingForce = new Vector2(300f, 3500f);
 		
 		moveMine = new CustomAction(0.01f, 10, characterOwner) {
 			float offsetX=0.5f, offsetY=1f;
@@ -64,19 +66,20 @@ public class Parachute extends Actor{
 			public void onFinish(){
 				explosion.obtainAndStart(getX(), getY(), 0);
 				setVisible(false);
-				((Character)args[0]).jump(1.3f, 1.4f, 1, 1);
+				((Character)args[0]).jump(1.5f, 1.2f, 1, 1);
 				parachuteState = true;
 			}
 			
 			
 			
 		};
-		smallBombsSpawn = new CustomAction(0.2f, 0, characterOwner, smallBombsPool) {
+		smallBombsSpawn = new CustomAction(0.4f, 0, characterOwner, smallBombsPool) {
 			@Override
 			public void perform() {
 				Character character = (Character)args[0];
 				SmallBomb smallBomb = ((Pool<SmallBomb>)args[1]).obtain();
 				smallBomb.init(character, 1);
+				Logger.log(this, AbilityManager.getInstance().activeSmallBombs.size + " size " + AbilityManager.getInstance().smallBombsPool.getFree());
 				if(character.animationManager.getCurrentAnimationState()!=CharacterAnimationState.FLYABILITY)
 					character.animationManager.setCurrentAnimationState(CharacterAnimationState.FLYABILITY);
 			}
@@ -98,14 +101,19 @@ public class Parachute extends Actor{
     		if(!smallBombsSpawn.isRegistered())
     			CustomActionManager.getInstance().registerAction(smallBombsSpawn);
     	}
-    	else if(characterOwner.flags.isCanLand() && characterOwner.flags.isAlive()){
+    	if(characterOwner.flags.isCanLand() && characterOwner.flags.isAlive() && parachuteState){
     		remove();
+    		characterOwner.flags.setUsingAbility(false);
+    		Logger.log(this, "finish1");
     		smallBombsSpawn.setFinished(true);
+    		characterOwner.land();
     	}
     	if(!characterOwner.flags.isAlive()){
     		moveMine.setFinished(true);
     		smallBombsSpawn.setFinished(true);
     		remove();
+    		Logger.log(this, "finish2");
+    		characterOwner.flags.setUsingAbility(false);
     	}
     }
     

@@ -66,7 +66,7 @@ public class FlagsHandler {
  	
 	//UMIEJETNOSCI
 	private boolean canBeLifted;
-	
+	private boolean usingAbility;
 
 	//TEMP
 	private boolean tempRunFlag;
@@ -785,5 +785,13 @@ public class FlagsHandler {
 
 	public void setSnaredBodyPosition(Vector2 snaredBodyPosition) {
 		this.snaredBodyPosition = snaredBodyPosition;
+	}
+
+	public boolean isUsingAbility() {
+		return usingAbility;
+	}
+
+	public void setUsingAbility(boolean usingAbility) {
+		this.usingAbility = usingAbility;
 	}
 }

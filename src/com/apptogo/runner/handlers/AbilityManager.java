@@ -522,8 +522,8 @@ public class AbilityManager
 	    }
     };
     
-	private final Array<SmallBomb> activeSmallBombs = new Array<SmallBomb>();
-    private final Pool<SmallBomb> smallBombsPool = new Pool<SmallBomb>() {
+	public final Array<SmallBomb> activeSmallBombs = new Array<SmallBomb>();
+    public final Pool<SmallBomb> smallBombsPool = new Pool<SmallBomb>() {
 	    @Override
 	    protected SmallBomb newObject() {
 	    	SmallBomb smallBomb = new SmallBomb(world, gameWorld);
@@ -597,6 +597,7 @@ public class AbilityManager
         for (int i = len; --i >= 0;) {
             if (activeSmallBombs.get(i).alive == false) {
             	smallBombsPool.free(activeSmallBombs.removeIndex(i));
+            	Logger.log(this, "usuwam, w poolu: " + smallBombsPool.getFree() + " high " + smallBombsPool.peak);
             }
         }
 	}
