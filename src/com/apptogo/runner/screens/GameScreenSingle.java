@@ -49,7 +49,7 @@ public class GameScreenSingle extends GameScreen
 		
 		createGui();
 		createLabels();
-
+/*ODKOMENTOWAC IF W CHARACTER START() !!!
 		CustomActionManager.getInstance().registerAction(new CustomAction(2f, 1, player.character) {
 			
 			@Override
@@ -61,6 +61,8 @@ public class GameScreenSingle extends GameScreen
 				}
 			}
 		});
+*/
+		player.character.start(); //i to tez stad wywalic przy uruchomieniu countdown
 		
 		createFinishWidget();
 		

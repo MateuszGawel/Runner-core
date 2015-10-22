@@ -86,6 +86,7 @@ public class BodyMember extends Actor
 		jointDef.collideConnected = false;
 		
 		jointDef.enableLimit = true;
+		
 		jointDef.lowerAngle = (float) Math.toRadians( minAngle );
 		jointDef.upperAngle = (float) Math.toRadians( maxAngle );
 		
@@ -99,7 +100,7 @@ public class BodyMember extends Actor
 
     public void init(Vector2 linearVelocity)
     {
-    	body.setTransform(player.getX() + offsetX + 1f, player.getY() + offsetY + 1f, angle);
+    	body.setTransform(player.getX() + offsetX + 1.5f, player.getY() + offsetY + 1.5f, angle);
     	
     	Vector2 playerVelocity = player.character.body.getLinearVelocity();
     	

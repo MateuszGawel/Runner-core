@@ -10,6 +10,9 @@ import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomAction;
 import com.apptogo.runner.handlers.CustomActionManager;
 import com.apptogo.runner.handlers.ResourcesManager;
+import com.apptogo.runner.handlers.ScreensManager;
+import com.apptogo.runner.levels.Level;
+import com.apptogo.runner.levels.LevelManager;
 import com.apptogo.runner.main.Runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -183,7 +186,10 @@ public class SplashScreen extends BaseScreen
 	{
 		if( currentPhase == SplashPhase.FINISHED ) 
 		{
-			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
+			Level level = LevelManager.getInstance().getCampaignLevelWorlds().first().getLevels().first();
+			
+			ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
+			//loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 			
 			currentPhase = SplashPhase.END;
 		}

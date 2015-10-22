@@ -308,84 +308,64 @@ public abstract class Character extends Group  implements Comparable<Character>{
 		PolygonShape torsoShape = new PolygonShape();
 		torsoShape.setAsBox(8/PPM, 12/PPM);
 		
-		BodyMember torso = new BodyMember(this, world, torsoShape, torsoRegion, 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);		
-				
-		bodyMembers.add(torso);
-		
+		BodyMember torso = new BodyMember(this, world, torsoShape, torsoRegion, 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);			
 		
 		//head
 		PolygonShape headShape = new PolygonShape();
 		headShape.setAsBox(10/PPM, 10/PPM, new Vector2(0,0), (float)Math.toRadians(45));
 		
-		BodyMember head = new BodyMember(this, world, headShape, headRegion, 4.5f/PPM, 30.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, -6/PPM), new Vector2(4.5f/PPM, 14/PPM), -10, 30);		
-				
-		bodyMembers.add(head);
-		
+		BodyMember head = new BodyMember(this, world, headShape, headRegion, 4f/PPM, 23.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-3/PPM, -10/PPM), new Vector2(1.5f/PPM, 11/PPM), -10, 30);				
 		
 		//legs
 		PolygonShape legShape = new PolygonShape();
 		legShape.setAsBox(3/PPM, 6/PPM);
 		
 		//left
-		
 		BodyMember leftLeg = new BodyMember(this, world, legShape, legRegion, -3.5f/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3.5f/PPM, -10f/PPM), 0, 5);		
 		
-		bodyMembers.add(leftLeg);
-		
 		//right
-		
-		BodyMember rightLeg = new BodyMember(this, world, legShape, legRegion, 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), 0, 5);		
-		
-		bodyMembers.add(rightLeg);
-		
+		BodyMember rightLeg = new BodyMember(this, world, legShape, legRegion, 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), 0, 5);			
 		
 		//foots
 		PolygonShape footShape = new PolygonShape();
 		footShape.setAsBox(3/PPM, 8/PPM);
 		
 		//left
-		
-		BodyMember leftFoot = new BodyMember(this, world, footShape, footRegion, -3.5f/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0/PPM, 6/PPM), new Vector2(0/PPM, -4/PPM), 0, 90);		
-		
-		bodyMembers.add(leftFoot);
+		BodyMember leftFoot = new BodyMember(this, world, footShape, footRegion, -3.5f/PPM, -27/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
 		
 		//right
-		
-		BodyMember rightFoot = new BodyMember(this, world, footShape, footRegion, 3/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0/PPM, 6/PPM), new Vector2(0/PPM, -4/PPM), 0, 90);		
-		
-		bodyMembers.add(rightFoot);
-		
+		BodyMember rightFoot = new BodyMember(this, world, footShape, footRegion, 3/PPM, -27/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
+			
 		//arm
 		PolygonShape armShape = new PolygonShape();
 		armShape.setAsBox(2/PPM, 5/PPM);
 		
-		BodyMember arm = new BodyMember(this, world, armShape, armRegion, -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -170, 15);		
-		
-		bodyMembers.add(arm);
-				
-		
+		BodyMember arm = new BodyMember(this, world, armShape, armRegion, -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -170, 15);				
+		/*
 		//hands
 		PolygonShape handShape = new PolygonShape();
 		handShape.setAsBox(2/PPM, 8/PPM);
 		
 		//left
-		
 		BodyMember leftHand = new BodyMember(this, world, handShape, handRegion, -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, arm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
-		
-		bodyMembers.add(leftHand);
-			
+				
 		//right
-		
 		BodyMember rightHand = new BodyMember(this, world, handShape, handRegion, -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, arm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+		*/
 		
-		bodyMembers.add(rightHand);
-		
-		//stuff
+		bodyMembers.add(torso);
+		bodyMembers.add(head);
+		bodyMembers.add(leftLeg);
+		bodyMembers.add(rightLeg);
+		bodyMembers.add(leftFoot);
+		bodyMembers.add(rightFoot);
+		bodyMembers.add(arm);
+//		bodyMembers.add(leftHand);
+//		bodyMembers.add(rightHand);
 		bodyMembers.add(stuff);
 		
-		
 		gameWorld.worldStage.addActor(stuff);
-		gameWorld.worldStage.addActor(leftHand);
+//		gameWorld.worldStage.addActor(leftHand);
 		gameWorld.worldStage.addActor(rightLeg);
 		gameWorld.worldStage.addActor(rightFoot);
 		gameWorld.worldStage.addActor(leftLeg);
@@ -393,13 +373,13 @@ public abstract class Character extends Group  implements Comparable<Character>{
 		gameWorld.worldStage.addActor(torso);
 		gameWorld.worldStage.addActor(head);
 		gameWorld.worldStage.addActor(arm);
-		gameWorld.worldStage.addActor(rightHand);
+//		gameWorld.worldStage.addActor(rightHand);
 	}
 	
 	public void start()
 	{
-		if(flags.isCanBegin())
-		{				
+		//if(flags.isCanBegin())
+		//{				
 			if(!stepSoundPlayed && flags.isBegan()){				
 				stepSoundId = sounds.get(CharacterSound.STEPS).loop();
 				stepSoundPlayed = true;
@@ -410,7 +390,7 @@ public abstract class Character extends Group  implements Comparable<Character>{
 			}
 			else
 				animationManager.setCurrentAnimationState(CharacterAnimationState.FLYING);
-		}
+		//}
 	}
 	
 	public void jump(float xMultiplier, float yMultiplier, float xAdd, float yAdd){
