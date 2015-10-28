@@ -63,7 +63,7 @@ public class GameScreenSingle extends GameScreen
 		});
 */
 		player.character.start(); //i to tez stad wywalic przy uruchomieniu countdown
-		
+		enemies.forEach(enemy -> enemy.character.start());
 		createFinishWidget();
 		
 		gameGuiStage.addActor( finishWidget.actor() );

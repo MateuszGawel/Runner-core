@@ -5,6 +5,7 @@ import java.util.Random;
 import com.apptogo.runner.actors.Animation;
 import com.apptogo.runner.animation.Loading;
 import com.apptogo.runner.enums.CharacterAnimationState;
+import com.apptogo.runner.enums.CharacterType;
 import com.apptogo.runner.enums.ScreenClass;
 import com.apptogo.runner.enums.ScreenType;
 import com.apptogo.runner.handlers.CustomAction;
@@ -186,10 +187,13 @@ public class SplashScreen extends BaseScreen
 	{
 		if( currentPhase == SplashPhase.FINISHED ) 
 		{
-			Level level = LevelManager.getInstance().getCampaignLevelWorlds().first().getLevels().first();
-			
-			ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
-			//loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
+//			Level level = LevelManager.getInstance().getCampaignLevelWorlds().first().getLevels().get(1);
+//			
+//			player.setCharacterType(CharacterType.BANDIT);
+//			player.save();
+//			
+//			ScreensManager.getInstance().createLoadingGameScreen( ScreenType.SCREEN_GAME_SINGLE, level, null );
+			loadScreenAfterFadeOut( ScreenType.SCREEN_MAIN_MENU );
 			
 			currentPhase = SplashPhase.END;
 		}

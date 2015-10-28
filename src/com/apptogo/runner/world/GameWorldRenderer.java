@@ -23,8 +23,7 @@ public class GameWorldRenderer
     {  
         this.gameWorld = gameWorld;  
         this.debugRenderer = new Box2DDebugRenderer();  
-        this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();  
-        this.camera.zoom -= 0.6f;
+        this.camera = (OrthographicCamera) gameWorld.getWorldStage().getCamera();
         
     	camera.position.x = gameWorld.player.character.getBody().getPosition().x;  
     	camera.position.y = gameWorld.player.character.getBody().getPosition().y;  
@@ -45,7 +44,7 @@ public class GameWorldRenderer
     	if(!gameWorld.player.character.flags.isTeleport()){
     		//Logger.log(this, "NO LERP: camX: " + camera.position.x + " bodyX: " + gameWorld.player.character.getBody().getPosition().x);
     		
-    		/*
+    		
     		//sledzenie kamera glowy po dieDismemberment
     		if( gameWorld.player.character.bodyMemberToFollow != null )
             {
@@ -55,12 +54,12 @@ public class GameWorldRenderer
     					0);
             }
     		else
-    		{*/
+    		{
     			camera.position.set(
     					Math.min(gameWorld.maxCameraX - 2, Math.max(gameWorld.player.character.getBody().getPosition().x + 2, gameWorld.minCameraX + 2)),
     					Math.min(gameWorld.maxCameraY - 1, Math.max(gameWorld.player.character.getBody().getPosition().y + 1, gameWorld.minCameraY + 1)),
     					0);
-    		//}
+    		}
     	}
     	else{
     		if(lerpStart == null)
@@ -94,6 +93,6 @@ public class GameWorldRenderer
     	//Logger.log(this, "liczba rendercalli WorldStage: " + ((SpriteBatch)gameWorld.getWorldStage().getBatch()).renderCalls);
     	
     	
-    	debugRenderer.render(gameWorld.world, camera.combined);
+//    	debugRenderer.render(gameWorld.world, camera.combined);
     }
 }

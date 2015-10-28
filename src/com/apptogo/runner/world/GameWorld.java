@@ -227,6 +227,15 @@ public abstract class GameWorld
 	
     public void update(float delta) 
     {
+    	Array<Joint> joints = new Array<Joint>();
+    	world.getJoints(joints);
+    	
+    	for(Joint joint : joints)
+    	{
+    		if(joint.getUserData() != null && joint.getUserData().equals("DESTROY")) world.destroyJoint(joint);
+    	}
+    	
+    	
     	//handleBodyCulling();
         world.step(delta, 3, 3);
         backgroundStage.act(delta);

@@ -45,13 +45,8 @@ public class Bandit extends Character{
 		initAnimations();
 		this.world = world;
 		createBody(startingPosition);
-		
-		PolygonShape bagShape = new PolygonShape();
-		bagShape.setAsBox(7/PPM, 10/PPM);
-		
-		BodyMember bag = new BodyMember(this, world, bagShape, "banditBag", -14/PPM, -2/PPM, 0 * MathUtils.degreesToRadians);		
-		
-		createBodyMembers(gameWorld, "banditHead", "banditTorso", "banditArm", "banditHand", "banditLeg", "banditFoot", bag);
+				
+		createBodyMembers();
 		 
         addSounds();
         
@@ -62,6 +57,89 @@ public class Bandit extends Character{
         this.specialAbilities.add(CharacterAbilityType.BOMB);
         this.specialAbilities.add(CharacterAbilityType.OIL);
         this.specialAbilities.add(CharacterAbilityType.PARACHUTE);
+	}
+	
+	public void createBodyMembers()
+	{
+		//torso				
+		PolygonShape torsoShape = new PolygonShape();
+		torsoShape.setAsBox(8/PPM, 12/PPM);
+		
+		BodyMember torso = new BodyMember(this, world, torsoShape, "banditTorso", 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);			
+		torso.applyForce = 4;
+		//head
+		PolygonShape headShape = new PolygonShape();
+		headShape.setAsBox(10/PPM, 10/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		BodyMember head = new BodyMember(this, world, headShape, "banditHead", 4f/PPM, 23.5f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-3/PPM, -10/PPM), new Vector2(1.5f/PPM, 11/PPM), -10, 30);				
+		head.applyForce = 3;
+		//legs
+		PolygonShape legShape = new PolygonShape();
+		legShape.setAsBox(3/PPM, 6/PPM);
+		
+		//left
+		BodyMember leftLeg = new BodyMember(this, world, legShape, "banditLeg", -3.5f/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3.5f/PPM, -10f/PPM), -60, 30);		
+		
+		//right
+		BodyMember rightLeg = new BodyMember(this, world, legShape, "banditLeg", 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), -60, 30);			
+		
+		//foots
+		PolygonShape footShape = new PolygonShape();
+		footShape.setAsBox(3/PPM, 3/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		//left
+		BodyMember leftFoot = new BodyMember(this, world, footShape, "banditFoot", -3.5f/PPM, -27/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
+		
+		//right
+		BodyMember rightFoot = new BodyMember(this, world, footShape, "banditFoot", 3/PPM, -27/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
+		
+		//arm
+		PolygonShape armShape = new PolygonShape();
+		armShape.setAsBox(2/PPM, 5/PPM);
+		
+		BodyMember leftArm = new BodyMember(this, world, armShape, "banditArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		BodyMember rightArm = new BodyMember(this, world, armShape, "banditArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		//hands
+		PolygonShape handShape = new PolygonShape();
+		handShape.setAsBox(2/PPM, 8/PPM);
+		
+		//left
+		BodyMember leftHand = new BodyMember(this, world, handShape, "banditHand", -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+				
+		//right
+		BodyMember rightHand = new BodyMember(this, world, handShape, "banditHand", -3/PPM, -11/PPM, 0 * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0/PPM, 7/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+		
+		//stuff
+		PolygonShape stuffShape = new PolygonShape();
+		stuffShape.setAsBox(7/PPM, 10/PPM);
+		
+		BodyMember stuff = new BodyMember(this, world, stuffShape, "banditBag", -14/PPM, -2/PPM, 0 * MathUtils.degreesToRadians);	
+		
+		bodyMembers.add(stuff);
+		bodyMembers.add(leftArm);
+		bodyMembers.add(leftHand);	
+		bodyMembers.add(leftLeg);
+		bodyMembers.add(rightLeg);	
+		bodyMembers.add(torso);
+		bodyMembers.add(head);
+		bodyMembers.add(leftFoot);
+		bodyMembers.add(rightFoot);
+		bodyMembers.add(rightArm);
+		bodyMembers.add(rightHand);
+				
+		gameWorld.worldStage.addActor(stuff);
+		gameWorld.worldStage.addActor(leftArm);
+		gameWorld.worldStage.addActor(leftHand);
+		gameWorld.worldStage.addActor(leftLeg);
+		gameWorld.worldStage.addActor(rightLeg);
+		gameWorld.worldStage.addActor(torso);
+		gameWorld.worldStage.addActor(head);
+		gameWorld.worldStage.addActor(leftFoot);
+		gameWorld.worldStage.addActor(rightFoot);
+		gameWorld.worldStage.addActor(rightArm);
+		gameWorld.worldStage.addActor(rightHand);
 	}
 	
 	private void initAnimations(){

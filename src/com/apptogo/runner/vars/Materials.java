@@ -5,6 +5,7 @@ import static com.apptogo.runner.vars.Box2DVars.BIT_CHARACTER;
 import static com.apptogo.runner.vars.Box2DVars.BIT_CHARACTER_SENSOR;
 import static com.apptogo.runner.vars.Box2DVars.BIT_TERRAIN;
 import static com.apptogo.runner.vars.Box2DVars.BIT_WORLD_OBJECT;
+import static com.apptogo.runner.vars.Box2DVars.BIT_BODY_MEMBER;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class Materials {
@@ -40,11 +41,11 @@ public class Materials {
 		characterBody = createFixtureDef(12f, 0f, 0f, BIT_CHARACTER, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT | BIT_ABILITY), false); //postaæ
 		wallSensorBody = createFixtureDef(0f, 0f, 0f, BIT_CHARACTER, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), false);
 		characterSensor = createFixtureDef(0f, 0f, 0f, BIT_CHARACTER_SENSOR, (short)(BIT_WORLD_OBJECT | BIT_TERRAIN), true); //obydwa sensory
-		bodyMemberBody = createFixtureDef(1f, 0.1f, 0f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN), false); //czesci cia³a
+		bodyMemberBody = createFixtureDef(12f, 0f, 0f, BIT_BODY_MEMBER, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false); //czesci cia³a
 		
 		//world (podzial dla busha)
-		terrainBody = createFixtureDef(30f, 0.5f, 0f, BIT_TERRAIN, (short)(BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_ABILITY), false); //statyczny ground
-		worldObjectBody = createFixtureDef(30f, 0.5f, 0f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT | BIT_CHARACTER_SENSOR | BIT_ABILITY), false); //statyczne obiekty
+		terrainBody = createFixtureDef(30f, 0.5f, 0f, BIT_TERRAIN, (short)(BIT_WORLD_OBJECT | BIT_CHARACTER | BIT_CHARACTER_SENSOR | BIT_ABILITY | BIT_BODY_MEMBER), false); //statyczny ground
+		worldObjectBody = createFixtureDef(30f, 0.5f, 0f, BIT_WORLD_OBJECT, (short)(BIT_CHARACTER | BIT_WORLD_OBJECT | BIT_CHARACTER_SENSOR | BIT_ABILITY | BIT_BODY_MEMBER), false); //statyczne obiekty
 		
 		//obstacle
 		obstacleGhostBody = createFixtureDef(1000f, 0.1f, 0.1f, BIT_WORLD_OBJECT, (short)(BIT_TERRAIN | BIT_WORLD_OBJECT), false); //bez kolizji z playerem, trzeba sensor jesli ma byc wykrywane

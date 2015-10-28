@@ -9,7 +9,6 @@ import com.apptogo.runner.enums.CharacterAbilityType;
 import com.apptogo.runner.enums.CharacterAnimationState;
 import com.apptogo.runner.enums.CharacterSound;
 import com.apptogo.runner.enums.CharacterType;
-import com.apptogo.runner.handlers.AbilityManager;
 import com.apptogo.runner.handlers.ResourcesManager;
 import com.apptogo.runner.handlers.ScreensManager;
 import com.apptogo.runner.screens.BaseScreen;
@@ -17,6 +16,7 @@ import com.apptogo.runner.world.GameWorld;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -35,13 +35,8 @@ public class Alien extends Character{
 		this.world = world;
 		
 		createBody(startingPosition);
-
-		PolygonShape staffShape = new PolygonShape();
-		staffShape.setAsBox(9/PPM, 20/PPM);
 		
-		BodyMember staff = new BodyMember(this, world, staffShape, "alienStaff", 8/PPM, -2/PPM, -45 * MathUtils.degreesToRadians);		
-		
-		createBodyMembers(gameWorld, "alienHead", "alienTorso", "alienArm", "alienHand", "alienLeg", "alienFoot", staff);
+		createBodyMembers();
 
         addSounds();
         
@@ -52,6 +47,89 @@ public class Alien extends Character{
         this.specialAbilities.add(CharacterAbilityType.LIFT);
         this.specialAbilities.add(CharacterAbilityType.FORCEFIELD);
         this.specialAbilities.add(CharacterAbilityType.BLACKHOLE);
+	}
+	
+	public void createBodyMembers()
+	{
+		//torso				
+		PolygonShape torsoShape = new PolygonShape();
+		torsoShape.setAsBox(8/PPM, 12/PPM);
+		
+		BodyMember torso = new BodyMember(this, world, torsoShape, "alienTorso", 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);			
+		
+		//head
+		PolygonShape headShape = new PolygonShape();
+		headShape.setAsBox(11f/PPM, 11f/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		BodyMember head = new BodyMember(this, world, headShape, "alienHead", -1f/PPM, 31f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-2/PPM, -17f/PPM), new Vector2(-1.5f/PPM, 14/PPM), -10, 30);				
+			
+		//legs
+		PolygonShape legShape = new PolygonShape();
+		legShape.setAsBox(3/PPM, 5/PPM);
+		
+		//left
+		BodyMember leftLeg = new BodyMember(this, world, legShape, "alienLeg", -3.5f/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3.5f/PPM, -10f/PPM), -10, 10);		
+		
+		//right
+		BodyMember rightLeg = new BodyMember(this, world, legShape, "alienLeg", 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), -10, 10);			
+		
+		//foots
+		PolygonShape footShape = new PolygonShape();
+		footShape.setAsBox(3/PPM, 3/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+
+		//left
+		BodyMember leftFoot = new BodyMember(this, world, footShape, "alienFoot", 1f/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(-1.5f/PPM, 5/PPM), new Vector2(1f/PPM, -5/PPM), 0, 90);		
+		
+		//right
+		BodyMember rightFoot = new BodyMember(this, world, footShape, "alienFoot", 4/PPM, -25/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(-1.5f/PPM, 5/PPM), new Vector2(1f/PPM, -5/PPM), 0, 90);		
+		
+		//arm
+		PolygonShape armShape = new PolygonShape();
+		armShape.setAsBox(2/PPM, 5/PPM);
+		
+		BodyMember leftArm = new BodyMember(this, world, armShape, "alienArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		BodyMember rightArm = new BodyMember(this, world, armShape, "alienArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		//hands
+		PolygonShape handShape = new PolygonShape();
+		handShape.setAsBox(2/PPM, 5/PPM);
+		
+		//left
+		BodyMember leftHand = new BodyMember(this, world, handShape, "alienHand", -3/PPM, -8/PPM, 0 * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0/PPM, 4/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+				
+		//right
+		BodyMember rightHand = new BodyMember(this, world, handShape, "alienHand", -3/PPM, -8/PPM, 0 * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0/PPM, 4/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+
+		//stuff
+		PolygonShape stuffShape = new PolygonShape();
+		stuffShape.setAsBox(3/PPM, 18/PPM);
+		
+		BodyMember stuff = new BodyMember(this, world, stuffShape, "alienStaff", 8/PPM, -2/PPM, -45 * MathUtils.degreesToRadians);	
+		
+		bodyMembers.add(stuff);
+		bodyMembers.add(leftArm);
+		bodyMembers.add(leftHand);	
+		bodyMembers.add(leftLeg);
+		bodyMembers.add(rightLeg);	
+		bodyMembers.add(torso);
+		bodyMembers.add(head);
+		bodyMembers.add(leftFoot);
+		bodyMembers.add(rightFoot);
+		bodyMembers.add(rightArm);
+		bodyMembers.add(rightHand);
+
+		gameWorld.worldStage.addActor(stuff);
+		gameWorld.worldStage.addActor(leftArm);
+		gameWorld.worldStage.addActor(leftHand);
+		gameWorld.worldStage.addActor(leftLeg);
+		gameWorld.worldStage.addActor(rightLeg);
+		gameWorld.worldStage.addActor(torso);
+		gameWorld.worldStage.addActor(head);
+		gameWorld.worldStage.addActor(leftFoot);
+		gameWorld.worldStage.addActor(rightFoot);
+		gameWorld.worldStage.addActor(rightArm);
+		gameWorld.worldStage.addActor(rightHand);
 	}
 	
 	private void addSounds(){
@@ -166,32 +244,7 @@ public class Alien extends Character{
 		animationManager.createAnimation(9, 0.03f, "alien_diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "alien_dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
-	
-	public void createBodyMembers(){
-		CircleShape circleShape = new CircleShape();
-		circleShape.setRadius(20/PPM);
-		bodyMembers.add(new BodyMember(this, world, circleShape, "gfx/game/characters/alienHead.png", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
 		
-		PolygonShape polygonShape = new PolygonShape();
-		polygonShape.setAsBox(15/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienTorso.png", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
-		polygonShape.setAsBox(5/PPM, 10/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienLeg.png", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienLeg.png", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienFoot.png", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienFoot.png", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienArm.png", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienArm.png", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienHand.png", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienHand.png", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		polygonShape.setAsBox(9/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "gfx/game/characters/alienStaff.png", 65/PPM, -10/PPM, 200f * MathUtils.degreesToRadians));
-		
-		for(BodyMember bodyMember : bodyMembers){
-			gameWorld.worldStage.addActor(bodyMember);
-		}
-	}
-	
 	@Override
 	public void act(float delta) {
     	super.act(delta);

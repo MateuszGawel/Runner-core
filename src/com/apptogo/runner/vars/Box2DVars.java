@@ -21,6 +21,7 @@ public class Box2DVars {
 	public static final short BIT_WORLD_OBJECT = 32;
 	public static final short BIT_ABILITY = 128;
 	public static final short BIT_TERRAIN = 256;
+	public static final short BIT_BODY_MEMBER = 512;
 	
 	public static float getShapeWidth(Shape shape)
 	{

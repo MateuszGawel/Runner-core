@@ -18,6 +18,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -36,12 +37,7 @@ public class Archer extends Character{
 		this.world = world;
 		createBody(startingPosition);
         
-		PolygonShape arrowsShape = new PolygonShape();
-		arrowsShape.setAsBox(3/PPM, 12/PPM);
-		
-		BodyMember arrows = new BodyMember(this, world, arrowsShape, "archerArrows", -12/PPM, -2/PPM, 0 * MathUtils.degreesToRadians);		
-		
-		createBodyMembers(gameWorld, "archerHead", "archerTorso", "archerArm", "archerHand", "archerLeg", "archerFoot", arrows);
+		createBodyMembers();
 		
         addSounds();
         
@@ -52,6 +48,90 @@ public class Archer extends Character{
         this.specialAbilities.add(CharacterAbilityType.ARROW);
         this.specialAbilities.add(CharacterAbilityType.SNARES);
         this.specialAbilities.add(CharacterAbilityType.BOAR);
+	}
+	
+	public void createBodyMembers()
+	{
+		//torso				
+		PolygonShape torsoShape = new PolygonShape();
+		torsoShape.setAsBox(8/PPM, 12/PPM);
+		
+		BodyMember torso = new BodyMember(this, world, torsoShape, "archerTorso", 0/PPM, 0/PPM, 0 * MathUtils.degreesToRadians);			
+		
+		//head
+		PolygonShape headShape = new PolygonShape();
+		headShape.setAsBox(11/PPM, 11/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		BodyMember head = new BodyMember(this, world, headShape, "archerHead", 0f/PPM, 31f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(-1/PPM, -17.5f/PPM), new Vector2(-0.5f/PPM, 11/PPM), -10, 30);				
+		head.go();
+		//legs
+		PolygonShape legShape = new PolygonShape();
+		legShape.setAsBox(3/PPM, 6/PPM);
+		
+		//left
+		BodyMember leftLeg = new BodyMember(this, world, legShape, "archerLeg", -3.5f/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3.5f/PPM, -10f/PPM), -60, 30);		
+		
+		//right
+		BodyMember rightLeg = new BodyMember(this, world, legShape, "archerLeg", 3/PPM, -15/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(3f/PPM, -10f/PPM), -60, 30);			
+		
+		//foots
+		PolygonShape footShape = new PolygonShape();
+		footShape.setAsBox(3/PPM, 3/PPM, new Vector2(0,0), (float)Math.toRadians(45));
+		
+		//left
+		BodyMember leftFoot = new BodyMember(this, world, footShape, "archerFoot", -0.5f/PPM, -26/PPM, 0 * MathUtils.degreesToRadians, leftLeg.getBody(), new Vector2(-3/PPM, 6/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
+		
+		//right
+		BodyMember rightFoot = new BodyMember(this, world, footShape, "archerFoot", 6/PPM, -26/PPM, 0 * MathUtils.degreesToRadians, rightLeg.getBody(), new Vector2(-3/PPM, 6/PPM), new Vector2(0/PPM, -5/PPM), 0, 90);		
+		
+		//arm
+		PolygonShape armShape = new PolygonShape();
+		armShape.setAsBox(2/PPM, 5/PPM);
+		
+		BodyMember leftArm = new BodyMember(this, world, armShape, "archerArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		BodyMember rightArm = new BodyMember(this, world, armShape, "archerArm", -3/PPM, -3f/PPM, 0 * MathUtils.degreesToRadians, torso.getBody(), new Vector2(0/PPM, 5/PPM), new Vector2(-3/PPM, 2/PPM), -160, 30);
+		
+		//hands
+		PolygonShape handShape = new PolygonShape();
+		handShape.setAsBox(2/PPM, 6/PPM);
+		
+		//left
+		BodyMember leftHand = new BodyMember(this, world, handShape, "archerHand", -3/PPM, -9.5f/PPM, 0 * MathUtils.degreesToRadians, leftArm.getBody(), new Vector2(0/PPM, 4.5f/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+				
+		//right
+		BodyMember rightHand = new BodyMember(this, world, handShape, "archerHand", -3/PPM, -9.5f/PPM, 0 * MathUtils.degreesToRadians, rightArm.getBody(), new Vector2(0/PPM, 4.5f/PPM), new Vector2(0/PPM, -4/PPM), -90, 0);		
+		
+		//stuff
+		PolygonShape stuffShape = new PolygonShape();
+		stuffShape.setAsBox(3/PPM, 12/PPM);
+		
+		BodyMember stuff = new BodyMember(this, world, stuffShape, "archerArrows", -12/PPM, -2/PPM, -15 * MathUtils.degreesToRadians);		
+		
+		
+		bodyMembers.add(stuff);
+		bodyMembers.add(leftArm);
+		bodyMembers.add(leftHand);
+		bodyMembers.add(leftLeg);
+		bodyMembers.add(rightLeg);		
+		bodyMembers.add(torso);
+		bodyMembers.add(head);
+		bodyMembers.add(leftFoot);
+		bodyMembers.add(rightFoot);
+		bodyMembers.add(rightArm);
+		bodyMembers.add(rightHand);
+				
+		gameWorld.worldStage.addActor(stuff);
+		gameWorld.worldStage.addActor(leftArm);
+		gameWorld.worldStage.addActor(leftHand);
+		gameWorld.worldStage.addActor(leftLeg);
+		gameWorld.worldStage.addActor(rightLeg);
+		gameWorld.worldStage.addActor(torso);
+		gameWorld.worldStage.addActor(head);
+		gameWorld.worldStage.addActor(leftFoot);
+		gameWorld.worldStage.addActor(rightFoot);
+		gameWorld.worldStage.addActor(rightArm);
+		gameWorld.worldStage.addActor(rightHand);
 	}
 	
 	private void addSounds(){
@@ -153,34 +233,6 @@ public class Archer extends Character{
 		animationManager.createAnimation(9, 0.03f, "archer_diebottom", CharacterAnimationState.DIEINGBOTTOM, false);
 		animationManager.createAnimation(9, 0.03f, "archer_dietop", CharacterAnimationState.DIEINGTOP, false);
 	}
-	
-	public void createBodyMembers(){
-		CircleShape circleShape = new CircleShape();
-		circleShape.setRadius(20/PPM);
-		bodyMembers.add(new BodyMember(this, world, circleShape, "archerHead", 20/PPM, 20/PPM, 0 * MathUtils.degreesToRadians));
-		
-		PolygonShape polygonShape = new PolygonShape();
-		polygonShape.setAsBox(15/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerTorso", 20/PPM, -15/PPM, 0 * MathUtils.degreesToRadians));
-		polygonShape.setAsBox(5/PPM, 10/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerLeg", 25/PPM, -50/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerLeg", 10/PPM, -50/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerFoot", 35/PPM, -70/PPM, 30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerFoot", 5/PPM, -70/PPM, -30f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArm", 35/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArm", 5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerHand", 45/PPM, -10/PPM, 80f * MathUtils.degreesToRadians));
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerHand", -5/PPM, -10/PPM, -80f * MathUtils.degreesToRadians));
-		polygonShape.setAsBox(9/PPM, 25/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerBow", 65/PPM, -10/PPM, 200f * MathUtils.degreesToRadians));
-		polygonShape.setAsBox(5/PPM, 15/PPM);
-		bodyMembers.add(new BodyMember(this, world, polygonShape, "archerArrows", 0/PPM, -10/PPM, 0 * MathUtils.degreesToRadians));
-		
-		for(BodyMember bodyMember : bodyMembers){
-			gameWorld.worldStage.addActor(bodyMember);
-		}
-	}
-	
 
 	
 	@Override

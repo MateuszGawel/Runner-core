@@ -1,5 +1,6 @@
 package com.apptogo.runner.screens;
 
+import com.apptogo.runner.actors.BodyMember;
 import com.apptogo.runner.actors.CharacterButton;
 import com.apptogo.runner.actors.GameProgressBar;
 import com.apptogo.runner.actors.ParticleEffectActor;
@@ -119,6 +120,8 @@ public abstract class GameScreen extends BaseScreen{
 	public void prepare()
 	{
 		createCoinLabel();
+		
+		player.character.dieDismemberment();
 	}
 	
 	protected void createGui()
@@ -225,6 +228,16 @@ public abstract class GameScreen extends BaseScreen{
 		if( Gdx.input.isKeyJustPressed(Keys.D) )
 		{
 			gameWorld.player.character.dieDismemberment();
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.G) )
+		{
+			BodyMember.motorSpeed = -1;
+		}
+		
+		if( Gdx.input.isKeyJustPressed(Keys.H) )
+		{
+			BodyMember.motorSpeed = 1;
 		}
 		
 		
